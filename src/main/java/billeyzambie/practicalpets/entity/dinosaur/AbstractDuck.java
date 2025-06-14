@@ -23,8 +23,6 @@ public abstract class AbstractDuck extends LandPracticalPet {
 
     public final AnimationState quackAnimationState = new AnimationState();
 
-    public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.BREAD);
-
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         return super.mobInteract(player, hand);
