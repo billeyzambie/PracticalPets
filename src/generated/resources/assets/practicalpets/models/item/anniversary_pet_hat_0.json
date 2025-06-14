@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "practicalpets:item/anniversary_pet_hat_0"
+  }
+}

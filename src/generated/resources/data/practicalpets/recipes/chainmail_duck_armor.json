@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "M": {
+      "item": "minecraft:iron_nugget"
+    },
+    "N": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "pattern": [
+    " M ",
+    "MN ",
+    " MM"
+  ],
+  "result": {
+    "item": "practicalpets:chainmail_duck_armor"
+  },
+  "show_notification": true
+}

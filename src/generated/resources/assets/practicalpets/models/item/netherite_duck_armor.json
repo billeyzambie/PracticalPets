@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "practicalpets:item/netherite_duck_armor"
+  }
+}

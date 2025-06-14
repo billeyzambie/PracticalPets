@@ -1,0 +1,42 @@
+{
+  "banana_slip": {
+    "sounds": [
+      {
+        "name": "practicalpets:banana_slip",
+        "stream": false
+      }
+    ]
+  },
+  "banana_duck_ambient": {
+    "sounds": [
+      {
+        "name": "practicalpets:banana_duck_ambient",
+        "stream": false
+      }
+    ]
+  },
+  "duck_hurt": {
+    "sounds": [
+      {
+        "name": "practicalpets:duck_hurt",
+        "stream": false
+      }
+    ]
+  },
+  "banana_duck_death": {
+    "sounds": [
+      {
+        "name": "practicalpets:banana_duck_death",
+        "stream": false
+      }
+    ]
+  },
+  "pet_level_up": {
+    "sounds": [
+      {
+        "name": "practicalpets:pet_level_up",
+        "stream": false
+      }
+    ]
+  }
+}
