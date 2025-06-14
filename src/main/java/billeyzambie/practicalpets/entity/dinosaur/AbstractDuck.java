@@ -24,11 +24,6 @@ public abstract class AbstractDuck extends LandPracticalPet {
     public final AnimationState quackAnimationState = new AnimationState();
 
     @Override
-    public InteractionResult mobInteract(Player player, InteractionHand hand) {
-        return super.mobInteract(player, hand);
-    }
-
-    @Override
     public void playAmbientSound() {
         super.playAmbientSound();
         if (!this.level().isClientSide && this.getTarget() == null) {
