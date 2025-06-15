@@ -3,6 +3,7 @@ package billeyzambie.practicalpets;
 import billeyzambie.practicalpets.client.ModModelLayers;
 import billeyzambie.practicalpets.client.model.entity.dinosaur.BananaDuckArmorModel;
 import billeyzambie.practicalpets.client.model.entity.dinosaur.BananaDuckModel;
+import billeyzambie.practicalpets.client.model.entity.dinosaur.DuckArmorModel;
 import billeyzambie.practicalpets.client.model.entity.dinosaur.DuckModel;
 import billeyzambie.practicalpets.client.model.entity.pet_equipment.AnniversaryPetHatModel;
 import billeyzambie.practicalpets.client.model.entity.pet_equipment.PetBowtieModel;
@@ -29,6 +30,7 @@ public final class ClientListener {
         event.registerLayerDefinition(ModModelLayers.DUCK, DuckModel::createBodyLayer);
 
         event.registerLayerDefinition(ModModelLayers.BANANA_DUCK_ARMOR, BananaDuckArmorModel::createBodyLayer);
+        event.registerLayerDefinition(ModModelLayers.DUCK_ARMOR, DuckArmorModel::createBodyLayer);
         event.registerLayerDefinition(ModModelLayers.PET_BOWTIE, PetBowtieModel::createBodyLayer);
         event.registerLayerDefinition(ModModelLayers.ANNIVERSARY_PET_HAT, AnniversaryPetHatModel::createBodyLayer);
     }

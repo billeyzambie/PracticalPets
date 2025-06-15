@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public abstract class PracticalPetModel<T extends Entity> extends HierarchicalModel<T> {
+    protected static final Vector3f ANIMATION_VECTOR_CACHE = new Vector3f();
+
     public abstract HashMap<String, AnimationDefinition> getKeyframeAnimationHashMap();
     public abstract HashMap<String, MathAnimationDefinition> getMathAnimationHashMap();
 

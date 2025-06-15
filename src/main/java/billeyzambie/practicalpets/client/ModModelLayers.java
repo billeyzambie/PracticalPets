@@ -15,6 +15,11 @@ public class ModModelLayers {
     public static final ModelLayerLocation BANANA_DUCK_ARMOR = new ModelLayerLocation(
             new ResourceLocation(PracticalPets.MODID, "banana_duck_armor_layer"), "main"
     );
+
+    public static final ModelLayerLocation DUCK_ARMOR = new ModelLayerLocation(
+            new ResourceLocation(PracticalPets.MODID, "duck_armor_layer"), "main"
+    );
+
     public static final ModelLayerLocation PET_BOWTIE = new ModelLayerLocation(
             new ResourceLocation(PracticalPets.MODID, "pet_bowtie_layer"), "main"
     );

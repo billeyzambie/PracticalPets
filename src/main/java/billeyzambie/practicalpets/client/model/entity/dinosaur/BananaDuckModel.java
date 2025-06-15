@@ -12,6 +12,7 @@ import billeyzambie.practicalpets.entity.dinosaur.BananaDuck;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.animation.AnimationDefinition;
+import net.minecraft.client.animation.KeyframeAnimations;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -221,6 +222,10 @@ public class BananaDuckModel extends PracticalPetModel<BananaDuck> {
     @Override
     public void setupAnim(@NotNull BananaDuck entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+
+        if (entity.isBaby()) {
+            KeyframeAnimations.animate(this, DuckAnimation.ling, 0, 1, ANIMATION_VECTOR_CACHE);
+        }
 
         boolean isMakingBanana =
                 entity.makingBananaAnimationState.isStarted()

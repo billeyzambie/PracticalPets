@@ -1,7 +1,10 @@
 package billeyzambie.practicalpets.entity.dinosaur;
 
 import billeyzambie.practicalpets.ModEntities;
+import billeyzambie.practicalpets.ModSounds;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.TamableAnimal;
@@ -71,6 +74,22 @@ public class Duck extends AbstractDuck {
     @Override
     public float headSizeZ() {
         return 3;
+    }
+
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return ModSounds.DUCK_AMBIENT.get();
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(@NotNull DamageSource damageSource) {
+        return ModSounds.DUCK_HURT.get();
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return ModSounds.DUCK_DEATH.get();
     }
 
     @Override

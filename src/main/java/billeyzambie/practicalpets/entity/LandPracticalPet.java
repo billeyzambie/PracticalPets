@@ -603,25 +603,10 @@ public abstract class LandPracticalPet extends TamableAnimal implements ACEntity
     }
 
     @Override
-    //for domestication innovation
+    //for domestication innovation command drum to work better
     public void setOrderedToSit(boolean bool) {
         super.setOrderedToSit(bool);
         if (bool) this.setShouldFollowOwner(true);
-    }
-
-    @Override
-    protected SoundEvent getAmbientSound() {
-        return ModSounds.BANANA_DUCK_AMBIENT.get();
-    }
-
-    @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return ModSounds.DUCK_HURT.get();
-    }
-
-    @Override
-    protected SoundEvent getDeathSound() {
-        return ModSounds.BANANA_DUCK_DEATH.get();
     }
 
     public boolean hasTarget() {

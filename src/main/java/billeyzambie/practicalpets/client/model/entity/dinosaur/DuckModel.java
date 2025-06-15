@@ -84,6 +84,10 @@ public class DuckModel extends PracticalPetModel<Duck> {
 		pathToHat = List.of(ooo, body, bone6, bodynolegs, head, lol, bone7, hat);
 	}
 
+	protected DuckModel() {
+
+	}
+
 	public static LayerDefinition createBodyLayer() {
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();
@@ -149,13 +153,13 @@ public class DuckModel extends PracticalPetModel<Duck> {
 		return LayerDefinition.create(meshdefinition, 64, 64);
 	}
 
-	protected static final Vector3f ANIMATION_VECTOR_CACHE = new Vector3f();
-
 	@Override
 	public void setupAnim(@NotNull Duck entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 
-		this.dontshowonbaby.visible = !entity.isBaby();
+		//this.dontshowonbaby is null for the armor
+		if (this.dontshowonbaby != null)
+			this.dontshowonbaby.visible = !entity.isBaby();
 		if (entity.isBaby()) {
 			KeyframeAnimations.animate(this, DuckAnimation.ling, 0, 1, ANIMATION_VECTOR_CACHE);
 		}

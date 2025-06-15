@@ -15,6 +15,14 @@
       }
     ]
   },
+  "duck_ambient": {
+    "sounds": [
+      {
+        "name": "practicalpets:duck_ambient",
+        "stream": false
+      }
+    ]
+  },
   "duck_hurt": {
     "sounds": [
       {
@@ -27,6 +35,14 @@
     "sounds": [
       {
         "name": "practicalpets:banana_duck_death",
+        "stream": false
+      }
+    ]
+  },
+  "duck_death": {
+    "sounds": [
+      {
+        "name": "practicalpets:duck_death",
         "stream": false
       }
     ]
