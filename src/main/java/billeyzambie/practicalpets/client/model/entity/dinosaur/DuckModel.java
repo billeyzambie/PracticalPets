@@ -81,7 +81,7 @@ public class DuckModel extends PracticalPetModel<Duck> {
 		this.wing1 = this.bodynolegs.getChild("wing1");
 
 		pathToBowtie = List.of(ooo, body, bone6, bodynolegs, head, bowtie);
-		pathToHat = List.of(ooo, body, bone6, bodynolegs, bodylol, head, lol, bone7, hat);
+		pathToHat = List.of(ooo, body, bone6, bodynolegs, head, lol, bone7, hat);
 	}
 
 	public static LayerDefinition createBodyLayer() {

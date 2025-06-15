@@ -1,6 +1,7 @@
 package billeyzambie.practicalpets;
 
 import billeyzambie.practicalpets.entity.dinosaur.BananaDuck;
+import billeyzambie.practicalpets.entity.dinosaur.Duck;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -23,7 +24,7 @@ public final class CommonListener {
         );
         event.put(
                 ModEntities.DUCK.get(),
-                BananaDuck.createMobAttributes()
+                Duck.createMobAttributes()
                         .add(Attributes.MAX_HEALTH, 6)
                         .add(Attributes.MOVEMENT_SPEED, 0.25)
                         .add(Attributes.ATTACK_DAMAGE, 2)

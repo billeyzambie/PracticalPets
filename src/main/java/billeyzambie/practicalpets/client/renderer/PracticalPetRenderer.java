@@ -77,7 +77,6 @@ public abstract class PracticalPetRenderer<T extends Mob, M extends PracticalPet
                     }
 
                     cosmeticModel.root().resetPose();
-                    cosmeticModel.setupAnim(entity, 0, 0, 0, 0, 0);
 
                     poseStack.mulPose(Axis.XP.rotationDegrees(180));
 
@@ -86,6 +85,8 @@ public abstract class PracticalPetRenderer<T extends Mob, M extends PracticalPet
                     for (ModelPart part : pathToAttachment) {
                         part.translateAndRotate(poseStack);
                     }
+
+                    cosmeticModel.setupAnim(entity, 0, 0, 0, 0, 0);
 
                     float r = 1, g = 1, b = 1;
                     if (cosmetic instanceof DyeableLeatherItem dyeableItem) {
