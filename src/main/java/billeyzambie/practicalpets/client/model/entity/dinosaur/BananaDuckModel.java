@@ -7,6 +7,7 @@ import billeyzambie.animationcontrollers.PracticalPetModel;
 import billeyzambie.animationcontrollers.MathAnimationDefinition;
 import billeyzambie.practicalpets.ModAnimationControllers;
 import billeyzambie.practicalpets.client.animation.dinosaur.BananaDuckAnimation;
+import billeyzambie.practicalpets.client.animation.dinosaur.DuckAnimation;
 import billeyzambie.practicalpets.entity.dinosaur.BananaDuck;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -218,9 +219,8 @@ public class BananaDuckModel extends PracticalPetModel<BananaDuck> {
 
 
     @Override
-    public void setupAnim(BananaDuck entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(@NotNull BananaDuck entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-        this.applyHeadRotation(netHeadYaw, headPitch);
 
         boolean isMakingBanana =
                 entity.makingBananaAnimationState.isStarted()
@@ -230,7 +230,7 @@ public class BananaDuckModel extends PracticalPetModel<BananaDuck> {
         if (isMakingBanana)
             bananaMakingShake(entity.makingBananaAnimationState.getAccumulatedTime() / 1000f);
         else
-            this.animate(entity.quackAnimationState, BananaDuckAnimation.quack, ageInTicks);
+            this.animate(entity.quackAnimationState, DuckAnimation.quack, ageInTicks);
 
         this.animate(entity.makingBananaAnimationState, BananaDuckAnimation.make_banana, ageInTicks);
 
@@ -243,7 +243,8 @@ public class BananaDuckModel extends PracticalPetModel<BananaDuck> {
 
     }
 
-    private void applyHeadRotation(float pNetHeadYaw, float pHeadPitch) {
+    @Override
+    protected void applyHeadRotation(float pNetHeadYaw, float pHeadPitch) {
         this.head.yRot += pNetHeadYaw * ((float) Math.PI / 180F);
         this.head.xRot += pHeadPitch * ((float) Math.PI / 180F) / 2;
         this.lol.xRot += pHeadPitch * ((float) Math.PI / 180F) / 2;

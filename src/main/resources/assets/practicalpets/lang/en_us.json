@@ -1,9 +1,11 @@
 {
+  "entity.practicalpets.banana_duck": "Banana Duck",
+  "item.practicalpets.banana_duck_spawn_egg": "Banana Duck Spawn Egg",
+  "entity.practicalpets.duck": "Duck",
+  "item.practicalpets.duck_spawn_egg": "Duck Spawn Egg",
   "item.practicalpets.poultry_banana": "Poultry Banana",
   "block.practicalpets.banana_peel": "Banana Peel",
   "item.practicalpets.banana_peel": "Banana Peel",
-  "entity.practicalpets.banana_duck": "Banana Duck",
-  "item.practicalpets.banana_duck_spawn_egg": "Banana Duck Spawn Egg",
   "action.practicalpets.following": "Following",
   "action.practicalpets.sitting": "Sitting",
   "action.practicalpets.wandering": "Wandering",

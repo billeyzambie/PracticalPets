@@ -5,15 +5,19 @@ package billeyzambie.practicalpets.client.model.entity.dinosaur;// Made with Blo
 
 import billeyzambie.animationcontrollers.MathAnimationDefinition;
 import billeyzambie.animationcontrollers.PracticalPetModel;
+import billeyzambie.practicalpets.ModAnimationControllers;
 import billeyzambie.practicalpets.client.animation.dinosaur.BananaDuckAnimation;
 import billeyzambie.practicalpets.client.animation.dinosaur.DuckAnimation;
 import billeyzambie.practicalpets.entity.dinosaur.Duck;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.animation.AnimationDefinition;
+import net.minecraft.client.animation.KeyframeAnimations;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3f;
 
 import java.util.HashMap;
 import java.util.List;
@@ -145,14 +149,34 @@ public class DuckModel extends PracticalPetModel<Duck> {
 		return LayerDefinition.create(meshdefinition, 64, 64);
 	}
 
-	@Override
-	public void setupAnim(Duck duck, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-		super.setupAnim(duck, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-		this.dontshowonbaby.visible = !duck.isBaby();
+	protected static final Vector3f ANIMATION_VECTOR_CACHE = new Vector3f();
 
-		if (!duck.isInSittingPose()) {
+	@Override
+	public void setupAnim(@NotNull Duck entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+		super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+
+		this.dontshowonbaby.visible = !entity.isBaby();
+		if (entity.isBaby()) {
+			KeyframeAnimations.animate(this, DuckAnimation.ling, 0, 1, ANIMATION_VECTOR_CACHE);
+		}
+
+		this.animate(entity.quackAnimationState, DuckAnimation.quack, ageInTicks);
+
+		ModAnimationControllers.SIMPLE_SIT.animate(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
+		ModAnimationControllers.FLAP_AND_IF_ANGRY.animate(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
+		ModAnimationControllers.SIMPLE_ANGRY.animate(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
+
+		if (!entity.isInSittingPose()) {
 			this.animateWalk(BananaDuckAnimation.walk, limbSwing, limbSwingAmount, 3f, 2f);
 		}
+
+	}
+
+	@Override
+	protected void applyHeadRotation(float pNetHeadYaw, float pHeadPitch) {
+		this.head.yRot += pNetHeadYaw * ((float) Math.PI / 180F);
+		this.head.xRot += pHeadPitch * ((float) Math.PI / 180F) / 2;
+		this.lol.xRot += pHeadPitch * ((float) Math.PI / 180F) / 2;
 	}
 
 	@Override
@@ -161,8 +185,8 @@ public class DuckModel extends PracticalPetModel<Duck> {
 	}
 
 	@Override
-	public ModelPart root() {
-		return null;
+	public @NotNull ModelPart root() {
+		return ooo;
 	}
 
 	private final HashMap<String, AnimationDefinition> keyframeAnimationHashMap = new HashMap<>() {{

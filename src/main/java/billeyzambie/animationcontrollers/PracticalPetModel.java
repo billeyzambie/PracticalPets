@@ -5,6 +5,8 @@ import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3f;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,11 +20,18 @@ public abstract class PracticalPetModel<T extends Entity> extends HierarchicalMo
     public abstract ModelPart head();
 
     @Override
-    public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(@NotNull T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
 
         if (entity instanceof LivingEntity living && living.getHealth() < living.getMaxHealth())
             hurtAnimation(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+
+        this.applyHeadRotation(netHeadYaw, headPitch);
+    }
+
+    protected void applyHeadRotation(float pNetHeadYaw, float pHeadPitch) {
+        this.head().yRot += pNetHeadYaw * ((float) Math.PI / 180F);
+        this.head().xRot += pHeadPitch * ((float) Math.PI / 180F);
     }
 
     protected void hurtAnimation(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {

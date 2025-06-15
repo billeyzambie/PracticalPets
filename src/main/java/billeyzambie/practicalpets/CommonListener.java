@@ -21,6 +21,14 @@ public final class CommonListener {
                         .add(Attributes.ATTACK_DAMAGE, 2)
                         .build()
         );
+        event.put(
+                ModEntities.DUCK.get(),
+                BananaDuck.createMobAttributes()
+                        .add(Attributes.MAX_HEALTH, 6)
+                        .add(Attributes.MOVEMENT_SPEED, 0.25)
+                        .add(Attributes.ATTACK_DAMAGE, 2)
+                        .build()
+        );
     }
     @SubscribeEvent
     public static void registerSpawnPlacements(SpawnPlacementRegisterEvent event) {
