@@ -202,6 +202,7 @@ public abstract class LandPracticalPet extends TamableAnimal implements ACEntity
     }
 
     public enum HealOverrideType {
+        DEFINE_NUTRITION,
         OVERRIDE,
         ADD,
         MULTIPLY
@@ -222,7 +223,7 @@ public abstract class LandPracticalPet extends TamableAnimal implements ACEntity
         float healAmount;
 
         if (foodProperties == null) {
-            if (healOverride == null || healOverride.type() != HealOverrideType.OVERRIDE) {
+            if (healOverride == null || healOverride.type() != HealOverrideType.DEFINE_NUTRITION) {
                 throw new Error("Item " + itemStack.getItem() + " isn't edible but no heal override was defined for it for " + this.getClass());
             }
             healAmount = healOverride.value();

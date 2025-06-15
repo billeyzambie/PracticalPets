@@ -16,6 +16,10 @@ public class DuckArmor extends Item implements PetCosmetic {
                 PracticalPets.MODID,
                 "textures/entity/banana_duck/armor/" + materialName + ".png"
         );
+        this.duckModelTexture = new ResourceLocation(
+                PracticalPets.MODID,
+                "textures/entity/duck/armor/" + materialName + ".png"
+        );
 
         this.damageMultiplier = damageMultiplier;
         this.equipSound = equipSound;
@@ -23,11 +27,16 @@ public class DuckArmor extends Item implements PetCosmetic {
     private final SoundEvent equipSound;
 
     private final ResourceLocation bananaDuckModelTexture;
-    private final float damageMultiplier;
-
     public ResourceLocation getBananaDuckModelTexture() {
         return this.bananaDuckModelTexture;
     }
+
+    private final ResourceLocation duckModelTexture;
+    public ResourceLocation getDuckModelTexture() {
+        return this.duckModelTexture;
+    }
+
+    private final float damageMultiplier;
     @Override
     public float damageMultiplier() {
         return this.damageMultiplier;

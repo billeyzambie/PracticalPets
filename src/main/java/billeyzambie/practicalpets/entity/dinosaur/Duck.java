@@ -49,10 +49,10 @@ public class Duck extends AbstractDuck {
     public HealOverride healOverride(ItemStack itemStack) {
         //Seeds aren't edible so a healOverride must be defined
         if (itemStack.is(Tags.Items.SEEDS))
-            return new HealOverride(HealOverrideType.OVERRIDE, 2);
+            return new HealOverride(HealOverrideType.DEFINE_NUTRITION, 2);
         //Bread is bad for ducks
         if (itemStack.is(Items.BREAD))
-            return new HealOverride(HealOverrideType.OVERRIDE, 1);
+            return new HealOverride(HealOverrideType.DEFINE_NUTRITION, 1);
         return super.healOverride(itemStack);
     }
 
