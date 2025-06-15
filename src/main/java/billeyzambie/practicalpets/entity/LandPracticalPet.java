@@ -297,8 +297,8 @@ public abstract class LandPracticalPet extends TamableAnimal implements ACEntity
             return new HealOverride(HealOverrideType.ADD, value);
         }
 
-        public static HealOverride multiply(int factor) {
-            return new HealOverride(HealOverrideType.MULTIPLY, factor);
+        public static HealOverride multiply(int value) {
+            return new HealOverride(HealOverrideType.MULTIPLY, value);
         }
     }
 
@@ -320,15 +320,16 @@ public abstract class LandPracticalPet extends TamableAnimal implements ACEntity
                 throw new Error("Item " + itemStack.getItem() + " isn't edible but no heal override was defined for it for " + this.getClass());
             }
             healAmount = healOverride.value();
-        } else if (healOverride == null) {
+        }
+        else if (healOverride == null) {
             healAmount = foodProperties.getNutrition();
-        } else {
+        }
+        else {
             healAmount = foodProperties.getNutrition();
             switch (healOverride.type()) {
                 case OVERRIDE -> healAmount = healOverride.value();
                 case ADD -> healAmount += healOverride.value();
                 case MULTIPLY -> healAmount *= healOverride.value();
-                default -> throw new IllegalStateException("Unexpected override type: " + healOverride.type());
             }
         }
 
@@ -572,7 +573,7 @@ public abstract class LandPracticalPet extends TamableAnimal implements ACEntity
                             return InteractionResult.SUCCESS;
                         }
                     }
-                    if (item.isEdible() && this.isFood(itemstack) && this.getHealth() < this.getMaxHealth()) {
+                    if (this.isFood(itemstack) && this.getHealth() < this.getMaxHealth()) {
                         this.healFromEatingItem(itemstack);
                         this.usePlayerItem(player, hand, itemstack);
                         return InteractionResult.CONSUME;

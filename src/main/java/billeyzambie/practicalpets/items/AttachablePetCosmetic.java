@@ -9,7 +9,7 @@ import net.minecraft.world.entity.Entity;
 import javax.annotation.Nullable;
 
 public interface AttachablePetCosmetic extends PetCosmetic {
-    ResourceLocation getModelTexture();
+    @Nullable ResourceLocation getModelTexture();
     enum AttachBone { HAT, BOWTIE }
     AttachBone getAttachBone();
 

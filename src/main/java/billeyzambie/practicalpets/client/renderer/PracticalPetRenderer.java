@@ -24,28 +24,31 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
 
 public abstract class PracticalPetRenderer<T extends Mob, M extends PracticalPetModel<T>> extends MobRenderer<T, M> {
-    PetBowtieModel<T> petBowtieModel;
-    AnniversaryPetHatModel<T> anniversaryPetHatModel;
 
-    public final HashMap<Item, HierarchicalModel<T>> cosmeticModels = new HashMap<>();
+    final HashMap<Item, HierarchicalModel<T>> cosmeticModels = new HashMap<>();
 
-    public PracticalPetRenderer(EntityRendererProvider.Context p_174304_, M p_174305_, float p_174306_) {
-        super(p_174304_, p_174305_, p_174306_);
-        petBowtieModel = new PetBowtieModel<>(p_174304_.bakeLayer(ModModelLayers.PET_BOWTIE));
-        anniversaryPetHatModel = new AnniversaryPetHatModel<>(p_174304_.bakeLayer(ModModelLayers.ANNIVERSARY_PET_HAT));
+    public PracticalPetRenderer(EntityRendererProvider.Context context, M model, float shadowRadius) {
+        super(context, model, shadowRadius);
 
-        cosmeticModels.put(ModItems.PET_BOWTIE.get(), petBowtieModel);
-        cosmeticModels.put(ModItems.ANNIVERSARY_PET_HAT_0.get(), anniversaryPetHatModel);
+        cosmeticModels.put(
+                ModItems.PET_BOWTIE.get(),
+                new PetBowtieModel<>(context.bakeLayer(ModModelLayers.PET_BOWTIE))
+        );
+        cosmeticModels.put(
+                ModItems.ANNIVERSARY_PET_HAT_0.get(),
+                new AnniversaryPetHatModel<>(context.bakeLayer(ModModelLayers.ANNIVERSARY_PET_HAT))
+        );
     }
 
     @Override
     public void render(T entity, float entityYaw, float partialticks, PoseStack poseStack,
-                       MultiBufferSource buffer, int packedLight) {
+                       @NotNull MultiBufferSource buffer, int packedLight) {
 
         float scale = entity.getScale();
         poseStack.scale(scale, scale, scale);
@@ -97,9 +100,13 @@ public abstract class PracticalPetRenderer<T extends Mob, M extends PracticalPet
                         b = (i & 255) / 255f;
                     }
 
-                    VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.entityCutoutNoCull(cosmetic.getModelTexture()));
+                    VertexConsumer vertexConsumer;
 
-                    cosmeticModel.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, r, g, b, 1);
+                    ResourceLocation texture = cosmetic.getModelTexture();
+                    if (texture != null) {
+                        vertexConsumer = buffer.getBuffer(RenderType.entityCutoutNoCull(texture));
+                        cosmeticModel.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, r, g, b, 1);
+                    }
 
                     ResourceLocation emissiveTexture = cosmetic.getModelEmissiveTexture();
                     if (emissiveTexture != null) {
