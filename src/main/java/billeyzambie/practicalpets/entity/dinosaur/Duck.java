@@ -14,9 +14,28 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
+
 public class Duck extends AbstractDuck {
     public Duck(EntityType<? extends TamableAnimal> entityType, Level level) {
         super(entityType, level);
+    }
+
+    private static final HashMap<Integer, Integer> VARIANT_SPAWN_WEIGHTS = new HashMap<>() {{
+        put(0, 72);
+        put(1, 72);
+        // 2 is the secret golden duck that doesn't spawn naturally
+        // but will be spawned by breeding a duck with a penguin when penguins are added
+        put(3, 3);
+        put(4, 35);
+        put(5, 35);
+        put(6, 35);
+        put(7, 35);
+    }};
+
+    @Override
+    public HashMap<Integer, Integer> variantSpawnWeights() {
+        return VARIANT_SPAWN_WEIGHTS;
     }
 
     @Override
@@ -100,6 +119,13 @@ public class Duck extends AbstractDuck {
             if (this.isTame()) {
                 baby.setOwnerUUID(this.getOwnerUUID());
                 baby.setTame(true);
+            }
+
+            if (partner instanceof Duck duckPartner) {
+                if (this.random.nextBoolean())
+                    baby.setVariant(this.variant());
+                else
+                    baby.setVariant(duckPartner.variant());
             }
         }
 

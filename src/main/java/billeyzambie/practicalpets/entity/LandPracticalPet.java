@@ -7,7 +7,6 @@ import billeyzambie.practicalpets.ModSounds;
 import billeyzambie.practicalpets.goals.*;
 import billeyzambie.practicalpets.items.PetCosmetic;
 import billeyzambie.practicalpets.items.PetHat;
-import com.mojang.datafixers.types.Func;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -19,6 +18,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -28,17 +28,17 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.ForgeEventFactory;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.Map;
 
 public abstract class LandPracticalPet extends TamableAnimal implements ACEntity {
 
@@ -66,6 +66,77 @@ public abstract class LandPracticalPet extends TamableAnimal implements ACEntity
     private static final EntityDataAccessor<ItemStack> HEAD_ITEM = SynchedEntityData.defineId(LandPracticalPet.class, EntityDataSerializers.ITEM_STACK);
     private static final EntityDataAccessor<ItemStack> NECK_ITEM = SynchedEntityData.defineId(LandPracticalPet.class, EntityDataSerializers.ITEM_STACK);
     private static final EntityDataAccessor<ItemStack> BODY_ITEM = SynchedEntityData.defineId(LandPracticalPet.class, EntityDataSerializers.ITEM_STACK);
+    private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(LandPracticalPet.class, EntityDataSerializers.INT);
+
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(HAS_TARGET, false);
+        this.entityData.define(SHOULD_FOLLOW_OWNER, true);
+        this.entityData.define(PET_LEVEL, 1);
+        this.entityData.define(PET_XP, 0f);
+        this.entityData.define(HEAD_ITEM, ItemStack.EMPTY);
+        this.entityData.define(NECK_ITEM, ItemStack.EMPTY);
+        this.entityData.define(BODY_ITEM, ItemStack.EMPTY);
+        this.entityData.define(VARIANT, 0);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag compoundTag) {
+        super.readAdditionalSaveData(compoundTag);
+        this.setShouldFollowOwner(compoundTag.getBoolean("ShouldFollowOwner"));
+        this.setPetLevel(compoundTag.getInt("PetLevel"));
+        this.setPetXP(compoundTag.getFloat("PetXP"));
+        this.setHeadItem(ItemStack.of(compoundTag.getCompound("HeadItem")));
+        this.setNeckItem(ItemStack.of(compoundTag.getCompound("NeckItem")));
+        this.setBodyItem(ItemStack.of(compoundTag.getCompound("BodyItem")));
+        this.setVariant(compoundTag.getInt("Variant"));
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag compoundTag) {
+        super.addAdditionalSaveData(compoundTag);
+        compoundTag.putBoolean("ShouldFollowOwner", this.shouldFollowOwner());
+        compoundTag.putInt("PetLevel", this.petLevel());
+        compoundTag.putFloat("PetXP", this.petXP());
+        compoundTag.put("HeadItem", getHeadItem().save(new CompoundTag()));
+        compoundTag.put("NeckItem", getNeckItem().save(new CompoundTag()));
+        compoundTag.put("BodyItem", getBodyItem().save(new CompoundTag()));
+        compoundTag.putInt("Variant", this.variant());
+    }
+
+    public abstract HashMap<Integer, Integer> variantSpawnWeights();
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType,
+                                        @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag tag) {
+        int selectedVariant = pickRandomWeightedVariant();
+        this.setVariant(selectedVariant);
+
+        return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData, tag);
+    }
+
+    private int pickRandomWeightedVariant() {
+        var weights = variantSpawnWeights();
+        if (weights == null)
+            return 0;
+        int totalWeight = 0;
+        for (int weight : weights.values()) {
+            totalWeight += weight;
+        }
+
+        int randomValue = this.random.nextInt(totalWeight);
+        int weightAddedSoFar = 0;
+
+        for (Map.Entry<Integer, Integer> entry : weights.entrySet()) {
+            weightAddedSoFar += entry.getValue();
+            if (randomValue < weightAddedSoFar) {
+                return entry.getKey();
+            }
+        }
+
+        throw new IllegalStateException("I don't this this will ever happen");
+    }
 
     public ItemStack getEquippedItem(PetCosmetic.Slot slot) {
         switch (slot) {
@@ -79,7 +150,7 @@ public abstract class LandPracticalPet extends TamableAnimal implements ACEntity
                 return getBodyItem();
             }
         }
-        throw new Error("Missing case for getting equipment in slot " + slot);
+        throw new IllegalStateException("Missing case for getting equipment in slot " + slot);
     }
 
     public void setEquippedItem(ItemStack itemStack, PetCosmetic.Slot slot) {
@@ -283,40 +354,6 @@ public abstract class LandPracticalPet extends TamableAnimal implements ACEntity
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(HAS_TARGET, false);
-        this.entityData.define(SHOULD_FOLLOW_OWNER, true);
-        this.entityData.define(PET_LEVEL, 1);
-        this.entityData.define(PET_XP, 0f);
-        this.entityData.define(HEAD_ITEM, ItemStack.EMPTY);
-        this.entityData.define(NECK_ITEM, ItemStack.EMPTY);
-        this.entityData.define(BODY_ITEM, ItemStack.EMPTY);
-    }
-
-    @Override
-    public void readAdditionalSaveData(CompoundTag compoundTag) {
-        super.readAdditionalSaveData(compoundTag);
-        this.setShouldFollowOwner(compoundTag.getBoolean("ShouldFollowOwner"));
-        this.setPetLevel(compoundTag.getInt("PetLevel"));
-        this.setPetXP(compoundTag.getFloat("PetXP"));
-        this.setHeadItem(ItemStack.of(compoundTag.getCompound("HeadItem")));
-        this.setNeckItem(ItemStack.of(compoundTag.getCompound("NeckItem")));
-        this.setBodyItem(ItemStack.of(compoundTag.getCompound("BodyItem")));
-    }
-
-    @Override
-    public void addAdditionalSaveData(CompoundTag compoundTag) {
-        super.addAdditionalSaveData(compoundTag);
-        compoundTag.putBoolean("ShouldFollowOwner", this.shouldFollowOwner());
-        compoundTag.putInt("PetLevel", this.petLevel());
-        compoundTag.putFloat("PetXP", this.petXP());
-        compoundTag.put("HeadItem", getHeadItem().save(new CompoundTag()));
-        compoundTag.put("NeckItem", getNeckItem().save(new CompoundTag()));
-        compoundTag.put("BodyItem", getBodyItem().save(new CompoundTag()));
-    }
-
-    @Override
     public boolean hurt(DamageSource source, float amount) {
         if (source.getEntity() instanceof LivingEntity living && this.isOwnedBy(living) && !living.isCrouching())
             return false;
@@ -346,6 +383,15 @@ public abstract class LandPracticalPet extends TamableAnimal implements ACEntity
 
     public void setShouldFollowOwner(boolean following) {
         this.entityData.set(SHOULD_FOLLOW_OWNER, following);
+    }
+
+    public int variant() {
+        return this.entityData.get(VARIANT);
+    }
+
+    public void setVariant(int variant) {
+        this.entityData.set(VARIANT, variant);
+        setAttributesAccordingToPetLevel();
     }
 
     public int petLevel() {

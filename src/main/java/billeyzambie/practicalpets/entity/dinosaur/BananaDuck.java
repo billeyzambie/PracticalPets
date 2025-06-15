@@ -26,6 +26,8 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.LevelAccessor;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
+
 public class BananaDuck extends AbstractDuck {
     private static final EntityDataAccessor<Integer> TOTAL_BANANAS_MADE = SynchedEntityData.defineId(BananaDuck.class, EntityDataSerializers.INT);
 
@@ -79,6 +81,11 @@ public class BananaDuck extends AbstractDuck {
     public void addAdditionalSaveData(CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
         compoundTag.putInt("TotalBananasMade", this.totalBananasMade());
+    }
+
+    @Override
+    public HashMap<Integer, Integer> variantSpawnWeights() {
+        return null;
     }
 
     public int totalBananasMade() {
