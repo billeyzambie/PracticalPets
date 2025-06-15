@@ -49,12 +49,12 @@ public class Duck extends AbstractDuck {
     public HealOverride healOverride(ItemStack itemStack) {
         //Seeds and glistering melon aren't edible so a healOverride must be defined
         if (itemStack.is(Tags.Items.SEEDS))
-            return new HealOverride(HealOverrideType.DEFINE_NUTRITION, 2);
+            return HealOverride.defineNutrition(3);
         if (itemStack.is(Items.GLISTERING_MELON_SLICE))
-            return new HealOverride(HealOverrideType.DEFINE_NUTRITION, 6);
+            return HealOverride.defineNutrition(6);
         //Bread is bad for ducks
         if (itemStack.is(Items.BREAD))
-            return new HealOverride(HealOverrideType.DEFINE_NUTRITION, 1);
+            return HealOverride.override(1);
         return super.healOverride(itemStack);
     }
 
@@ -76,6 +76,7 @@ public class Duck extends AbstractDuck {
     @Override
     public AgeableMob getBreedOffspring(@NotNull ServerLevel level, @NotNull AgeableMob partner) {
         Duck baby = ModEntities.DUCK.get().create(level);
+
         if (baby != null) {
             if (this.isTame()) {
                 baby.setOwnerUUID(this.getOwnerUUID());

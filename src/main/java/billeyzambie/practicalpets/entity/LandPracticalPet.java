@@ -7,6 +7,7 @@ import billeyzambie.practicalpets.ModSounds;
 import billeyzambie.practicalpets.goals.*;
 import billeyzambie.practicalpets.items.PetCosmetic;
 import billeyzambie.practicalpets.items.PetHat;
+import com.mojang.datafixers.types.Func;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -36,6 +37,8 @@ import net.minecraftforge.event.ForgeEventFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public abstract class LandPracticalPet extends TamableAnimal implements ACEntity {
 
@@ -201,7 +204,7 @@ public abstract class LandPracticalPet extends TamableAnimal implements ACEntity
         return false;
     }
 
-    public enum HealOverrideType {
+    private enum HealOverrideType {
         DEFINE_NUTRITION,
         OVERRIDE,
         ADD,
@@ -209,9 +212,27 @@ public abstract class LandPracticalPet extends TamableAnimal implements ACEntity
     }
 
     public record HealOverride(HealOverrideType type, int value) {
+
+        public static HealOverride defineNutrition(int value) {
+            return new HealOverride(HealOverrideType.DEFINE_NUTRITION, value);
+        }
+
+        public static HealOverride override(int value) {
+            return new HealOverride(HealOverrideType.OVERRIDE, value);
+        }
+
+        public static HealOverride add(int value) {
+            return new HealOverride(HealOverrideType.ADD, value);
+        }
+
+        public static HealOverride multiply(int factor) {
+            return new HealOverride(HealOverrideType.MULTIPLY, factor);
+        }
     }
 
-    /** Overrides must end with {@code return super.healOverride(itemStack)} */
+    /**
+     * Overrides must end with {@code return super.healOverride(itemStack)}
+     */
     public HealOverride healOverride(ItemStack itemStack) {
         return null;
     }
@@ -227,11 +248,9 @@ public abstract class LandPracticalPet extends TamableAnimal implements ACEntity
                 throw new Error("Item " + itemStack.getItem() + " isn't edible but no heal override was defined for it for " + this.getClass());
             }
             healAmount = healOverride.value();
-        }
-        else if (healOverride == null) {
+        } else if (healOverride == null) {
             healAmount = foodProperties.getNutrition();
-        }
-        else {
+        } else {
             healAmount = foodProperties.getNutrition();
             switch (healOverride.type()) {
                 case OVERRIDE -> healAmount = healOverride.value();
@@ -243,19 +262,24 @@ public abstract class LandPracticalPet extends TamableAnimal implements ACEntity
 
         this.heal(healAmount);
     }
+
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new PanicIfShouldGoal(this, 1.5D));
-        this.goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
-        this.targetSelector.addGoal(3, new OwnerHurtByTargetIfShouldGoal(this));
-        this.targetSelector.addGoal(4, new OwnerHurtTargetIfShouldGoal(this));
-        this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.25, false));
-        this.goalSelector.addGoal(6, new PredicateTemptGoal(this, 1.0D, LandPracticalPet::isFood, false));
-        this.goalSelector.addGoal(7, new FollowOwnerWanderableGoal(this, 1.0D, 10.0F, 5.0F, false));
-        this.goalSelector.addGoal(10, new BreedGoal(this, 0.8D));
-        this.goalSelector.addGoal(11, new WaterAvoidingRandomStrollGoal(this, 0.8D, 1.0000001E-5F));
-        this.goalSelector.addGoal(12, new LookAtPlayerGoal(this, Player.class, 10.0F));
+        this.goalSelector.addGoal(10, new PanicIfShouldGoal(this, 1.5D));
+        this.goalSelector.addGoal(20, new SitWhenOrderedToGoal(this));
+        this.targetSelector.addGoal(30, new OwnerHurtByTargetIfShouldGoal(this));
+        this.targetSelector.addGoal(40, new OwnerHurtTargetIfShouldGoal(this));
+        this.goalSelector.addGoal(50, new MeleeAttackGoal(this, 1.25, false));
+        this.goalSelector.addGoal(60, new PredicateTemptGoal(this, 1.0D, LandPracticalPet::isFood, false));
+        this.goalSelector.addGoal(70, new FollowOwnerWanderableGoal(this, 1.0D, 10.0F, 5.0F, false));
+        this.goalSelector.addGoal(80, new BreedGoal(this, 0.8D));
+        this.goalSelector.addGoal(90, getStrollGoal(this));
+        this.goalSelector.addGoal(100, new LookAtPlayerGoal(this, Player.class, 10.0F));
+    }
+
+    protected static Goal getStrollGoal(LandPracticalPet pet) {
+        return new WaterAvoidingRandomStrollGoal(pet, 0.8D, 1.0000001E-5F);
     }
 
     @Override
