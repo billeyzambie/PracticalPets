@@ -66,4 +66,8 @@ public class ModItems {
             "banana_duck_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntities.BANANA_DUCK, 0xfecb32, 0xFFF0BB, new Item.Properties())
     );
+    public static final RegistryObject<ForgeSpawnEggItem> DUCK_SPAWN_EGG = register(
+            "duck_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.DUCK, 0xfecb32, 0xFFF0BB, new Item.Properties())
+    );
 }

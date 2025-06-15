@@ -48,6 +48,7 @@ public class PracticalPets
             .title(Component.literal("Practical Pets"))
             .displayItems((parameters, output) -> {
                 output.accept(ModItems.BANANA_DUCK_SPAWN_EGG.get());
+                output.accept(ModItems.DUCK_SPAWN_EGG.get());
                 output.accept(ModItems.LEATHER_DUCK_ARMOR.get());
                 output.accept(ModItems.GOLDEN_DUCK_ARMOR.get());
                 output.accept(ModItems.CHAINMAIL_DUCK_ARMOR.get());

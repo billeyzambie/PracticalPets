@@ -8,6 +8,10 @@ public class ModModelLayers {
     public static final ModelLayerLocation BANANA_DUCK = new ModelLayerLocation(
             new ResourceLocation(PracticalPets.MODID, "banana_duck_layer"), "main"
     );
+    public static final ModelLayerLocation DUCK = new ModelLayerLocation(
+            new ResourceLocation(PracticalPets.MODID, "duck_layer"), "main"
+    );
+
     public static final ModelLayerLocation BANANA_DUCK_ARMOR = new ModelLayerLocation(
             new ResourceLocation(PracticalPets.MODID, "banana_duck_armor_layer"), "main"
     );

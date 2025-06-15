@@ -10,7 +10,7 @@ import net.minecraft.client.animation.KeyframeAnimations;
  * Exported for Minecraft version 1.19 or later with Mojang mappings
  * @author Author
  */
-public class DuckModelAnimation {
+public class DuckAnimation {
 	public static final AnimationDefinition look_at_target = AnimationDefinition.Builder.withLength(0.0F).looping()
 		.addAnimation("head", new AnimationChannel(AnimationChannel.Targets.ROTATION,
 			new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
