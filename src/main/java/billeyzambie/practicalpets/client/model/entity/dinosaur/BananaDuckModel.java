@@ -56,6 +56,11 @@ public class BananaDuckModel extends PracticalPetModel<BananaDuck> {
         return pathToHat;
     }
 
+    @Override
+    public ModelPart head() {
+        return head;
+    }
+
     protected ModelPart ooo;
     protected ModelPart pop;
     protected ModelPart shake;
@@ -214,8 +219,7 @@ public class BananaDuckModel extends PracticalPetModel<BananaDuck> {
 
     @Override
     public void setupAnim(BananaDuck entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        this.root().getAllParts().forEach(ModelPart::resetPose);
-
+        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
         this.applyHeadRotation(netHeadYaw, headPitch);
 
         boolean isMakingBanana =
@@ -237,8 +241,6 @@ public class BananaDuckModel extends PracticalPetModel<BananaDuck> {
         if (!entity.isInSittingPose())
             this.animateWalk(BananaDuckAnimation.walk, limbSwing, limbSwingAmount, 3f, 2f);
 
-        if (entity.getHealth() < entity.getMaxHealth())
-            hurtAnimation(ageInTicks);
     }
 
     private void applyHeadRotation(float pNetHeadYaw, float pHeadPitch) {
@@ -272,11 +274,6 @@ public class BananaDuckModel extends PracticalPetModel<BananaDuck> {
         }
 
         this.root().x += (float) xOffset;
-    }
-
-    private void hurtAnimation(float ageInTicks) {
-        this.head.xRot += 9 * ((float) Math.PI / 180F);
-        this.root().x += (float) (Math.sin(ageInTicks * 100 * ((float) Math.PI / 180F)) / 15);
     }
 
     @Override
