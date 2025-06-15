@@ -93,13 +93,6 @@ public class BananaDuck extends AbstractDuck {
         this.setTotalBananasMade(totalBananasMade() + 1);
     }
 
-    public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.WHEAT_SEEDS);
-
-    @Override
-    public boolean isTameItem(ItemStack itemStack) {
-        return FOOD_ITEMS.test(itemStack);
-    }
-
     public final AnimationState makingBananaAnimationState = new AnimationState();
 
     @Override

@@ -40,7 +40,20 @@ public class Duck extends AbstractDuck {
     public boolean isTameItem(ItemStack itemStack) {
         return itemStack.is(Tags.Items.SEEDS)
                 || itemStack.is(Tags.Items.CROPS_CARROT)
-                || itemStack.is(Items.MELON);
+                || itemStack.is(Items.MELON_SLICE)
+                || itemStack.is(Items.GLISTERING_MELON_SLICE)
+                || super.isTameItem(itemStack);
+    }
+
+    @Override
+    public HealOverride healOverride(ItemStack itemStack) {
+        //Seeds aren't edible so a healOverride must be defined
+        if (itemStack.is(Tags.Items.SEEDS))
+            return new HealOverride(HealOverrideType.OVERRIDE, 2);
+        //Bread is bad for ducks
+        if (itemStack.is(Items.BREAD))
+            return new HealOverride(HealOverrideType.OVERRIDE, 1);
+        return super.healOverride(itemStack);
     }
 
     @Override

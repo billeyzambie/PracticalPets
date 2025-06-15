@@ -193,7 +193,9 @@ public abstract class LandPracticalPet extends TamableAnimal implements ACEntity
         return isTameItem(itemStack) || isFoodThatDoesntTame(itemStack);
     }
 
-    public abstract boolean isTameItem(ItemStack itemStack);
+    public boolean isTameItem(ItemStack itemStack) {
+        return false;
+    }
 
     public boolean isFoodThatDoesntTame(ItemStack itemStack) {
         return false;
@@ -208,6 +210,7 @@ public abstract class LandPracticalPet extends TamableAnimal implements ACEntity
     public record HealOverride(HealOverrideType type, int value) {
     }
 
+    /** Overrides must end with {@code return super.healOverride(itemStack)} */
     public HealOverride healOverride(ItemStack itemStack) {
         return null;
     }

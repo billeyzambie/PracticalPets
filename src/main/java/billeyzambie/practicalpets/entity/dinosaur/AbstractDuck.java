@@ -24,6 +24,11 @@ public abstract class AbstractDuck extends LandPracticalPet {
     public final AnimationState quackAnimationState = new AnimationState();
 
     @Override
+    public boolean isTameItem(ItemStack itemStack) {
+        return itemStack.is(Items.BREAD);
+    }
+
+    @Override
     public void playAmbientSound() {
         super.playAmbientSound();
         if (!this.level().isClientSide && this.getTarget() == null) {
