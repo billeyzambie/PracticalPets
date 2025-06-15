@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.DyeableLeatherItem;
@@ -68,7 +69,7 @@ public abstract class PracticalPetRenderer<T extends Mob, M extends PracticalPet
                         case HAT -> pathToAttachment = this.getModel().pathToHat();
                         case BOWTIE -> pathToAttachment = this.getModel().pathToBowtie();
                         default ->
-                                throw new Error("Pretty sure this will never happen (error at practicalpetrender at render at switch (cosmetic.getAttachBone()))");
+                                throw new IllegalStateException("Pretty sure this will never happen (error at practicalpetrender at render at switch (cosmetic.getAttachBone()))");
                     }
 
                     var cosmeticModel = cosmeticModels.get(cosmetic);
@@ -99,6 +100,12 @@ public abstract class PracticalPetRenderer<T extends Mob, M extends PracticalPet
                     VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.entityCutoutNoCull(cosmetic.getModelTexture()));
 
                     cosmeticModel.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, r, g, b, 1);
+
+                    ResourceLocation emissiveTexture = cosmetic.getModelEmissiveTexture();
+                    if (emissiveTexture != null) {
+                        vertexConsumer = buffer.getBuffer(RenderType.eyes(emissiveTexture));
+                        cosmeticModel.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, r, g, b, 1);
+                    }
 
                     poseStack.popPose();
                 }

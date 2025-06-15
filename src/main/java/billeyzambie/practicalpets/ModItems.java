@@ -60,7 +60,7 @@ public class ModItems {
     );
     public static final RegistryObject<Item> ANNIVERSARY_PET_HAT_0 = register(
             "anniversary_pet_hat_0",
-            () -> new PetHat("anniversary_hat_0", 2, new Item.Properties().stacksTo(1).rarity(Rarity.EPIC))
+            () -> new AnniversaryPetHat("anniversary_hat_0", 2, new Item.Properties().stacksTo(1).rarity(Rarity.EPIC))
     );
     public static final RegistryObject<ForgeSpawnEggItem> BANANA_DUCK_SPAWN_EGG = register(
             "banana_duck_spawn_egg",

@@ -33,6 +33,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.ForgeEventFactory;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -83,7 +84,7 @@ public abstract class LandPracticalPet extends TamableAnimal implements ACEntity
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compoundTag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
         this.setShouldFollowOwner(compoundTag.getBoolean("ShouldFollowOwner"));
         this.setPetLevel(compoundTag.getInt("PetLevel"));
@@ -108,8 +109,8 @@ public abstract class LandPracticalPet extends TamableAnimal implements ACEntity
 
     public abstract HashMap<Integer, Integer> variantSpawnWeights();
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType,
-                                        @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag tag) {
+    public @NotNull SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor level, @NotNull DifficultyInstance difficulty, MobSpawnType spawnType,
+                                                 @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag tag) {
         int selectedVariant = pickRandomWeightedVariant();
         this.setVariant(selectedVariant);
 

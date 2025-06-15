@@ -1,8 +1,13 @@
 package billeyzambie.practicalpets.items;
 
 import billeyzambie.practicalpets.entity.LandPracticalPet;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+
+import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 public interface PetCosmetic {
     enum Slot { HEAD, NECK, BODY }
