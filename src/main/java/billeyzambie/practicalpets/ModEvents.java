@@ -1,6 +1,6 @@
 package billeyzambie.practicalpets;
 
-import billeyzambie.practicalpets.entity.LandPracticalPet;
+import billeyzambie.practicalpets.entity.PracticalPet;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
@@ -61,9 +61,9 @@ public class ModEvents {
             return;
 
         List<TamableAnimal> pets = serverPlayer.level().getEntitiesOfClass(TamableAnimal.class, player.getBoundingBox().inflate(50),
-                pet -> pet instanceof LandPracticalPet &&
+                pet -> pet instanceof PracticalPet &&
                 pet.isTame() && pet.getOwnerUUID() != null && pet.getOwnerUUID().equals(player.getUUID())
-                        && ((LandPracticalPet) pet).followMode() == LandPracticalPet.FollowMode.FOLLOWING
+                        && ((PracticalPet) pet).followMode() == PracticalPet.FollowMode.FOLLOWING
         );
         pets.forEach(pet -> {
             pet.teleportTo(player.getX(), player.getY(), player.getZ());

@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "practicalpets:banana_duck"
+    "practicalpets:banana_duck",
+    "practicalpets:duck"
   ]
 }

@@ -26,7 +26,7 @@ public final class CommonListener {
                 ModEntities.DUCK.get(),
                 Duck.createMobAttributes()
                         .add(Attributes.MAX_HEALTH, 6)
-                        .add(Attributes.MOVEMENT_SPEED, 0.25)
+                        .add(Attributes.MOVEMENT_SPEED, Duck.MOVEMENT_SPEED)
                         .add(Attributes.ATTACK_DAMAGE, 2)
                         .build()
         );
@@ -40,5 +40,13 @@ public final class CommonListener {
                 BananaDuck::canSpawn,
                 SpawnPlacementRegisterEvent.Operation.OR
         );
+        event.register(
+                ModEntities.DUCK.get(),
+                SpawnPlacements.Type.IN_WATER,
+                Heightmap.Types.WORLD_SURFACE,
+                Duck::canSpawn,
+                SpawnPlacementRegisterEvent.Operation.OR
+        );
     }
+
 }

@@ -53,7 +53,7 @@ public class AnimationController implements Animatable {
     }
 
     @Override
-    public <T extends Entity> void animate(
+    public <T extends Entity> void play(
             PracticalPetModel<T> model,
             T entity,
             float limbSwing,
@@ -82,7 +82,7 @@ public class AnimationController implements Animatable {
                             (Math.min(1, (stateTime) / (20 * previousState.blendOutTime)));
 
             if (transitionBlendFactor != 0)
-                state.animations.forEach(a -> a.animate(
+                state.animations.forEach(a -> a.play(
                         (PracticalPetModel<Entity>) model,
                         entity,
                         limbSwing,
@@ -95,7 +95,7 @@ public class AnimationController implements Animatable {
                 ));
 
             if (transitionBlendFactor != 1)
-                previousState.animations.forEach(a -> a.animate(
+                previousState.animations.forEach(a -> a.play(
                         (PracticalPetModel<Entity>) model,
                         entity,
                         limbSwing,

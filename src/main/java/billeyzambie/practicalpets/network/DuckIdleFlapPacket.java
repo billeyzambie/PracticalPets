@@ -10,28 +10,31 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class QuackAnimPacket {
+public class DuckIdleFlapPacket {
     private final int entityId;
+    private final int timerValue;
 
-    public QuackAnimPacket(int entityId) {
+    public DuckIdleFlapPacket(int entityId, int timerValue) {
         this.entityId = entityId;
+        this.timerValue = timerValue;
     }
 
-    public static void encode(QuackAnimPacket msg, FriendlyByteBuf buf) {
+    public static void encode(DuckIdleFlapPacket msg, FriendlyByteBuf buf) {
         buf.writeInt(msg.entityId);
+        buf.writeInt(msg.timerValue);
     }
 
-    public static QuackAnimPacket decode(FriendlyByteBuf buf) {
-        return new QuackAnimPacket(buf.readInt());
+    public static DuckIdleFlapPacket decode(FriendlyByteBuf buf) {
+        return new DuckIdleFlapPacket(buf.readInt(), buf.readInt());
     }
 
-    public static void handle(QuackAnimPacket msg, Supplier<NetworkEvent.Context> ctx) {
+    public static void handle(DuckIdleFlapPacket msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
                 assert Minecraft.getInstance().level != null;
                 Entity entity = Minecraft.getInstance().level.getEntity(msg.entityId);
                 if (entity instanceof AbstractDuck duck) {
-                    duck.quackAnimationState.start(duck.tickCount);
+                    duck.setIdleFlapTime(msg.timerValue);
                 }
             });
         });

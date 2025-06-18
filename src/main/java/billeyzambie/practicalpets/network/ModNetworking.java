@@ -1,6 +1,7 @@
 package billeyzambie.practicalpets.network;
 
 import billeyzambie.practicalpets.PracticalPets;
+import billeyzambie.practicalpets.entity.dinosaur.Duck;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
@@ -22,5 +23,9 @@ public class ModNetworking {
                 QuackAnimPacket::encode,
                 QuackAnimPacket::decode,
                 QuackAnimPacket::handle);
+        CHANNEL.registerMessage(id++, DuckIdleFlapPacket.class,
+        DuckIdleFlapPacket::encode,
+                DuckIdleFlapPacket::decode,
+                DuckIdleFlapPacket::handle);
     }
 }

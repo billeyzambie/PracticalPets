@@ -4,8 +4,9 @@ import billeyzambie.animationcontrollers.AnimationController;
 import billeyzambie.animationcontrollers.BinaryAnimationControllerBuilder;
 import billeyzambie.animationcontrollers.KeyframeAnimationReference;
 import billeyzambie.animationcontrollers.MathAnimationReference;
-import billeyzambie.practicalpets.entity.LandPracticalPet;
-import net.minecraft.world.entity.Mob;
+import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.entity.dinosaur.AbstractDuck;
+import billeyzambie.practicalpets.entity.dinosaur.BananaDuck;
 import net.minecraft.world.entity.TamableAnimal;
 
 public class ModAnimationControllers {
@@ -43,12 +44,12 @@ public class ModAnimationControllers {
             )
             .build();
 
-    public static final AnimationController FLAP_AND_IF_ANGRY = BinaryAnimationControllerBuilder.start("simple_flap")
+    public static final AnimationController BANANA_DUCK_FLAP_AND_IF_ANGRY = BinaryAnimationControllerBuilder.start("simple_flap")
             .otherStateAnimations(new MathAnimationReference("flap"))
             .blendTime(0.1f)
             .transitionPredicate(
                     (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
-                            -> !entity.onGround() || ((LandPracticalPet)entity).hasTarget()
+                            -> entity instanceof BananaDuck bananaDuck && (bananaDuck.duckIsFlapping() || bananaDuck.hasTarget())
             )
             .build();
 
@@ -57,7 +58,16 @@ public class ModAnimationControllers {
             .blendTime(0.1f)
             .transitionPredicate(
                     (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
-                            -> ((LandPracticalPet)entity).hasTarget()
+                            -> ((PracticalPet)entity).hasTarget()
+            )
+            .build();
+
+    public static final AnimationController DUCK_IDLE_FLAP = BinaryAnimationControllerBuilder.start("duck_idle_flap")
+            .otherStateAnimations(new KeyframeAnimationReference("idle_flap"))
+            .blendTime(0.2f)
+            .transitionPredicate(
+                    (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                            -> ((AbstractDuck)entity).isIdleFlapping()
             )
             .build();
 

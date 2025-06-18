@@ -1,6 +1,6 @@
-package billeyzambie.practicalpets.goals;
+package billeyzambie.practicalpets.goal;
 
-import billeyzambie.practicalpets.entity.LandPracticalPet;
+import billeyzambie.practicalpets.entity.PracticalPet;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
@@ -18,7 +18,7 @@ import java.util.function.BiPredicate;
 public class PredicateTemptGoal extends Goal {
     private static final TargetingConditions TEMP_TARGETING = TargetingConditions.forNonCombat().range(10.0D).ignoreLineOfSight();
     private final TargetingConditions targetingConditions;
-    protected final LandPracticalPet pet;
+    protected final PracticalPet pet;
     private final double speedModifier;
     private double px;
     private double py;
@@ -29,13 +29,13 @@ public class PredicateTemptGoal extends Goal {
     protected Player player;
     private int calmDown;
     private boolean isRunning;
-    private final BiPredicate<LandPracticalPet, ItemStack> predicate;
+    private final BiPredicate<PracticalPet, ItemStack> predicate;
     private final boolean canScare;
     /**
      * This is a copy of {@link net.minecraft.world.entity.ai.goal.TemptGoal} that takes a predicate
      * instead of an {@link net.minecraft.world.item.crafting.Ingredient}
      */
-    public PredicateTemptGoal(LandPracticalPet p_25939_, double p_25940_, BiPredicate<LandPracticalPet, ItemStack> predicate, boolean p_25942_) {
+    public PredicateTemptGoal(PracticalPet p_25939_, double p_25940_, BiPredicate<PracticalPet, ItemStack> predicate, boolean p_25942_) {
         this.pet = p_25939_;
         this.speedModifier = p_25940_;
         this.predicate = predicate;

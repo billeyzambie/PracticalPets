@@ -29,6 +29,7 @@ public class BananaDuckModel extends PracticalPetModel<BananaDuck> {
     private final HashMap<String, AnimationDefinition> keyframeAnimationHashMap = new HashMap<>() {{
         put("sit", BananaDuckAnimation.sit);
         put("angry", BananaDuckAnimation.angry);
+        put("idle_flap", DuckAnimation.idle_flap);
     }};
     private final HashMap<String, MathAnimationDefinition> mathAnimationHashMap = new HashMap<>() {{
         put("flap", BananaDuckAnimation.flap);
@@ -239,9 +240,10 @@ public class BananaDuckModel extends PracticalPetModel<BananaDuck> {
 
         this.animate(entity.makingBananaAnimationState, BananaDuckAnimation.make_banana, ageInTicks);
 
-        ModAnimationControllers.SIMPLE_SIT.animate(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
-        ModAnimationControllers.FLAP_AND_IF_ANGRY.animate(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
-        ModAnimationControllers.SIMPLE_ANGRY.animate(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
+        ModAnimationControllers.SIMPLE_SIT.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
+        ModAnimationControllers.BANANA_DUCK_FLAP_AND_IF_ANGRY.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
+        ModAnimationControllers.SIMPLE_ANGRY.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
+        ModAnimationControllers.DUCK_IDLE_FLAP.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
 
         if (!entity.isInSittingPose())
             this.animateWalk(BananaDuckAnimation.walk, limbSwing, limbSwingAmount, 3f, 2f);

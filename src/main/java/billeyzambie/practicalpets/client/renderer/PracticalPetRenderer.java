@@ -5,7 +5,7 @@ import billeyzambie.practicalpets.ModItems;
 import billeyzambie.practicalpets.client.ModModelLayers;
 import billeyzambie.practicalpets.client.model.entity.pet_equipment.AnniversaryPetHatModel;
 import billeyzambie.practicalpets.client.model.entity.pet_equipment.PetBowtieModel;
-import billeyzambie.practicalpets.entity.LandPracticalPet;
+import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.items.AttachablePetCosmetic;
 import billeyzambie.practicalpets.items.PetCosmetic;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -55,7 +55,7 @@ public abstract class PracticalPetRenderer<T extends Mob, M extends PracticalPet
 
         super.render(entity, entityYaw, partialticks, poseStack, buffer, packedLight);
 
-        if (entity instanceof LandPracticalPet pet) {
+        if (entity instanceof PracticalPet pet) {
             for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
                 ItemStack cosmeticStack = pet.getEquippedItem(slot);
                 if (!cosmeticStack.isEmpty() && cosmeticStack.getItem() instanceof AttachablePetCosmetic cosmetic) {

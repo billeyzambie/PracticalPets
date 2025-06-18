@@ -1,8 +1,8 @@
 package billeyzambie.practicalpets.items;
 
 import billeyzambie.practicalpets.PracticalPets;
+import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.entity.dinosaur.AbstractDuck;
-import billeyzambie.practicalpets.entity.LandPracticalPet;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.Item;
@@ -48,7 +48,7 @@ public class DuckArmor extends Item implements PetCosmetic {
     }
 
     @Override
-    public boolean canBePutOn(LandPracticalPet pet) {
+    public boolean canBePutOn(PracticalPet pet) {
         return pet instanceof AbstractDuck;
     }
 

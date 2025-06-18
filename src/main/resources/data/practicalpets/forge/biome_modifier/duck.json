@@ -1,0 +1,21 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": "#practicalpets:duck_spawns",
+  "conditions": [
+    {
+      "type": "forge:not",
+      "value": {
+        "type": "forge:biome_tag_check",
+        "tag": "minecraft:is_beach"
+      }
+    }
+  ],
+  "spawners": [
+    {
+      "type": "practicalpets:duck",
+      "weight": 8,
+      "minCount": 2,
+      "maxCount": 5
+    }
+  ]
+}

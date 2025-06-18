@@ -11,7 +11,7 @@ public interface Animatable {
 
     public static List<Animatable> NO_ANIMATIONS = new ArrayList<>();
 
-    public <T extends Entity> void animate(
+    public <T extends Entity> void play(
             PracticalPetModel<T> model,
             T entity,
             float limbSwing,

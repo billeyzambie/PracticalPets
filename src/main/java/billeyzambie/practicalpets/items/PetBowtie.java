@@ -1,7 +1,7 @@
 package billeyzambie.practicalpets.items;
 
 import billeyzambie.practicalpets.PracticalPets;
-import billeyzambie.practicalpets.entity.LandPracticalPet;
+import billeyzambie.practicalpets.entity.PracticalPet;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 
@@ -37,7 +37,7 @@ public class PetBowtie extends Item implements AttachablePetCosmetic, DyeableIte
     }
 
     @Override
-    public boolean canBePutOn(LandPracticalPet pet) {
+    public boolean canBePutOn(PracticalPet pet) {
         return true;
     }
 

@@ -45,7 +45,7 @@ public class MathAnimationDefinition implements Animatable {
     }
 
     @Override
-    public <T extends Entity> void animate(
+    public <T extends Entity> void play(
             PracticalPetModel<T> model,
             T entity,
             float limbSwing,

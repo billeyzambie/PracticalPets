@@ -1,6 +1,6 @@
 package billeyzambie.practicalpets.jade;
 
-import billeyzambie.practicalpets.entity.LandPracticalPet;
+import billeyzambie.practicalpets.entity.PracticalPet;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -18,7 +18,7 @@ public enum PetLevelComponentProvider implements IEntityComponentProvider {
             EntityAccessor accessor,
             IPluginConfig config
     ) {
-        if (accessor.getEntity() instanceof LandPracticalPet pet && pet.isLevelable()) {
+        if (accessor.getEntity() instanceof PracticalPet pet && pet.isLevelable()) {
             int level = pet.petLevel();
             int xpForNextLevel = (int) (pet.getTotalPetXPNeededForLevel(level + 1) - pet.getTotalPetXPNeededForLevel(level));
             int currentXp = (int) (pet.petXP() - pet.getTotalPetXPNeededForLevel(level));

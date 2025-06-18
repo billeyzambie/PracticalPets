@@ -11,7 +11,7 @@ public class MathAnimationReference implements Animatable {
     }
 
     @Override
-    public <T extends Entity> void animate(
+    public <T extends Entity> void play(
             PracticalPetModel<T> model,
             T entity,
             float limbSwing,
@@ -23,6 +23,6 @@ public class MathAnimationReference implements Animatable {
             float blendWeight
     ) {
         MathAnimationDefinition animationDefinition = model.getMathAnimationHashMap().get(name);
-        animationDefinition.animate(model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, blendWeight);
+        animationDefinition.play(model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, blendWeight);
     }
 }

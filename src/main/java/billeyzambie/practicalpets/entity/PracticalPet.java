@@ -4,10 +4,11 @@ import billeyzambie.animationcontrollers.ACData;
 import billeyzambie.animationcontrollers.ACEntity;
 import billeyzambie.practicalpets.ModItems;
 import billeyzambie.practicalpets.ModSounds;
-import billeyzambie.practicalpets.goals.*;
+import billeyzambie.practicalpets.goal.*;
 import billeyzambie.practicalpets.items.PetCosmetic;
 import billeyzambie.practicalpets.items.PetHat;
 import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -41,10 +42,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public abstract class LandPracticalPet extends TamableAnimal implements ACEntity {
+public abstract class PracticalPet extends TamableAnimal implements ACEntity {
 
     HashMap<String, ACData> ACData = new HashMap<>();
 
+    @Override
     public HashMap<String, ACData> getACData() {
         return ACData;
     }
@@ -60,14 +62,14 @@ public abstract class LandPracticalPet extends TamableAnimal implements ACEntity
         }
     }
 
-    private static final EntityDataAccessor<Boolean> SHOULD_FOLLOW_OWNER = SynchedEntityData.defineId(LandPracticalPet.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Boolean> HAS_TARGET = SynchedEntityData.defineId(LandPracticalPet.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Integer> PET_LEVEL = SynchedEntityData.defineId(LandPracticalPet.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Float> PET_XP = SynchedEntityData.defineId(LandPracticalPet.class, EntityDataSerializers.FLOAT);
-    private static final EntityDataAccessor<ItemStack> HEAD_ITEM = SynchedEntityData.defineId(LandPracticalPet.class, EntityDataSerializers.ITEM_STACK);
-    private static final EntityDataAccessor<ItemStack> NECK_ITEM = SynchedEntityData.defineId(LandPracticalPet.class, EntityDataSerializers.ITEM_STACK);
-    private static final EntityDataAccessor<ItemStack> BODY_ITEM = SynchedEntityData.defineId(LandPracticalPet.class, EntityDataSerializers.ITEM_STACK);
-    private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(LandPracticalPet.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> SHOULD_FOLLOW_OWNER = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> HAS_TARGET = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> PET_LEVEL = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Float> PET_XP = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<ItemStack> HEAD_ITEM = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.ITEM_STACK);
+    private static final EntityDataAccessor<ItemStack> NECK_ITEM = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.ITEM_STACK);
+    private static final EntityDataAccessor<ItemStack> BODY_ITEM = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.ITEM_STACK);
+    private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.INT);
 
 
     @Override
@@ -136,7 +138,7 @@ public abstract class LandPracticalPet extends TamableAnimal implements ACEntity
             }
         }
 
-        throw new IllegalStateException("I don't this this will ever happen");
+        throw new IllegalStateException("I don't this this will ever happen (error in pickRandomWeightedVariant in PracticalPet.jaav)");
     }
 
     public ItemStack getEquippedItem(PetCosmetic.Slot slot) {
@@ -258,7 +260,7 @@ public abstract class LandPracticalPet extends TamableAnimal implements ACEntity
         return !anyEquipmentIsBrave();
     }
 
-    public LandPracticalPet(EntityType<? extends TamableAnimal> entityType, Level level) {
+    public PracticalPet(EntityType<? extends TamableAnimal> entityType, Level level) {
         super(entityType, level);
         setAttributesAccordingToPetLevel();
     }
@@ -317,7 +319,8 @@ public abstract class LandPracticalPet extends TamableAnimal implements ACEntity
 
         if (foodProperties == null) {
             if (healOverride == null || healOverride.type() != HealOverrideType.DEFINE_NUTRITION) {
-                throw new Error("Item " + itemStack.getItem() + " isn't edible but no heal override was defined for it for " + this.getClass());
+                Util.logAndPauseIfInIde("Item " + itemStack.getItem() + " isn't edible but no heal override was defined for it for " + this.getClass());
+                return;
             }
             healAmount = healOverride.value();
         }
@@ -338,21 +341,42 @@ public abstract class LandPracticalPet extends TamableAnimal implements ACEntity
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(10, new PanicIfShouldGoal(this, 1.5D));
+        if (shouldRegisterFloatGoal())
+            this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(10, new PanicIfShouldGoal(this, 1.3D));
         this.goalSelector.addGoal(20, new SitWhenOrderedToGoal(this));
-        this.targetSelector.addGoal(30, new OwnerHurtByTargetIfShouldGoal(this));
-        this.targetSelector.addGoal(40, new OwnerHurtTargetIfShouldGoal(this));
         this.goalSelector.addGoal(50, new MeleeAttackGoal(this, 1.25, false));
-        this.goalSelector.addGoal(60, new PredicateTemptGoal(this, 1.0D, LandPracticalPet::isFood, false));
-        this.goalSelector.addGoal(70, new FollowOwnerWanderableGoal(this, 1.0D, 10.0F, 5.0F, false));
-        this.goalSelector.addGoal(80, new BreedGoal(this, 0.8D));
-        this.goalSelector.addGoal(90, getStrollGoal(this));
-        this.goalSelector.addGoal(100, new LookAtPlayerGoal(this, Player.class, 10.0F));
+        this.goalSelector.addGoal(60, new FollowOwnerWanderableGoal(this, 1.0D, 10.0F, 5.0F, false));
+        this.goalSelector.addGoal(70, new PredicateTemptGoal(this, 1.0D, PracticalPet::isFood, false));
+
+        Goal followParentGoal = getFollowParentGoal();
+        if (followParentGoal != null)
+            this.goalSelector.addGoal(80, followParentGoal);
+
+        this.goalSelector.addGoal(90, new BreedGoal(this, 0.8D));
+
+        Goal strollGoal = getStrollGoal();
+        if (strollGoal != null)
+            this.goalSelector.addGoal(100, strollGoal);
+
+        this.goalSelector.addGoal(110, new LookAtPlayerGoal(this, Player.class, 10.0F));
+
+        this.targetSelector.addGoal(20, new OwnerHurtByTargetIfShouldGoal(this));
+        this.targetSelector.addGoal(30, new OwnerHurtTargetIfShouldGoal(this));
     }
 
-    protected static Goal getStrollGoal(LandPracticalPet pet) {
-        return new WaterAvoidingRandomStrollGoal(pet, 0.8D, 1.0000001E-5F);
+    @Nullable
+    protected Goal getFollowParentGoal() {
+        return new FollowParentGoal(this, 1.1D);
+    }
+
+    @Nullable
+    protected Goal getStrollGoal() {
+        return new WaterAvoidingRandomStrollGoal(this, 1, 1.0000001E-5F);
+    }
+
+    protected boolean shouldRegisterFloatGoal() {
+        return true;
     }
 
     @Override
@@ -377,6 +401,10 @@ public abstract class LandPracticalPet extends TamableAnimal implements ACEntity
             addPetXP(amount);
         }
         return result;
+    }
+
+    public boolean shouldntFollowParent() {
+        return this.isInSittingPose();
     }
 
     public boolean shouldFollowOwner() {
@@ -667,8 +695,8 @@ public abstract class LandPracticalPet extends TamableAnimal implements ACEntity
 
     @Override
     public void tick() {
-        if (!level().isClientSide)
-            setHasTarget(this.getTarget() != null);
+        if (!this.level().isClientSide)
+            this.setHasTarget(this.getTarget() != null);
         super.tick();
     }
 }

@@ -1,7 +1,7 @@
 package billeyzambie.practicalpets.jade;
 
 import billeyzambie.practicalpets.PracticalPets;
-import billeyzambie.practicalpets.entity.LandPracticalPet;
+import billeyzambie.practicalpets.entity.PracticalPet;
 import net.minecraft.resources.ResourceLocation;
 import snownee.jade.api.IWailaClientRegistration;
 import snownee.jade.api.IWailaCommonRegistration;
@@ -20,6 +20,6 @@ public class PracticalPetsWailaPlugin implements IWailaPlugin {
 
     @Override
     public void registerClient(IWailaClientRegistration registration) {
-        registration.registerEntityComponent(PetLevelComponentProvider.INSTANCE, LandPracticalPet.class);
+        registration.registerEntityComponent(PetLevelComponentProvider.INSTANCE, PracticalPet.class);
     }
 }

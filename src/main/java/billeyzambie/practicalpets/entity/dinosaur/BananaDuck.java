@@ -16,7 +16,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.item.ItemStack;
@@ -81,7 +80,7 @@ public class BananaDuck extends AbstractDuck {
     @Override
     public void addAdditionalSaveData(CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
-        compoundTag.putInt("TotalBananasMade", this.totalBananasMade());
+        compoundTag.putInt("TotalBananasMade", this.getTotalBananasMade());
     }
 
     @Override
@@ -89,7 +88,7 @@ public class BananaDuck extends AbstractDuck {
         return null;
     }
 
-    public int totalBananasMade() {
+    public int getTotalBananasMade() {
         return this.entityData.get(TOTAL_BANANAS_MADE);
     }
 
@@ -98,20 +97,20 @@ public class BananaDuck extends AbstractDuck {
     }
 
     public void incrementTotalBananasMade() {
-        this.setTotalBananasMade(totalBananasMade() + 1);
+        this.setTotalBananasMade(getTotalBananasMade() + 1);
     }
 
     public final AnimationState makingBananaAnimationState = new AnimationState();
 
     @Override
-    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+    public @NotNull InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         if (itemstack.is(Items.APPLE) && this.isTame() && !this.isBaby()) {
             makingBananaAnimationState.start(this.tickCount);
             if (!this.level().isClientSide) {
                 this.usePlayerItem(player, hand, itemstack);
                 this.incrementTotalBananasMade();
-                if (this.totalBananasMade() % 5 == 0 && !player.getAbilities().instabuild) {
+                if (this.getTotalBananasMade() % 5 == 0 && !player.getAbilities().instabuild) {
                     player.giveExperienceLevels(-1);
                     player.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP, 1, 0.9f);
                 }
@@ -134,7 +133,7 @@ public class BananaDuck extends AbstractDuck {
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource) {
+    protected SoundEvent getHurtSound(@NotNull DamageSource damageSource) {
         return ModSounds.DUCK_HURT.get();
     }
 
@@ -144,7 +143,7 @@ public class BananaDuck extends AbstractDuck {
     }
 
     @Override
-    public @Nullable AgeableMob getBreedOffspring(ServerLevel level, AgeableMob partner) {
+    public @Nullable AgeableMob getBreedOffspring(@NotNull ServerLevel level, @NotNull AgeableMob partner) {
         BananaDuck baby = ModEntities.BANANA_DUCK.get().create(level);
         if (baby != null) {
             if (this.isTame()) {
@@ -169,5 +168,18 @@ public class BananaDuck extends AbstractDuck {
     @Override
     public float headSizeZ() {
         return 3;
+    }
+
+    @Override
+    protected float getStandingEyeHeight(@NotNull Pose pose, @NotNull EntityDimensions dimensions) {
+        return dimensions.height * 14.5f / 15;
+    }
+
+    @Override
+    public void aiStep() {
+        super.aiStep();
+        if (this.isIdleFlapping()) {
+            this.getDeltaMovement().add(0, 0.1, 0);
+        }
     }
 }

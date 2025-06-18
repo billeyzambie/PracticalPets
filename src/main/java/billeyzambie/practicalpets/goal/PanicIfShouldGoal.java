@@ -1,10 +1,10 @@
-package billeyzambie.practicalpets.goals;
+package billeyzambie.practicalpets.goal;
 
-import billeyzambie.practicalpets.entity.LandPracticalPet;
+import billeyzambie.practicalpets.entity.PracticalPet;
 import net.minecraft.world.entity.ai.goal.PanicGoal;
 
 public class PanicIfShouldGoal extends PanicGoal {
-    public PanicIfShouldGoal(LandPracticalPet pathfinderMob, double speedMultiplier) {
+    public PanicIfShouldGoal(PracticalPet pathfinderMob, double speedMultiplier) {
         super(pathfinderMob, speedMultiplier);
     }
 
@@ -12,6 +12,6 @@ public class PanicIfShouldGoal extends PanicGoal {
     public boolean canUse() {
         if (mob.getTarget() == null && (mob.isOnFire() || mob.isFreezing()))
             return true;
-        return ((LandPracticalPet) mob).shouldPanic() && super.canUse();
+        return ((PracticalPet) mob).shouldPanic() && super.canUse();
     }
 }
