@@ -24,7 +24,6 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraftforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
@@ -33,6 +32,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 
 public class Duck extends AbstractDuck {
+    public float inWaterStartTime = -1;
+
+    //copied from vanilla chicken
     public float flap;
     public float flapSpeed;
     public float oFlapSpeed;
@@ -208,12 +210,6 @@ public class Duck extends AbstractDuck {
             this.flapping = 1.0F;
         }
         this.flapping *= 0.9F;
-
-        Vec3 vec3 = this.getDeltaMovement();
-        if (this.duckIsFlapping() && vec3.y < 0.0D) {
-            this.setDeltaMovement(vec3.multiply(1.0D, 0.6D, 1.0D));
-        }
-
         this.flap += this.flapping * 2.0F;
 
         if (this.isInWater()) {

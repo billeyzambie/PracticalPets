@@ -174,13 +174,24 @@ public class DuckModel extends PracticalPetModel<Duck> {
             this.animateWalk(BananaDuckAnimation.walk, limbSwing, limbSwingAmount, 3f, 4f);
         }
 
-        float partialTick = ageInTicks % 1.0f;
+        float partialTick = ageInTicks % 1f;
         float f = Mth.lerp(partialTick, entity.oFlap, entity.flap);
         float f1 = Mth.lerp(partialTick, entity.oFlapSpeed, entity.flapSpeed);
         float flap = (Mth.sin(f) + 1.0F) * f1;
 
         this.wing0.zRot += flap;
         this.wing1.zRot -= flap;
+
+        if (entity.isInWater()) {
+            if (entity.inWaterStartTime == -1)
+                entity.inWaterStartTime = ageInTicks;
+            float inWaterTime = ageInTicks - entity.inWaterStartTime;
+            this.root().y += (Mth.cos(inWaterTime / 6f) - 1) * 1.5f;
+        }
+        else {
+            entity.inWaterStartTime = -1;
+        }
+
     }
 
     @Override
