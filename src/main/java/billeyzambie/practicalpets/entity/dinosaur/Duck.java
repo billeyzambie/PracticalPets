@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 
 public class Duck extends AbstractDuck {
-    public float inWaterStartTime = -1;
+    public final float floatWaveRandomOffset;
 
     //copied from vanilla chicken
     public float flap;
@@ -46,6 +46,7 @@ public class Duck extends AbstractDuck {
     public Duck(EntityType<? extends TamableAnimal> entityType, Level level) {
         super(entityType, level);
         this.setPathfindingMalus(BlockPathTypes.WATER, 0F);
+        this.floatWaveRandomOffset = this.getRandom().nextFloat() * Mth.TWO_PI;
     }
 
     private static final HashMap<Integer, Integer> VARIANT_SPAWN_WEIGHTS = new HashMap<>() {{
@@ -231,7 +232,7 @@ public class Duck extends AbstractDuck {
         return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData, tag);
     }
 
-    public static boolean canSpawn(EntityType<Duck> duckEntityType, ServerLevelAccessor serverLevelAccessor, MobSpawnType mobSpawnType, BlockPos blockPos, RandomSource randomSource) {
+    public static boolean canSpawn(EntityType<Duck> ignoredDuckEntityType, ServerLevelAccessor serverLevelAccessor, MobSpawnType ignoredMobSpawnType, BlockPos blockPos, RandomSource ignoredRandomSource) {
         return isBrightEnoughToSpawn(serverLevelAccessor, blockPos);
     }
 
@@ -246,12 +247,12 @@ public class Duck extends AbstractDuck {
         }
 
         @Override
-        protected boolean hasValidPathType(BlockPathTypes p_33974_) {
+        protected boolean hasValidPathType(@NotNull BlockPathTypes p_33974_) {
             return p_33974_ == BlockPathTypes.WATER || super.hasValidPathType(p_33974_);
         }
 
         @Override
-        public boolean isStableDestination(BlockPos pos) {
+        public boolean isStableDestination(@NotNull BlockPos pos) {
             FluidState fluid = this.level.getFluidState(pos);
             return fluid.is(FluidTags.WATER) || super.isStableDestination(pos);
         }

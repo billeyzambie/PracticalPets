@@ -7,6 +7,7 @@ import billeyzambie.animationcontrollers.MathAnimationReference;
 import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.entity.dinosaur.AbstractDuck;
 import billeyzambie.practicalpets.entity.dinosaur.BananaDuck;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 
 public class ModAnimationControllers {
@@ -68,6 +69,15 @@ public class ModAnimationControllers {
             .transitionPredicate(
                     (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
                             -> ((AbstractDuck)entity).isIdleFlapping()
+            )
+            .build();
+
+    public static final AnimationController DUCK_WATER_WAVE = BinaryAnimationControllerBuilder.start("duck_water_wave")
+            .otherStateAnimations(new MathAnimationReference("water_wave"))
+            .blendTime(0.2f)
+            .transitionPredicate(
+                    (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                            -> entity.isInWater()
             )
             .build();
 

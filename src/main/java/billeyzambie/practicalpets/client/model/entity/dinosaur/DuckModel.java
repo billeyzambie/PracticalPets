@@ -169,6 +169,7 @@ public class DuckModel extends PracticalPetModel<Duck> {
         ModAnimationControllers.SIMPLE_SIT.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
         ModAnimationControllers.SIMPLE_ANGRY.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
         ModAnimationControllers.DUCK_IDLE_FLAP.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
+        ModAnimationControllers.DUCK_WATER_WAVE.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, Mth.clamp(1 - 2 * limbSwingAmount, 0, 1));
 
         if (!entity.isInSittingPose()) {
             this.animateWalk(BananaDuckAnimation.walk, limbSwing, limbSwingAmount, 3f, 4f);
@@ -181,16 +182,6 @@ public class DuckModel extends PracticalPetModel<Duck> {
 
         this.wing0.zRot += flap;
         this.wing1.zRot -= flap;
-
-        if (entity.isInWater()) {
-            if (entity.inWaterStartTime == -1)
-                entity.inWaterStartTime = ageInTicks;
-            float inWaterTime = ageInTicks - entity.inWaterStartTime;
-            this.root().y += (Mth.cos(inWaterTime / 6f) - 1) * 1.5f;
-        }
-        else {
-            entity.inWaterStartTime = -1;
-        }
 
     }
 
@@ -216,6 +207,9 @@ public class DuckModel extends PracticalPetModel<Duck> {
         put("angry", DuckAnimation.angry);
         put("idle_flap", DuckAnimation.idle_flap);
     }};
+    private final HashMap<String, MathAnimationDefinition> mathAnimationHashMap = new HashMap<>() {{
+        put("water_wave", DuckAnimation.water_wave);
+    }};
 
     @Override
     public HashMap<String, AnimationDefinition> getKeyframeAnimationHashMap() {
@@ -224,7 +218,7 @@ public class DuckModel extends PracticalPetModel<Duck> {
 
     @Override
     public HashMap<String, MathAnimationDefinition> getMathAnimationHashMap() {
-        return null;
+        return mathAnimationHashMap;
     }
 
     List<ModelPart> pathToBowtie;

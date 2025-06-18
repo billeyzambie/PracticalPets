@@ -10,12 +10,10 @@
       }
     }
   ],
-  "spawners": [
-    {
-      "type": "practicalpets:duck",
-      "weight": 8,
-      "minCount": 2,
-      "maxCount": 5
-    }
-  ]
+  "spawners": {
+    "type": "practicalpets:duck",
+    "weight": 20,
+    "minCount": 2,
+    "maxCount": 5
+  }
 }

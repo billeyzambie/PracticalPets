@@ -6,6 +6,7 @@ import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.Keyframe;
 import net.minecraft.client.animation.KeyframeAnimations;
+import net.minecraft.util.Mth;
 import org.joml.Vector3f;
 
 /**
@@ -22,7 +23,7 @@ public class BananaDuckAnimation extends AbstractDuckAnimation {
                     (
                             model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, blendWeight, prevValue
                     ) -> {
-                            return new Vector3f(0, 0, (float)Math.sin(animTime * 5 * Math.PI) * 14);
+                            return new Vector3f(0, 0, Mth.sin((float) (animTime * 5 * Math.PI)) * 14);
                     }
             )
             .addBoneFunction(
@@ -31,7 +32,7 @@ public class BananaDuckAnimation extends AbstractDuckAnimation {
                     (
                             model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, blendWeight, prevValue
                     ) -> {
-                            return new Vector3f(0, 0, (float)Math.sin(animTime * 5 * Math.PI + Math.PI / 4) * 9 + 9);
+                            return new Vector3f(0, 0, Mth.sin((float) (animTime * 5 * Math.PI + Math.PI / 4)) * 9 + 9);
                     }
             )
             .addBoneFunction(
@@ -40,7 +41,7 @@ public class BananaDuckAnimation extends AbstractDuckAnimation {
                     (
                             model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, blendWeight, prevValue
                     ) -> {
-                            return new Vector3f(0, -(float)Math.sin(animTime * 5 * Math.PI) * 14, 0);
+                            return new Vector3f(0, -(float)Mth.sin((float) (animTime * 5 * Math.PI)) * 14, 0);
                     }
             )
             .addBoneFunction(
@@ -49,7 +50,7 @@ public class BananaDuckAnimation extends AbstractDuckAnimation {
                     (
                             model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, blendWeight, prevValue
                     ) -> {
-                            return new Vector3f(0, 0, (float)Math.sin(animTime * 5 * Math.PI + Math.PI / 4) * 9 + 9);
+                            return new Vector3f(0, 0, Mth.sin((float) (animTime * 5 * Math.PI + Math.PI / 4)) * 9 + 9);
                     }
             )
             .addBoneFunction(
@@ -58,7 +59,7 @@ public class BananaDuckAnimation extends AbstractDuckAnimation {
                     (
                             model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, blendWeight, prevValue
                     ) -> {
-                            return new Vector3f(0, 0, -(float)Math.sin(animTime * 5 * Math.PI) * 14);
+                            return new Vector3f(0, 0, -(float)Mth.sin((float) (animTime * 5 * Math.PI)) * 14);
                     }
             )
             .addBoneFunction(
@@ -67,7 +68,7 @@ public class BananaDuckAnimation extends AbstractDuckAnimation {
                     (
                             model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, blendWeight, prevValue
                     ) -> {
-                            return new Vector3f(0, 0, -(float)Math.sin(animTime * 5 * Math.PI + Math.PI / 4) * 9 + 9);
+                            return new Vector3f(0, 0, -(float) Mth.sin((float) (animTime * 5 * Math.PI + Math.PI / 4)) * 9 + 9);
                     }
             )
             .addBoneFunction(
@@ -76,7 +77,7 @@ public class BananaDuckAnimation extends AbstractDuckAnimation {
                     (
                             model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, blendWeight, prevValue
                     ) -> {
-                            return new Vector3f(0, -(float)Math.sin(animTime * 5 * Math.PI) * 15 - 15, 0);
+                            return new Vector3f(0, -(float)Mth.sin((float) (animTime * 5 * Math.PI)) * 15 - 15, 0);
                     }
             )
             .addBoneFunction(
@@ -85,7 +86,7 @@ public class BananaDuckAnimation extends AbstractDuckAnimation {
                     (
                             model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, blendWeight, prevValue
                     ) -> {
-                            return new Vector3f(0, 0, (float)Math.sin(animTime * 5 * Math.PI + Math.PI / 4) * 7 + 7);
+                            return new Vector3f(0, 0, Mth.sin((float) (animTime * 5 * Math.PI + Math.PI / 4)) * 7 + 7);
                     }
             )
             .build();
