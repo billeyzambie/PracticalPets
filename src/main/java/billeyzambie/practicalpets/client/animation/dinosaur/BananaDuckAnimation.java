@@ -76,7 +76,7 @@ public class BananaDuckAnimation extends AbstractDuckAnimation {
                     (
                             model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, blendWeight, prevValue
                     ) -> {
-                            return new Vector3f(0, -(float)Math.sin(animTime * 5 * Math.PI) * 7 - 15, 0);
+                            return new Vector3f(0, -(float)Math.sin(animTime * 5 * Math.PI) * 15 - 15, 0);
                     }
             )
             .addBoneFunction(

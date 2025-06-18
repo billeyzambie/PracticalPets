@@ -23,6 +23,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -179,7 +180,9 @@ public class BananaDuck extends AbstractDuck {
     public void aiStep() {
         super.aiStep();
         if (this.isIdleFlapping()) {
-            this.getDeltaMovement().add(0, 0.1, 0);
+            Vec3 motion = this.getDeltaMovement();
+            this.setDeltaMovement(motion.x, 0.05, motion.z);
+            this.hasImpulse = true;
         }
     }
 }
