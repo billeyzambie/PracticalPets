@@ -1,7 +1,8 @@
 package billeyzambie.practicalpets.client.renderer;
 
 import billeyzambie.animationcontrollers.PracticalPetModel;
-import billeyzambie.practicalpets.ModItems;
+import billeyzambie.practicalpets.client.model.entity.pet_equipment.RubberDuckyPetHatModel;
+import billeyzambie.practicalpets.misc.PPItems;
 import billeyzambie.practicalpets.client.ModModelLayers;
 import billeyzambie.practicalpets.client.model.entity.pet_equipment.AnniversaryPetHatModel;
 import billeyzambie.practicalpets.client.model.entity.pet_equipment.PetBowtieModel;
@@ -37,12 +38,16 @@ public abstract class PracticalPetRenderer<T extends Mob, M extends PracticalPet
         super(context, model, shadowRadius);
 
         cosmeticModels.put(
-                ModItems.PET_BOWTIE.get(),
+                PPItems.PET_BOWTIE.get(),
                 new PetBowtieModel<>(context.bakeLayer(ModModelLayers.PET_BOWTIE))
         );
         cosmeticModels.put(
-                ModItems.ANNIVERSARY_PET_HAT_0.get(),
+                PPItems.ANNIVERSARY_PET_HAT_0.get(),
                 new AnniversaryPetHatModel<>(context.bakeLayer(ModModelLayers.ANNIVERSARY_PET_HAT))
+        );
+        cosmeticModels.put(
+                PPItems.RUBBER_DUCKY_PET_HAT.get(),
+                new RubberDuckyPetHatModel<>(context.bakeLayer(ModModelLayers.RUBBER_DUCKY_PET_HAT))
         );
     }
 
@@ -72,7 +77,7 @@ public abstract class PracticalPetRenderer<T extends Mob, M extends PracticalPet
                         case HAT -> pathToAttachment = this.getModel().pathToHat();
                         case BOWTIE -> pathToAttachment = this.getModel().pathToBowtie();
                         default ->
-                                throw new IllegalStateException("Pretty sure this will never happen (error at practicalpetrender at render at switch (cosmetic.getAttachBone()))");
+                                throw new AssertionError("Pretty sure this will never happen (error at practicalpetrender at render at switch (cosmetic.getAttachBone()))");
                     }
 
                     var cosmeticModel = cosmeticModels.get(cosmetic);

@@ -1,7 +1,7 @@
 package billeyzambie.practicalpets.blocks;
 
-import billeyzambie.practicalpets.DelayedTaskManager;
-import billeyzambie.practicalpets.ModSounds;
+import billeyzambie.practicalpets.util.DelayedTaskManager;
+import billeyzambie.practicalpets.misc.PPSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
@@ -71,7 +71,7 @@ public class BananaPeel extends Block {
             world.destroyBlock(pos, false, entity);
             livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 5));
             livingEntity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 240, 5));
-            world.playSound(null, pos, ModSounds.BANANA_SLIP_SOUND.get(), SoundSource.BLOCKS);
+            world.playSound(null, pos, PPSounds.BANANA_SLIP_SOUND.get(), SoundSource.BLOCKS);
             entity.getPersistentData().putBoolean("practicalpets_just_slipped", true);
             DelayedTaskManager.schedule(() -> {
                 if (entity.isAlive()) {

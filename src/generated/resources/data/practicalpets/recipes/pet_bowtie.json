@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "tag": "minecraft:wool_carpets"
+    }
+  },
+  "pattern": [
+    " C ",
+    "C C"
+  ],
+  "result": {
+    "item": "practicalpets:pet_bowtie"
+  },
+  "show_notification": true
+}

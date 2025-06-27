@@ -1,4 +1,4 @@
-package billeyzambie.practicalpets;
+package billeyzambie.practicalpets.misc;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -7,7 +7,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.eventbus.api.IEventBus;
 
-public class ModSounds {
+public class PPSounds {
     public static final DeferredRegister<SoundEvent> REGISTRY = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, "practicalpets");
 
     public static final RegistryObject<SoundEvent> BANANA_SLIP_SOUND = REGISTRY.register("banana_slip",

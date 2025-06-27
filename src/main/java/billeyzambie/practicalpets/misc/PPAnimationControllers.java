@@ -1,4 +1,4 @@
-package billeyzambie.practicalpets;
+package billeyzambie.practicalpets.misc;
 
 import billeyzambie.animationcontrollers.AnimationController;
 import billeyzambie.animationcontrollers.BinaryAnimationControllerBuilder;
@@ -7,10 +7,9 @@ import billeyzambie.animationcontrollers.MathAnimationReference;
 import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.entity.dinosaur.AbstractDuck;
 import billeyzambie.practicalpets.entity.dinosaur.BananaDuck;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 
-public class ModAnimationControllers {
+public class PPAnimationControllers {
 
     /*
     public static final AnimationController SIMPLE_SIT = new AnimationController("sit", List.of(

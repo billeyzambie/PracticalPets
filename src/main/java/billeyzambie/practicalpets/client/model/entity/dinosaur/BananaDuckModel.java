@@ -5,7 +5,7 @@ package billeyzambie.practicalpets.client.model.entity.dinosaur;// Made with Blo
 
 import billeyzambie.animationcontrollers.PracticalPetModel;
 import billeyzambie.animationcontrollers.MathAnimationDefinition;
-import billeyzambie.practicalpets.ModAnimationControllers;
+import billeyzambie.practicalpets.misc.PPAnimationControllers;
 import billeyzambie.practicalpets.client.animation.dinosaur.BananaDuckAnimation;
 import billeyzambie.practicalpets.client.animation.dinosaur.DuckAnimation;
 import billeyzambie.practicalpets.entity.dinosaur.BananaDuck;
@@ -240,10 +240,10 @@ public class BananaDuckModel extends PracticalPetModel<BananaDuck> {
 
         this.animate(entity.makingBananaAnimationState, BananaDuckAnimation.make_banana, ageInTicks);
 
-        ModAnimationControllers.SIMPLE_SIT.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
-        ModAnimationControllers.BANANA_DUCK_FLAP_AND_IF_ANGRY.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
-        ModAnimationControllers.SIMPLE_ANGRY.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
-        ModAnimationControllers.DUCK_IDLE_FLAP.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
+        PPAnimationControllers.SIMPLE_SIT.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
+        PPAnimationControllers.BANANA_DUCK_FLAP_AND_IF_ANGRY.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
+        PPAnimationControllers.SIMPLE_ANGRY.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
+        PPAnimationControllers.DUCK_IDLE_FLAP.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
 
         if (!entity.isInSittingPose())
             this.animateWalk(BananaDuckAnimation.walk, limbSwing, limbSwingAmount, 3f, 2f);

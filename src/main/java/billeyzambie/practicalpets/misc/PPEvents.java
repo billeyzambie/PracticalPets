@@ -1,4 +1,4 @@
-package billeyzambie.practicalpets;
+package billeyzambie.practicalpets.misc;
 
 import billeyzambie.practicalpets.entity.PracticalPet;
 import net.minecraft.server.level.ServerPlayer;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Mod.EventBusSubscriber
-public class ModEvents {
+public class PPEvents {
     private static List<TamableAnimal> pets;
 
     @SubscribeEvent
@@ -67,6 +67,7 @@ public class ModEvents {
         );
         pets.forEach(pet -> {
             pet.teleportTo(player.getX(), player.getY(), player.getZ());
+            pet.moveTo(player.getX(), player.getY(), player.getZ());
         });
     }
 }

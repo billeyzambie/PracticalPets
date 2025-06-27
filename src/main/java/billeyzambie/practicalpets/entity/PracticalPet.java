@@ -2,8 +2,9 @@ package billeyzambie.practicalpets.entity;
 
 import billeyzambie.animationcontrollers.ACData;
 import billeyzambie.animationcontrollers.ACEntity;
-import billeyzambie.practicalpets.ModItems;
-import billeyzambie.practicalpets.ModSounds;
+import billeyzambie.practicalpets.items.RubberDuckyPetHat;
+import billeyzambie.practicalpets.misc.PPItems;
+import billeyzambie.practicalpets.misc.PPSounds;
 import billeyzambie.practicalpets.goal.*;
 import billeyzambie.practicalpets.items.PetCosmetic;
 import billeyzambie.practicalpets.items.PetHat;
@@ -61,6 +62,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity {
             return super.toString().toLowerCase(Locale.ENGLISH);
         }
     }
+
 
     private static final EntityDataAccessor<Boolean> SHOULD_FOLLOW_OWNER = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> HAS_TARGET = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.BOOLEAN);
@@ -138,7 +140,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity {
             }
         }
 
-        throw new IllegalStateException("I don't this this will ever happen (error in pickRandomWeightedVariant in PracticalPet.jaav)");
+        throw new AssertionError("I don't this this will ever happen (error in pickRandomWeightedVariant in PracticalPet.java)");
     }
 
     public ItemStack getEquippedItem(PetCosmetic.Slot slot) {
@@ -153,7 +155,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity {
                 return getBodyItem();
             }
         }
-        throw new IllegalStateException("Missing case for getting equipment in slot " + slot);
+        throw new AssertionError("Missing case for getting pet equipment in slot " + slot);
     }
 
     public void setEquippedItem(ItemStack itemStack, PetCosmetic.Slot slot) {
@@ -379,26 +381,35 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity {
         return true;
     }
 
+    public final AnimationState squishHatAnimationState = new AnimationState();
+
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (source.getEntity() instanceof LivingEntity living && this.isOwnedBy(living) && !living.isCrouching())
+        if (source.getEntity() instanceof LivingEntity living && this.isOwnedBy(living) && !living.isShiftKeyDown())
             return false;
         for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
             ItemStack cosmeticStack = this.getEquippedItem(slot);
             if (!cosmeticStack.isEmpty() && cosmeticStack.getItem() instanceof PetCosmetic cosmetic)
                 amount *= cosmetic.damageMultiplier();
         }
-        return super.hurt(source, amount);
+        boolean result = super.hurt(source, amount);
+        if (result && this.getHeadItem().getItem() instanceof RubberDuckyPetHat && source.getEntity() != null) {
+            RubberDuckyPetHat.applyEffect(this, source.getEntity());
+        }
+        return result;
     }
 
     @Override
-    public boolean doHurtTarget(Entity entity) {
+    public boolean doHurtTarget(@NotNull Entity entity) {
         boolean result = super.doHurtTarget(entity);
         if (result && entity instanceof Mob) {
             float amount = 1;
             if (!entity.isAlive())
                 amount += 2;
             addPetXP(amount);
+        }
+        if (this.getHeadItem().getItem() instanceof RubberDuckyPetHat) {
+            RubberDuckyPetHat.applyEffect(this, entity);
         }
         return result;
     }
@@ -462,7 +473,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity {
         setPetLevel(level);
         if (!level().isClientSide()) {
 
-            this.level().playSound(null, this.blockPosition(), ModSounds.PET_LEVEL_UP.get(), SoundSource.NEUTRAL, 1.0F, 1.0F);
+            this.level().playSound(null, this.blockPosition(), PPSounds.PET_LEVEL_UP.get(), SoundSource.NEUTRAL, 1.0F, 1.0F);
 
             Component message = Component.translatable(
                     "ui.practicalpets.chat.level_up",
@@ -548,7 +559,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity {
     }
 
     @Override
-    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+    public @NotNull InteractionResult mobInteract(Player player, InteractionHand hand) {
 
         ItemStack itemstack = player.getItemInHand(hand);
         Item item = itemstack.getItem();
@@ -644,7 +655,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity {
     public void tame(Player player) {
         //only run if this is the first time it's tamed, since I plan to add owner switching later
         if (!isTame() && getNeckItem().isEmpty()) {
-            ItemStack bowtie = new ItemStack(ModItems.PET_BOWTIE.get());
+            ItemStack bowtie = new ItemStack(PPItems.PET_BOWTIE.get());
 
             float hue = level().random.nextFloat();
             int rgb = java.awt.Color.HSBtoRGB(hue, 1.0f, 1.0f);

@@ -37,13 +37,6 @@ public class MathAnimationDefinition implements Animatable {
         this.boneFunctions = boneFunctions;
     }
 
-    public static float fastPow(float base, float exponent) {
-        if (exponent == 0.0f) return 1f;
-        if (exponent == 1.0f) return base;
-        if (exponent == 2.0f) return base * base;
-        return (float) Math.pow(base, exponent);
-    }
-
     @Override
     public <T extends Entity> void play(
             PracticalPetModel<T> model,
@@ -69,7 +62,8 @@ public class MathAnimationDefinition implements Animatable {
 
                 Vector3f previousValue = switch (channel) {
                     case POSITION -> new Vector3f(bone.x, bone.y, bone.z);
-                    case ROTATION -> new Vector3f((float)Math.toDegrees(bone.xRot), (float)Math.toDegrees(bone.yRot), (float)Math.toDegrees(bone.zRot));
+                    case ROTATION ->
+                            new Vector3f((float) Math.toDegrees(bone.xRot), (float) Math.toDegrees(bone.yRot), (float) Math.toDegrees(bone.zRot));
                     case SCALE -> new Vector3f(bone.xScale, bone.yScale, bone.zScale);
                 };
 
@@ -91,14 +85,14 @@ public class MathAnimationDefinition implements Animatable {
                         bone.offsetPos(result.mul(blendWeight));
                     }
                     case ROTATION -> {
-                        bone.offsetRotation(result.mul((float)Math.PI / 180 * blendWeight ));
+                        bone.offsetRotation(result.mul((float) Math.PI / 180 * blendWeight));
                     }
                     case SCALE -> {
                         bone.offsetScale(
                                 new Vector3f(
-                                        fastPow(result.x, blendWeight),
-                                        fastPow(result.y, blendWeight),
-                                        fastPow(result.z, blendWeight)
+                                        (result.x - 1) * blendWeight + 1,
+                                        (result.y - 1) * blendWeight + 1,
+                                        (result.z - 1) * blendWeight + 1
                                 )
                         );
                     }

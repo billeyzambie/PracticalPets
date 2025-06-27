@@ -22,26 +22,11 @@ public class DuckFollowParentGoal extends Goal {
         Duck bestCandidate = null;
         double closestDist = Double.MAX_VALUE;
 
-        Duck adultThatIsntMoving = null;
-
-        for (Duck candidate : nearby) {
-            if (candidate == duck) continue;
-
-            if (!candidate.isBaby() && candidate.getNavigation().isDone()) {
-                double distSq = duck.distanceToSqr(candidate);
-                if (distSq < closestDist && distSq >= 0.25D * candidate.getScale()) {
-                    closestDist = distSq;
-                    bestCandidate = candidate;
-                }
-            }
-            adultThatIsntMoving = bestCandidate;
-        }
-
         for (Duck candidate : nearby) {
             if (candidate == duck) continue;
 
 
-            if (adultThatIsntMoving == null && !candidate.isBeingFollowedByDuckling() && followsAdult(candidate)) {
+            if (!candidate.isBeingFollowedByDuckling() && followsAdult(candidate)) {
                 double distSq = duck.distanceToSqr(candidate);
                 if (distSq < closestDist && distSq >= 0.25D * candidate.getScale()) {
                     closestDist = distSq;

@@ -1,7 +1,6 @@
 package billeyzambie.practicalpets.items;
 
-import billeyzambie.practicalpets.PracticalPets;
-import net.minecraft.client.renderer.RenderType;
+import billeyzambie.practicalpets.misc.PracticalPets;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 

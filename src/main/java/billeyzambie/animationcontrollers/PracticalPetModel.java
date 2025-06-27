@@ -1,5 +1,7 @@
 package billeyzambie.animationcontrollers;
 
+import billeyzambie.practicalpets.client.animation.PracticalPetAnimation;
+import billeyzambie.practicalpets.entity.PracticalPet;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -27,6 +29,9 @@ public abstract class PracticalPetModel<T extends Entity> extends HierarchicalMo
 
         if (entity instanceof LivingEntity living && living.getHealth() < living.getMaxHealth())
             hurtAnimation(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+
+        if (entity instanceof PracticalPet pet)
+            this.animate(pet.squishHatAnimationState, PracticalPetAnimation.HatSquish, ageInTicks);
 
         this.applyHeadRotation(netHeadYaw, headPitch);
     }

@@ -1,4 +1,4 @@
-package billeyzambie.practicalpets;
+package billeyzambie.practicalpets.util;
 
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

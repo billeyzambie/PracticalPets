@@ -1,7 +1,7 @@
 
 package billeyzambie.practicalpets.client.renderer.dinosaur;
 
-import billeyzambie.practicalpets.PracticalPets;
+import billeyzambie.practicalpets.misc.PracticalPets;
 import billeyzambie.practicalpets.client.ModModelLayers;
 import billeyzambie.practicalpets.client.layer.DuckArmorLayer;
 import billeyzambie.practicalpets.client.model.entity.dinosaur.DuckModel;
@@ -9,8 +9,6 @@ import billeyzambie.practicalpets.client.renderer.PracticalPetRenderer;
 import billeyzambie.practicalpets.entity.dinosaur.Duck;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.animal.Chicken;
 import org.jetbrains.annotations.NotNull;
 
 public class DuckRenderer extends PracticalPetRenderer<Duck, DuckModel> {

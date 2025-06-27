@@ -1,6 +1,6 @@
 package billeyzambie.practicalpets.jade;
 
-import billeyzambie.practicalpets.PracticalPets;
+import billeyzambie.practicalpets.misc.PracticalPets;
 import billeyzambie.practicalpets.entity.PracticalPet;
 import net.minecraft.resources.ResourceLocation;
 import snownee.jade.api.IWailaClientRegistration;
