@@ -12,4 +12,8 @@ public class OwnerHurtByTargetIfShouldGoal extends OwnerHurtByTargetGoal {
     public boolean canUse() {
         return ((PracticalPet)mob).shouldDefendOwner() && super.canUse();
     }
+    @Override
+    public boolean canContinueToUse() {
+        return ((PracticalPet)mob).shouldDefendOwner() && super.canContinueToUse();
+    }
 }

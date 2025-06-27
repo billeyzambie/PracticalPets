@@ -44,6 +44,7 @@ public class PredicateTemptGoal extends Goal {
         this.targetingConditions = TEMP_TARGETING.copy().selector(this::shouldFollow);
     }
 
+    @Override
     public boolean canUse() {
         if (this.calmDown > 0) {
             --this.calmDown;
@@ -58,6 +59,7 @@ public class PredicateTemptGoal extends Goal {
             return this.predicate.test(pet, entity.getMainHandItem()) || this.predicate.test(pet, entity.getOffhandItem());
     }
 
+    @Override
     public boolean canContinueToUse() {
         if (this.canScare()) {
             if (this.pet.distanceToSqr(this.player) < 36.0D) {
@@ -85,13 +87,16 @@ public class PredicateTemptGoal extends Goal {
         return this.canScare;
     }
 
+    @Override
     public void start() {
+        assert this.player != null;
         this.px = this.player.getX();
         this.py = this.player.getY();
         this.pz = this.player.getZ();
         this.isRunning = true;
     }
 
+    @Override
     public void stop() {
         this.player = null;
         this.pet.getNavigation().stop();
@@ -99,7 +104,9 @@ public class PredicateTemptGoal extends Goal {
         this.isRunning = false;
     }
 
+    @Override
     public void tick() {
+        assert this.player != null;
         this.pet.getLookControl().setLookAt(this.player, (float)(this.pet.getMaxHeadYRot() + 20), (float)this.pet.getMaxHeadXRot());
         if (this.pet.distanceToSqr(this.player) < 6.25D) {
             this.pet.getNavigation().stop();

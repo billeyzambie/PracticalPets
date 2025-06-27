@@ -85,6 +85,11 @@ public abstract class AbstractDuck extends PracticalPet {
         }
     }
 
+    @Override
+    protected boolean shouldRegisterSpreadingAnger() {
+        return true;
+    }
+
     private static final UUID IDLE_FLAP_SLOWDOWN_UUID = UUID.fromString("a5b76512-260b-42c3-88ce-167c04996aa0");
     private static final AttributeModifier IDLE_FLAP_SLOWDOWN_MODIFIER =
             new AttributeModifier(IDLE_FLAP_SLOWDOWN_UUID, "IdleFlapSlowdown", -0.75, AttributeModifier.Operation.MULTIPLY_TOTAL);

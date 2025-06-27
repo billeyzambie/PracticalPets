@@ -240,7 +240,7 @@ public class Duck extends AbstractDuck {
     public void aiStep() {
         super.aiStep();
 
-        if (!this.level().isClientSide()) {
+        if (!this.level().isClientSide() && this.isTame()) {
             this.tickBiteFloor();
         }
 
@@ -274,9 +274,13 @@ public class Duck extends AbstractDuck {
 
     public final AnimationState biteFloorAnimationState = new AnimationState();
     private boolean navigationWasDone = true;
+
     private void tickBiteFloor() {
         boolean navigationIsDone = this.getNavigation().isDone();
-        if (navigationIsDone && !this.navigationWasDone && this.getRandom().nextFloat() * 0 - (this.petLevel() - 1) / 3f < 1) {
+        if (
+                navigationIsDone && !this.navigationWasDone
+                        && this.getRandom().nextFloat() * (10 - (this.petLevel() - 1) * 2f / 9) < 1
+        ) {
 
             BlockState blockState = this.level().getBlockState(this.blockPosition());
 
@@ -296,7 +300,7 @@ public class Duck extends AbstractDuck {
         for (FoundItemChoice itemChoice : FoundItemChoice.LIST_OF) {
             if (
                     itemChoice.itemCanBeFoundIn == ItemCanBeFoundIn.BOTH
-                    || itemChoice.itemCanBeFoundIn == itemWasFoundIn
+                            || itemChoice.itemCanBeFoundIn == itemWasFoundIn
             ) {
                 float finalWeight = itemChoice.defaultWeight();
                 if (itemChoice.isTreasure)

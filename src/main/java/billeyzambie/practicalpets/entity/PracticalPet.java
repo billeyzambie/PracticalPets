@@ -24,6 +24,7 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.target.ResetUniversalAngerTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
@@ -112,6 +113,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity {
     }
 
     public abstract HashMap<Integer, Integer> variantSpawnWeights();
+
     @Override
     public @NotNull SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor level, @NotNull DifficultyInstance difficulty, MobSpawnType spawnType,
                                                  @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag tag) {
@@ -233,7 +235,11 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity {
     }
 
     public boolean shouldDefendOwner() {
-        return anyEquipmentIsBrave();
+        return this.shouldDefendSelf();
+    }
+
+    public boolean shouldDefendSelf() {
+        return this.anyEquipmentIsBrave();
     }
 
     public abstract int getLevel1MaxHealth();
@@ -325,11 +331,9 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity {
                 return;
             }
             healAmount = healOverride.value();
-        }
-        else if (healOverride == null) {
+        } else if (healOverride == null) {
             healAmount = foodProperties.getNutrition();
-        }
-        else {
+        } else {
             healAmount = foodProperties.getNutrition();
             switch (healOverride.type()) {
                 case OVERRIDE -> healAmount = healOverride.value();
@@ -363,8 +367,13 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity {
 
         this.goalSelector.addGoal(110, new LookAtPlayerGoal(this, Player.class, 10.0F));
 
-        this.targetSelector.addGoal(20, new OwnerHurtByTargetIfShouldGoal(this));
-        this.targetSelector.addGoal(30, new OwnerHurtTargetIfShouldGoal(this));
+        this.targetSelector.addGoal(10, new OwnerHurtByTargetIfShouldGoal(this));
+        this.targetSelector.addGoal(20, new OwnerHurtTargetIfShouldGoal(this));
+        this.targetSelector.addGoal(30,
+                this.shouldRegisterSpreadingAnger()
+                        ? new DefendSelfIfShouldGoal(this).setAlertOthers()
+                        : new DefendSelfIfShouldGoal(this)
+        );
     }
 
     @Nullable
@@ -375,6 +384,10 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity {
     @Nullable
     protected Goal getStrollGoal() {
         return new WaterAvoidingRandomStrollGoal(this, 1, 1.0000001E-5F);
+    }
+
+    protected boolean shouldRegisterSpreadingAnger() {
+        return false;
     }
 
     protected boolean shouldRegisterFloatGoal() {
