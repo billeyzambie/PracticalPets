@@ -64,7 +64,7 @@ public abstract class AbstractDuck extends PracticalPet {
 
     @Override
     public boolean isTameItem(ItemStack itemStack) {
-        return itemStack.is(Items.BREAD);
+        return itemStack.is(Items.BREAD) || super.isTameItem(itemStack);
     }
 
     @Override

@@ -8,6 +8,7 @@ import billeyzambie.practicalpets.misc.PPSounds;
 import billeyzambie.practicalpets.goal.*;
 import billeyzambie.practicalpets.items.PetCosmetic;
 import billeyzambie.practicalpets.items.PetHat;
+import billeyzambie.practicalpets.misc.PracticalPets;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
@@ -28,7 +29,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.ResetUniversalAngerTargetGoal;
-import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
@@ -48,7 +48,6 @@ import java.util.*;
 
 public abstract class PracticalPet extends TamableAnimal implements ACEntity, NeutralMob {
 
-    public static final String HATS_CLAIMED_TAG_ID = "practicalpets:founders_hats_claimed";
     HashMap<String, ACData> ACData = new HashMap<>();
 
     @Override
@@ -120,7 +119,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     public abstract HashMap<Integer, Integer> variantSpawnWeights();
 
     @Override
-    public @NotNull SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor level, @NotNull DifficultyInstance difficulty, MobSpawnType spawnType,
+    public @NotNull SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor level, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType spawnType,
                                                  @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag tag) {
         int selectedVariant = pickRandomWeightedVariant();
         this.setVariant(selectedVariant);
@@ -279,7 +278,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     }
 
     @Override
-    public final boolean isFood(ItemStack itemStack) {
+    public final boolean isFood(@NotNull ItemStack itemStack) {
         return isTameItem(itemStack) || isFoodThatDoesntTame(itemStack);
     }
 
@@ -566,7 +565,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     }
 
     @Override
-    protected void dropAllDeathLoot(DamageSource p_21192_) {
+    protected void dropAllDeathLoot(@NotNull DamageSource p_21192_) {
         super.dropAllDeathLoot(p_21192_);
         dropAllEquipment();
     }
@@ -678,6 +677,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
 
     public static final LocalDate FOUNDERS_HAT_END_DATE = LocalDate.of(2025, 8, 1);
 
+    public static final String FOUNDERS_HATS_CLAIMED_TAG_ID = PracticalPets.MODID + ":founders_hats_claimed";
     @Override
     public void tame(@NotNull Player player) {
         // Only run if this is the first time it's tamed, since I plan to add owner switching later.
@@ -698,14 +698,14 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
             this.setNeckItem(bowtie);
         }
 
-        int foundersHatsClaimed = player.getPersistentData().getInt(HATS_CLAIMED_TAG_ID);
+        int foundersHatsClaimed = player.getPersistentData().getInt(FOUNDERS_HATS_CLAIMED_TAG_ID);
         if (
                 this.getHeadItem().isEmpty()
                         && LocalDate.now().isBefore(FOUNDERS_HAT_END_DATE)
                         && foundersHatsClaimed < 5
         ) {
             this.setHeadItem(new ItemStack(PPItems.ANNIVERSARY_PET_HAT_0.get()));
-            player.getPersistentData().putInt(HATS_CLAIMED_TAG_ID, foundersHatsClaimed + 1);
+            player.getPersistentData().putInt(FOUNDERS_HATS_CLAIMED_TAG_ID, foundersHatsClaimed + 1);
             ItemStack foundersHat = PPItems.ANNIVERSARY_PET_HAT_0.get().getDefaultInstance();
             player.sendSystemMessage(Component.translatable("ui.practicalpets.chat.got_founders_hat", foundersHat.getDisplayName()));
             player.sendSystemMessage(Component.translatable("ui.practicalpets.info.item.anniversary_pet_hat_0", foundersHat.getDisplayName()));
@@ -714,12 +714,8 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         super.tame(player);
     }
 
-    private static @NotNull ItemStack getDefaultInstance() {
-        return PPItems.ANNIVERSARY_PET_HAT_0.get().getDefaultInstance();
-    }
-
     @Override
-    public boolean wantsToAttack(LivingEntity target, LivingEntity owner) {
+    public boolean wantsToAttack(@NotNull LivingEntity target, @NotNull LivingEntity owner) {
         if (target instanceof TamableAnimal pet) {
             return !pet.isTame() || pet.getOwner() != owner;
         } else
@@ -727,7 +723,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     }
 
     @Override
-    protected void usePlayerItem(Player player, InteractionHand hand, ItemStack itemStack) {
+    protected void usePlayerItem(@NotNull Player player, @NotNull InteractionHand hand, @NotNull ItemStack itemStack) {
         if (this.isFood(itemStack) || itemStack.isEdible()) {
             //this.triggerAnim("eating", "eat");
             this.playSound(SoundEvents.GENERIC_EAT, 1.0F, 1.0F);
