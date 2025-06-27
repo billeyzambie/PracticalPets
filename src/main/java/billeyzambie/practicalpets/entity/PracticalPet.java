@@ -16,15 +16,19 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.util.TimeUtil;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.ResetUniversalAngerTargetGoal;
+import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
@@ -39,13 +43,12 @@ import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.time.LocalDate;
+import java.util.*;
 
-public abstract class PracticalPet extends TamableAnimal implements ACEntity {
+public abstract class PracticalPet extends TamableAnimal implements ACEntity, NeutralMob {
 
+    public static final String HATS_CLAIMED_TAG_ID = "practicalpets:founders_hats_claimed";
     HashMap<String, ACData> ACData = new HashMap<>();
 
     @Override
@@ -74,7 +77,6 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity {
     private static final EntityDataAccessor<ItemStack> BODY_ITEM = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.ITEM_STACK);
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.INT);
 
-
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
@@ -86,6 +88,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity {
         this.entityData.define(NECK_ITEM, ItemStack.EMPTY);
         this.entityData.define(BODY_ITEM, ItemStack.EMPTY);
         this.entityData.define(VARIANT, 0);
+        this.entityData.define(DATA_REMAINING_ANGER_TIME, 0);
     }
 
     @Override
@@ -98,10 +101,11 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity {
         this.setNeckItem(ItemStack.of(compoundTag.getCompound("NeckItem")));
         this.setBodyItem(ItemStack.of(compoundTag.getCompound("BodyItem")));
         this.setVariant(compoundTag.getInt("Variant"));
+        this.readPersistentAngerSaveData(this.level(), compoundTag);
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compoundTag) {
+    public void addAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
         compoundTag.putBoolean("ShouldFollowOwner", this.shouldFollowOwner());
         compoundTag.putInt("PetLevel", this.petLevel());
@@ -110,6 +114,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity {
         compoundTag.put("NeckItem", getNeckItem().save(new CompoundTag()));
         compoundTag.put("BodyItem", getBodyItem().save(new CompoundTag()));
         compoundTag.putInt("Variant", this.variant());
+        this.addPersistentAngerSaveData(compoundTag);
     }
 
     public abstract HashMap<Integer, Integer> variantSpawnWeights();
@@ -368,12 +373,14 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity {
         this.goalSelector.addGoal(110, new LookAtPlayerGoal(this, Player.class, 10.0F));
 
         this.targetSelector.addGoal(10, new OwnerHurtByTargetIfShouldGoal(this));
-        this.targetSelector.addGoal(20, new OwnerHurtTargetIfShouldGoal(this));
-        this.targetSelector.addGoal(30,
+        this.targetSelector.addGoal(20,
                 this.shouldRegisterSpreadingAnger()
                         ? new DefendSelfIfShouldGoal(this).setAlertOthers()
                         : new DefendSelfIfShouldGoal(this)
         );
+        this.targetSelector.addGoal(30, new OwnerHurtTargetIfShouldGoal(this));
+        if (this.shouldRegisterSpreadingAnger())
+            this.targetSelector.addGoal(40, new ResetUniversalAngerTargetGoal<>(this, true));
     }
 
     @Nullable
@@ -406,9 +413,14 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity {
                 amount *= cosmetic.damageMultiplier();
         }
         boolean result = super.hurt(source, amount);
-        if (result && this.getHeadItem().getItem() instanceof RubberDuckyPetHat && source.getEntity() != null) {
-            RubberDuckyPetHat.applyEffect(this, source.getEntity());
+        if (result) {
+            if (this.getHeadItem().getItem() instanceof RubberDuckyPetHat && source.getEntity() != null) {
+                RubberDuckyPetHat.applyEffect(this, source.getEntity());
+            }
+            if (this.isTame())
+                this.setFollowMode(FollowMode.FOLLOWING);
         }
+
         return result;
     }
 
@@ -664,14 +676,18 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity {
         }
     }
 
+    public static final LocalDate FOUNDERS_HAT_END_DATE = LocalDate.of(2025, 8, 1);
+
     @Override
-    public void tame(Player player) {
-        //only run if this is the first time it's tamed, since I plan to add owner switching later
-        if (!isTame() && getNeckItem().isEmpty()) {
+    public void tame(@NotNull Player player) {
+        // Only run if this is the first time it's tamed, since I plan to add owner switching later.
+        // And also only if it doesn't have a bowtie already,
+        // in case I make some pets rarely spawn with a special kind of bowtie or something
+        if (!this.isTame() && this.getNeckItem().isEmpty()) {
             ItemStack bowtie = new ItemStack(PPItems.PET_BOWTIE.get());
 
-            float hue = level().random.nextFloat();
-            int rgb = java.awt.Color.HSBtoRGB(hue, 1.0f, 1.0f);
+            float hue = this.getRandom().nextFloat();
+            int rgb = java.awt.Color.HSBtoRGB(hue, 1, 1);
 
             CompoundTag tag = new CompoundTag();
             CompoundTag display = new CompoundTag();
@@ -679,9 +695,27 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity {
             tag.put("display", display);
             bowtie.setTag(tag);
 
-            setNeckItem(bowtie);
+            this.setNeckItem(bowtie);
+        }
+
+        int foundersHatsClaimed = player.getPersistentData().getInt(HATS_CLAIMED_TAG_ID);
+        if (
+                this.getHeadItem().isEmpty()
+                        && LocalDate.now().isBefore(FOUNDERS_HAT_END_DATE)
+                        && foundersHatsClaimed < 5
+        ) {
+            this.setHeadItem(new ItemStack(PPItems.ANNIVERSARY_PET_HAT_0.get()));
+            player.getPersistentData().putInt(HATS_CLAIMED_TAG_ID, foundersHatsClaimed + 1);
+            ItemStack foundersHat = PPItems.ANNIVERSARY_PET_HAT_0.get().getDefaultInstance();
+            player.sendSystemMessage(Component.translatable("ui.practicalpets.chat.got_founders_hat", foundersHat.getDisplayName()));
+            player.sendSystemMessage(Component.translatable("ui.practicalpets.info.item.anniversary_pet_hat_0", foundersHat.getDisplayName()));
+            player.playSound(PPSounds.PET_LEVEL_UP.get());
         }
         super.tame(player);
+    }
+
+    private static @NotNull ItemStack getDefaultInstance() {
+        return PPItems.ANNIVERSARY_PET_HAT_0.get().getDefaultInstance();
     }
 
     @Override
@@ -723,4 +757,43 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity {
             this.setHasTarget(this.getTarget() != null);
         super.tick();
     }
+
+    @Override
+    public void aiStep() {
+        super.aiStep();
+        if (this.level() instanceof ServerLevel serverLevel) {
+            this.updatePersistentAnger(serverLevel, true);
+        }
+    }
+
+    @Nullable
+    private UUID persistentAngerTarget;
+    private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
+
+    @Override
+    public int getRemainingPersistentAngerTime() {
+        return this.entityData.get(DATA_REMAINING_ANGER_TIME);
+    }
+
+    @Override
+    public void setRemainingPersistentAngerTime(int p_30404_) {
+        this.entityData.set(DATA_REMAINING_ANGER_TIME, p_30404_);
+    }
+
+    @Override
+    public void startPersistentAngerTimer() {
+        this.setRemainingPersistentAngerTime(PERSISTENT_ANGER_TIME.sample(this.random));
+    }
+
+    @Override
+    public @Nullable UUID getPersistentAngerTarget() {
+        return this.persistentAngerTarget;
+    }
+
+    @Override
+    public void setPersistentAngerTarget(@Nullable UUID p_30400_) {
+        this.persistentAngerTarget = p_30400_;
+    }
+
+    private static final EntityDataAccessor<Integer> DATA_REMAINING_ANGER_TIME = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.INT);
 }

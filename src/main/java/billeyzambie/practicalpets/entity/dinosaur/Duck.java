@@ -6,7 +6,7 @@ import billeyzambie.practicalpets.misc.PPSounds;
 import billeyzambie.practicalpets.goal.DuckFollowParentGoal;
 import billeyzambie.practicalpets.network.DuckBiteFloorAnimPacket;
 import billeyzambie.practicalpets.network.ModNetworking;
-import billeyzambie.practicalpets.util.PPTags;
+import billeyzambie.practicalpets.misc.PPTags;
 import billeyzambie.practicalpets.util.PPUtil;
 import billeyzambie.practicalpets.util.WeightedList;
 import net.minecraft.core.BlockPos;

@@ -45,11 +45,13 @@ public class PracticalPets
     // Creates a creative tab with the id "practicalpets:example_tab" for the example item, that is placed after the combat tab
     public static final RegistryObject<CreativeModeTab> MOD_TAB = CREATIVE_MODE_TABS.register("practicalpets", () -> CreativeModeTab.builder()
             .withTabsBefore(CreativeModeTabs.COMBAT)
-            .icon(() -> new ItemStack(PPItems.POULTRY_BANANA.get()))
+            .icon(() -> new ItemStack(PPItems.PET_BOWTIE.get()))
             .title(Component.literal("Practical Pets"))
             .displayItems((parameters, output) -> {
                 output.accept(PPItems.BANANA_DUCK_SPAWN_EGG.get());
                 output.accept(PPItems.DUCK_SPAWN_EGG.get());
+                output.accept(PPItems.POULTRY_BANANA.get());
+                output.accept(PPItems.BANANA_PEEL.get());
                 output.accept(PPItems.LEATHER_DUCK_ARMOR.get());
                 output.accept(PPItems.GOLDEN_DUCK_ARMOR.get());
                 output.accept(PPItems.CHAINMAIL_DUCK_ARMOR.get());
@@ -60,8 +62,6 @@ public class PracticalPets
                 output.accept(PPItems.ANNIVERSARY_PET_HAT_0.get());
                 output.accept(PPItems.RUBBER_DUCKY_PET_HAT.get());
                 //output.accept(ModItems.END_ROD_DUCK_ARMOR.get());
-                output.accept(PPItems.POULTRY_BANANA.get());
-                output.accept(PPItems.BANANA_PEEL.get());
             }).build());
 
     public PracticalPets(FMLJavaModLoadingContext context)
@@ -123,7 +123,7 @@ public class PracticalPets
     public void onServerStarting(ServerStartingEvent event)
     {
         // Do something when the server starts
-        LOGGER.info("HELLO from server starting");
+        //LOGGER.info("HELLO from server starting");
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent

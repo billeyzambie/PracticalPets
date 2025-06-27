@@ -25,5 +25,7 @@
   "ui.jade.plugin_practicalpets.pet_xp": "Leveling Progress: %s / %s",
   "config.jade.plugin_practicalpets.pet_level_provider": "Show Pet Level",
   "ui.practicalpets.chat.level_up": "LEVEL UP! %s has advanced to level %s!",
-  "ui.practicalpets.chat.level_down": "%s has been downgraded to level %s"
+  "ui.practicalpets.chat.level_down": "%s has been downgraded to level %s",
+  "ui.practicalpets.chat.got_founders_hat": "Your pet has been equipped with a limited-time %s! And the other first 4 pets you tame before 1st August 2025 will too!",
+  "ui.practicalpets.info.item.anniversary_pet_hat_0": "The %s makes a pet level up twice as fast."
 }

@@ -19,6 +19,12 @@ public class PPItems {
         //more stuff here soon
         return REGISTRY.register(name, sup);
     }
+    //it's first so that some mods might consider it the mod's icon, or at least I think so
+    public static final RegistryObject<Item> PET_BOWTIE = register(
+            "pet_bowtie",
+            () -> new PetBowtie("bowtie")
+    );
+
     public static final RegistryObject<Item> LEATHER_DUCK_ARMOR  = register(
             "leather_duck_armor",
             () -> new DyeableDuckArmor("leather",0.7f, SoundEvents.ARMOR_EQUIP_LEATHER)
@@ -64,10 +70,6 @@ public class PPItems {
             () -> new Item(new Item.Properties().food(new FoodProperties.Builder().meat().nutrition(1).fast().saturationMod(0.6f).build()))
     );
 
-    public static final RegistryObject<Item> PET_BOWTIE = register(
-            "pet_bowtie",
-            () -> new PetBowtie("bowtie")
-    );
     public static final RegistryObject<Item> ANNIVERSARY_PET_HAT_0 = register(
             "anniversary_pet_hat_0",
             () -> new AnniversaryPetHat("anniversary_hat_0", 2, new Item.Properties().stacksTo(1).rarity(Rarity.EPIC))

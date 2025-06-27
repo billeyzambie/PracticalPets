@@ -1,19 +1,20 @@
 package billeyzambie.practicalpets.entity.dinosaur;
 
+import billeyzambie.practicalpets.misc.PPTags;
 import billeyzambie.practicalpets.util.DelayedTaskManager;
 import billeyzambie.practicalpets.misc.PPEntities;
 import billeyzambie.practicalpets.misc.PPItems;
 import billeyzambie.practicalpets.misc.PPSounds;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.RandomSource;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
@@ -22,7 +23,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -61,10 +61,6 @@ public class BananaDuck extends AbstractDuck {
         super.registerGoals();
     }
 
-    public static boolean canSpawn(EntityType<BananaDuck> entityType, LevelAccessor level, MobSpawnType spawnType, BlockPos position, RandomSource random) {
-        return Animal.checkAnimalSpawnRules(entityType, level, spawnType, position, random);
-    }
-
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
@@ -79,7 +75,7 @@ public class BananaDuck extends AbstractDuck {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compoundTag) {
+    public void addAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
         compoundTag.putInt("TotalBananasMade", this.getTotalBananasMade());
     }
@@ -97,23 +93,41 @@ public class BananaDuck extends AbstractDuck {
         this.entityData.set(TOTAL_BANANAS_MADE, value);
     }
 
-    public void incrementTotalBananasMade() {
-        this.setTotalBananasMade(getTotalBananasMade() + 1);
-    }
-
     public final AnimationState makingBananaAnimationState = new AnimationState();
+
+    public TagKey<Item> getCanTurnToBananaTag() {
+        int level = this.petLevel();
+        if (level >= 10) {
+            return PPTags.Items.LEVEL_10_TO_POULTRY_BANANA;
+        }
+        else if (level >= 7) {
+            return PPTags.Items.LEVEL_7_TO_POULTRY_BANANA;
+        }
+        else if (level >= 5) {
+            return PPTags.Items.LEVEL_5_TO_POULTRY_BANANA;
+        }
+        else {
+            return PPTags.Items.LEVEL_1_TO_POULTRY_BANANA;
+        }
+    }
 
     @Override
     public @NotNull InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
-        if (itemstack.is(Items.APPLE) && this.isTame() && !this.isBaby()) {
-            makingBananaAnimationState.start(this.tickCount);
+
+        if (itemstack.is(this.getCanTurnToBananaTag()) && this.isTame() && !this.isBaby()) {
+            this.makingBananaAnimationState.start(this.tickCount);
             if (!this.level().isClientSide) {
                 this.usePlayerItem(player, hand, itemstack);
-                this.incrementTotalBananasMade();
+                this.setTotalBananasMade(this.getTotalBananasMade() + 1);
                 if (this.getTotalBananasMade() % 5 == 0 && !player.getAbilities().instabuild) {
-                    player.giveExperienceLevels(-1);
-                    player.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP, 1, 0.9f);
+                    if (player.experienceLevel > 0) {
+                        player.giveExperienceLevels(-1);
+                        player.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP, 1, 0.9f);
+                    }
+                    else {
+                        player.addEffect(new MobEffectInstance(MobEffects.WITHER, 1, 3));
+                    }
                 }
                 DelayedTaskManager.schedule(() -> {
                     if (this.isAlive()) {

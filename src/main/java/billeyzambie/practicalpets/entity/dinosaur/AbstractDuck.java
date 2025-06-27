@@ -35,12 +35,12 @@ public abstract class AbstractDuck extends PracticalPet {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compoundTag) {
+    public void addAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
         compoundTag.putInt("IdleFlapTime", this.getIdleFlapTime());
     }
 
-    int idleFlapTime = -MIN_TIME_TO_FLAP;
+    int idleFlapTime = getIdleFlapTimeResetValue();
 
     public int getIdleFlapTime() {
         return idleFlapTime;
@@ -48,8 +48,12 @@ public abstract class AbstractDuck extends PracticalPet {
 
     public void resetIdleFlapTime() {
         this.setIdleFlapTime(
-                this.getRandom().nextIntBetweenInclusive(-MAX_TIME_TO_FLAP, -MIN_TIME_TO_FLAP)
+                getIdleFlapTimeResetValue()
         );
+    }
+
+    private int getIdleFlapTimeResetValue() {
+        return this.getRandom().nextIntBetweenInclusive(-MAX_TIME_TO_FLAP, -MIN_TIME_TO_FLAP);
     }
 
     public void setIdleFlapTime(int value) {
@@ -90,6 +94,11 @@ public abstract class AbstractDuck extends PracticalPet {
         return true;
     }
 
+    @Override
+    public boolean shouldDefendSelf() {
+        return true;
+    }
+
     private static final UUID IDLE_FLAP_SLOWDOWN_UUID = UUID.fromString("a5b76512-260b-42c3-88ce-167c04996aa0");
     private static final AttributeModifier IDLE_FLAP_SLOWDOWN_MODIFIER =
             new AttributeModifier(IDLE_FLAP_SLOWDOWN_UUID, "IdleFlapSlowdown", -0.75, AttributeModifier.Operation.MULTIPLY_TOTAL);
@@ -106,6 +115,7 @@ public abstract class AbstractDuck extends PracticalPet {
             }
             else {
                 int nextFlapTime = this.getIdleFlapTime() + 1;
+                //pause the idle flap timer while sitting
                 if (!this.isInSittingPose() || wasIdleFlapping || nextFlapTime < 0) {
                     this.setIdleFlapTime(nextFlapTime);
                 }
@@ -123,12 +133,13 @@ public abstract class AbstractDuck extends PracticalPet {
         }
 
         AttributeInstance movementSpeed = this.getAttribute(Attributes.MOVEMENT_SPEED);
-        assert movementSpeed != null;
+        assert movementSpeed != null : "AbstractDuck movement speed was null";
         if (this.isIdleFlapping()) {
             if (!movementSpeed.hasModifier(IDLE_FLAP_SLOWDOWN_MODIFIER)) {
                 movementSpeed.addTransientModifier(IDLE_FLAP_SLOWDOWN_MODIFIER);
             }
-        } else if (movementSpeed.hasModifier(IDLE_FLAP_SLOWDOWN_MODIFIER)) {
+        }
+        else if (movementSpeed.hasModifier(IDLE_FLAP_SLOWDOWN_MODIFIER)) {
             movementSpeed.removeModifier(IDLE_FLAP_SLOWDOWN_MODIFIER);
         }
     }
