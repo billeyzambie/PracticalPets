@@ -5,7 +5,7 @@ package billeyzambie.practicalpets.client.model.entity.dinosaur;// Made with Blo
 
 import billeyzambie.animationcontrollers.MathAnimationDefinition;
 import billeyzambie.animationcontrollers.PracticalPetModel;
-import billeyzambie.practicalpets.ModAnimationControllers;
+import billeyzambie.practicalpets.misc.PPAnimationControllers;
 import billeyzambie.practicalpets.client.animation.dinosaur.BananaDuckAnimation;
 import billeyzambie.practicalpets.client.animation.dinosaur.DuckAnimation;
 import billeyzambie.practicalpets.entity.dinosaur.Duck;
@@ -164,12 +164,13 @@ public class DuckModel extends PracticalPetModel<Duck> {
             KeyframeAnimations.animate(this, DuckAnimation.ling, 0, 1, ANIMATION_VECTOR_CACHE);
         }
 
+        this.animate(entity.biteFloorAnimationState, DuckAnimation.pickupbread, ageInTicks);
         this.animate(entity.quackAnimationState, DuckAnimation.quack, ageInTicks);
 
-        ModAnimationControllers.SIMPLE_SIT.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
-        ModAnimationControllers.SIMPLE_ANGRY.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
-        ModAnimationControllers.DUCK_IDLE_FLAP.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
-        ModAnimationControllers.DUCK_WATER_WAVE.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, Mth.clamp(1 - 2 * limbSwingAmount, 0, 1));
+        PPAnimationControllers.SIMPLE_SIT.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
+        PPAnimationControllers.SIMPLE_ANGRY.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
+        PPAnimationControllers.DUCK_IDLE_FLAP.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
+        PPAnimationControllers.DUCK_WATER_WAVE.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, Mth.clamp(1 - 2 * limbSwingAmount, 0, 1));
 
         if (!entity.isInSittingPose()) {
             this.animateWalk(BananaDuckAnimation.walk, limbSwing, limbSwingAmount, 3f, 4f);
@@ -182,7 +183,6 @@ public class DuckModel extends PracticalPetModel<Duck> {
 
         this.wing0.zRot += flap;
         this.wing1.zRot -= flap;
-
     }
 
     @Override

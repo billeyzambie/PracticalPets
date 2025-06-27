@@ -25,7 +25,7 @@ public class DuckAnimation {
             "body",
             MathAnimationDefinition.AnimationChannel.POSITION,
             (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, blendWeight, previousValue)
-                    -> new Vector3f(0, (Mth.cos(3 * animTime + ((Duck)entity).floatWaveRandomOffset) * 1 - 1) * 0.5f, 0)
+                    -> new Vector3f(0, -(Mth.cos(3 * animTime + ((Duck)entity).floatWaveRandomOffset) * 1 - 1) * 0.5f, 0)
     ).build();
     public static final AnimationDefinition look_at_target = AnimationDefinition.Builder.withLength(0.0F).looping()
             .addAnimation("head", new AnimationChannel(AnimationChannel.Targets.ROTATION,

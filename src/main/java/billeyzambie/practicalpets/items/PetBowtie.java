@@ -1,6 +1,6 @@
 package billeyzambie.practicalpets.items;
 
-import billeyzambie.practicalpets.PracticalPets;
+import billeyzambie.practicalpets.misc.PracticalPets;
 import billeyzambie.practicalpets.entity.PracticalPet;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;

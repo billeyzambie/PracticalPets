@@ -1,18 +1,21 @@
 package billeyzambie.practicalpets.datagen;
 
-import billeyzambie.practicalpets.ModItems;
-import billeyzambie.practicalpets.PracticalPets;
+import billeyzambie.practicalpets.misc.PPItems;
+import billeyzambie.practicalpets.misc.PracticalPets;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 
 import java.util.function.Consumer;
 
-import static billeyzambie.practicalpets.ModItems.*;
+import static billeyzambie.practicalpets.misc.PPItems.*;
 
 public class ModRecipeProvider extends RecipeProvider implements IConditionBuilder {
 
@@ -30,13 +33,26 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         SmithingTransformRecipeBuilder
                 .smithing(
                         Ingredient.of(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE),
-                        Ingredient.of(ModItems.DIAMOND_DUCK_ARMOR.get()),
+                        Ingredient.of(PPItems.DIAMOND_DUCK_ARMOR.get()),
                         Ingredient.of(Items.NETHERITE_INGOT),
                         RecipeCategory.COMBAT,
-                        ModItems.NETHERITE_DUCK_ARMOR.get()
+                        PPItems.NETHERITE_DUCK_ARMOR.get()
                 )
                 .unlocks("has_netherite_ingot", has(Items.NETHERITE_INGOT))
-                .save(consumer, new ResourceLocation(PracticalPets.MODID, NETHERITE_DUCK_ARMOR.getId().getPath()));
+                .save(consumer, NETHERITE_DUCK_ARMOR.getId());
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.DIAMOND)
+                .define('N', DIAMOND_NUGGET.get())
+                .pattern("NNN")
+                .pattern("NNN")
+                .pattern("NNN")
+                .unlockedBy("has_material", has(DIAMOND_NUGGET.get()))
+                .save(consumer, new ResourceLocation(PracticalPets.MODID, "diamond_from_nuggets"));
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, PET_BOWTIE.get())
+                .define('C', ItemTags.WOOL_CARPETS)
+                .pattern(" C ")
+                .pattern("C C")
+                .unlockedBy("has_material", has(ItemTags.WOOL_CARPETS))
+                .save(consumer, PET_BOWTIE.getId());
     }
 
     private void duckArmorRecipe(Consumer<FinishedRecipe> consumer, String materialName, String resultId, Item ingredient) {

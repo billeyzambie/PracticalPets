@@ -1,6 +1,6 @@
 package billeyzambie.practicalpets.items;
 
-import billeyzambie.practicalpets.ModItems;
+import billeyzambie.practicalpets.misc.PPItems;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -50,7 +50,7 @@ public class PoultryBanana extends Item {
         if (!level.isClientSide) {
             MobEffect randomEffect = BENEFICIAL_EFFECTS.get(random.nextInt(BENEFICIAL_EFFECTS.size()));
             entity.addEffect(new MobEffectInstance(randomEffect, 200, 1));
-            ItemStack peel = new ItemStack(ModItems.BANANA_PEEL.get());
+            ItemStack peel = new ItemStack(PPItems.BANANA_PEEL.get());
             if (entity instanceof Player player) {
                 if (!player.addItem(peel)) {
                     player.drop(peel, false);

@@ -1,7 +1,7 @@
 package billeyzambie.practicalpets.datagen;
 
-import billeyzambie.practicalpets.ModItems;
-import billeyzambie.practicalpets.PracticalPets;
+import billeyzambie.practicalpets.misc.PPItems;
+import billeyzambie.practicalpets.misc.PracticalPets;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -17,14 +17,17 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        simpleItem(ModItems.LEATHER_DUCK_ARMOR);
-        simpleItem(ModItems.GOLDEN_DUCK_ARMOR);
-        simpleItem(ModItems.CHAINMAIL_DUCK_ARMOR);
-        simpleItem(ModItems.IRON_DUCK_ARMOR);
-        simpleItem(ModItems.DIAMOND_DUCK_ARMOR);
-        simpleItem(ModItems.NETHERITE_DUCK_ARMOR);
-        simpleItem(ModItems.PET_BOWTIE);
-        simpleItem(ModItems.ANNIVERSARY_PET_HAT_0);
+        simpleItem(PPItems.LEATHER_DUCK_ARMOR);
+        simpleItem(PPItems.GOLDEN_DUCK_ARMOR);
+        simpleItem(PPItems.CHAINMAIL_DUCK_ARMOR);
+        simpleItem(PPItems.IRON_DUCK_ARMOR);
+        simpleItem(PPItems.DIAMOND_DUCK_ARMOR);
+        simpleItem(PPItems.NETHERITE_DUCK_ARMOR);
+        simpleItem(PPItems.PET_BOWTIE);
+        simpleItem(PPItems.ANNIVERSARY_PET_HAT_0);
+        simpleItem(PPItems.RUBBER_DUCKY_PET_HAT);
+        simpleItem(PPItems.DIAMOND_NUGGET);
+        simpleItem(PPItems.CHICKEN_NUGGET);
         //simpleItem(ModItems.END_ROD_DUCK_ARMOR);
     }
 

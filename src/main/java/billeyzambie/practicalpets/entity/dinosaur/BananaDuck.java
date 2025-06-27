@@ -1,9 +1,9 @@
 package billeyzambie.practicalpets.entity.dinosaur;
 
-import billeyzambie.practicalpets.DelayedTaskManager;
-import billeyzambie.practicalpets.ModEntities;
-import billeyzambie.practicalpets.ModItems;
-import billeyzambie.practicalpets.ModSounds;
+import billeyzambie.practicalpets.util.DelayedTaskManager;
+import billeyzambie.practicalpets.misc.PPEntities;
+import billeyzambie.practicalpets.misc.PPItems;
+import billeyzambie.practicalpets.misc.PPSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -118,7 +118,7 @@ public class BananaDuck extends AbstractDuck {
                 DelayedTaskManager.schedule(() -> {
                     if (this.isAlive()) {
                         this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.PLAYER_BURP, this.getSoundSource(), 1.0F, this.random.nextFloat() * 0.4F + 0.8F);
-                        this.spawnAtLocation(new ItemStack(ModItems.POULTRY_BANANA.get()));
+                        this.spawnAtLocation(new ItemStack(PPItems.POULTRY_BANANA.get()));
                     }
                 }, 26);
             }
@@ -130,22 +130,22 @@ public class BananaDuck extends AbstractDuck {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return ModSounds.BANANA_DUCK_AMBIENT.get();
+        return PPSounds.BANANA_DUCK_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(@NotNull DamageSource damageSource) {
-        return ModSounds.DUCK_HURT.get();
+        return PPSounds.DUCK_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return ModSounds.BANANA_DUCK_DEATH.get();
+        return PPSounds.BANANA_DUCK_DEATH.get();
     }
 
     @Override
     public @Nullable AgeableMob getBreedOffspring(@NotNull ServerLevel level, @NotNull AgeableMob partner) {
-        BananaDuck baby = ModEntities.BANANA_DUCK.get().create(level);
+        BananaDuck baby = PPEntities.BANANA_DUCK.get().create(level);
         if (baby != null) {
             if (this.isTame()) {
                 baby.setOwnerUUID(this.getOwnerUUID());

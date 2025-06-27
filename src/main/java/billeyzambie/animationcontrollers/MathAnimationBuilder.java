@@ -1,7 +1,5 @@
 package billeyzambie.animationcontrollers;
 
-import billeyzambie.practicalpets.ModAnimationControllers;
-
 import java.util.HashMap;
 
 public class MathAnimationBuilder {

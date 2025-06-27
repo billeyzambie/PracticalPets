@@ -1,6 +1,6 @@
 package billeyzambie.practicalpets.datagen;
 
-import billeyzambie.practicalpets.PracticalPets;
+import billeyzambie.practicalpets.misc.PracticalPets;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;

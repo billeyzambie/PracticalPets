@@ -1,10 +1,17 @@
 package billeyzambie.practicalpets.entity.dinosaur;
 
-import billeyzambie.practicalpets.ModEntities;
-import billeyzambie.practicalpets.ModSounds;
+import billeyzambie.practicalpets.misc.PPEntities;
+import billeyzambie.practicalpets.misc.PPItems;
+import billeyzambie.practicalpets.misc.PPSounds;
 import billeyzambie.practicalpets.goal.DuckFollowParentGoal;
+import billeyzambie.practicalpets.network.DuckBiteFloorAnimPacket;
+import billeyzambie.practicalpets.network.ModNetworking;
+import billeyzambie.practicalpets.util.PPTags;
+import billeyzambie.practicalpets.util.PPUtil;
+import billeyzambie.practicalpets.util.WeightedList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.FluidTags;
@@ -17,19 +24,26 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class Duck extends AbstractDuck {
     public final float floatWaveRandomOffset;
@@ -70,6 +84,27 @@ public class Duck extends AbstractDuck {
     public int getLevel1MaxHealth() {
         return 6;
     }
+
+    public static boolean duckCanSpawn(
+            EntityType<Duck> duckEntityType,
+            LevelAccessor levelAccessor,
+            MobSpawnType mobSpawnType,
+            BlockPos blockPos,
+            RandomSource randomSource
+    ) {
+        try {
+            boolean animalCanSpawn = checkAnimalSpawnRules(duckEntityType, levelAccessor, mobSpawnType, blockPos, randomSource);
+            BlockPos below = blockPos.below();
+            boolean nearWater = levelAccessor.getFluidState(below.north()).is(FluidTags.WATER)
+                    || levelAccessor.getFluidState(below.south()).is(FluidTags.WATER)
+                    || levelAccessor.getFluidState(below.east()).is(FluidTags.WATER)
+                    || levelAccessor.getFluidState(below.west()).is(FluidTags.WATER);
+            return animalCanSpawn && nearWater;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 
     @Override
     public int getLevel1AttackDamage() {
@@ -126,22 +161,22 @@ public class Duck extends AbstractDuck {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return ModSounds.DUCK_AMBIENT.get();
+        return PPSounds.DUCK_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(@NotNull DamageSource damageSource) {
-        return ModSounds.DUCK_HURT.get();
+        return PPSounds.DUCK_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return ModSounds.DUCK_DEATH.get();
+        return PPSounds.DUCK_DEATH.get();
     }
 
     @Override
     public AgeableMob getBreedOffspring(@NotNull ServerLevel level, @NotNull AgeableMob partner) {
-        Duck baby = ModEntities.DUCK.get().create(level);
+        Duck baby = PPEntities.DUCK.get().create(level);
 
         if (baby != null) {
             if (this.isTame()) {
@@ -194,13 +229,20 @@ public class Duck extends AbstractDuck {
 
     @Nullable
     public Duck followingDuck = null;
+
     public boolean isBeingFollowedByDuckling() {
         return this.level().getEntitiesOfClass(this.getClass(), this.getBoundingBox().inflate(8.0D, 4.0D, 8.0D)).stream().anyMatch(duck -> duck.followingDuck == this);
     }
 
+    private static final VoxelShape BABY_LIQUID_SHAPE = LiquidBlock.STABLE_SHAPE.move(0, 0.25f, 0);
+
     @Override
     public void aiStep() {
         super.aiStep();
+
+        if (!this.level().isClientSide()) {
+            this.tickBiteFloor();
+        }
 
         //Copied from vanilla chicken
         this.oFlap = this.flap;
@@ -215,7 +257,10 @@ public class Duck extends AbstractDuck {
 
         if (this.isInWater()) {
             CollisionContext collisioncontext = CollisionContext.of(this);
-            if (collisioncontext.isAbove(LiquidBlock.STABLE_SHAPE, this.blockPosition(), true) && !this.level().getFluidState(this.blockPosition().above()).is(FluidTags.WATER)) {
+            if (
+                    collisioncontext.isAbove(this.isBaby() ? BABY_LIQUID_SHAPE : LiquidBlock.STABLE_SHAPE, this.blockPosition(), true)
+                            && !this.level().getFluidState(this.blockPosition().above()).is(FluidTags.WATER)
+            ) {
                 this.setOnGround(true);
             } else {
                 this.setDeltaMovement(this.getDeltaMovement().scale(0.5D).add(0.0D, 0.05D, 0.0D));
@@ -227,13 +272,51 @@ public class Duck extends AbstractDuck {
 
     }
 
+    public final AnimationState biteFloorAnimationState = new AnimationState();
+    private boolean navigationWasDone = true;
+    private void tickBiteFloor() {
+        boolean navigationIsDone = this.getNavigation().isDone();
+        if (navigationIsDone && !this.navigationWasDone && this.getRandom().nextFloat() * 0 - (this.petLevel() - 1) / 3f < 1) {
+
+            BlockState blockState = this.level().getBlockState(this.blockPosition());
+
+            if (this.isInWater() || blockState.is(PPTags.Blocks.GRASS)) {
+                this.sendBiteFloorAnimation();
+                if (!this.isInWater() || this.random.nextBoolean()) {
+                    this.spawnFoundItem(this.isInWater() ? ItemCanBeFoundIn.WATER : ItemCanBeFoundIn.GRASS);
+                }
+            }
+
+        }
+        this.navigationWasDone = navigationIsDone;
+    }
+
+    private void spawnFoundItem(ItemCanBeFoundIn itemWasFoundIn) {
+        WeightedList<FoundItemChoice> weightedList = new WeightedList<>();
+        for (FoundItemChoice itemChoice : FoundItemChoice.LIST_OF) {
+            if (
+                    itemChoice.itemCanBeFoundIn == ItemCanBeFoundIn.BOTH
+                    || itemChoice.itemCanBeFoundIn == itemWasFoundIn
+            ) {
+                float finalWeight = itemChoice.defaultWeight();
+                if (itemChoice.isTreasure)
+                    finalWeight += Math.max(0, (this.petLevel() - 5) / 3f);
+                weightedList.add(itemChoice, finalWeight);
+            }
+        }
+        weightedList.getRandomChoice().spawnAtEntity(this);
+    }
+
+    private void sendBiteFloorAnimation() {
+        ModNetworking.CHANNEL.send(
+                PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> this),
+                new DuckBiteFloorAnimPacket(this.getId())
+        );
+    }
+
     @Override
     public @NotNull SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor level, @NotNull DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag tag) {
         return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData, tag);
-    }
-
-    public static boolean canSpawn(EntityType<Duck> ignoredDuckEntityType, ServerLevelAccessor serverLevelAccessor, MobSpawnType ignoredMobSpawnType, BlockPos blockPos, RandomSource ignoredRandomSource) {
-        return isBrightEnoughToSpawn(serverLevelAccessor, blockPos);
     }
 
     @Override
@@ -257,4 +340,124 @@ public class Duck extends AbstractDuck {
             return fluid.is(FluidTags.WATER) || super.isStableDestination(pos);
         }
     }
+
+    enum ItemCanBeFoundIn {GRASS, WATER, BOTH}
+
+    record FoundItemChoice(
+            @Nullable Item item,
+            @Nullable ResourceLocation lootTable,
+            ItemCanBeFoundIn itemCanBeFoundIn,
+            boolean isTreasure,
+            float defaultWeight
+    ) {
+        public void spawnAtEntity(LivingEntity entity) {
+            if (item == null && lootTable == null) {
+                throw new IllegalArgumentException("Duck.FoundItemChoice item and lootTable cannot both be null");
+            }
+            if (item != null) {
+                if (lootTable != null)
+                    throw new IllegalArgumentException("Duck.FoundItemChoice item and lootTable cannot both be defined");
+                entity.spawnAtLocation(item);
+            } else {
+                PPUtil.dropLootTableAtEntity(entity, lootTable);
+            }
+        }
+
+        public static final List<FoundItemChoice> LIST_OF = List.of(
+                new FoundItemChoice(
+                        null,
+                        BuiltInLootTables.FISHING_JUNK,
+                        ItemCanBeFoundIn.BOTH,
+                        false,
+                        9
+                ),
+                new FoundItemChoice(
+                        null,
+                        BuiltInLootTables.FISHING_JUNK,
+                        ItemCanBeFoundIn.WATER,
+                        false,
+                        30
+                ),
+                new FoundItemChoice(
+                        null,
+                        BuiltInLootTables.FISHING,
+                        ItemCanBeFoundIn.WATER,
+                        true,
+                        9
+                ),
+                new FoundItemChoice(
+                        PPItems.RUBBER_DUCKY_PET_HAT.get(),
+                        null,
+                        ItemCanBeFoundIn.WATER,
+                        true,
+                        1
+                ),
+                new FoundItemChoice(
+                        PPItems.DIAMOND_NUGGET.get(),
+                        null,
+                        ItemCanBeFoundIn.BOTH,
+                        true,
+                        1
+                ),
+                new FoundItemChoice(
+                        PPItems.CHICKEN_NUGGET.get(),
+                        null,
+                        ItemCanBeFoundIn.BOTH,
+                        false,
+                        8
+                ),
+                new FoundItemChoice(
+                        Items.IRON_NUGGET,
+                        null,
+                        ItemCanBeFoundIn.BOTH,
+                        true,
+                        1
+                ),
+                new FoundItemChoice(
+                        Items.GOLD_NUGGET,
+                        null,
+                        ItemCanBeFoundIn.BOTH,
+                        true,
+                        1
+                ),
+                new FoundItemChoice(
+                        Items.WHEAT_SEEDS,
+                        null,
+                        ItemCanBeFoundIn.BOTH,
+                        true,
+                        30
+                ),
+                new FoundItemChoice(
+                        Items.CARROT,
+                        null,
+                        ItemCanBeFoundIn.BOTH,
+                        true,
+                        10
+                ),
+                new FoundItemChoice(
+                        Items.MELON_SEEDS,
+                        null,
+                        ItemCanBeFoundIn.GRASS,
+                        true,
+                        10
+                ),
+                new FoundItemChoice(
+                        Items.BEETROOT_SEEDS,
+                        null,
+                        ItemCanBeFoundIn.GRASS,
+                        true,
+                        10
+                ),
+                new FoundItemChoice(
+                        Items.PUMPKIN_SEEDS,
+                        null,
+                        ItemCanBeFoundIn.GRASS,
+                        true,
+                        10
+                )
+        );
+
+    }
+
+
 }

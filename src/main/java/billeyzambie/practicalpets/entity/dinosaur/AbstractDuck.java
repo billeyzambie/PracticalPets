@@ -100,7 +100,10 @@ public abstract class AbstractDuck extends PracticalPet {
                 this.resetIdleFlapTime();
             }
             else {
-                this.setIdleFlapTime(this.getIdleFlapTime() + 1);
+                int nextFlapTime = this.getIdleFlapTime() + 1;
+                if (!this.isInSittingPose() || wasIdleFlapping || nextFlapTime < 0) {
+                    this.setIdleFlapTime(nextFlapTime);
+                }
             }
             if (this.isIdleFlapping() || wasIdleFlapping)
                 ModNetworking.CHANNEL.send(
@@ -128,7 +131,7 @@ public abstract class AbstractDuck extends PracticalPet {
 
     //isFlapping already exists in LivingEntity so I had to name it duckIsFlapping
     public boolean duckIsFlapping() {
-        return !this.onGround() || this.isIdleFlapping();
+        return (!this.onGround() && !this.isInWater()) || this.isIdleFlapping();
     }
 
     public boolean isIdleFlapping() {

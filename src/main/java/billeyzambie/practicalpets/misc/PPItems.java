@@ -1,7 +1,8 @@
-package billeyzambie.practicalpets;
+package billeyzambie.practicalpets.misc;
 
 import billeyzambie.practicalpets.items.*;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
@@ -12,7 +13,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Supplier;
 
-public class ModItems {
+public class PPItems {
     public static final DeferredRegister<Item> REGISTRY = DeferredRegister.create(ForgeRegistries.ITEMS, PracticalPets.MODID);
     private static <I extends Item> RegistryObject<I> register(final String name, final Supplier<? extends I> sup) {
         //more stuff here soon
@@ -52,8 +53,17 @@ public class ModItems {
     );
     public static final RegistryObject<Item> BANANA_PEEL = register(
         "banana_peel",
-            () -> new BlockItem(ModBlocks.BANANA_PEEL.get(), new Item.Properties())
+            () -> new BlockItem(PPBlocks.BANANA_PEEL.get(), new Item.Properties())
     );
+    public static final RegistryObject<Item> DIAMOND_NUGGET = register(
+            "diamond_nugget",
+            () -> new Item(new Item.Properties())
+    );
+    public static final RegistryObject<Item> CHICKEN_NUGGET = register(
+            "chicken_nugget",
+            () -> new Item(new Item.Properties().food(new FoodProperties.Builder().meat().nutrition(1).fast().saturationMod(0.6f).build()))
+    );
+
     public static final RegistryObject<Item> PET_BOWTIE = register(
             "pet_bowtie",
             () -> new PetBowtie("bowtie")
@@ -62,12 +72,17 @@ public class ModItems {
             "anniversary_pet_hat_0",
             () -> new AnniversaryPetHat("anniversary_hat_0", 2, new Item.Properties().stacksTo(1).rarity(Rarity.EPIC))
     );
+    public static final RegistryObject<Item> RUBBER_DUCKY_PET_HAT = register(
+            "rubber_ducky_pet_hat",
+            RubberDuckyPetHat::new
+    );
+
     public static final RegistryObject<ForgeSpawnEggItem> BANANA_DUCK_SPAWN_EGG = register(
             "banana_duck_spawn_egg",
-            () -> new ForgeSpawnEggItem(ModEntities.BANANA_DUCK, 0xfecb32, 0xFFF0BB, new Item.Properties())
+            () -> new ForgeSpawnEggItem(PPEntities.BANANA_DUCK, 0xfecb32, 0xFFF0BB, new Item.Properties())
     );
     public static final RegistryObject<ForgeSpawnEggItem> DUCK_SPAWN_EGG = register(
             "duck_spawn_egg",
-            () -> new ForgeSpawnEggItem(ModEntities.DUCK, 0x5E4523, 0x193F0A, new Item.Properties())
+            () -> new ForgeSpawnEggItem(PPEntities.DUCK, 0x5E4523, 0x193F0A, new Item.Properties())
     );
 }
