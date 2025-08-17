@@ -29,7 +29,8 @@ public class PracticalPetSpawns {
 
     private static boolean isDuckBiome(Holder<Biome> biome) {
         return (biome.is(Tags.Biomes.IS_SWAMP)
-                        || biome.is(BiomeTags.IS_RIVER)
+                || biome.is(BiomeTags.IS_JUNGLE)
+                || biome.is(BiomeTags.IS_RIVER)
                         || biome.is(Tags.Biomes.IS_PLAINS)
                         || biome.is(BiomeTags.IS_FOREST)
                         || biome.is(Tags.Biomes.IS_LUSH)

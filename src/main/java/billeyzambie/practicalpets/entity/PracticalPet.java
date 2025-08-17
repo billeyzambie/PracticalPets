@@ -239,7 +239,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     }
 
     public boolean shouldDefendOwner() {
-        return this.shouldDefendSelf();
+        return this.anyEquipmentIsBrave();
     }
 
     public boolean shouldDefendSelf() {
@@ -456,7 +456,6 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
 
     public void setVariant(int variant) {
         this.entityData.set(VARIANT, variant);
-        setAttributesAccordingToPetLevel();
     }
 
     public int petLevel() {

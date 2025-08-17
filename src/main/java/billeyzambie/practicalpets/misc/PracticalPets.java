@@ -50,6 +50,7 @@ public class PracticalPets
             .displayItems((parameters, output) -> {
                 output.accept(PPItems.BANANA_DUCK_SPAWN_EGG.get());
                 output.accept(PPItems.DUCK_SPAWN_EGG.get());
+                output.accept(PPItems.RAT_SPAWN_EGG.get());
                 output.accept(PPItems.POULTRY_BANANA.get());
                 output.accept(PPItems.BANANA_PEEL.get());
                 output.accept(PPItems.LEATHER_DUCK_ARMOR.get());

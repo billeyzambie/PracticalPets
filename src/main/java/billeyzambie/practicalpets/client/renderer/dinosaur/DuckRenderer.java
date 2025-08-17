@@ -37,7 +37,7 @@ public class DuckRenderer extends PracticalPetRenderer<Duck, DuckModel> {
             BUTCHY_TEXTURE,
             PARADISE_TEXTURE,
             CAYUGA_TEXTURE
-};
+    };
 
     private static final ResourceLocation[] BABY_TEXTURES = {
             BABY_TEXTURE,

@@ -2,6 +2,7 @@ package billeyzambie.practicalpets.misc;
 
 import billeyzambie.practicalpets.entity.dinosaur.BananaDuck;
 import billeyzambie.practicalpets.entity.dinosaur.Duck;
+import billeyzambie.practicalpets.entity.otherpet.Rat;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacements;
@@ -31,6 +32,12 @@ public class PPEntities {
                     .sized(0.6f, 0.6f)
                     .build("duck")
     );
+    public static final RegistryObject<EntityType<Rat>> RAT = REGISTRY.register(
+            "rat",
+            () -> EntityType.Builder.of(Rat::new, MobCategory.CREATURE)
+                    .sized(0.6f, 0.33f)
+                    .build("rat")
+    );
 
     @SubscribeEvent
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
@@ -50,6 +57,14 @@ public class PPEntities {
                         .add(Attributes.ATTACK_DAMAGE, 2)
                         .build()
         );
+        event.put(
+                RAT.get(),
+                Rat.createMobAttributes()
+                        .add(Attributes.MAX_HEALTH, 10)
+                        .add(Attributes.MOVEMENT_SPEED, 0.2)
+                        .add(Attributes.ATTACK_DAMAGE, 2)
+                        .build()
+        );
 
         SpawnPlacements.register(
                 BANANA_DUCK.get(),
@@ -62,6 +77,12 @@ public class PPEntities {
                 SpawnPlacements.Type.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Duck::duckCanSpawn
+        );
+        SpawnPlacements.register(
+                RAT.get(),
+                SpawnPlacements.Type.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                Animal::checkAnimalSpawnRules
         );
 
     }

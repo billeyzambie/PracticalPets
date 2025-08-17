@@ -20,6 +20,26 @@ import java.util.UUID;
 
 public abstract class AbstractDuck extends PracticalPet {
 
+    @Override
+    public int getLevel1MaxHealth() {
+        return 6;
+    }
+
+    @Override
+    public int getLevel1AttackDamage() {
+        return 2;
+    }
+
+    @Override
+    public int getLevel10MaxHealth() {
+        return 80;
+    }
+
+    @Override
+    public int getLevel10AttackDamage() {
+        return 16;
+    }
+
     public AbstractDuck(EntityType<? extends TamableAnimal> entityType, Level level) {
         super(entityType, level);
     }

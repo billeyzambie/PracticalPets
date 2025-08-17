@@ -87,4 +87,8 @@ public class PPItems {
             "duck_spawn_egg",
             () -> new ForgeSpawnEggItem(PPEntities.DUCK, 0x5E4523, 0x193F0A, new Item.Properties())
     );
+    public static final RegistryObject<ForgeSpawnEggItem> RAT_SPAWN_EGG = register(
+            "rat_spawn_egg",
+            () -> new ForgeSpawnEggItem(PPEntities.RAT, 0x718794, 0xffd1b3, new Item.Properties())
+    );
 }

@@ -32,26 +32,6 @@ import java.util.HashMap;
 public class BananaDuck extends AbstractDuck {
     private static final EntityDataAccessor<Integer> TOTAL_BANANAS_MADE = SynchedEntityData.defineId(BananaDuck.class, EntityDataSerializers.INT);
 
-    @Override
-    public int getLevel1MaxHealth() {
-        return 6;
-    }
-
-    @Override
-    public int getLevel1AttackDamage() {
-        return 2;
-    }
-
-    @Override
-    public int getLevel10MaxHealth() {
-        return 100;
-    }
-
-    @Override
-    public int getLevel10AttackDamage() {
-        return 20;
-    }
-
     public BananaDuck(EntityType<? extends TamableAnimal> entityType, Level level) {
         super(entityType, level);
     }

@@ -80,11 +80,6 @@ public class Duck extends AbstractDuck {
         return VARIANT_SPAWN_WEIGHTS;
     }
 
-    @Override
-    public int getLevel1MaxHealth() {
-        return 6;
-    }
-
     public static boolean duckCanSpawn(
             EntityType<Duck> duckEntityType,
             LevelAccessor levelAccessor,
@@ -103,22 +98,6 @@ public class Duck extends AbstractDuck {
         } catch (Exception e) {
             return false;
         }
-    }
-
-
-    @Override
-    public int getLevel1AttackDamage() {
-        return 2;
-    }
-
-    @Override
-    public int getLevel10MaxHealth() {
-        return 100;
-    }
-
-    @Override
-    public int getLevel10AttackDamage() {
-        return 20;
     }
 
     @Override
