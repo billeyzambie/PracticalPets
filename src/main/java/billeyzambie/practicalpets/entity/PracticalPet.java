@@ -75,6 +75,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     private static final EntityDataAccessor<ItemStack> NECK_ITEM = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.ITEM_STACK);
     private static final EntityDataAccessor<ItemStack> BODY_ITEM = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.ITEM_STACK);
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> IS_RAINBOW = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.BOOLEAN);
 
     @Override
     protected void defineSynchedData() {
@@ -88,6 +89,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         this.entityData.define(BODY_ITEM, ItemStack.EMPTY);
         this.entityData.define(VARIANT, 0);
         this.entityData.define(DATA_REMAINING_ANGER_TIME, 0);
+        this.entityData.define(IS_RAINBOW, false);
     }
 
     @Override
@@ -100,6 +102,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         this.setNeckItem(ItemStack.of(compoundTag.getCompound("NeckItem")));
         this.setBodyItem(ItemStack.of(compoundTag.getCompound("BodyItem")));
         this.setVariant(compoundTag.getInt("Variant"));
+        this.setIsRainbow(compoundTag.getBoolean("IsRainbow"));
         this.readPersistentAngerSaveData(this.level(), compoundTag);
     }
 
@@ -112,7 +115,8 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         compoundTag.put("HeadItem", getHeadItem().save(new CompoundTag()));
         compoundTag.put("NeckItem", getNeckItem().save(new CompoundTag()));
         compoundTag.put("BodyItem", getBodyItem().save(new CompoundTag()));
-        compoundTag.putInt("Variant", this.variant());
+        compoundTag.putInt("Variant", this.getVariant());
+        compoundTag.putBoolean("IsRainbow", this.isRainbow());
         this.addPersistentAngerSaveData(compoundTag);
     }
 
@@ -121,8 +125,13 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     @Override
     public @NotNull SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor level, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType spawnType,
                                                  @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag tag) {
-        int selectedVariant = pickRandomWeightedVariant();
+        int selectedVariant = this.pickRandomWeightedVariant();
         this.setVariant(selectedVariant);
+
+        this.setPetLevel(1);
+
+        if (this.random.nextInt(300) == 0)
+            this.setIsRainbow(true);
 
         return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData, tag);
     }
@@ -238,10 +247,9 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         return anyEquipmentIsBrave;
     }
 
-    public boolean shouldDefendOwner() {
+    public boolean shouldDefendOwner(@NotNull LivingEntity target) {
         return this.anyEquipmentIsBrave();
     }
-
     public boolean shouldDefendSelf() {
         return this.anyEquipmentIsBrave();
     }
@@ -450,12 +458,20 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         this.entityData.set(SHOULD_FOLLOW_OWNER, following);
     }
 
-    public int variant() {
+    public int getVariant() {
         return this.entityData.get(VARIANT);
     }
 
     public void setVariant(int variant) {
         this.entityData.set(VARIANT, variant);
+    }
+
+    public boolean isRainbow() {
+        return this.entityData.get(IS_RAINBOW);
+    }
+
+    public void setIsRainbow(boolean value) {
+        this.entityData.set(IS_RAINBOW, value);
     }
 
     public int petLevel() {
@@ -582,7 +598,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     }
 
     @Override
-    public @NotNull InteractionResult mobInteract(Player player, InteractionHand hand) {
+    public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
 
         ItemStack itemstack = player.getItemInHand(hand);
         Item item = itemstack.getItem();

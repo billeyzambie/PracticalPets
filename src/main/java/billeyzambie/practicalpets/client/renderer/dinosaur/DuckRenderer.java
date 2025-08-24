@@ -52,7 +52,7 @@ public class DuckRenderer extends PracticalPetRenderer<Duck, DuckModel> {
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull Duck duck) {
-        int variant = duck.variant();
-        return duck.isBaby() ? BABY_TEXTURES[variant] : ADULT_TEXTURES[variant];
+        int variant = duck.getVariant();
+        return duck.isBaby() ? BABY_TEXTURES[variant % BABY_TEXTURES.length] : ADULT_TEXTURES[variant % ADULT_TEXTURES.length];
     }
 }

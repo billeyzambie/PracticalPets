@@ -21,7 +21,7 @@ public class PracticalPetSpawns {
         if (isDuckBiome(biome)) {
             builder.getMobSpawnSettings().getSpawner(MobCategory.CREATURE).add(new MobSpawnSettings.SpawnerData(
                     PPEntities.DUCK.get(),
-                    200, 2, 4
+                    2000, 2, 4
             ));
         }
 
@@ -31,10 +31,10 @@ public class PracticalPetSpawns {
         return (biome.is(Tags.Biomes.IS_SWAMP)
                 || biome.is(BiomeTags.IS_JUNGLE)
                 || biome.is(BiomeTags.IS_RIVER)
-                        || biome.is(Tags.Biomes.IS_PLAINS)
-                        || biome.is(BiomeTags.IS_FOREST)
-                        || biome.is(Tags.Biomes.IS_LUSH)
-                        || biome.is(Tags.Biomes.IS_WET)
+                || biome.is(Tags.Biomes.IS_PLAINS)
+                || biome.is(BiomeTags.IS_FOREST)
+                || biome.is(Tags.Biomes.IS_LUSH)
+                || biome.is(Tags.Biomes.IS_WET)
         ) && !biome.is(Tags.Biomes.IS_HOT)
                 && !biome.is(Tags.Biomes.IS_COLD);
     }

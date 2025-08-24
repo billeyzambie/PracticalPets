@@ -177,14 +177,12 @@ public class RatModel extends PracticalPetModel<Rat> {
 
 		PPAnimationControllers.SIMPLE_SIT.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
 		if (!entity.isInSittingPose()) {
-			this.animateWalk(RatAnimation.walk, limbSwing, limbSwingAmount, 3f, 4f);
+			float mult1 = 3f;
+			float mult2 = 4f;
+			this.animateWalk(RatAnimation.walk, limbSwing, limbSwingAmount, mult1, mult2);
+			tail.yRot += Mth.cos(limbSwing * mult1 * Mth.PI * 5.33f / 20f) * limbSwingAmount * mult2 * Mth.PI / 18f;
 		}
 
-	}
-
-	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-		ooo.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
 	}
 
 }

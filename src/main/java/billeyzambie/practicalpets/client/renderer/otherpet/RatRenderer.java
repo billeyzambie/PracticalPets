@@ -32,6 +32,6 @@ public class RatRenderer extends PracticalPetRenderer<Rat, RatModel> {
         if (rat.getIsAlbino())
             return ALBINO_TEXTURE;
 
-        return BASE_TEXTURES[rat.variant()];
+        return BASE_TEXTURES[rat.getVariant() % BASE_TEXTURES.length];
     }
 }

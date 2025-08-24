@@ -165,9 +165,9 @@ public class Duck extends AbstractDuck {
 
             if (partner instanceof Duck duckPartner) {
                 if (this.random.nextBoolean())
-                    baby.setVariant(this.variant());
+                    baby.setVariant(this.getVariant());
                 else
-                    baby.setVariant(duckPartner.variant());
+                    baby.setVariant(duckPartner.getVariant());
             }
         }
 

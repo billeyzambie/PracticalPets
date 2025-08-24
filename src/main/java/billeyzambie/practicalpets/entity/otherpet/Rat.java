@@ -7,16 +7,23 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Rat extends PracticalPet {
 
@@ -94,7 +101,7 @@ public class Rat extends PracticalPet {
     @Override
     public @NotNull SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor level, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag tag) {
         SpawnGroupData result = super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData, tag);
-        this.setPatternColor(this.variant());
+        this.setPatternColor(this.getVariant());
         this.setPatternType(this.random.nextInt(PATTERN_TYPE_COUNT));
         if (this.random.nextInt(100) == 0) {
             this.setIsAlbino(true);
@@ -143,6 +150,45 @@ public class Rat extends PracticalPet {
                 || super.isTameItem(itemStack);
     }
 
+    private static final Map<Item, Boolean> BASE_COMMON_CACHE = new ConcurrentHashMap<>();
+
+    public static boolean itemCanBeRobbed(ItemStack stack) {
+        if (stack.isEmpty()) return false;
+
+        Rarity stackRarity = stack.getRarity();
+        if (stackRarity == Rarity.COMMON) return true;
+        if (stackRarity != Rarity.RARE) return false;
+
+        return isBaseCommon(stack.getItem());
+    }
+
+    private static boolean isBaseCommon(Item item) {
+        return BASE_COMMON_CACHE.computeIfAbsent(item,
+                it -> it.getRarity(ItemStack.EMPTY) == Rarity.COMMON
+        );
+    }
+
+    @Override
+    public boolean shouldDefendOwner(@NotNull LivingEntity target) {
+        if (super.shouldDefendOwner(target))
+            return true;
+        return itemCanBeRobbed(target.getMainHandItem());
+    }
+
+    @Override
+    public boolean doHurtTarget(@NotNull Entity entity) {
+        boolean result = super.doHurtTarget(entity);
+        if (
+                result
+                        && entity instanceof LivingEntity living
+                        && itemCanBeRobbed(living.getMainHandItem())
+        ) {
+            this.spawnAtLocation(living.getMainHandItem());
+            living.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+        }
+        return result;
+    }
+
     @Override
     public AgeableMob getBreedOffspring(@NotNull ServerLevel level, @NotNull AgeableMob partner) {
         Rat baby = PPEntities.RAT.get().create(level);
@@ -155,11 +201,11 @@ public class Rat extends PracticalPet {
 
             if (partner instanceof Rat ratPartner) {
                 if (this.random.nextBoolean()) {
-                    baby.setVariant(this.variant());
+                    baby.setVariant(this.getVariant());
                     baby.setPatternColor(ratPartner.getPatternColor());
                 }
                 else {
-                    baby.setVariant(ratPartner.variant());
+                    baby.setVariant(ratPartner.getVariant());
                     baby.setPatternColor(this.getPatternColor());
                 }
 
@@ -181,5 +227,25 @@ public class Rat extends PracticalPet {
         }
 
         return baby;
+    }
+
+    @Override
+    protected @Nullable SoundEvent getAmbientSound() {
+        return SoundEvents.FOX_AMBIENT;
+    }
+
+    @Override
+    protected @Nullable SoundEvent getHurtSound(@NotNull DamageSource damageSource) {
+        return SoundEvents.FOX_HURT;
+    }
+
+    @Override
+    protected @Nullable SoundEvent getDeathSound() {
+        return SoundEvents.FOX_DEATH;
+    }
+
+    @Override
+    public float getVoicePitch() {
+        return super.getVoicePitch() * 1.9f;
     }
 }

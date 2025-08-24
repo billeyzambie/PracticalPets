@@ -1,9 +1,12 @@
 package billeyzambie.practicalpets.misc;
 
 import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.entity.otherpet.Rat;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -70,4 +73,5 @@ public class PPEvents {
             pet.moveTo(player.getX(), player.getY(), player.getZ());
         });
     }
+
 }

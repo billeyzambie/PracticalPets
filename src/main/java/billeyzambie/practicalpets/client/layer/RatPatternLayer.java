@@ -47,7 +47,7 @@ public class RatPatternLayer extends RenderLayer<Rat, RatModel> {
             return;
 
         int textureIndex = rat.getPatternType() * Rat.COLOR_TYPE_COUNT + rat.getPatternColor();
-        ResourceLocation texture = PATTERN_TEXTURES[textureIndex];
+        ResourceLocation texture = PATTERN_TEXTURES[textureIndex % PATTERN_TEXTURES.length];
 
         VertexConsumer vertexconsumer = p_117059_.getBuffer(RenderType.entityTranslucent(texture));
         this.getParentModel().renderToBuffer(p_117058_, vertexconsumer, p_117060_, LivingEntityRenderer.getOverlayCoords(rat, 0.0F), 1.0F, 1.0F, 1.0F, 1.0F);

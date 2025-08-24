@@ -285,11 +285,6 @@ public class BananaDuckModel extends PracticalPetModel<BananaDuck> {
     }
 
     @Override
-    public void renderToBuffer(@NotNull PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        ooo.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-    }
-
-    @Override
     public @NotNull ModelPart root() {
         return ooo;
     }
