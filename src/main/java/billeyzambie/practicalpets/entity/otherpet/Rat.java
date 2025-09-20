@@ -1,6 +1,7 @@
 package billeyzambie.practicalpets.entity.otherpet;
 
 import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.goal.DropHeldItemToOwnerGoal;
 import billeyzambie.practicalpets.misc.PPEntities;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -12,6 +13,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -183,7 +185,7 @@ public class Rat extends PracticalPet {
                         && entity instanceof LivingEntity living
                         && itemCanBeRobbed(living.getMainHandItem())
         ) {
-            this.spawnAtLocation(living.getMainHandItem());
+            this.setItemSlot(EquipmentSlot.MAINHAND, living.getMainHandItem());
             living.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
         }
         return result;
@@ -248,4 +250,33 @@ public class Rat extends PracticalPet {
     public float getVoicePitch() {
         return super.getVoicePitch() * 1.9f;
     }
+
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(5, new DropHeldItemToOwnerGoal(this, 1.5, false));
+    }
+
+    @Override
+    protected double getMeleeAttackSpeedMultiplier() {
+        return 1.5;
+    }
+
+    @Override
+    protected double getFollowOwnerSpeed() {
+        return 1.5;
+    }
+
+    @Override
+    protected void dropEquipment() {
+        super.dropEquipment();
+        ItemStack itemstack = this.getItemBySlot(EquipmentSlot.MAINHAND);
+        if (!itemstack.isEmpty()) {
+            this.spawnAtLocation(itemstack);
+            this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+        }
+    }
+
+    public float lastWalkTime = 0;
+    public float lastRunTime = 0;
 }

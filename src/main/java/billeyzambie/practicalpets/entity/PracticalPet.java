@@ -26,6 +26,7 @@ import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.ResetUniversalAngerTargetGoal;
@@ -248,10 +249,10 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     }
 
     public boolean shouldDefendOwner(@NotNull LivingEntity target) {
-        return this.anyEquipmentIsBrave();
+        return this.anyEquipmentIsBrave() || (this.getMaxHealth() >= 20 && this.getAttributeValue(Attributes.ATTACK_DAMAGE) >= 3);
     }
     public boolean shouldDefendSelf() {
-        return this.anyEquipmentIsBrave();
+        return this.anyEquipmentIsBrave() || (this.getMaxHealth() >= 20 && this.getAttributeValue(Attributes.ATTACK_DAMAGE) >= 3);
     }
 
     public abstract int getLevel1MaxHealth();
@@ -277,7 +278,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     }
 
     public boolean shouldPanic() {
-        return !anyEquipmentIsBrave();
+        return !this.shouldDefendSelf();
     }
 
     public PracticalPet(EntityType<? extends TamableAnimal> entityType, Level level) {
@@ -363,8 +364,8 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
             this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(10, new PanicIfShouldGoal(this, 1.3D));
         this.goalSelector.addGoal(20, new SitWhenOrderedToGoal(this));
-        this.goalSelector.addGoal(50, new MeleeAttackGoal(this, 1.25, false));
-        this.goalSelector.addGoal(60, new FollowOwnerWanderableGoal(this, 1.0D, 10.0F, 5.0F, false));
+        this.goalSelector.addGoal(50, new MeleeAttackGoal(this, this.getMeleeAttackSpeedMultiplier(), false));
+        this.goalSelector.addGoal(60, new FollowOwnerWanderableGoal(this, this.getFollowOwnerSpeed(), 10.0F, 5.0F, false));
         this.goalSelector.addGoal(70, new PredicateTemptGoal(this, 1.0D, PracticalPet::isFood, false));
 
         Goal followParentGoal = getFollowParentGoal();
@@ -388,6 +389,14 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         this.targetSelector.addGoal(30, new OwnerHurtTargetIfShouldGoal(this));
         if (this.shouldRegisterSpreadingAnger())
             this.targetSelector.addGoal(40, new ResetUniversalAngerTargetGoal<>(this, true));
+    }
+
+    protected double getFollowOwnerSpeed() {
+        return 1.25D;
+    }
+
+    protected double getMeleeAttackSpeedMultiplier() {
+        return 1.25;
     }
 
     @Nullable

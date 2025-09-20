@@ -54,7 +54,7 @@ public abstract class PracticalPetModel<T extends Entity> extends HierarchicalMo
 
     protected void hurtAnimation(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.head().xRot += 9 * ((float) Math.PI / 180F);
-        this.root().x += (float) (Math.sin(ageInTicks * 100 * ((float) Math.PI / 180F)) / 15);
+        this.root().x += (float) (Math.sin(ageInTicks * 100 * Mth.PI / 180f) / 15f);
     }
 
     protected float redMultiplier = 1;

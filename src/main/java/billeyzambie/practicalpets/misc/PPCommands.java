@@ -15,6 +15,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -27,38 +29,36 @@ public final class PPCommands {
     public static void onRegisterCommands(RegisterCommandsEvent event) {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
 
-        dispatcher.register(Commands.literal("practicalpets")
+        dispatcher.register(Commands.literal("practicalpets:rat_cube")
                 .requires(src -> src.hasPermission(2))
-                .then(Commands.literal("ratcube")
-                        .executes(context -> spawnRatCubeAtPlayer(context, 1, true))
-                        .then(Commands.argument("no_ai", BoolArgumentType.bool())
+                .executes(context -> spawnRatCubeAtPlayer(context, 1, true))
+                .then(Commands.argument("no_ai", BoolArgumentType.bool())
+                        .executes(context -> spawnRatCubeAtPlayer(
+                                context,
+                                1,
+                                BoolArgumentType.getBool(context, "no_ai")
+                        ))
+                        .then(Commands.argument("spacing", IntegerArgumentType.integer(1, 8))
                                 .executes(context -> spawnRatCubeAtPlayer(
                                         context,
                                         IntegerArgumentType.getInteger(context, "spacing"),
                                         BoolArgumentType.getBool(context, "no_ai")
                                 ))
+                        )
+                        .then(Commands.argument("position", BlockPosArgument.blockPos())
+                                .executes(context -> spawnRatCubeAtPos(
+                                        context,
+                                        BlockPosArgument.getLoadedBlockPos(context, "position"),
+                                        IntegerArgumentType.getInteger(context, "spacing"),
+                                        BoolArgumentType.getBool(context, "no_ai")
+                                ))
                                 .then(Commands.argument("spacing", IntegerArgumentType.integer(1, 8))
-                                        .executes(context -> spawnRatCubeAtPlayer(
-                                                context,
-                                                IntegerArgumentType.getInteger(context, "spacing"),
-                                                BoolArgumentType.getBool(context, "no_ai")
-                                        ))
-                                )
-                                .then(Commands.argument("position", BlockPosArgument.blockPos())
                                         .executes(context -> spawnRatCubeAtPos(
                                                 context,
                                                 BlockPosArgument.getLoadedBlockPos(context, "position"),
-                                                1,
+                                                IntegerArgumentType.getInteger(context, "spacing"),
                                                 BoolArgumentType.getBool(context, "no_ai")
                                         ))
-                                        .then(Commands.argument("spacing", IntegerArgumentType.integer(1, 8))
-                                                .executes(context -> spawnRatCubeAtPos(
-                                                        context,
-                                                        BlockPosArgument.getLoadedBlockPos(context, "position"),
-                                                        IntegerArgumentType.getInteger(context, "spacing"),
-                                                        BoolArgumentType.getBool(context, "no_ai")
-                                                ))
-                                        )
                                 )
                         )
                 )
@@ -101,6 +101,10 @@ public final class PPCommands {
                     String a = String.valueOf((char) ('A' + i));
                     String b = String.valueOf((char) ('A' + j));
                     rat.setCustomName(Component.literal(a + b + k));
+
+                    if (!noAi) {
+                        rat.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 50, 0, false, false, true));
+                    }
 
                     level.addFreshEntity(rat);
                 }

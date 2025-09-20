@@ -8,7 +8,7 @@ public class AnimationController implements Animatable {
 
     @FunctionalInterface
     public interface TransitionPredicate {
-        TransitionPredicate ALWAYS_FALSE = (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime) -> false;
+        TransitionPredicate ALWAYS_FALSE = (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, blendWeight) -> false;
 
         boolean test(
                 PracticalPetModel<Entity> model,
@@ -28,15 +28,39 @@ public class AnimationController implements Animatable {
         }
     }
 
+    @FunctionalInterface
+    public interface TransitionAction {
+        void run(
+                PracticalPetModel<Entity> model,
+                Entity entity,
+                float limbSwing,
+                float limbSwingAmount,
+                float ageInTicks,
+                float animTime,
+                float netHeadYaw,
+                float headPitch,
+                float blendWeight
+        );
+    }
+
     public static class State {
         List<Animatable> animations;
         List<TransitionPredicate> transitions;
+        TransitionAction onEntry;
+        TransitionAction onExit;
         float blendOutTime;
 
-        public State(List<Animatable> animations, List<TransitionPredicate> transitions, float blendOutTime) {
+        public State(List<Animatable> animations, List<TransitionPredicate> transitions,
+                     float blendOutTime, TransitionAction onEntry, TransitionAction onExit) {
             this.animations = animations;
             this.transitions = transitions;
             this.blendOutTime = blendOutTime;
+            this.onEntry = onEntry;
+            this.onExit = onExit;
+        }
+
+        public State(List<Animatable> animations, List<TransitionPredicate> transitions, float blendOutTime) {
+            this(animations, transitions, blendOutTime, null, null);
         }
 
         public State(List<Animatable> animations, List<TransitionPredicate> transitions) {
@@ -54,8 +78,8 @@ public class AnimationController implements Animatable {
 
     @Override
     public <T extends Entity> void play(
-            PracticalPetModel<T> model,
-            T entity,
+            PracticalPetModel<T> modelT,
+            T entityT,
             float limbSwing,
             float limbSwingAmount,
             float ageInTicks,
@@ -64,74 +88,114 @@ public class AnimationController implements Animatable {
             float headPitch,
             float blendWeight
     ) {
-        if (entity instanceof ACEntity acEntity) {
+        if (entityT instanceof ACEntity acEntity) {
+            @SuppressWarnings("unchecked")
+            PracticalPetModel<Entity> model = (PracticalPetModel<Entity>) modelT;
+
             ACData acData;
             ACData entityACData = acEntity.getACData().get(name);
-            if (entityACData == null)
+            boolean firstTime = false;
+            if (entityACData == null) {
                 acEntity.getACData().put(name, acData = new ACData(ageInTicks));
-            else
+                firstTime = true;
+            } else {
                 acData = entityACData;
+            }
+
             State state = states.get(acData.getStateIndex());
             State previousState = states.get(acData.getPreviousStateIndex());
+
+            if (firstTime && state.onEntry != null) {
+                state.onEntry.run(
+                        model, entityT,
+                        limbSwing, limbSwingAmount,
+                        ageInTicks,
+                        0.0F,
+                        netHeadYaw, headPitch,
+                        blendWeight
+                );
+            }
 
             float stateTime = ageInTicks - acData.getTimeStateStarted();
             float previousStateTime = ageInTicks - acData.getTimePreviousStateStarted();
 
             float transitionBlendFactor =
-                    previousState.blendOutTime == 0 ? 1 :
-                            (Math.min(1, (stateTime) / (20 * previousState.blendOutTime)));
+                    previousState.blendOutTime == 0 ? 1.0F :
+                            Math.min(1.0F, (stateTime) / (20.0F * previousState.blendOutTime));
 
-            if (transitionBlendFactor != 0)
-                state.animations.forEach(a -> a.play(
-                        (PracticalPetModel<Entity>) model,
-                        entity,
+            if (transitionBlendFactor != 0.0F) {
+                for (Animatable a : state.animations) {
+                    a.play(
+                            model,
+                            entityT,
+                            limbSwing,
+                            limbSwingAmount,
+                            ageInTicks,
+                            stateTime,
+                            netHeadYaw,
+                            headPitch,
+                            blendWeight * transitionBlendFactor
+                    );
+                }
+            }
+
+            if (transitionBlendFactor != 1.0F) {
+                for (Animatable a : previousState.animations) {
+                    a.play(
+                            model,
+                            entityT,
+                            limbSwing,
+                            limbSwingAmount,
+                            ageInTicks,
+                            previousStateTime,
+                            netHeadYaw,
+                            headPitch,
+                            blendWeight * (1.0F - transitionBlendFactor)
+                    );
+                }
+            }
+
+            List<TransitionPredicate> transitions = state.transitions;
+            for (int i = 0; i < transitions.size(); i++) {
+                TransitionPredicate predicate = transitions.get(i);
+                if (predicate != null && predicate.test(
+                        model,
+                        entityT,
                         limbSwing,
                         limbSwingAmount,
                         ageInTicks,
                         stateTime,
                         netHeadYaw,
                         headPitch,
-                        blendWeight * transitionBlendFactor
-                ));
-
-            if (transitionBlendFactor != 1)
-                previousState.animations.forEach(a -> a.play(
-                        (PracticalPetModel<Entity>) model,
-                        entity,
-                        limbSwing,
-                        limbSwingAmount,
-                        ageInTicks,
-                        previousStateTime,
-                        netHeadYaw,
-                        headPitch,
-                        blendWeight * (1 - transitionBlendFactor)
-                ));
-
-
-            List<TransitionPredicate> transitions = state.transitions;
-            for (int i = 0; i < transitions.size(); i++) {
-                TransitionPredicate transitionPredicate = transitions.get(i);
-                if (
-                        transitionPredicate != null
-                                && transitionPredicate.test(
-                                (PracticalPetModel<Entity>) model,
-                                entity,
-                                limbSwing,
-                                limbSwingAmount,
+                        blendWeight
+                )) {
+                    if (state.onExit != null) {
+                        state.onExit.run(
+                                model, entityT,
+                                limbSwing, limbSwingAmount,
                                 ageInTicks,
                                 stateTime,
-                                netHeadYaw,
-                                headPitch,
+                                netHeadYaw, headPitch,
                                 blendWeight
-                        )
-                ) {
+                        );
+                    }
+
+                    State nextState = states.get(i);
+                    if (nextState.onEntry != null) {
+                        nextState.onEntry.run(
+                                model, entityT,
+                                limbSwing, limbSwingAmount,
+                                ageInTicks,
+                                0.0F,
+                                netHeadYaw, headPitch,
+                                blendWeight
+                        );
+                    }
+
                     acData.setStateIndex(i, ageInTicks);
+                    break;
                 }
-
             }
-
         }
-
-
     }
 }

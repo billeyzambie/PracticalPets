@@ -57,6 +57,11 @@ public class RatModel extends PracticalPetModel<Rat> {
 		return pathToHat;
 	}
 
+	List<ModelPart> pathToItem;
+	public List<ModelPart> pathToItem() {
+		return pathToItem;
+	}
+
 	@Override
 	public ModelPart head() {
 		return head;
@@ -82,6 +87,7 @@ public class RatModel extends PracticalPetModel<Rat> {
 	private final ModelPart rightear;
 	private final ModelPart leftear;
 	private final ModelPart snout;
+	private final ModelPart item;
 	private final ModelPart hat;
 	private final ModelPart tail;
 
@@ -106,11 +112,13 @@ public class RatModel extends PracticalPetModel<Rat> {
 		this.rightear = this.head.getChild("rightear");
 		this.leftear = this.head.getChild("leftear");
 		this.snout = this.head.getChild("snout");
+		this.item = this.snout.getChild("item");
 		this.hat = this.head.getChild("hat");
 		this.tail = this.bodynolegs.getChild("tail");
 
 		pathToBowtie = List.of(ooo, death, body, bodynolegs, frontbody, bowtie);
 		pathToHat = List.of(ooo, death, body, bodynolegs, frontbody, head, hat);
+		pathToItem = List.of(ooo, death, body, bodynolegs, frontbody, head, snout, item);
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -162,6 +170,8 @@ public class RatModel extends PracticalPetModel<Rat> {
 		PartDefinition snout = head.addOrReplaceChild("snout", CubeListBuilder.create().texOffs(22, 25).addBox(-1.5F, -1.0F, -2.5F, 3.0F, 2.0F, 3.0F, new CubeDeformation(0.0F))
 		.texOffs(25, 21).addBox(-3.5F, -1.5F, -1.5F, 7.0F, 3.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.5F, -2.0F));
 
+		PartDefinition item = snout.addOrReplaceChild("item", CubeListBuilder.create(), PartPose.offsetAndRotation(0.0F, 1.0F, -2.5F, 1.5708F, 0.0F, 0.0F));
+
 		PartDefinition hat = head.addOrReplaceChild("hat", CubeListBuilder.create(), PartPose.offset(0.0F, -1.5F, -0.5F));
 
 		PartDefinition tail = bodynolegs.addOrReplaceChild("tail", CubeListBuilder.create(), PartPose.offset(0.0F, -1.0F, 2.5F));
@@ -177,10 +187,27 @@ public class RatModel extends PracticalPetModel<Rat> {
 
 		PPAnimationControllers.SIMPLE_SIT.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
 		if (!entity.isInSittingPose()) {
-			float mult1 = 3f;
-			float mult2 = 4f;
-			this.animateWalk(RatAnimation.walk, limbSwing, limbSwingAmount, mult1, mult2);
-			tail.yRot += Mth.cos(limbSwing * mult1 * Mth.PI * 5.33f / 20f) * limbSwingAmount * mult2 * Mth.PI / 18f;
+			float freqMulti = 3f;
+			float ampMulti = 6f;
+
+			if (entity.getDeltaMovement().horizontalDistance() >= 0.09) {
+				entity.lastRunTime = ageInTicks;
+			}
+			else {
+				entity.lastWalkTime = ageInTicks;
+			}
+			float diff = entity.lastRunTime - entity.lastWalkTime;
+
+			if (diff > 0) {
+				this.animateWalk(RatAnimation.walk, limbSwing, limbSwingAmount * Mth.clamp(1 - diff / 4, 0, 1), freqMulti, ampMulti);
+				this.animateWalk(RatAnimation.run, limbSwing, limbSwingAmount * Mth.clamp(diff / 4, 0, 1), freqMulti, ampMulti);
+			}
+			else {
+				this.animateWalk(RatAnimation.walk, limbSwing, limbSwingAmount * Mth.clamp(-diff / 4, 0, 1), freqMulti, ampMulti);
+				this.animateWalk(RatAnimation.run, limbSwing, limbSwingAmount * Mth.clamp(1 + diff / 4, 0, 1), freqMulti, ampMulti);
+			}
+
+			tail.yRot += Mth.cos(limbSwing * freqMulti * Mth.PI * 5.33f / 20f) * limbSwingAmount * ampMulti * Mth.PI / 18f;
 		}
 
 	}
