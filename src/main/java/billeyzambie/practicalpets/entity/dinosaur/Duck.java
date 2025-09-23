@@ -181,12 +181,12 @@ public class Duck extends AbstractDuck {
     }
 
     @Override
-    protected Goal getStrollGoal() {
+    protected Goal createStrollGoal() {
         return new RandomStrollGoal(this, 1d);
     }
 
     @Override
-    protected @Nullable Goal getFollowParentGoal() {
+    protected @Nullable Goal createFollowParentGoal() {
         return new DuckFollowParentGoal(this);
     }
 

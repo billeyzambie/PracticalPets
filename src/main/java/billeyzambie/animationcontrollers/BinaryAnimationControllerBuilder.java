@@ -54,7 +54,7 @@ public class BinaryAnimationControllerBuilder {
                 new AnimationController.State(
                         defaultStateAnimations,
                         List.of(
-                                AnimationController.TransitionPredicate.ALWAYS_FALSE,
+                                AnimationController.TransitionPredicate.NEVER,
                                 transitionPredicate
                         ),
                         toOtherBlendTime

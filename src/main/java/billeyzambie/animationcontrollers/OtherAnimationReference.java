@@ -2,11 +2,11 @@ package billeyzambie.animationcontrollers;
 
 import net.minecraft.world.entity.Entity;
 
-public class MathAnimationReference implements Animatable {
+public class OtherAnimationReference implements Animatable {
     //This has just a string as a property instead of an AnimationDefinition so that animation controllers can be reused across different mobs
     String name;
 
-    public MathAnimationReference(String name) {
+    public OtherAnimationReference(String name) {
         this.name = name;
     }
 
@@ -22,7 +22,7 @@ public class MathAnimationReference implements Animatable {
             float headPitch,
             float blendWeight
     ) {
-        MathAnimationDefinition animationDefinition = model.getMathAnimationHashMap().get(name);
+        Animatable animationDefinition = model.getOtherAnimationHashMap().get(name);
         animationDefinition.play(model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, blendWeight);
     }
 }

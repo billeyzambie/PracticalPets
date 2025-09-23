@@ -3,6 +3,7 @@ package billeyzambie.practicalpets.client.model.entity.dinosaur;// Made with Blo
 // Paste this class into your mod and generate all required imports
 
 
+import billeyzambie.animationcontrollers.Animatable;
 import billeyzambie.animationcontrollers.PracticalPetModel;
 import billeyzambie.animationcontrollers.MathAnimationDefinition;
 import billeyzambie.practicalpets.misc.PPAnimationControllers;
@@ -31,7 +32,7 @@ public class BananaDuckModel extends PracticalPetModel<BananaDuck> {
         put("angry", BananaDuckAnimation.angry);
         put("idle_flap", DuckAnimation.idle_flap);
     }};
-    private final HashMap<String, MathAnimationDefinition> mathAnimationHashMap = new HashMap<>() {{
+    private final HashMap<String, Animatable> mathAnimationHashMap = new HashMap<>() {{
         put("flap", BananaDuckAnimation.flap);
     }};
 
@@ -41,7 +42,7 @@ public class BananaDuckModel extends PracticalPetModel<BananaDuck> {
     }
 
     @Override
-    public HashMap<String, MathAnimationDefinition> getMathAnimationHashMap() {
+    public HashMap<String, Animatable> getOtherAnimationHashMap() {
         return mathAnimationHashMap;
     }
 

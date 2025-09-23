@@ -1,6 +1,7 @@
 package billeyzambie.practicalpets.client.renderer;
 
 import billeyzambie.animationcontrollers.PracticalPetModel;
+import billeyzambie.practicalpets.client.model.entity.pet_equipment.PetChefHatModel;
 import billeyzambie.practicalpets.client.model.entity.pet_equipment.RubberDuckyPetHatModel;
 import billeyzambie.practicalpets.misc.PPItems;
 import billeyzambie.practicalpets.client.ModModelLayers;
@@ -48,6 +49,10 @@ public abstract class PracticalPetRenderer<T extends Mob, M extends PracticalPet
         cosmeticModels.put(
                 PPItems.RUBBER_DUCKY_PET_HAT.get(),
                 new RubberDuckyPetHatModel<>(context.bakeLayer(ModModelLayers.RUBBER_DUCKY_PET_HAT))
+        );
+        cosmeticModels.put(
+                PPItems.PET_CHEF_HAT.get(),
+                new PetChefHatModel<>(context.bakeLayer(ModModelLayers.PET_CHEF_HAT))
         );
     }
 

@@ -8,7 +8,7 @@ public class AnimationController implements Animatable {
 
     @FunctionalInterface
     public interface TransitionPredicate {
-        TransitionPredicate ALWAYS_FALSE = (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, blendWeight) -> false;
+        TransitionPredicate NEVER = (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, blendWeight) -> false;
 
         boolean test(
                 PracticalPetModel<Entity> model,

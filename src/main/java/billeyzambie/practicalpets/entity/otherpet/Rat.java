@@ -13,7 +13,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -263,11 +262,6 @@ public class Rat extends PracticalPet {
     }
 
     @Override
-    protected double getFollowOwnerSpeed() {
-        return 1.5;
-    }
-
-    @Override
     protected void dropEquipment() {
         super.dropEquipment();
         ItemStack itemstack = this.getItemBySlot(EquipmentSlot.MAINHAND);
@@ -275,6 +269,10 @@ public class Rat extends PracticalPet {
             this.spawnAtLocation(itemstack);
             this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
         }
+    }
+
+    public boolean isCooking() {
+        return false;
     }
 
     public float lastWalkTime = 0;

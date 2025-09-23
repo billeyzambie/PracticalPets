@@ -26,7 +26,6 @@ import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.ResetUniversalAngerTargetGoal;
@@ -77,6 +76,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     private static final EntityDataAccessor<ItemStack> BODY_ITEM = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.ITEM_STACK);
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> IS_RAINBOW = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> IS_INTERESTED = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.BOOLEAN);
 
     @Override
     protected void defineSynchedData() {
@@ -91,6 +91,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         this.entityData.define(VARIANT, 0);
         this.entityData.define(DATA_REMAINING_ANGER_TIME, 0);
         this.entityData.define(IS_RAINBOW, false);
+        this.entityData.define(IS_INTERESTED, false);
     }
 
     @Override
@@ -365,20 +366,22 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         this.goalSelector.addGoal(10, new PanicIfShouldGoal(this, 1.3D));
         this.goalSelector.addGoal(20, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(50, new MeleeAttackGoal(this, this.getMeleeAttackSpeedMultiplier(), false));
+        this.goalSelector.addGoal(55, new PPBegGoal(this));
         this.goalSelector.addGoal(60, new FollowOwnerWanderableGoal(this, this.getFollowOwnerSpeed(), 10.0F, 5.0F, false));
         this.goalSelector.addGoal(70, new PredicateTemptGoal(this, 1.0D, PracticalPet::isFood, false));
 
-        Goal followParentGoal = getFollowParentGoal();
+        Goal followParentGoal = createFollowParentGoal();
         if (followParentGoal != null)
             this.goalSelector.addGoal(80, followParentGoal);
 
         this.goalSelector.addGoal(90, new BreedGoal(this, 0.8D));
 
-        Goal strollGoal = getStrollGoal();
+        Goal strollGoal = createStrollGoal();
         if (strollGoal != null)
             this.goalSelector.addGoal(100, strollGoal);
 
-        this.goalSelector.addGoal(110, new LookAtPlayerGoal(this, Player.class, 10.0F));
+        this.goalSelector.addGoal(120, new LookAtPlayerGoal(this, Player.class, 10.0F));
+        this.goalSelector.addGoal(120, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(10, new OwnerHurtByTargetIfShouldGoal(this));
         this.targetSelector.addGoal(20,
@@ -400,12 +403,12 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     }
 
     @Nullable
-    protected Goal getFollowParentGoal() {
+    protected Goal createFollowParentGoal() {
         return new FollowParentGoal(this, 1.1D);
     }
 
     @Nullable
-    protected Goal getStrollGoal() {
+    protected Goal createStrollGoal() {
         return new WaterAvoidingRandomStrollGoal(this, 1, 1.0000001E-5F);
     }
 
@@ -481,6 +484,14 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
 
     public void setIsRainbow(boolean value) {
         this.entityData.set(IS_RAINBOW, value);
+    }
+
+    public boolean isInterested() {
+        return this.entityData.get(IS_INTERESTED);
+    }
+
+    public void setIsInterested(boolean value) {
+        this.entityData.set(IS_INTERESTED, value);
     }
 
     public int petLevel() {

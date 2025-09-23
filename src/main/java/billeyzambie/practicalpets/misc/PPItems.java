@@ -19,7 +19,7 @@ public class PPItems {
         //more stuff here soon
         return REGISTRY.register(name, sup);
     }
-    //it's first so that some mods might consider it the mod's icon, or at least I think so
+    //it's first so that some mods might consider it the mod's icon
     public static final RegistryObject<Item> PET_BOWTIE = register(
             "pet_bowtie",
             () -> new PetBowtie("bowtie")
@@ -77,6 +77,10 @@ public class PPItems {
     public static final RegistryObject<Item> RUBBER_DUCKY_PET_HAT = register(
             "rubber_ducky_pet_hat",
             RubberDuckyPetHat::new
+    );
+    public static final RegistryObject<Item> PET_CHEF_HAT = register(
+            "pet_chef_hat",
+            () -> new DyeablePetHat("misc", 0xffffff)
     );
 
     public static final RegistryObject<ForgeSpawnEggItem> BANANA_DUCK_SPAWN_EGG = register(

@@ -62,6 +62,7 @@ public class PracticalPets
                 output.accept(PPItems.PET_BOWTIE.get());
                 output.accept(PPItems.ANNIVERSARY_PET_HAT_0.get());
                 output.accept(PPItems.RUBBER_DUCKY_PET_HAT.get());
+                output.accept(PPItems.PET_CHEF_HAT.get());
                 //output.accept(ModItems.END_ROD_DUCK_ARMOR.get());
             }).build());
 

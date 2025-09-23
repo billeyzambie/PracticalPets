@@ -3,6 +3,7 @@ package billeyzambie.practicalpets.client.model.entity.otherpet;// Made with Blo
 // Paste this class into your mod and generate all required imports
 
 
+import billeyzambie.animationcontrollers.Animatable;
 import billeyzambie.animationcontrollers.MathAnimationDefinition;
 import billeyzambie.animationcontrollers.PracticalPetModel;
 import billeyzambie.practicalpets.client.animation.dinosaur.BananaDuckAnimation;
@@ -33,6 +34,8 @@ public class RatModel extends PracticalPetModel<Rat> {
 
 	private final HashMap<String, AnimationDefinition> keyframeAnimationHashMap = new HashMap<>() {{
 		put("sit", RatAnimation.sit);
+		put("sit2", RatAnimation.sit2);
+		put("cook", RatAnimation.cook);
 	}};
 
 	@Override
@@ -41,7 +44,7 @@ public class RatModel extends PracticalPetModel<Rat> {
 	}
 
 	@Override
-	public HashMap<String, MathAnimationDefinition> getMathAnimationHashMap() {
+	public HashMap<String, Animatable> getOtherAnimationHashMap() {
 		return null;
 	}
 
@@ -185,7 +188,8 @@ public class RatModel extends PracticalPetModel<Rat> {
 	public void setupAnim(@NotNull Rat entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 
-		PPAnimationControllers.SIMPLE_SIT.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
+		PPAnimationControllers.RAT_POSE.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
+
 		if (!entity.isInSittingPose()) {
 			float freqMulti = 3f;
 			float ampMulti = 6f;
@@ -198,6 +202,7 @@ public class RatModel extends PracticalPetModel<Rat> {
 			}
 			float diff = entity.lastRunTime - entity.lastWalkTime;
 
+			//smoothen the transition from the walk to the run and vice versa
 			if (diff > 0) {
 				this.animateWalk(RatAnimation.walk, limbSwing, limbSwingAmount * Mth.clamp(1 - diff / 4, 0, 1), freqMulti, ampMulti);
 				this.animateWalk(RatAnimation.run, limbSwing, limbSwingAmount * Mth.clamp(diff / 4, 0, 1), freqMulti, ampMulti);
@@ -207,7 +212,7 @@ public class RatModel extends PracticalPetModel<Rat> {
 				this.animateWalk(RatAnimation.run, limbSwing, limbSwingAmount * Mth.clamp(1 + diff / 4, 0, 1), freqMulti, ampMulti);
 			}
 
-			tail.yRot += Mth.cos(limbSwing * freqMulti * Mth.PI * 5.33f / 20f) * limbSwingAmount * ampMulti * Mth.PI / 18f;
+			tail.yRot += Mth.cos(limbSwing * freqMulti * Mth.PI * 5.33f / 20f) * limbSwingAmount * ampMulti * Mth.PI / 36f;
 		}
 
 	}
