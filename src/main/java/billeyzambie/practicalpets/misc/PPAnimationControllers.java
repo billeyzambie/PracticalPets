@@ -105,7 +105,7 @@ public class PPAnimationControllers {
                                     -> entity instanceof Rat rat
                                     && rat.isCooking()
                     ),
-                    0.2f
+                    0.1f
             ),
             //waiting to use sit2 after walking tempted
             new AnimationController.State(

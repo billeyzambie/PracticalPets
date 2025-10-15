@@ -41,7 +41,7 @@ public class RatRenderer extends PracticalPetRenderer<Rat, RatModel> {
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull Rat rat) {
-        if (rat.getIsAlbino())
+        if (rat.isAlbino())
             return ALBINO_TEXTURE;
 
         return BASE_TEXTURES[rat.getVariant() % BASE_TEXTURES.length];

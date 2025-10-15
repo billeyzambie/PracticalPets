@@ -43,8 +43,10 @@ import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.*;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.List;
 
 public abstract class PracticalPet extends TamableAnimal implements ACEntity, NeutralMob {
 
@@ -297,7 +299,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     }
 
     public boolean isFoodThatDoesntTame(ItemStack itemStack) {
-        return false;
+        return itemStack.is(PPItems.POULTRY_BANANA.get());
     }
 
     private enum HealOverrideType {
@@ -345,15 +347,23 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
                 return;
             }
             healAmount = healOverride.value();
-        } else if (healOverride == null) {
-            healAmount = foodProperties.getNutrition();
-        } else {
-            healAmount = foodProperties.getNutrition();
-            switch (healOverride.type()) {
-                case OVERRIDE -> healAmount = healOverride.value();
-                case ADD -> healAmount += healOverride.value();
-                case MULTIPLY -> healAmount *= healOverride.value();
+            switch (itemStack.getRarity()) {
+                case UNCOMMON -> healAmount *= 2f;
+                case RARE -> healAmount *= 3f;
+                case EPIC -> healAmount *= 4f;
+                default -> {}
             }
+        }
+        else {
+            healAmount = foodProperties.getNutrition();
+            if (healOverride != null) {
+                switch (healOverride.type()) {
+                    case OVERRIDE -> healAmount = healOverride.value();
+                    case ADD -> healAmount += healOverride.value();
+                    case MULTIPLY -> healAmount *= healOverride.value();
+                }
+            }
+            itemStack.finishUsingItem(this.level(), this);
         }
 
         this.heal(healAmount);
@@ -368,7 +378,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         this.goalSelector.addGoal(50, new MeleeAttackGoal(this, this.getMeleeAttackSpeedMultiplier(), false));
         this.goalSelector.addGoal(55, new PPBegGoal(this));
         this.goalSelector.addGoal(60, new FollowOwnerWanderableGoal(this, this.getFollowOwnerSpeed(), 10.0F, 5.0F, false));
-        this.goalSelector.addGoal(70, new PredicateTemptGoal(this, 1.0D, PracticalPet::isFood, false));
+        this.goalSelector.addGoal(70, new PredicateTemptGoal(this, this.getFollowOwnerSpeed(), PracticalPet::isFood, false));
 
         Goal followParentGoal = createFollowParentGoal();
         if (followParentGoal != null)
@@ -418,6 +428,10 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
 
     protected boolean shouldRegisterFloatGoal() {
         return true;
+    }
+
+    public boolean shouldDropHeldItemToOwner() {
+        return false;
     }
 
     public final AnimationState squishHatAnimationState = new AnimationState();
@@ -653,7 +667,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
             if (this.isTame() && this.isOwnedBy(player)) {
                 return InteractionResult.SUCCESS;
             } else {
-                return !this.isFood(itemstack) || !(this.getHealth() < this.getMaxHealth()) && this.isTame() ? InteractionResult.PASS : InteractionResult.SUCCESS;
+                return !this.isTameItem(itemstack) || !(this.getHealth() < this.getMaxHealth() ) && this.isTame() ? InteractionResult.PASS : InteractionResult.SUCCESS;
             }
         } else {
             if (this.isTame()) {
@@ -685,7 +699,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
 
                     return interactionresult;
                 }
-            } else if (this.isFood(itemstack)) {
+            } else if (this.isTameItem(itemstack)) {
                 this.usePlayerItem(player, hand, itemstack);
                 if (this.random.nextInt(3) == 0 && !ForgeEventFactory.onAnimalTame(this, player)) {
                     this.tame(player);
@@ -722,7 +736,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
             ItemStack bowtie = new ItemStack(PPItems.PET_BOWTIE.get());
 
             float hue = this.getRandom().nextFloat();
-            int rgb = java.awt.Color.HSBtoRGB(hue, 1, 1);
+            int rgb = Color.HSBtoRGB(hue, 1, 1);
 
             CompoundTag tag = new CompoundTag();
             CompoundTag display = new CompoundTag();

@@ -48,11 +48,16 @@ public class PracticalPets
             .icon(() -> new ItemStack(PPItems.PET_BOWTIE.get()))
             .title(Component.literal("Practical Pets"))
             .displayItems((parameters, output) -> {
+                //spawn eggs
                 output.accept(PPItems.BANANA_DUCK_SPAWN_EGG.get());
                 output.accept(PPItems.DUCK_SPAWN_EGG.get());
                 output.accept(PPItems.RAT_SPAWN_EGG.get());
+                //food obtained from pets
                 output.accept(PPItems.POULTRY_BANANA.get());
+                output.accept(PPItems.RATATOUILLE.get());
+                //other items obtained from pets
                 output.accept(PPItems.BANANA_PEEL.get());
+                //pet equipment
                 output.accept(PPItems.LEATHER_DUCK_ARMOR.get());
                 output.accept(PPItems.GOLDEN_DUCK_ARMOR.get());
                 output.accept(PPItems.CHAINMAIL_DUCK_ARMOR.get());
@@ -87,7 +92,7 @@ public class PracticalPets
         //
         final DeferredRegister<Codec<? extends BiomeModifier>> biomeModifiers = DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, MODID);
         biomeModifiers.register(modEventBus);
-        biomeModifiers.register("add_pet_spawns", PracticalPetSpawnBiomeModifier::makeCodec);
+        biomeModifiers.register("add_pet_spawns", PPBiomeModifier::makeCodec);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -140,7 +145,8 @@ public class PracticalPets
                     (stack, tintIndex) -> tintIndex == 0 ? ((DyeableLeatherItem) stack.getItem()).getColor(stack) : -1,
                     PPItems.LEATHER_DUCK_ARMOR.get(),
                     PPItems.PET_BOWTIE.get(),
-                    PPItems.RUBBER_DUCKY_PET_HAT.get()
+                    PPItems.RUBBER_DUCKY_PET_HAT.get(),
+                    PPItems.PET_CHEF_HAT.get()
             );
         }
     }

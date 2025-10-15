@@ -24,6 +24,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -81,24 +82,47 @@ public class Duck extends AbstractDuck {
     }
 
     public static boolean duckCanSpawn(
-            EntityType<Duck> duckEntityType,
-            LevelAccessor levelAccessor,
-            MobSpawnType mobSpawnType,
-            BlockPos blockPos,
-            RandomSource randomSource
+            EntityType<Duck> type,
+            LevelAccessor level,
+            MobSpawnType reason,
+            BlockPos pos,
+            RandomSource rng
     ) {
-        try {
-            boolean animalCanSpawn = checkAnimalSpawnRules(duckEntityType, levelAccessor, mobSpawnType, blockPos, randomSource);
-            BlockPos below = blockPos.below();
-            boolean nearWater = levelAccessor.getFluidState(below.north()).is(FluidTags.WATER)
-                    || levelAccessor.getFluidState(below.south()).is(FluidTags.WATER)
-                    || levelAccessor.getFluidState(below.east()).is(FluidTags.WATER)
-                    || levelAccessor.getFluidState(below.west()).is(FluidTags.WATER);
-            return animalCanSpawn && nearWater;
-        } catch (Exception e) {
-            return false;
+        if (!Animal.checkAnimalSpawnRules(type, level, reason, pos, rng)) return false;
+
+        final int R = 4;
+        final BlockPos ground = pos.below();
+        final BlockPos.MutableBlockPos p = new BlockPos.MutableBlockPos();
+
+        for (int dz = -R; dz <= R; dz++) {
+            for (int dx = -R; dx <= R; dx++) {
+                p.set(ground.getX() + dx, ground.getY(), ground.getZ() + dz);
+                if (!level.hasChunkAt(p)) continue;
+
+                if (level.getFluidState(p).is(FluidTags.WATER)) {
+                    BlockPos airPos = p.above();
+                    if (!level.hasChunkAt(airPos)) continue;
+                    if (level.getBlockState(airPos).isAir()
+                            && level.canSeeSkyFromBelowWater(airPos)) {
+                        return true;
+                    }
+                }
+
+                p.move(0, 1, 0);
+                if (level.hasChunkAt(p) && level.getFluidState(p).is(FluidTags.WATER)) {
+                    BlockPos airPos = p.above();
+                    if (level.hasChunkAt(airPos)
+                            && level.getBlockState(airPos).isAir()
+                            && level.canSeeSkyFromBelowWater(airPos)) {
+                        return true;
+                    }
+                }
+                p.move(0, -1, 0);
+            }
         }
+        return false;
     }
+
 
     @Override
     public boolean isTameItem(ItemStack itemStack) {

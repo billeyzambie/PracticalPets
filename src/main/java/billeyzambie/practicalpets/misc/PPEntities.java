@@ -34,7 +34,7 @@ public class PPEntities {
     );
     public static final RegistryObject<EntityType<Rat>> RAT = REGISTRY.register(
             "rat",
-            () -> EntityType.Builder.of(Rat::new, MobCategory.CREATURE)
+            () -> EntityType.Builder.of(Rat::new, MobCategory.AMBIENT)
                     .sized(0.6f, 0.33f)
                     .build("rat")
     );
@@ -64,25 +64,6 @@ public class PPEntities {
                         .add(Attributes.MOVEMENT_SPEED, 0.2)
                         .add(Attributes.ATTACK_DAMAGE, 2)
                         .build()
-        );
-
-        SpawnPlacements.register(
-                BANANA_DUCK.get(),
-                SpawnPlacements.Type.ON_GROUND,
-                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                Animal::checkAnimalSpawnRules
-        );
-        SpawnPlacements.register(
-                DUCK.get(),
-                SpawnPlacements.Type.ON_GROUND,
-                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                Duck::duckCanSpawn
-        );
-        SpawnPlacements.register(
-                RAT.get(),
-                SpawnPlacements.Type.ON_GROUND,
-                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                Animal::checkAnimalSpawnRules
         );
 
     }

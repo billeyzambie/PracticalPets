@@ -10,12 +10,53 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.items.IItemHandler;
 
 public class PPUtil {
+
+    public static void clear(IItemHandler h) {
+        for (int i = 0; i < h.getSlots(); i++) {
+            ItemStack s = h.getStackInSlot(i);
+            if (s.isEmpty()) continue;
+            h.extractItem(i, Integer.MAX_VALUE, false);
+        }
+    }
+
+    public static void dump(IItemHandler h, Level level, Vec3 pos) {
+        for (int i = 0; i < h.getSlots(); i++) {
+            ItemStack s = h.extractItem(i, Integer.MAX_VALUE, false);
+            if (!s.isEmpty())
+                level.addFreshEntity(new ItemEntity(level, pos.x, pos.y, pos.z, s));
+        }
+    }
+
+    public static void dump(IItemHandler h, Entity entity) {
+        dump(h, entity.level(), entity.position());
+    }
+
+    public static int countItems(IItemHandler h) {
+        int total = 0;
+        for (int i = 0; i < h.getSlots(); i++) {
+            total += h.getStackInSlot(i).getCount(); // empty stacks count as 0
+        }
+        return total;
+    }
+
+    public static boolean isFull(IItemHandler h) {
+        for (int i = 0; i < h.getSlots(); i++) {
+            ItemStack s = h.getStackInSlot(i);
+            if (s.isEmpty()) return false;
+            int cap = Math.min(h.getSlotLimit(i), s.getMaxStackSize());
+            if (s.getCount() < cap) return false;
+        }
+        return true;
+    }
 
     public static void dropLootTableAtEntity(Entity entity, ResourceLocation lootTableId) {
         if (!(entity.level() instanceof ServerLevel serverLevel)) return;
@@ -36,6 +77,7 @@ public class PPUtil {
             ItemEntity itemEntity = new ItemEntity(serverLevel, entity.getX(), entity.getY(), entity.getZ(), stack);
             serverLevel.addFreshEntity(itemEntity);
         }
+
 
     }
 }

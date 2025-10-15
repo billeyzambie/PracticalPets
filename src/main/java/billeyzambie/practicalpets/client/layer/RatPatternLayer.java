@@ -43,7 +43,7 @@ public class RatPatternLayer extends RenderLayer<Rat, RatModel> {
 
     @Override
     public void render(@NotNull PoseStack p_117058_, @NotNull MultiBufferSource p_117059_, int p_117060_, Rat rat, float p_117062_, float p_117063_, float p_117064_, float p_117065_, float p_117066_, float p_117067_) {
-        if (rat.getIsAlbino() || rat.isInvisible())
+        if (rat.isAlbino() || rat.isInvisible())
             return;
 
         int textureIndex = rat.getPatternType() * Rat.COLOR_TYPE_COUNT + rat.getPatternColor();

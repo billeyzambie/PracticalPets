@@ -10,13 +10,13 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 //Copied from Alex's Mobs
-public class PracticalPetSpawnBiomeModifier implements BiomeModifier {
+public class PPBiomeModifier implements BiomeModifier {
     private static final RegistryObject<Codec<? extends BiomeModifier>> SERIALIZER = RegistryObject.create(new ResourceLocation(PracticalPets.MODID, "add_pet_spawns"), ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, PracticalPets.MODID);
 
     @Override
     public void modify(Holder<Biome> biome, Phase phase, ModifiableBiomeInfo.BiomeInfo.Builder builder) {
         if (phase == Phase.ADD) {
-            PracticalPetSpawns.addBiomeSpawns(biome, builder);
+            PPSpawns.addBiomeSpawns(biome, builder);
         }
     }
 
@@ -25,7 +25,7 @@ public class PracticalPetSpawnBiomeModifier implements BiomeModifier {
         return SERIALIZER.get();
     }
 
-    public static Codec<PracticalPetSpawnBiomeModifier> makeCodec() {
-        return Codec.unit(PracticalPetSpawnBiomeModifier::new);
+    public static Codec<PPBiomeModifier> makeCodec() {
+        return Codec.unit(PPBiomeModifier::new);
     }
 }
