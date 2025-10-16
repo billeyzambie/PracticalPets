@@ -268,11 +268,14 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
 
     protected void setAttributesAccordingToPetLevel() {
         int level = this.petLevel();
+        double progress1to10 = (level - 1) / 9d;
+        if (progress1to10 < 1)
+            progress1to10 *= progress1to10;
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(
-                Math.round(Mth.lerp((level - 1) / 9d, getLevel1MaxHealth(), getLevel10MaxHealth()) / 2d) * 2
+                Math.round(Mth.lerp(progress1to10, getLevel1MaxHealth(), getLevel10MaxHealth()) / 2d) * 2
         );
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(
-                Mth.lerp((level - 1) / 9d, getLevel1AttackDamage(), getLevel10AttackDamage())
+                Mth.lerp(progress1to10, getLevel1AttackDamage(), getLevel10AttackDamage())
         );
     }
 
@@ -517,6 +520,13 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         setAttributesAccordingToPetLevel();
     }
 
+    public void setPetLevelPlus(int petLevel) {
+        this.setPetLevel(petLevel);
+        this.setPetXP(getTotalPetXPNeededForLevel(petLevel));
+        this.setHealth((float) this.getAttribute(Attributes.MAX_HEALTH).getValue());
+        this.playLevelUpSound();
+    }
+
     public float petXP() {
         return this.entityData.get(PET_XP);
     }
@@ -546,7 +556,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         setPetLevel(level);
         if (!level().isClientSide()) {
 
-            this.level().playSound(null, this.blockPosition(), PPSounds.PET_LEVEL_UP.get(), SoundSource.NEUTRAL, 1.0F, 1.0F);
+            this.playLevelUpSound();
 
             Component message = Component.translatable(
                     "ui.practicalpets.chat.level_up",
@@ -569,6 +579,10 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         }
 
         setHealth(getMaxHealth());
+    }
+
+    private void playLevelUpSound() {
+        this.level().playSound(null, this.blockPosition(), PPSounds.PET_LEVEL_UP.get(), SoundSource.NEUTRAL, 1.0F, 1.0F);
     }
 
     /**

@@ -9,12 +9,13 @@ import billeyzambie.practicalpets.util.DelayedTaskManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
 
 public class RubberDuckyPetHat extends Item implements AttachablePetCosmetic, DyeableItem {
     public RubberDuckyPetHat() {
-        super(new Item.Properties().stacksTo(1));
+        super(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
     }
 
     ResourceLocation modelTexture = new ResourceLocation(

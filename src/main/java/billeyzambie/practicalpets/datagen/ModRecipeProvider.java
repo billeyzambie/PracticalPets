@@ -53,6 +53,13 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .pattern("C C")
                 .unlockedBy("has_material", has(ItemTags.WOOL_CARPETS))
                 .save(consumer, PET_BOWTIE.getId());
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, PET_CHEF_HAT.get())
+                .define('C', ItemTags.WOOL_CARPETS)
+                .pattern("CCC")
+                .pattern("CCC")
+                .pattern(" C ")
+                .unlockedBy("has_material", has(ItemTags.WOOL_CARPETS))
+                .save(consumer, PET_CHEF_HAT.getId());
     }
 
     private void duckArmorRecipe(Consumer<FinishedRecipe> consumer, String materialName, String resultId, Item ingredient) {

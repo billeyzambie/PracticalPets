@@ -139,6 +139,12 @@ public class Rat extends PracticalPet implements CookingPet {
     public void cookingSuccess() {
         PPUtil.clear(cookingIngredients);
         var newItem = new ItemStack(PPItems.RATATOUILLE.get());
+        int level = this.petLevel();
+        if (level > 1) {
+            CompoundTag tag = new CompoundTag();
+            tag.putInt("RatLevel", level);
+            newItem.setTag(tag);
+        }
         ItemStack previousItem = this.getMainHandItem();
         if (previousItem.hasCustomHoverName())
             newItem.setHoverName(previousItem.getHoverName());

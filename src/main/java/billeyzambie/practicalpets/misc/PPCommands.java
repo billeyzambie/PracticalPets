@@ -1,5 +1,6 @@
 package billeyzambie.practicalpets.misc;
 
+import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.entity.otherpet.Rat;
 import billeyzambie.practicalpets.misc.PPEntities;
 import billeyzambie.practicalpets.misc.PracticalPets;
@@ -10,7 +11,9 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
+import net.minecraft.commands.arguments.selector.EntitySelectorParser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -28,6 +31,20 @@ public final class PPCommands {
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
+
+        dispatcher.register(Commands.literal("practicalpets:set_pet_level")
+                .requires(src -> src.hasPermission(2))
+                .then(Commands.argument("pet", EntityArgument.entity())
+                        .then(Commands.argument("level", IntegerArgumentType.integer(1))
+                                .executes(commandContext -> {
+                                    PracticalPet pet = (PracticalPet) EntityArgument.getEntity(commandContext, "pet");
+                                    int level = IntegerArgumentType.getInteger(commandContext, "level");
+                                    pet.setPetLevelPlus(level);
+                                    commandContext.getSource().sendSuccess(() -> Component.translatable("command.practicalpets.set_pet_level.success", pet.getName(), level), true);
+                                    return 1;
+                                })))
+
+        );
 
         dispatcher.register(Commands.literal("practicalpets:rat_cube")
                 .requires(src -> src.hasPermission(2))

@@ -25,7 +25,7 @@ public enum PetLevelComponentProvider implements IEntityComponentProvider {
             currentXp = Math.min(currentXp, xpForNextLevel - 1);
             tooltip.add(
                     Component.translatable(
-                            "ui.jade.plugin_practicalpets.pet_level",
+                            "ui.practicalpets.pet_level",
                             Component.literal(
                                     Integer.toString(level)
                             ).withStyle(ChatFormatting.BLUE)

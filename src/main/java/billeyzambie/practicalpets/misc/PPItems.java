@@ -68,13 +68,8 @@ public class PPItems {
     );
     public static final RegistryObject<Item> RATATOUILLE = register(
             "ratatouille",
-            () -> new BowlFoodItem(new Item.Properties().stacksTo(1).food(
-                    new FoodProperties.Builder()
-                            .nutrition(6).saturationMod(1.2f)
-                            .effect(() -> new MobEffectInstance(MobEffects.NIGHT_VISION, 400, 0), 1f)
-                            .effect(() -> new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 300, 1), 1f)
-                            .effect(() -> new MobEffectInstance(MobEffects.REGENERATION, 300, 0), 1f)
-                            .build()
+            () -> new Ratatouille(new Item.Properties().stacksTo(1).food(
+                    new FoodProperties.Builder().build()
             ))
     );
     public static final RegistryObject<Item> DIAMOND_NUGGET = register(
