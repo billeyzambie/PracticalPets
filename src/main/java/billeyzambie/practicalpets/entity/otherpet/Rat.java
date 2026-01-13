@@ -158,8 +158,6 @@ public class Rat extends PracticalPet implements CookingPet {
         this.setIsCooking(false);
         this.spawnAtLocation(this.getMainHandItem().split(1));
         PPUtil.dump(cookingIngredients, this);
-        if (this.isOrderedToSit())
-            this.setFollowMode(FollowMode.FOLLOWING);
     }
 
     public int getCookingTicks() {
@@ -440,7 +438,7 @@ public class Rat extends PracticalPet implements CookingPet {
     public void tick() {
         super.tick();
         if (!this.level().isClientSide() && this.getMainHandItem().is(Items.BOWL) && !this.isCooking() && holdingBowlTicks++ > 200) {
-            this.spawnAtLocation(this.getMainHandItem().split(1));
+            this.cookingInterrupted();
         }
     }
 }

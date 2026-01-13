@@ -1,9 +1,12 @@
 package billeyzambie.practicalpets.misc;
 
+import billeyzambie.practicalpets.client.ModMenus;
+import billeyzambie.practicalpets.client.ui.PracticalPetScreen;
 import billeyzambie.practicalpets.network.ModNetworking;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
@@ -140,6 +143,8 @@ public class PracticalPets
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event)
         {
+            MenuScreens.register(ModMenus.PRACTICAL_PET_MENU.get(), PracticalPetScreen::new);
+
             //ai generated:
             Minecraft.getInstance().getItemColors().register(
                     (stack, tintIndex) -> tintIndex == 0 ? ((DyeableLeatherItem) stack.getItem()).getColor(stack) : -1,

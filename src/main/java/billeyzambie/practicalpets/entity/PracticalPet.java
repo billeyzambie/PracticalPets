@@ -2,6 +2,7 @@ package billeyzambie.practicalpets.entity;
 
 import billeyzambie.animationcontrollers.ACData;
 import billeyzambie.animationcontrollers.ACEntity;
+import billeyzambie.practicalpets.client.ui.PracticalPetMenu;
 import billeyzambie.practicalpets.items.RubberDuckyPetHat;
 import billeyzambie.practicalpets.misc.PPItems;
 import billeyzambie.practicalpets.misc.PPSounds;
@@ -25,6 +26,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -40,6 +42,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -582,7 +585,8 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     }
 
     private void playLevelUpSound() {
-        this.level().playSound(null, this.blockPosition(), PPSounds.PET_LEVEL_UP.get(), SoundSource.NEUTRAL, 1.0F, 1.0F);
+        this.level().playSound(null, this.blockPosition(), PPSounds.PET_LEVEL_UP.get(), SoundSource.NEUTRAL,
+                1.0F, (float)Math.pow(2, (this.petLevel() - 2) / 12d));
     }
 
     /**
@@ -706,9 +710,21 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
                     }
 
                     InteractionResult interactionresult = super.mobInteract(player, hand);
-                    if (!interactionresult.consumesAction() && canSitStand()) {
-                        incrementFollowMode();
-                        player.displayClientMessage(Component.translatable("action.practicalpets." + followMode().toString()).withStyle(ChatFormatting.GREEN), true);
+                    if (!interactionresult.consumesAction() && this.canSitStand()) {
+                        if (player.isSecondaryUseActive()) {
+                            NetworkHooks.openScreen(
+                                    (ServerPlayer) player,
+                                    new SimpleMenuProvider(
+                                            (id, inv, p) -> new PracticalPetMenu(id, inv, this),
+                                            this.getName()
+                                    ),
+                                    buf -> buf.writeVarInt(this.getId())
+                            );
+                        }
+                        else {
+                            incrementFollowMode();
+                            player.displayClientMessage(Component.translatable("action.practicalpets." + followMode().toString()).withStyle(ChatFormatting.GREEN), true);
+                        }
                     }
 
                     return interactionresult;
