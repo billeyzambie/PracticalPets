@@ -1,6 +1,7 @@
 package billeyzambie.practicalpets.client.renderer.otherpet;
 
 import billeyzambie.practicalpets.client.ModModelLayers;
+import billeyzambie.practicalpets.client.layer.PetBackStrapLayer;
 import billeyzambie.practicalpets.client.layer.RatPatternLayer;
 import billeyzambie.practicalpets.client.model.entity.otherpet.RatModel;
 import billeyzambie.practicalpets.client.renderer.PracticalPetRenderer;
@@ -25,6 +26,7 @@ public class RatRenderer extends PracticalPetRenderer<Rat, RatModel> {
     public RatRenderer(EntityRendererProvider.Context context) {
         super(context, new RatModel(context.bakeLayer(ModModelLayers.RAT)), 0.4f);
         this.addLayer(new RatPatternLayer(this));
+        this.addLayer(new PetBackStrapLayer<>(this, BACK_STRAP_TEXTURE));
         itemInHandRenderer = context.getItemInHandRenderer();
     }
 
@@ -38,6 +40,9 @@ public class RatRenderer extends PracticalPetRenderer<Rat, RatModel> {
             new ResourceLocation(PracticalPets.MODID, "textures/entity/rat/rat3.png"),
             new ResourceLocation(PracticalPets.MODID, "textures/entity/rat/rat4.png"),
     };
+
+    private static final ResourceLocation BACK_STRAP_TEXTURE =
+            new ResourceLocation(PracticalPets.MODID, "textures/entity/rat/back_strap.png");
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull Rat rat) {

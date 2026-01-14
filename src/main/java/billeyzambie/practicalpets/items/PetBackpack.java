@@ -43,6 +43,6 @@ public class PetBackpack extends BundleItem implements AttachablePetCosmetic, Dy
 
     @Override
     public int getDefaultColor() {
-        return 0xBF9871;
+        return 0xC29262;
     }
 }

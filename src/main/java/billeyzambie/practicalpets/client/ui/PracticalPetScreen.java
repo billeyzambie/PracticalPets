@@ -54,7 +54,7 @@ public class PracticalPetScreen extends AbstractContainerScreen<PracticalPetMenu
                 this.leftPos + 51, this.topPos + 78,
                 17,
                 (this.leftPos + 51) - this.mouseX,
-                (this.topPos + 78 - this.pet.getEyeHeight()) - this.mouseY,
+                (this.topPos + 50 - this.pet.getEyeHeight()) - this.mouseY,
                 this.pet
         );
     }

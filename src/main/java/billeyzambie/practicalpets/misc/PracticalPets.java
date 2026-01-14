@@ -114,7 +114,7 @@ public class PracticalPets
        //// Some common setup code
        //LOGGER.info("HELLO FROM COMMON SETUP");
 
-       //ModNetworking.register();
+       ModNetworking.register();
        //if (Config.logDirtBlock)
        //    LOGGER.info("DIRT BLOCK >> {}", ForgeRegistries.BLOCKS.getKey(Blocks.DIRT));
 

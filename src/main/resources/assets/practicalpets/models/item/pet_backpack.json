@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "practicalpets:item/pet_backpack",
+    "layer1": "practicalpets:item/pet_backpack_strings"
+  }
+}

@@ -1,6 +1,7 @@
 
 package billeyzambie.practicalpets.client.renderer.dinosaur;
 
+import billeyzambie.practicalpets.client.layer.PetBackStrapLayer;
 import billeyzambie.practicalpets.misc.PracticalPets;
 import billeyzambie.practicalpets.client.ModModelLayers;
 import billeyzambie.practicalpets.client.layer.DuckArmorLayer;
@@ -15,6 +16,7 @@ public class DuckRenderer extends PracticalPetRenderer<Duck, DuckModel> {
     public DuckRenderer(EntityRendererProvider.Context pContext) {
         super(pContext, new DuckModel(pContext.bakeLayer(ModModelLayers.DUCK)), 0.35f);
         this.addLayer(new DuckArmorLayer(this, pContext.getModelSet()));
+        this.addLayer(new PetBackStrapLayer<>(this, BACK_STRAP_TEXTURE));
     }
 
     private static final ResourceLocation PEKIN_TEXTURE = new ResourceLocation(PracticalPets.MODID, "textures/entity/duck/pekin.png");
@@ -27,6 +29,8 @@ public class DuckRenderer extends PracticalPetRenderer<Duck, DuckModel> {
     private static final ResourceLocation CAYUGA_TEXTURE = new ResourceLocation(PracticalPets.MODID, "textures/entity/duck/cayuga.png");
     private static final ResourceLocation BABY_TEXTURE = new ResourceLocation(PracticalPets.MODID, "textures/entity/duck/baby.png");
     private static final ResourceLocation DARK_BABY_TEXTURE = new ResourceLocation(PracticalPets.MODID, "textures/entity/duck/dark_baby.png");
+
+    private static final ResourceLocation BACK_STRAP_TEXTURE = new ResourceLocation(PracticalPets.MODID, "textures/entity/duck/back_strap.png");
 
     private static final ResourceLocation[] ADULT_TEXTURES = {
             PEKIN_TEXTURE,

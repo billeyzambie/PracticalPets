@@ -24,7 +24,9 @@ public class PetBackpackModel<T extends Entity> extends HierarchicalModel<T> {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
 
-        PartDefinition backpack = partdefinition.addOrReplaceChild("backpack", CubeListBuilder.create().texOffs(0, 0).addBox(-1.0F, -2.5F, 0.0F, 2.0F, 5.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.5F, 1.5708F, 0.0F, 0.0F));
+        PartDefinition backpack = partdefinition.addOrReplaceChild("backpack", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+        PartDefinition backpack_r1 = backpack.addOrReplaceChild("backpack_r1", CubeListBuilder.create().texOffs(0, 0).addBox(-1.0F, -2.5F, -0.5F, 2.0F, 5.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -0.5F, 0.0F, 1.5708F, 0.0F, 0.0F));
 
         return LayerDefinition.create(meshdefinition, 16, 16);
     }

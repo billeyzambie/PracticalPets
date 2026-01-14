@@ -181,7 +181,7 @@ public class BananaDuckModel extends PracticalPetModel<BananaDuck> {
                 .texOffs(20, 13).addBox(-1.5F, 0.0F, -1.0F, 3.0F, 1.0F, 2.0F, new CubeDeformation(0.0F))
                 .texOffs(20, 16).addBox(-1.5F, -3.0F, -1.0F, 3.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -6.075F, -0.9F));
 
-        PartDefinition backpack = head.addOrReplaceChild("backpack", CubeListBuilder.create(), PartPose.offset(0.0F, 10.0F, -0.85F));
+        PartDefinition backpack = head.addOrReplaceChild("backpack", CubeListBuilder.create(), PartPose.offsetAndRotation(0.0F, -2.0F, 1.15F, -1.5708F, 0.0F, 0.0F));
 
         PartDefinition lol = head.addOrReplaceChild("lol", CubeListBuilder.create(), PartPose.offset(0.0F, -2.5F, 0.0F));
 

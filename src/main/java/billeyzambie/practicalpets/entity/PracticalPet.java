@@ -809,8 +809,8 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
             this.setHeadItem(new ItemStack(PPItems.ANNIVERSARY_PET_HAT_0.get()));
             player.getPersistentData().putInt(FOUNDERS_HATS_CLAIMED_TAG_ID, foundersHatsClaimed + 1);
             ItemStack foundersHat = PPItems.ANNIVERSARY_PET_HAT_0.get().getDefaultInstance();
-            player.sendSystemMessage(Component.translatable("ui.practicalpets.chat.got_founders_hat", foundersHat.getDisplayName()));
-            player.sendSystemMessage(Component.translatable("ui.practicalpets.info.item.anniversary_pet_hat_0", foundersHat.getDisplayName(), foundersHatsClaimed + 1));
+            player.sendSystemMessage(Component.translatable("ui.practicalpets.chat.got_founders_hat", foundersHat.getDisplayName(), foundersHatsClaimed + 1));
+            player.sendSystemMessage(Component.translatable("ui.practicalpets.info.item.anniversary_pet_hat_0", foundersHat.getDisplayName()));
             player.playSound(PPSounds.PET_LEVEL_UP.get());
         }
         super.tame(player);

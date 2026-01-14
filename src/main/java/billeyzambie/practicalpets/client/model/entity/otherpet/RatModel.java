@@ -158,7 +158,7 @@ public class RatModel extends PracticalPetModel<Rat> {
 
 		PartDefinition bodynolegs = body.addOrReplaceChild("bodynolegs", CubeListBuilder.create().texOffs(0, 14).addBox(-2.5F, -3.5F, -4.5F, 5.0F, 5.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 1.0F, 5.5F));
 
-		PartDefinition backpack = bodynolegs.addOrReplaceChild("backpack", CubeListBuilder.create(), PartPose.offset(0.0F, -3.5F, -3.0F));
+		PartDefinition backpack = bodynolegs.addOrReplaceChild("backpack", CubeListBuilder.create(), PartPose.offset(0.0F, -3.5F, -2.0F));
 
 		PartDefinition frontbody = bodynolegs.addOrReplaceChild("frontbody", CubeListBuilder.create().texOffs(15, 0).addBox(-2.0F, -2.0F, -3.0F, 4.0F, 4.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -1.0F, -4.5F));
 

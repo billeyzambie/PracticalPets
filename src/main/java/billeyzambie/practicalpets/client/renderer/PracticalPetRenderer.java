@@ -1,12 +1,9 @@
 package billeyzambie.practicalpets.client.renderer;
 
 import billeyzambie.animationcontrollers.PracticalPetModel;
-import billeyzambie.practicalpets.client.model.entity.pet_equipment.PetChefHatModel;
-import billeyzambie.practicalpets.client.model.entity.pet_equipment.RubberDuckyPetHatModel;
+import billeyzambie.practicalpets.client.model.entity.pet_equipment.*;
 import billeyzambie.practicalpets.misc.PPItems;
 import billeyzambie.practicalpets.client.ModModelLayers;
-import billeyzambie.practicalpets.client.model.entity.pet_equipment.AnniversaryPetHatModel;
-import billeyzambie.practicalpets.client.model.entity.pet_equipment.PetBowtieModel;
 import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.items.AttachablePetCosmetic;
 import billeyzambie.practicalpets.items.PetCosmetic;
@@ -56,7 +53,7 @@ public abstract class PracticalPetRenderer<T extends Mob, M extends PracticalPet
         );
         cosmeticModels.put(
                 PPItems.PET_BACKPACK.get(),
-                new PetChefHatModel<>(context.bakeLayer(ModModelLayers.PET_BACKPACK))
+                new PetBackpackModel<>(context.bakeLayer(ModModelLayers.PET_BACKPACK))
         );
     }
 
