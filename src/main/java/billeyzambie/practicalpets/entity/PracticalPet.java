@@ -78,6 +78,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     private static final EntityDataAccessor<Float> PET_XP = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<ItemStack> HEAD_ITEM = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.ITEM_STACK);
     private static final EntityDataAccessor<ItemStack> NECK_ITEM = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.ITEM_STACK);
+    private static final EntityDataAccessor<ItemStack> BACK_ITEM = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.ITEM_STACK);
     private static final EntityDataAccessor<ItemStack> BODY_ITEM = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.ITEM_STACK);
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> IS_RAINBOW = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.BOOLEAN);
@@ -92,6 +93,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         this.entityData.define(PET_XP, 0f);
         this.entityData.define(HEAD_ITEM, ItemStack.EMPTY);
         this.entityData.define(NECK_ITEM, ItemStack.EMPTY);
+        this.entityData.define(BACK_ITEM, ItemStack.EMPTY);
         this.entityData.define(BODY_ITEM, ItemStack.EMPTY);
         this.entityData.define(VARIANT, 0);
         this.entityData.define(DATA_REMAINING_ANGER_TIME, 0);
@@ -107,6 +109,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         this.setPetXP(compoundTag.getFloat("PetXP"));
         this.setHeadItem(ItemStack.of(compoundTag.getCompound("HeadItem")));
         this.setNeckItem(ItemStack.of(compoundTag.getCompound("NeckItem")));
+        this.setBackItem(ItemStack.of(compoundTag.getCompound("BackItem")));
         this.setBodyItem(ItemStack.of(compoundTag.getCompound("BodyItem")));
         this.setVariant(compoundTag.getInt("Variant"));
         this.setIsRainbow(compoundTag.getBoolean("IsRainbow"));
@@ -121,6 +124,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         compoundTag.putFloat("PetXP", this.petXP());
         compoundTag.put("HeadItem", getHeadItem().save(new CompoundTag()));
         compoundTag.put("NeckItem", getNeckItem().save(new CompoundTag()));
+        compoundTag.put("BackItem", getBackItem().save(new CompoundTag()));
         compoundTag.put("BodyItem", getBodyItem().save(new CompoundTag()));
         compoundTag.putInt("Variant", this.getVariant());
         compoundTag.putBoolean("IsRainbow", this.isRainbow());
@@ -173,6 +177,9 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
             case NECK -> {
                 return getNeckItem();
             }
+            case BACK -> {
+                return getBackItem();
+            }
             case BODY -> {
                 return getBodyItem();
             }
@@ -184,6 +191,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         switch (slot) {
             case HEAD -> setHeadItem(itemStack);
             case NECK -> setNeckItem(itemStack);
+            case BACK -> setBackItem(itemStack);
             case BODY -> setBodyItem(itemStack);
         }
     }
@@ -212,6 +220,21 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
             playSound(cosmetic.getEquipSound());
         }
         this.entityData.set(NECK_ITEM, itemStack);
+        refreshAnyEquipmentIsBrave();
+        if (itemStack.getItem() instanceof PetCosmetic cosmetic) {
+            this.playSound(cosmetic.getEquipSound());
+        }
+    }
+
+    public ItemStack getBackItem() {
+        return this.entityData.get(BACK_ITEM);
+    }
+
+    public void setBackItem(ItemStack itemStack) {
+        if (itemStack.isEmpty() && this.getBackItem().getItem() instanceof PetCosmetic cosmetic) {
+            playSound(cosmetic.getEquipSound());
+        }
+        this.entityData.set(BACK_ITEM, itemStack);
         refreshAnyEquipmentIsBrave();
         if (itemStack.getItem() instanceof PetCosmetic cosmetic) {
             this.playSound(cosmetic.getEquipSound());
@@ -690,7 +713,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         } else {
             if (this.isTame()) {
                 if (this.isOwnedBy(player)) {
-                    if (item instanceof PetCosmetic cosmetic && cosmetic.canBePutOn(this)) {
+                    if (item instanceof PetCosmetic cosmetic && cosmetic.canBePutOn(this) && !player.isSecondaryUseActive()) {
                         PetCosmetic.Slot slot = cosmetic.slot();
                         ItemStack currentCosmetic = this.getEquippedItem(slot);
                         if (currentCosmetic.isEmpty()) {
@@ -780,14 +803,14 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         int foundersHatsClaimed = player.getPersistentData().getInt(FOUNDERS_HATS_CLAIMED_TAG_ID);
         if (
                 this.getHeadItem().isEmpty()
-                        && LocalDate.now().isBefore(FOUNDERS_HAT_END_DATE)
+                        //&& LocalDate.now().isBefore(FOUNDERS_HAT_END_DATE)
                         && foundersHatsClaimed < 5
         ) {
             this.setHeadItem(new ItemStack(PPItems.ANNIVERSARY_PET_HAT_0.get()));
             player.getPersistentData().putInt(FOUNDERS_HATS_CLAIMED_TAG_ID, foundersHatsClaimed + 1);
             ItemStack foundersHat = PPItems.ANNIVERSARY_PET_HAT_0.get().getDefaultInstance();
             player.sendSystemMessage(Component.translatable("ui.practicalpets.chat.got_founders_hat", foundersHat.getDisplayName()));
-            player.sendSystemMessage(Component.translatable("ui.practicalpets.info.item.anniversary_pet_hat_0", foundersHat.getDisplayName()));
+            player.sendSystemMessage(Component.translatable("ui.practicalpets.info.item.anniversary_pet_hat_0", foundersHat.getDisplayName(), foundersHatsClaimed + 1));
             player.playSound(PPSounds.PET_LEVEL_UP.get());
         }
         super.tame(player);

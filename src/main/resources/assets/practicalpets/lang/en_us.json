@@ -22,6 +22,7 @@
   "item.practicalpets.rubber_ducky_pet_hat": "Rubber Ducky Pet Hat",
   "item.practicalpets.pet_chef_hat": "Pet Chef Hat",
   "item.practicalpets.ratatouille": "Ratatouille",
+  "item.practicalpets.pet_backpack": "Pet Backpack",
   "action.practicalpets.following": "Following",
   "action.practicalpets.sitting": "Sitting",
   "action.practicalpets.wandering": "Wandering",
@@ -30,7 +31,7 @@
   "config.jade.plugin_practicalpets.pet_level_provider": "Show Pet Level",
   "ui.practicalpets.chat.level_up": "LEVEL UP! %s has advanced to level %s!",
   "ui.practicalpets.chat.level_down": "%s has been downgraded to level %s.",
-  "ui.practicalpets.chat.got_founders_hat": "Your pet has been equipped with a limited-time %s! And the other first 4 pets you tame before 1st August 2025 will too!",
+  "ui.practicalpets.chat.got_founders_hat": "The first 5 pets you tame will be equipped with a limited-time %s! When/if the mod gets popular, the founder's hat will become unobtainable in survival. This is pet #%s out of 5.",
   "ui.practicalpets.info.item.anniversary_pet_hat_0": "The %s makes a pet level up twice as fast.",
   "command.practicalpets.set_pet_level.success": "Set %s's level to %s."
 }

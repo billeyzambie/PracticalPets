@@ -45,6 +45,7 @@ public class DuckModel extends PracticalPetModel<Duck> {
     protected ModelPart bone9;
     protected ModelPart bowtie;
     protected ModelPart bodylol;
+    protected ModelPart backpack;
     protected ModelPart duck_tail;
     protected ModelPart duck_tail_flesh;
     protected ModelPart tcheste;
@@ -74,6 +75,7 @@ public class DuckModel extends PracticalPetModel<Duck> {
         this.bone9 = this.bone11.getChild("bone9");
         this.bowtie = this.head.getChild("bowtie");
         this.bodylol = this.bodynolegs.getChild("bodylol");
+        this.backpack = this.bodylol.getChild("backpack");
         this.duck_tail = this.bodylol.getChild("duck_tail");
         this.duck_tail_flesh = this.duck_tail.getChild("duck_tail_flesh");
         this.tcheste = this.bodylol.getChild("tcheste");
@@ -83,6 +85,7 @@ public class DuckModel extends PracticalPetModel<Duck> {
 
         pathToBowtie = List.of(ooo, body, bone6, bodynolegs, head, bowtie);
         pathToHat = List.of(ooo, body, bone6, bodynolegs, head, lol, bone7, hat);
+        pathToBackpack = List.of(ooo, body, bone6, bodynolegs, bodylol, backpack);
     }
 
     protected DuckModel() {
@@ -134,6 +137,8 @@ public class DuckModel extends PracticalPetModel<Duck> {
         PartDefinition bowtie = head.addOrReplaceChild("bowtie", CubeListBuilder.create(), PartPose.offset(0.0F, 0.5F, -1.0F));
 
         PartDefinition bodylol = bodynolegs.addOrReplaceChild("bodylol", CubeListBuilder.create(), PartPose.offset(0.0F, -1.0F, -1.0F));
+
+        PartDefinition backpack = bodylol.addOrReplaceChild("backpack", CubeListBuilder.create(), PartPose.offset(0.0F, -3.075F, 0.0F));
 
         PartDefinition bodylol_r1 = bodylol.addOrReplaceChild("bodylol_r1", CubeListBuilder.create().texOffs(0, 0).addBox(-3.0F, -4.0F, -3.0F, 6.0F, 8.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -0.075F, 0.0F, 1.5708F, 0.0F, 0.0F));
 
@@ -234,5 +239,12 @@ public class DuckModel extends PracticalPetModel<Duck> {
     @Override
     public ModelPart head() {
         return head;
+    }
+
+    List<ModelPart> pathToBackpack;
+
+    @Override
+    public List<ModelPart> pathToBackpack() {
+        return pathToBackpack;
     }
 }

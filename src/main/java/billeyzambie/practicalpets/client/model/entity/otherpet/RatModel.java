@@ -60,6 +60,13 @@ public class RatModel extends PracticalPetModel<Rat> {
 		return pathToHat;
 	}
 
+	List<ModelPart> pathToBackpack;
+
+	@Override
+	public List<ModelPart> pathToBackpack() {
+		return pathToBackpack;
+	}
+
 	List<ModelPart> pathToItem;
 	public List<ModelPart> pathToItem() {
 		return pathToItem;
@@ -80,6 +87,7 @@ public class RatModel extends PracticalPetModel<Rat> {
 	private final ModelPart rightbackleg2;
 	private final ModelPart rightfoot;
 	private final ModelPart bodynolegs;
+	private final ModelPart backpack;
 	private final ModelPart frontbody;
 	private final ModelPart bowtie;
 	private final ModelPart rightflap;
@@ -105,6 +113,7 @@ public class RatModel extends PracticalPetModel<Rat> {
 		this.rightbackleg2 = this.rightbackleg.getChild("rightbackleg2");
 		this.rightfoot = this.rightbackleg2.getChild("rightfoot");
 		this.bodynolegs = this.body.getChild("bodynolegs");
+		this.backpack = this.bodynolegs.getChild("backpack");
 		this.frontbody = this.bodynolegs.getChild("frontbody");
 		this.bowtie = this.frontbody.getChild("bowtie");
 		this.rightflap = this.frontbody.getChild("rightflap");
@@ -121,6 +130,7 @@ public class RatModel extends PracticalPetModel<Rat> {
 
 		pathToBowtie = List.of(ooo, death, body, bodynolegs, frontbody, bowtie);
 		pathToHat = List.of(ooo, death, body, bodynolegs, frontbody, head, hat);
+		pathToBackpack = List.of(ooo, death, body, bodynolegs, backpack);
 		pathToItem = List.of(ooo, death, body, bodynolegs, frontbody, head, snout, item);
 	}
 
@@ -147,6 +157,8 @@ public class RatModel extends PracticalPetModel<Rat> {
 		PartDefinition rightfoot = rightbackleg2.addOrReplaceChild("rightfoot", CubeListBuilder.create().texOffs(0, 7).addBox(-1.0F, 0.0F, -2.0F, 2.0F, 0.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 1.0F, 0.0F));
 
 		PartDefinition bodynolegs = body.addOrReplaceChild("bodynolegs", CubeListBuilder.create().texOffs(0, 14).addBox(-2.5F, -3.5F, -4.5F, 5.0F, 5.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 1.0F, 5.5F));
+
+		PartDefinition backpack = bodynolegs.addOrReplaceChild("backpack", CubeListBuilder.create(), PartPose.offset(0.0F, -3.5F, -3.0F));
 
 		PartDefinition frontbody = bodynolegs.addOrReplaceChild("frontbody", CubeListBuilder.create().texOffs(15, 0).addBox(-2.0F, -2.0F, -3.0F, 4.0F, 4.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -1.0F, -4.5F));
 

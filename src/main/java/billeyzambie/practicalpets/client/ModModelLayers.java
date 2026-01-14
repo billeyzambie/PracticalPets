@@ -5,10 +5,7 @@ import billeyzambie.practicalpets.client.model.entity.dinosaur.BananaDuckModel;
 import billeyzambie.practicalpets.client.model.entity.dinosaur.DuckArmorModel;
 import billeyzambie.practicalpets.client.model.entity.dinosaur.DuckModel;
 import billeyzambie.practicalpets.client.model.entity.otherpet.RatModel;
-import billeyzambie.practicalpets.client.model.entity.pet_equipment.AnniversaryPetHatModel;
-import billeyzambie.practicalpets.client.model.entity.pet_equipment.PetBowtieModel;
-import billeyzambie.practicalpets.client.model.entity.pet_equipment.PetChefHatModel;
-import billeyzambie.practicalpets.client.model.entity.pet_equipment.RubberDuckyPetHatModel;
+import billeyzambie.practicalpets.client.model.entity.pet_equipment.*;
 import billeyzambie.practicalpets.client.renderer.dinosaur.BananaDuckRenderer;
 import billeyzambie.practicalpets.client.renderer.dinosaur.DuckRenderer;
 import billeyzambie.practicalpets.client.renderer.otherpet.RatRenderer;
@@ -53,6 +50,9 @@ public class ModModelLayers {
     public static final ModelLayerLocation PET_CHEF_HAT = new ModelLayerLocation(
             new ResourceLocation(PracticalPets.MODID, "pet_chef_hat_layer"), "main"
     );
+    public static final ModelLayerLocation PET_BACKPACK = new ModelLayerLocation(
+            new ResourceLocation(PracticalPets.MODID, "pet_backpack_layer"), "main"
+    );
 
     @SubscribeEvent
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
@@ -72,5 +72,6 @@ public class ModModelLayers {
         event.registerLayerDefinition(ModModelLayers.ANNIVERSARY_PET_HAT, AnniversaryPetHatModel::createBodyLayer);
         event.registerLayerDefinition(ModModelLayers.RUBBER_DUCKY_PET_HAT, RubberDuckyPetHatModel::createBodyLayer);
         event.registerLayerDefinition(ModModelLayers.PET_CHEF_HAT, PetChefHatModel::createBodyLayer);
+        event.registerLayerDefinition(ModModelLayers.PET_BACKPACK, PetBackpackModel::createBodyLayer);
     }
 }

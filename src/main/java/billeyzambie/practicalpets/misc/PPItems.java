@@ -93,6 +93,10 @@ public class PPItems {
             "pet_chef_hat",
             () -> new DyeablePetHat("misc", 0xffffff)
     );
+    public static final RegistryObject<Item> PET_BACKPACK = register(
+            "pet_backpack",
+            PetBackpack::new
+    );
 
     public static final RegistryObject<ForgeSpawnEggItem> BANANA_DUCK_SPAWN_EGG = register(
             "banana_duck_spawn_egg",

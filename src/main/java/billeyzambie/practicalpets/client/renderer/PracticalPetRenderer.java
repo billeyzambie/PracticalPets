@@ -54,6 +54,10 @@ public abstract class PracticalPetRenderer<T extends Mob, M extends PracticalPet
                 PPItems.PET_CHEF_HAT.get(),
                 new PetChefHatModel<>(context.bakeLayer(ModModelLayers.PET_CHEF_HAT))
         );
+        cosmeticModels.put(
+                PPItems.PET_BACKPACK.get(),
+                new PetChefHatModel<>(context.bakeLayer(ModModelLayers.PET_BACKPACK))
+        );
     }
 
     @Override
@@ -81,6 +85,7 @@ public abstract class PracticalPetRenderer<T extends Mob, M extends PracticalPet
                     switch (cosmetic.getAttachBone()) {
                         case HAT -> pathToAttachment = this.getModel().pathToHat();
                         case BOWTIE -> pathToAttachment = this.getModel().pathToBowtie();
+                        case BACKPACK -> pathToAttachment = this.getModel().pathToBackpack();
                         default ->
                                 throw new AssertionError("Pretty sure this will never happen (error at practicalpetrender at render at switch (cosmetic.getAttachBone()))");
                     }

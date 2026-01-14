@@ -24,6 +24,7 @@ public abstract class PracticalPetModel<T extends Entity> extends HierarchicalMo
 
     public abstract List<ModelPart> pathToBowtie();
     public abstract List<ModelPart> pathToHat();
+    public abstract List<ModelPart> pathToBackpack();
     public abstract ModelPart head();
 
     @Override

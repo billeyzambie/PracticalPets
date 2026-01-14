@@ -30,6 +30,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleItem(PPItems.CHICKEN_NUGGET);
         simpleItem(PPItems.PET_CHEF_HAT);
         simpleItem(PPItems.RATATOUILLE);
+        simpleItem(PPItems.PET_BACKPACK);
         //simpleItem(ModItems.END_ROD_DUCK_ARMOR);
     }
 

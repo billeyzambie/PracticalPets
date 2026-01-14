@@ -60,6 +60,13 @@ public class BananaDuckModel extends PracticalPetModel<BananaDuck> {
         return pathToHat;
     }
 
+    List<ModelPart> pathToBackpack;
+
+    @Override
+    public List<ModelPart> pathToBackpack() {
+        return pathToBackpack;
+    }
+
     @Override
     public ModelPart head() {
         return head;
@@ -77,6 +84,7 @@ public class BananaDuckModel extends PracticalPetModel<BananaDuck> {
     protected ModelPart bodynolegs;
     protected ModelPart bodylol;
     protected ModelPart head;
+    protected ModelPart backpack;
     protected ModelPart lol;
     protected ModelPart beak;
     protected ModelPart bone;
@@ -115,6 +123,7 @@ public class BananaDuckModel extends PracticalPetModel<BananaDuck> {
         this.bodynolegs = this.bone6.getChild("bodynolegs");
         this.bodylol = this.bodynolegs.getChild("bodylol");
         this.head = this.bodylol.getChild("head");
+        this.backpack = this.head.getChild("backpack");
         this.lol = this.head.getChild("lol");
         this.beak = this.lol.getChild("beak");
         this.bone = this.beak.getChild("bone");
@@ -139,6 +148,7 @@ public class BananaDuckModel extends PracticalPetModel<BananaDuck> {
 
         pathToBowtie = List.of(ooo, pop, shake, body, bone6, bodynolegs, bone2, wing6, wing3, bowtie);
         pathToHat = List.of(ooo, pop, shake, body, bone6, bodynolegs, bodylol, head, lol, bone7, hat);
+        pathToBackpack = List.of(ooo, pop, shake, body, bone6, bodynolegs, bodylol, head, backpack);
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -170,6 +180,8 @@ public class BananaDuckModel extends PracticalPetModel<BananaDuck> {
         PartDefinition head = bodylol.addOrReplaceChild("head", CubeListBuilder.create().texOffs(20, 0).addBox(-1.5F, -2.0F, -1.0F, 3.0F, 2.0F, 2.0F, new CubeDeformation(0.0F))
                 .texOffs(20, 13).addBox(-1.5F, 0.0F, -1.0F, 3.0F, 1.0F, 2.0F, new CubeDeformation(0.0F))
                 .texOffs(20, 16).addBox(-1.5F, -3.0F, -1.0F, 3.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -6.075F, -0.9F));
+
+        PartDefinition backpack = head.addOrReplaceChild("backpack", CubeListBuilder.create(), PartPose.offset(0.0F, 10.0F, -0.85F));
 
         PartDefinition lol = head.addOrReplaceChild("lol", CubeListBuilder.create(), PartPose.offset(0.0F, -2.5F, 0.0F));
 

@@ -9,12 +9,12 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-public class ModMenus {
-    public static final DeferredRegister<MenuType<?>> MENUS =
+public class PPMenus {
+    public static final DeferredRegister<MenuType<?>> REGISTRY =
             DeferredRegister.create(ForgeRegistries.MENU_TYPES, "practicalpets");
 
     public static final RegistryObject<MenuType<PracticalPetMenu>> PRACTICAL_PET_MENU =
-            MENUS.register("practical_pet_menu",
+            REGISTRY.register("practical_pet_menu",
                     () -> IForgeMenuType.create((id, inv, buf) -> {
                         int entityId = buf.readVarInt();
                         Entity entity = inv.player.level().getEntity(entityId);

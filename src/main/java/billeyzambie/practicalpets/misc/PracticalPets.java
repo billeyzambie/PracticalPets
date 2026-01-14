@@ -1,6 +1,6 @@
 package billeyzambie.practicalpets.misc;
 
-import billeyzambie.practicalpets.client.ModMenus;
+import billeyzambie.practicalpets.client.PPMenus;
 import billeyzambie.practicalpets.client.ui.PracticalPetScreen;
 import billeyzambie.practicalpets.network.ModNetworking;
 import com.mojang.logging.LogUtils;
@@ -71,6 +71,7 @@ public class PracticalPets
                 output.accept(PPItems.ANNIVERSARY_PET_HAT_0.get());
                 output.accept(PPItems.RUBBER_DUCKY_PET_HAT.get());
                 output.accept(PPItems.PET_CHEF_HAT.get());
+                output.accept(PPItems.PET_BACKPACK.get());
                 //output.accept(ModItems.END_ROD_DUCK_ARMOR.get());
             }).build());
 
@@ -90,6 +91,7 @@ public class PracticalPets
 
         PPSounds.REGISTRY.register(modEventBus);
         PPEntities.REGISTRY.register(modEventBus);
+        PPMenus.REGISTRY.register(modEventBus);
         MinecraftForge.EVENT_BUS.register(PPEvents.class);
 
         //
@@ -109,16 +111,16 @@ public class PracticalPets
 
     private void commonSetup(final FMLCommonSetupEvent event)
     {
-        // Some common setup code
-        LOGGER.info("HELLO FROM COMMON SETUP");
+       //// Some common setup code
+       //LOGGER.info("HELLO FROM COMMON SETUP");
 
-        ModNetworking.register();
-        if (Config.logDirtBlock)
-            LOGGER.info("DIRT BLOCK >> {}", ForgeRegistries.BLOCKS.getKey(Blocks.DIRT));
+       //ModNetworking.register();
+       //if (Config.logDirtBlock)
+       //    LOGGER.info("DIRT BLOCK >> {}", ForgeRegistries.BLOCKS.getKey(Blocks.DIRT));
 
-        LOGGER.info(Config.magicNumberIntroduction + Config.magicNumber);
+       //LOGGER.info(Config.magicNumberIntroduction + Config.magicNumber);
 
-        Config.items.forEach((item) -> LOGGER.info("ITEM >> {}", item.toString()));
+       //Config.items.forEach((item) -> LOGGER.info("ITEM >> {}", item.toString()));
     }
 
     // Add the example block item to the building blocks tab
@@ -143,7 +145,7 @@ public class PracticalPets
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event)
         {
-            MenuScreens.register(ModMenus.PRACTICAL_PET_MENU.get(), PracticalPetScreen::new);
+            MenuScreens.register(PPMenus.PRACTICAL_PET_MENU.get(), PracticalPetScreen::new);
 
             //ai generated:
             Minecraft.getInstance().getItemColors().register(
@@ -151,7 +153,8 @@ public class PracticalPets
                     PPItems.LEATHER_DUCK_ARMOR.get(),
                     PPItems.PET_BOWTIE.get(),
                     PPItems.RUBBER_DUCKY_PET_HAT.get(),
-                    PPItems.PET_CHEF_HAT.get()
+                    PPItems.PET_CHEF_HAT.get(),
+                    PPItems.PET_BACKPACK.get()
             );
         }
     }
