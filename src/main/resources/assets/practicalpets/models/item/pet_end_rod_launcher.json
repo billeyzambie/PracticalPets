@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "practicalpets:item/pet_end_rod_launcher",
+    "layer1": "practicalpets:item/pet_end_rod_launcher_strings"
+  }
+}

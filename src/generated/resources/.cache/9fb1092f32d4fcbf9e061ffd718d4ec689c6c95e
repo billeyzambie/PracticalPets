@@ -1,4 +1,4 @@
-// 1.20.1	2026-01-14T20:48:00.0184287	Recipes
+// 1.20.1	2026-01-16T21:01:34.7776979	Recipes
 2099c482ffb8ce885ac4bc57855cd1626e05b906 data/practicalpets/advancements/recipes/combat/chainmail_duck_armor.json
 cfcb61eb2a14a89581ee589ac8dc872938f03897 data/practicalpets/advancements/recipes/combat/diamond_duck_armor.json
 b6c2254bce424605e5f83c7972a6cfd4c73697d0 data/practicalpets/advancements/recipes/combat/golden_duck_armor.json
@@ -9,6 +9,7 @@ b6c2254bce424605e5f83c7972a6cfd4c73697d0 data/practicalpets/advancements/recipes
 0d0a9d3f393526c5f2b7bb1839f8f14baf8b7ebd data/practicalpets/advancements/recipes/misc/pet_backpack.json
 18ac3c763d2a9345793e32c49877536673c8551a data/practicalpets/advancements/recipes/misc/pet_bowtie.json
 a71c8016e1d64f966ab96d6c810ad9872d5e2b91 data/practicalpets/advancements/recipes/misc/pet_chef_hat.json
+5cd1cd53b7fcaa9757bd9ea41c01ec6bdcabc185 data/practicalpets/advancements/recipes/misc/pet_end_rod_launcher.json
 b2683aef667804f65aae81098066bcf2a6d9e808 data/practicalpets/recipes/chainmail_duck_armor.json
 f0603c50d16de7d35a6c91677484f17e4aa184e1 data/practicalpets/recipes/diamond_duck_armor.json
 3f924825e23cbe74f917489f3c7ed601e45de1d8 data/practicalpets/recipes/diamond_from_nuggets.json
@@ -19,3 +20,4 @@ e5c357ecba61c7dbb6ec3469b94d588e94cb8144 data/practicalpets/recipes/netherite_du
 cc1cd2173dd68eb05f7008cc149cde7cba896077 data/practicalpets/recipes/pet_backpack.json
 b82c219dba6d78b91639716745bb9df1ae618037 data/practicalpets/recipes/pet_bowtie.json
 ee271fb808981ef9204acafdc7fa8466bd6a75ba data/practicalpets/recipes/pet_chef_hat.json
+59340885810dc9616854729492082979740bc8cb data/practicalpets/recipes/pet_end_rod_launcher.json

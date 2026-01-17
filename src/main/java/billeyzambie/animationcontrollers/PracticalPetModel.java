@@ -58,9 +58,9 @@ public abstract class PracticalPetModel<T extends Entity> extends HierarchicalMo
         this.root().x += (float) (Math.sin(ageInTicks * 100 * Mth.PI / 180f) / 15f);
     }
 
-    protected float redMultiplier = 1;
-    protected float greenMultiplier = 1;
-    protected float blueMultiplier = 1;
+    public float redMultiplier = 1;
+    public float greenMultiplier = 1;
+    public float blueMultiplier = 1;
 
     @Override
     public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {

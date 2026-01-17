@@ -72,6 +72,7 @@ public class PracticalPets
                 output.accept(PPItems.RUBBER_DUCKY_PET_HAT.get());
                 output.accept(PPItems.PET_CHEF_HAT.get());
                 output.accept(PPItems.PET_BACKPACK.get());
+                output.accept(PPItems.PET_END_ROD_LAUNCHER.get());
                 //output.accept(ModItems.END_ROD_DUCK_ARMOR.get());
             }).build());
 
@@ -154,7 +155,8 @@ public class PracticalPets
                     PPItems.PET_BOWTIE.get(),
                     PPItems.RUBBER_DUCKY_PET_HAT.get(),
                     PPItems.PET_CHEF_HAT.get(),
-                    PPItems.PET_BACKPACK.get()
+                    PPItems.PET_BACKPACK.get(),
+                    PPItems.PET_END_ROD_LAUNCHER.get()
             );
         }
     }

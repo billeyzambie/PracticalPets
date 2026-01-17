@@ -97,6 +97,10 @@ public class PPItems {
             "pet_backpack",
             PetBackpack::new
     );
+    public static final RegistryObject<Item> PET_END_ROD_LAUNCHER = register(
+            "pet_end_rod_launcher",
+            PetEndRodLauncher::new
+    );
 
     public static final RegistryObject<ForgeSpawnEggItem> BANANA_DUCK_SPAWN_EGG = register(
             "banana_duck_spawn_egg",

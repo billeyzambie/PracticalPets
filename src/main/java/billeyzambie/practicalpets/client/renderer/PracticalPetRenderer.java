@@ -12,6 +12,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -54,6 +55,10 @@ public abstract class PracticalPetRenderer<T extends Mob, M extends PracticalPet
         cosmeticModels.put(
                 PPItems.PET_BACKPACK.get(),
                 new PetBackpackModel<>(context.bakeLayer(ModModelLayers.PET_BACKPACK))
+        );
+        cosmeticModels.put(
+                PPItems.PET_END_ROD_LAUNCHER.get(),
+                new PetBackpackModel<>(context.bakeLayer(ModModelLayers.PET_END_ROD_LAUNCHER))
         );
     }
 
@@ -113,6 +118,9 @@ public abstract class PracticalPetRenderer<T extends Mob, M extends PracticalPet
                     }
 
                     VertexConsumer vertexConsumer;
+                    if (cosmetic.ignoreLighting(cosmeticStack)) {
+                        packedLight = LightTexture.FULL_BLOCK;
+                    }
 
                     ResourceLocation texture = cosmetic.getModelTexture();
                     if (texture != null) {

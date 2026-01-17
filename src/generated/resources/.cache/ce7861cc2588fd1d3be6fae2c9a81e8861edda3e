@@ -1,4 +1,4 @@
-// 1.20.1	2026-01-14T20:47:59.9999816	Item Models: practicalpets
+// 1.20.1	2026-01-16T21:11:25.3275026	Item Models: practicalpets
 11e7a1ccfb4781be10aad7b3abea29cedb982bb4 assets/practicalpets/models/item/anniversary_pet_hat_0.json
 0ea82611ff09100f15412e1ac49c38af7a70f024 assets/practicalpets/models/item/chainmail_duck_armor.json
 a242aa63a79c09b7565b77053773ece93eeb991a assets/practicalpets/models/item/chicken_nugget.json
@@ -8,7 +8,6 @@ a242aa63a79c09b7565b77053773ece93eeb991a assets/practicalpets/models/item/chicke
 f51a03d744829da7f89acd512c26f63afad6fc97 assets/practicalpets/models/item/iron_duck_armor.json
 b042671aca6088c07696ad0c85d870a5903ea1da assets/practicalpets/models/item/leather_duck_armor.json
 d3cef1be6abe3ad97ef4c0b0e60fa5cb4f0c5396 assets/practicalpets/models/item/netherite_duck_armor.json
-2a18fd0b8cfabe9c90f670564b06e19f8d06e393 assets/practicalpets/models/item/pet_backpack.json
 558df1de01055d53074d9c25a37bf4fa82e35255 assets/practicalpets/models/item/pet_bowtie.json
 6704a39b49171a447ff1e0315e7f814d923e4c83 assets/practicalpets/models/item/pet_chef_hat.json
 4c1e8168e25cd251726e3d1c32815813eabba8d7 assets/practicalpets/models/item/ratatouille.json

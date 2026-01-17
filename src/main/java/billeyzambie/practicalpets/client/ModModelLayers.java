@@ -53,6 +53,9 @@ public class ModModelLayers {
     public static final ModelLayerLocation PET_BACKPACK = new ModelLayerLocation(
             new ResourceLocation(PracticalPets.MODID, "pet_backpack_layer"), "main"
     );
+    public static final ModelLayerLocation PET_END_ROD_LAUNCHER = new ModelLayerLocation(
+            new ResourceLocation(PracticalPets.MODID, "pet_end_rod_launcher_layer"), "main"
+    );
 
     @SubscribeEvent
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
@@ -73,5 +76,6 @@ public class ModModelLayers {
         event.registerLayerDefinition(ModModelLayers.RUBBER_DUCKY_PET_HAT, RubberDuckyPetHatModel::createBodyLayer);
         event.registerLayerDefinition(ModModelLayers.PET_CHEF_HAT, PetChefHatModel::createBodyLayer);
         event.registerLayerDefinition(ModModelLayers.PET_BACKPACK, PetBackpackModel::createBodyLayer);
+        event.registerLayerDefinition(ModModelLayers.PET_END_ROD_LAUNCHER, PetEndRodLauncherModel::createBodyLayer);
     }
 }
