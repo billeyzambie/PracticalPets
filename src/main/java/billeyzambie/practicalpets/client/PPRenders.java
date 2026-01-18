@@ -8,7 +8,9 @@ import billeyzambie.practicalpets.client.model.entity.otherpet.RatModel;
 import billeyzambie.practicalpets.client.model.entity.pet_equipment.*;
 import billeyzambie.practicalpets.client.renderer.dinosaur.BananaDuckRenderer;
 import billeyzambie.practicalpets.client.renderer.dinosaur.DuckRenderer;
+import billeyzambie.practicalpets.client.renderer.other.PetEndRodProjectileRenderer;
 import billeyzambie.practicalpets.client.renderer.otherpet.RatRenderer;
+import billeyzambie.practicalpets.entity.other.PetEndRodProjectile;
 import billeyzambie.practicalpets.misc.PPEntities;
 import billeyzambie.practicalpets.misc.PracticalPets;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -19,7 +21,11 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = PracticalPets.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-public class ModModelLayers {
+public class PPRenders {
+    public static final ModelLayerLocation PET_END_ROD_PROJECTILE = new ModelLayerLocation(
+            new ResourceLocation(PracticalPets.MODID, "pet_end_rod_projectile_layer"), "main"
+    );
+
     public static final ModelLayerLocation BANANA_DUCK = new ModelLayerLocation(
             new ResourceLocation(PracticalPets.MODID, "banana_duck_layer"), "main"
     );
@@ -59,23 +65,27 @@ public class ModModelLayers {
 
     @SubscribeEvent
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(PPEntities.PET_END_ROD_PROJECTILE.get(), PetEndRodProjectileRenderer::new);
+
         event.registerEntityRenderer(PPEntities.BANANA_DUCK.get(), BananaDuckRenderer::new);
         event.registerEntityRenderer(PPEntities.DUCK.get(), DuckRenderer::new);
         event.registerEntityRenderer(PPEntities.RAT.get(), RatRenderer::new);
     }
     @SubscribeEvent
     public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
-        event.registerLayerDefinition(ModModelLayers.BANANA_DUCK, BananaDuckModel::createBodyLayer);
-        event.registerLayerDefinition(ModModelLayers.DUCK, DuckModel::createBodyLayer);
-        event.registerLayerDefinition(ModModelLayers.RAT, RatModel::createBodyLayer);
+        event.registerLayerDefinition(PPRenders.PET_END_ROD_PROJECTILE, PetEndRodLauncherModel::createBodyLayer);
 
-        event.registerLayerDefinition(ModModelLayers.BANANA_DUCK_ARMOR, BananaDuckArmorModel::createBodyLayer);
-        event.registerLayerDefinition(ModModelLayers.DUCK_ARMOR, DuckArmorModel::createBodyLayer);
-        event.registerLayerDefinition(ModModelLayers.PET_BOWTIE, PetBowtieModel::createBodyLayer);
-        event.registerLayerDefinition(ModModelLayers.ANNIVERSARY_PET_HAT, AnniversaryPetHatModel::createBodyLayer);
-        event.registerLayerDefinition(ModModelLayers.RUBBER_DUCKY_PET_HAT, RubberDuckyPetHatModel::createBodyLayer);
-        event.registerLayerDefinition(ModModelLayers.PET_CHEF_HAT, PetChefHatModel::createBodyLayer);
-        event.registerLayerDefinition(ModModelLayers.PET_BACKPACK, PetBackpackModel::createBodyLayer);
-        event.registerLayerDefinition(ModModelLayers.PET_END_ROD_LAUNCHER, PetEndRodLauncherModel::createBodyLayer);
+        event.registerLayerDefinition(PPRenders.BANANA_DUCK, BananaDuckModel::createBodyLayer);
+        event.registerLayerDefinition(PPRenders.DUCK, DuckModel::createBodyLayer);
+        event.registerLayerDefinition(PPRenders.RAT, RatModel::createBodyLayer);
+
+        event.registerLayerDefinition(PPRenders.BANANA_DUCK_ARMOR, BananaDuckArmorModel::createBodyLayer);
+        event.registerLayerDefinition(PPRenders.DUCK_ARMOR, DuckArmorModel::createBodyLayer);
+        event.registerLayerDefinition(PPRenders.PET_BOWTIE, PetBowtieModel::createBodyLayer);
+        event.registerLayerDefinition(PPRenders.ANNIVERSARY_PET_HAT, AnniversaryPetHatModel::createBodyLayer);
+        event.registerLayerDefinition(PPRenders.RUBBER_DUCKY_PET_HAT, RubberDuckyPetHatModel::createBodyLayer);
+        event.registerLayerDefinition(PPRenders.PET_CHEF_HAT, PetChefHatModel::createBodyLayer);
+        event.registerLayerDefinition(PPRenders.PET_BACKPACK, PetBackpackModel::createBodyLayer);
+        event.registerLayerDefinition(PPRenders.PET_END_ROD_LAUNCHER, PetEndRodLauncherModel::createBodyLayer);
     }
 }

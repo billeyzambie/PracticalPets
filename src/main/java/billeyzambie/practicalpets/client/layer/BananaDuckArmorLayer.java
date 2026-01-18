@@ -1,6 +1,6 @@
 package billeyzambie.practicalpets.client.layer;
 
-import billeyzambie.practicalpets.client.ModModelLayers;
+import billeyzambie.practicalpets.client.PPRenders;
 import billeyzambie.practicalpets.client.model.entity.dinosaur.BananaDuckArmorModel;
 import billeyzambie.practicalpets.client.model.entity.dinosaur.BananaDuckModel;
 import billeyzambie.practicalpets.entity.dinosaur.BananaDuck;
@@ -25,7 +25,7 @@ public class BananaDuckArmorLayer extends RenderLayer<BananaDuck, BananaDuckMode
 
     public BananaDuckArmorLayer(RenderLayerParent<BananaDuck, BananaDuckModel> p_174496_, EntityModelSet p_174497_) {
         super(p_174496_);
-        this.model = new BananaDuckArmorModel(p_174497_.bakeLayer(ModModelLayers.BANANA_DUCK_ARMOR));
+        this.model = new BananaDuckArmorModel(p_174497_.bakeLayer(PPRenders.BANANA_DUCK_ARMOR));
     }
 
     public void render(PoseStack p_117032_, MultiBufferSource p_117033_, int p_117034_, BananaDuck p_117035_, float p_117036_, float p_117037_, float p_117038_, float p_117039_, float p_117040_, float p_117041_) {

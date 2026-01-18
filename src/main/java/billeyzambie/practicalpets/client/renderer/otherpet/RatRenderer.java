@@ -1,6 +1,6 @@
 package billeyzambie.practicalpets.client.renderer.otherpet;
 
-import billeyzambie.practicalpets.client.ModModelLayers;
+import billeyzambie.practicalpets.client.PPRenders;
 import billeyzambie.practicalpets.client.layer.PetBackStrapLayer;
 import billeyzambie.practicalpets.client.layer.RatPatternLayer;
 import billeyzambie.practicalpets.client.model.entity.otherpet.RatModel;
@@ -24,7 +24,7 @@ public class RatRenderer extends PracticalPetRenderer<Rat, RatModel> {
     private final ItemInHandRenderer itemInHandRenderer;
 
     public RatRenderer(EntityRendererProvider.Context context) {
-        super(context, new RatModel(context.bakeLayer(ModModelLayers.RAT)), 0.4f);
+        super(context, new RatModel(context.bakeLayer(PPRenders.RAT)), 0.4f);
         this.addLayer(new RatPatternLayer(this));
         this.addLayer(new PetBackStrapLayer<>(this, BACK_STRAP_TEXTURE));
         itemInHandRenderer = context.getItemInHandRenderer();

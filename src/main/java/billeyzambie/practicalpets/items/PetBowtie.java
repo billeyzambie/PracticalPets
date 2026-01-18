@@ -4,6 +4,7 @@ import billeyzambie.practicalpets.misc.PracticalPets;
 import billeyzambie.practicalpets.entity.PracticalPet;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 public class PetBowtie extends Item implements AttachablePetCosmetic, DyeableItem {
     public PetBowtie(String modelTextureName) {
@@ -42,7 +43,7 @@ public class PetBowtie extends Item implements AttachablePetCosmetic, DyeableIte
     }
 
     @Override
-    public boolean causesBravery() {
+    public boolean causesBravery(ItemStack stack) {
         return false;
     }
 }

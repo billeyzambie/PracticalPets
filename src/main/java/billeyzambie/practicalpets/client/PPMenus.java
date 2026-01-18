@@ -1,6 +1,6 @@
 package billeyzambie.practicalpets.client;
 
-import billeyzambie.practicalpets.client.ui.PracticalPetMenu;
+import billeyzambie.practicalpets.ui.PracticalPetMenu;
 import billeyzambie.practicalpets.entity.PracticalPet;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.inventory.MenuType;

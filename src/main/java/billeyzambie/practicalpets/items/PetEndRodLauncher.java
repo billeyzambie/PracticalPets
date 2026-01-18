@@ -1,18 +1,20 @@
 package billeyzambie.practicalpets.items;
 
 import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.entity.other.PetEndRodProjectile;
 import billeyzambie.practicalpets.misc.ConfigurableBundleItem;
 import billeyzambie.practicalpets.misc.PracticalPets;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -68,8 +70,24 @@ public class PetEndRodLauncher extends ConfigurableBundleItem implements Attacha
     }
 
     @Override
-    public boolean causesBravery() {
-        return true;
+    public boolean canPerformRangedAttack(ItemStack stack) {
+        //can perform the ranged attack if it has end rods to inside it to shoot
+        return this.getContentWeight(stack) > 0;
+    }
+
+    @Override
+    public void performRangedAttack(ItemStack stack, PracticalPet shooter, LivingEntity target, float distanceFactor) {
+        if (this.removeOneMatching(stack, s -> s.is(Items.END_ROD)).isEmpty()) {
+            return; // no end rods in the launcher
+        }
+        shooter.level().addFreshEntity(new PetEndRodProjectile(shooter.level(), shooter, target, Direction.Axis.Y));
+        shooter.playSound(SoundEvents.SHULKER_SHOOT, 2.0F, (shooter.getRandom().nextFloat() - shooter.getRandom().nextFloat()) * 0.2F + 1.0F);
+        shooter.refreshAnyEquipmentIsBrave(); //the stack might have just run out of end rods
+    }
+
+    @Override
+    public boolean causesBravery(ItemStack stack) {
+        return this.canPerformRangedAttack(stack);
     }
 
     @Override
@@ -85,5 +103,6 @@ public class PetEndRodLauncher extends ConfigurableBundleItem implements Attacha
     @Override
     public void appendHoverText(@NotNull ItemStack bundleStack, Level level, List<Component> tooltipLines, @NotNull TooltipFlag tooltipFlag) {
         super.appendHoverText(bundleStack, level, tooltipLines, tooltipFlag);
+        tooltipLines.add(Component.translatable("tooltip.practicalpets.pet_end_rod_launcher"));
     }
 }

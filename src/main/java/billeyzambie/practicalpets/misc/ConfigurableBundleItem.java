@@ -2,6 +2,7 @@ package billeyzambie.practicalpets.misc;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import net.minecraft.ChatFormatting;
@@ -235,7 +236,7 @@ public abstract class ConfigurableBundleItem extends Item {
                 .sum();
     }
 
-    private static Optional<ItemStack> removeOne(ItemStack bundleStack) {
+    public static Optional<ItemStack> removeOne(ItemStack bundleStack) {
         CompoundTag tag = bundleStack.getOrCreateTag();
         if (!tag.contains(TAG_ITEMS)) {
             return Optional.empty();
@@ -254,6 +255,37 @@ public abstract class ConfigurableBundleItem extends Item {
                 return Optional.of(removedStack);
             }
         }
+    }
+
+    protected Optional<ItemStack> removeOneMatching(ItemStack bundleStack, Predicate<ItemStack> predicate) {
+        CompoundTag tag = bundleStack.getOrCreateTag();
+        if (!tag.contains(TAG_ITEMS)) {
+            return Optional.empty();
+        }
+
+        ListTag itemsTagList = tag.getList(TAG_ITEMS, Tag.TAG_COMPOUND);
+        for (int i = 0; i < itemsTagList.size(); i++) {
+            CompoundTag entryTag = itemsTagList.getCompound(i);
+            ItemStack stack = ItemStack.of(entryTag);
+            if (!predicate.test(stack)) {
+                continue;
+            }
+
+            itemsTagList.remove(i);
+            if (itemsTagList.isEmpty()) {
+                bundleStack.removeTagKey(TAG_ITEMS);
+            } else {
+                if (stack.getCount() > 1) {
+                    stack.shrink(1);
+                    CompoundTag newEntry = new CompoundTag();
+                    stack.save(newEntry);
+                    itemsTagList.add(0, newEntry);
+                }
+            }
+            return Optional.of(stack.copyWithCount(1));
+        }
+
+        return Optional.empty();
     }
 
     private static boolean dropContents(ItemStack bundleStack, Player player) {
@@ -276,7 +308,7 @@ public abstract class ConfigurableBundleItem extends Item {
         }
     }
 
-    private static Stream<ItemStack> getContents(ItemStack bundleStack) {
+    public static Stream<ItemStack> getContents(ItemStack bundleStack) {
         CompoundTag tag = bundleStack.getTag();
         if (tag == null) {
             return Stream.empty();

@@ -3,7 +3,7 @@ package billeyzambie.practicalpets.client.renderer.dinosaur;
 
 import billeyzambie.practicalpets.client.layer.PetBackStrapLayer;
 import billeyzambie.practicalpets.misc.PracticalPets;
-import billeyzambie.practicalpets.client.ModModelLayers;
+import billeyzambie.practicalpets.client.PPRenders;
 import billeyzambie.practicalpets.client.layer.BananaDuckArmorLayer;
 import billeyzambie.practicalpets.client.model.entity.dinosaur.BananaDuckModel;
 import billeyzambie.practicalpets.client.renderer.PracticalPetRenderer;
@@ -13,7 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class BananaDuckRenderer extends PracticalPetRenderer<BananaDuck, BananaDuckModel> {
     public BananaDuckRenderer(EntityRendererProvider.Context pContext) {
-        super(pContext, new BananaDuckModel(pContext.bakeLayer(ModModelLayers.BANANA_DUCK)), 0.35f);
+        super(pContext, new BananaDuckModel(pContext.bakeLayer(PPRenders.BANANA_DUCK)), 0.35f);
         this.addLayer(new BananaDuckArmorLayer(this, pContext.getModelSet()));
         this.addLayer(new PetBackStrapLayer<>(this, BACK_STRAP_TEXTURE));
     }

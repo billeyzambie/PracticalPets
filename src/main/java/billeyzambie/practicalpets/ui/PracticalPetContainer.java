@@ -1,4 +1,4 @@
-package billeyzambie.practicalpets.misc;
+package billeyzambie.practicalpets.ui;
 
 import billeyzambie.practicalpets.entity.PracticalPet;
 import net.minecraft.world.Container;
@@ -64,7 +64,10 @@ public class PracticalPetContainer implements Container {
     }
 
     @Override
-    public void setChanged() {}
+    public void setChanged() {
+        //So that it gets called when end rods are put in or out of the end rod launcher
+        this.pet.refreshAnyEquipmentIsBrave();
+    }
 
     @Override
     public boolean stillValid(@NotNull Player player) {

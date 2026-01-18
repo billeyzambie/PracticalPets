@@ -6,6 +6,7 @@ import billeyzambie.practicalpets.entity.dinosaur.AbstractDuck;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 public class DuckArmor extends Item implements PetCosmetic {
 
@@ -53,7 +54,7 @@ public class DuckArmor extends Item implements PetCosmetic {
     }
 
     @Override
-    public boolean causesBravery() {
+    public boolean causesBravery(ItemStack stack) {
         return true;
     }
 

@@ -3,12 +3,10 @@ package billeyzambie.practicalpets.misc;
 import billeyzambie.practicalpets.entity.dinosaur.BananaDuck;
 import billeyzambie.practicalpets.entity.dinosaur.Duck;
 import billeyzambie.practicalpets.entity.otherpet.Rat;
+import billeyzambie.practicalpets.entity.other.PetEndRodProjectile;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -20,6 +18,15 @@ import net.minecraftforge.registries.RegistryObject;
 public class PPEntities {
     public static final DeferredRegister<EntityType<?>> REGISTRY = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, PracticalPets.MODID);
 
+    //non mob entities
+    public static final RegistryObject<EntityType<PetEndRodProjectile>> PET_END_ROD_PROJECTILE = REGISTRY.register(
+            "pet_end_rod_projectile",
+            () -> EntityType.Builder.<PetEndRodProjectile>of(PetEndRodProjectile::new, MobCategory.MISC)
+                    .sized(0.3125F, 0.3125F)
+                    .build("pet_end_rod_projectile")
+    );
+
+    //mobs
     public static final RegistryObject<EntityType<BananaDuck>> BANANA_DUCK = REGISTRY.register(
             "banana_duck",
             () -> EntityType.Builder.of(BananaDuck::new, MobCategory.CREATURE)

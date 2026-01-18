@@ -9,6 +9,7 @@ import billeyzambie.practicalpets.util.DelayedTaskManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
@@ -49,7 +50,7 @@ public class RubberDuckyPetHat extends Item implements AttachablePetCosmetic, Dy
     }
 
     @Override
-    public boolean causesBravery() {
+    public boolean causesBravery(ItemStack stack) {
         return true;
     }
 

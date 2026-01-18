@@ -4,6 +4,7 @@ import billeyzambie.practicalpets.misc.PracticalPets;
 import billeyzambie.practicalpets.entity.PracticalPet;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 public class PetHat extends Item implements AttachablePetCosmetic {
 
@@ -52,7 +53,7 @@ public class PetHat extends Item implements AttachablePetCosmetic {
     }
 
     @Override
-    public boolean causesBravery() {
+    public boolean causesBravery(ItemStack stack) {
         return false;
     }
 

@@ -1,7 +1,7 @@
 package billeyzambie.practicalpets.misc;
 
 import billeyzambie.practicalpets.client.PPMenus;
-import billeyzambie.practicalpets.client.ui.PracticalPetScreen;
+import billeyzambie.practicalpets.ui.PracticalPetScreen;
 import billeyzambie.practicalpets.network.ModNetworking;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
@@ -10,7 +10,6 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.world.BiomeModifier;

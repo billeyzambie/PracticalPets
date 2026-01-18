@@ -2,7 +2,7 @@ package billeyzambie.practicalpets.entity;
 
 import billeyzambie.animationcontrollers.ACData;
 import billeyzambie.animationcontrollers.ACEntity;
-import billeyzambie.practicalpets.client.ui.PracticalPetMenu;
+import billeyzambie.practicalpets.ui.PracticalPetMenu;
 import billeyzambie.practicalpets.items.RubberDuckyPetHat;
 import billeyzambie.practicalpets.misc.PPItems;
 import billeyzambie.practicalpets.misc.PPSounds;
@@ -31,6 +31,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.ResetUniversalAngerTargetGoal;
+import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
@@ -51,7 +52,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.List;
 
-public abstract class PracticalPet extends TamableAnimal implements ACEntity, NeutralMob {
+public abstract class PracticalPet extends TamableAnimal implements ACEntity, NeutralMob, RangedAttackMob {
 
     HashMap<String, ACData> ACData = new HashMap<>();
 
@@ -258,19 +259,20 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
 
     private boolean anyEquipmentIsBrave = false;
 
-    private void refreshAnyEquipmentIsBrave() {
+    public void refreshAnyEquipmentIsBrave() {
         for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
             ItemStack cosmeticStack = this.getEquippedItem(slot);
             if (
                     !cosmeticStack.isEmpty()
                             && cosmeticStack.getItem() instanceof PetCosmetic cosmetic
-                            && cosmetic.causesBravery()
+                            && cosmetic.causesBravery(cosmeticStack)
             ) {
-                anyEquipmentIsBrave = true;
+                this.anyEquipmentIsBrave = true;
                 return;
             }
         }
-        anyEquipmentIsBrave = false;
+        this.anyEquipmentIsBrave = false;
+        this.refreshCanShootFromSlot();
     }
 
     public boolean anyEquipmentIsBrave() {
@@ -404,7 +406,8 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
             this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(10, new PanicIfShouldGoal(this, 1.3D));
         this.goalSelector.addGoal(20, new SitWhenOrderedToGoal(this));
-        this.goalSelector.addGoal(50, new MeleeAttackGoal(this, this.getMeleeAttackSpeedMultiplier(), false));
+        this.goalSelector.addGoal(30, new RangedAttackIfShouldGoal(this, this.getMeleeAttackSpeedMultiplier(), 20, 40, 20f));
+        this.goalSelector.addGoal(50, new MeleeAttackIfShouldGoal(this, this.getMeleeAttackSpeedMultiplier(), false));
         this.goalSelector.addGoal(55, new PPBegGoal(this));
         this.goalSelector.addGoal(60, new FollowOwnerWanderableGoal(this, this.getFollowOwnerSpeed(), 10.0F, 5.0F, false));
         this.goalSelector.addGoal(70, new PredicateTemptGoal(this, this.getFollowOwnerSpeed(), PracticalPet::isFood, false));
@@ -806,9 +809,9 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
                         //&& LocalDate.now().isBefore(FOUNDERS_HAT_END_DATE)
                         && foundersHatsClaimed < 5
         ) {
-            this.setHeadItem(new ItemStack(PPItems.ANNIVERSARY_PET_HAT_0.get()));
+            ItemStack foundersHat = new ItemStack(PPItems.ANNIVERSARY_PET_HAT_0.get());
+            this.setHeadItem(foundersHat);
             player.getPersistentData().putInt(FOUNDERS_HATS_CLAIMED_TAG_ID, foundersHatsClaimed + 1);
-            ItemStack foundersHat = PPItems.ANNIVERSARY_PET_HAT_0.get().getDefaultInstance();
             player.sendSystemMessage(Component.translatable("ui.practicalpets.chat.got_founders_hat", foundersHat.getDisplayName(), foundersHatsClaimed + 1));
             player.sendSystemMessage(Component.translatable("ui.practicalpets.info.item.anniversary_pet_hat_0", foundersHat.getDisplayName()));
             player.playSound(PPSounds.PET_LEVEL_UP.get());
@@ -894,4 +897,56 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     }
 
     private static final EntityDataAccessor<Integer> DATA_REMAINING_ANGER_TIME = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.INT);
+
+    private Optional<PetCosmetic.Slot> canShootFromSlot = Optional.empty();
+
+    private void refreshCanShootFromSlot() {
+        for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
+            ItemStack cosmeticStack = this.getEquippedItem(slot);
+            if (
+                    !cosmeticStack.isEmpty()
+                            && cosmeticStack.getItem() instanceof PetCosmetic cosmetic
+                            && cosmetic.canPerformRangedAttack(cosmeticStack)
+            ) {
+                this.canShootFromSlot = Optional.of(slot);
+                return;
+            }
+        }
+        this.canShootFromSlot = Optional.empty();
+    }
+
+    public boolean canPerformRangedAttack() {
+        return this.canPerformInnateRangedAttack() || this.canPerformCosmeticRangedAttack();
+    }
+
+    //There's no mob for which this is true currently, but there might be in the future.
+    //Probably when/if I port velvet worms from bedrock edition.
+    public boolean canPerformInnateRangedAttack() {
+        return false;
+    }
+
+    public boolean canPerformCosmeticRangedAttack() {
+        return this.canShootFromSlot.isPresent();
+    }
+
+    @Override
+    public void performRangedAttack(@NotNull LivingEntity target, float distanceFactor) {
+        if (this.canPerformCosmeticRangedAttack())
+            this.performCosmeticRangedAttack(canShootFromSlot.orElseThrow(), target, distanceFactor);
+        else if (this.canPerformInnateRangedAttack()) {
+            this.performInnateRangedAttack(target, distanceFactor);
+        }
+    }
+
+    public void performInnateRangedAttack(@NotNull LivingEntity target, float distanceFactor) {
+
+    }
+
+    public void performCosmeticRangedAttack(PetCosmetic.Slot slot, @NotNull LivingEntity target, float distanceFactor) {
+        ItemStack equippedStack = this.getEquippedItem(slot);
+        Item equippedItem = equippedStack.getItem();
+        if (equippedItem instanceof PetCosmetic cosmeticItem) {
+            cosmeticItem.performRangedAttack(equippedStack, this, target, distanceFactor);
+        }
+    }
 }

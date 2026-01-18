@@ -1,10 +1,8 @@
 package billeyzambie.practicalpets.client.layer;
 
-import billeyzambie.practicalpets.client.ModModelLayers;
+import billeyzambie.practicalpets.client.PPRenders;
 import billeyzambie.practicalpets.client.model.entity.dinosaur.DuckArmorModel;
 import billeyzambie.practicalpets.client.model.entity.dinosaur.DuckModel;
-import billeyzambie.practicalpets.client.model.entity.dinosaur.DuckModel;
-import billeyzambie.practicalpets.entity.dinosaur.Duck;
 import billeyzambie.practicalpets.entity.dinosaur.Duck;
 import billeyzambie.practicalpets.items.DuckArmor;
 import billeyzambie.practicalpets.items.DyeableDuckArmor;
@@ -27,7 +25,7 @@ public class DuckArmorLayer extends RenderLayer<Duck, DuckModel> {
 
     public DuckArmorLayer(RenderLayerParent<Duck, DuckModel> p_174496_, EntityModelSet p_174497_) {
         super(p_174496_);
-        this.model = new DuckArmorModel(p_174497_.bakeLayer(ModModelLayers.DUCK_ARMOR));
+        this.model = new DuckArmorModel(p_174497_.bakeLayer(PPRenders.DUCK_ARMOR));
     }
 
     public void render(PoseStack p_117032_, MultiBufferSource p_117033_, int p_117034_, Duck p_117035_, float p_117036_, float p_117037_, float p_117038_, float p_117039_, float p_117040_, float p_117041_) {

@@ -372,7 +372,7 @@ java.lang.IllegalAccessException: class io.netty.util.internal.PlatformDependent
 [16Ιαν2026 21:11:24.821] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.config.ConfigTracker/CONFIG]: Config file forge-server.toml for forge tracking
 [16Ιαν2026 21:11:24.821] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.ModLoadingContext/]: Attempted to register an empty config for type COMMON on mod forge
 [16Ιαν2026 21:11:24.821] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Attempting to inject @EventBusSubscriber classes into the eventbus for practicalpets
-[16Ιαν2026 21:11:24.823] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Auto-subscribing billeyzambie.practicalpets.client.ModModelLayers to MOD
+[16Ιαν2026 21:11:24.823] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Auto-subscribing billeyzambie.practicalpets.client.PPRenders to MOD
 [16Ιαν2026 21:11:24.829] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Auto-subscribing billeyzambie.practicalpets.datagen.DataGenerators to MOD
 [16Ιαν2026 21:11:24.830] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Auto-subscribing billeyzambie.practicalpets.misc.ClientListener to MOD
 [16Ιαν2026 21:11:24.831] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Auto-subscribing billeyzambie.practicalpets.misc.CommonListener to MOD

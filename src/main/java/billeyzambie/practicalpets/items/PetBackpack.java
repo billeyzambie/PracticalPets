@@ -4,6 +4,7 @@ import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.misc.PracticalPets;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BundleItem;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public class PetBackpack extends BundleItem implements AttachablePetCosmetic, DyeableItem {
@@ -37,7 +38,7 @@ public class PetBackpack extends BundleItem implements AttachablePetCosmetic, Dy
     }
 
     @Override
-    public boolean causesBravery() {
+    public boolean causesBravery(ItemStack stack) {
         return false;
     }
 

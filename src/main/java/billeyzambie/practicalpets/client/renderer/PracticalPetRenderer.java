@@ -1,9 +1,9 @@
 package billeyzambie.practicalpets.client.renderer;
 
 import billeyzambie.animationcontrollers.PracticalPetModel;
+import billeyzambie.practicalpets.client.PPRenders;
 import billeyzambie.practicalpets.client.model.entity.pet_equipment.*;
 import billeyzambie.practicalpets.misc.PPItems;
-import billeyzambie.practicalpets.client.ModModelLayers;
 import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.items.AttachablePetCosmetic;
 import billeyzambie.practicalpets.items.PetCosmetic;
@@ -38,27 +38,27 @@ public abstract class PracticalPetRenderer<T extends Mob, M extends PracticalPet
 
         cosmeticModels.put(
                 PPItems.PET_BOWTIE.get(),
-                new PetBowtieModel<>(context.bakeLayer(ModModelLayers.PET_BOWTIE))
+                new PetBowtieModel<>(context.bakeLayer(PPRenders.PET_BOWTIE))
         );
         cosmeticModels.put(
                 PPItems.ANNIVERSARY_PET_HAT_0.get(),
-                new AnniversaryPetHatModel<>(context.bakeLayer(ModModelLayers.ANNIVERSARY_PET_HAT))
+                new AnniversaryPetHatModel<>(context.bakeLayer(PPRenders.ANNIVERSARY_PET_HAT))
         );
         cosmeticModels.put(
                 PPItems.RUBBER_DUCKY_PET_HAT.get(),
-                new RubberDuckyPetHatModel<>(context.bakeLayer(ModModelLayers.RUBBER_DUCKY_PET_HAT))
+                new RubberDuckyPetHatModel<>(context.bakeLayer(PPRenders.RUBBER_DUCKY_PET_HAT))
         );
         cosmeticModels.put(
                 PPItems.PET_CHEF_HAT.get(),
-                new PetChefHatModel<>(context.bakeLayer(ModModelLayers.PET_CHEF_HAT))
+                new PetChefHatModel<>(context.bakeLayer(PPRenders.PET_CHEF_HAT))
         );
         cosmeticModels.put(
                 PPItems.PET_BACKPACK.get(),
-                new PetBackpackModel<>(context.bakeLayer(ModModelLayers.PET_BACKPACK))
+                new PetBackpackModel<>(context.bakeLayer(PPRenders.PET_BACKPACK))
         );
         cosmeticModels.put(
                 PPItems.PET_END_ROD_LAUNCHER.get(),
-                new PetBackpackModel<>(context.bakeLayer(ModModelLayers.PET_END_ROD_LAUNCHER))
+                new PetBackpackModel<>(context.bakeLayer(PPRenders.PET_END_ROD_LAUNCHER))
         );
     }
 

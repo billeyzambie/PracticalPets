@@ -1,4 +1,4 @@
-package billeyzambie.practicalpets.client.ui;
+package billeyzambie.practicalpets.ui;
 
 import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.misc.PracticalPets;

@@ -1,9 +1,8 @@
-package billeyzambie.practicalpets.client.ui;
+package billeyzambie.practicalpets.ui;
 
 import billeyzambie.practicalpets.client.PPMenus;
 import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.items.PetCosmetic;
-import billeyzambie.practicalpets.misc.PracticalPetContainer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
