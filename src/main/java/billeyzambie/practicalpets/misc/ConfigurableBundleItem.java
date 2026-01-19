@@ -272,15 +272,14 @@ public abstract class ConfigurableBundleItem extends Item {
             }
 
             itemsTagList.remove(i);
+            if (stack.getCount() > 1) {
+                stack.shrink(1);
+                CompoundTag newEntry = new CompoundTag();
+                stack.save(newEntry);
+                itemsTagList.add(0, newEntry);
+            }
             if (itemsTagList.isEmpty()) {
                 bundleStack.removeTagKey(TAG_ITEMS);
-            } else {
-                if (stack.getCount() > 1) {
-                    stack.shrink(1);
-                    CompoundTag newEntry = new CompoundTag();
-                    stack.save(newEntry);
-                    itemsTagList.add(0, newEntry);
-                }
             }
             return Optional.of(stack.copyWithCount(1));
         }

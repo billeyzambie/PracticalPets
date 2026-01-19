@@ -1,16 +1,24 @@
 package billeyzambie.practicalpets.entity.other;
 
+import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.entity.otherpet.Rat;
+import billeyzambie.practicalpets.items.DyeableItem;
 import billeyzambie.practicalpets.misc.PPEntities;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.Lists;
+
 import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -21,9 +29,12 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
@@ -46,13 +57,20 @@ public class PetEndRodProjectile extends Projectile {
     private UUID targetId;
 
 
-    public PetEndRodProjectile(Level p_37330_, LivingEntity p_37331_, Entity p_37332_, Direction.Axis p_37333_) {
+    public PetEndRodProjectile(Level p_37330_, LivingEntity owner, Entity p_37332_, Direction.Axis p_37333_) {
         this(PPEntities.PET_END_ROD_PROJECTILE.get(), p_37330_);
-        this.setOwner(p_37331_);
-        BlockPos blockpos = p_37331_.blockPosition();
-        double d0 = (double)blockpos.getX() + 0.5D;
-        double d1 = (double)blockpos.getY() + 0.5D;
-        double d2 = (double)blockpos.getZ() + 0.5D;
+        this.setOwner(owner);
+        if (owner instanceof PracticalPet pet) {
+            ItemStack backStack = pet.getBackItem();
+            Item backItem = backStack.getItem();
+            if (backItem instanceof DyeableItem dyeableItem) {
+                this.setColor(dyeableItem.getColor(backStack));
+            }
+        }
+        BlockPos blockpos = owner.blockPosition();
+        double d0 = (double) blockpos.getX() + 0.5D;
+        double d1 = (double) blockpos.getY() + 0.5D;
+        double d2 = (double) blockpos.getZ() + 0.5D;
         this.moveTo(d0, d1, d2, this.getYRot(), this.getXRot());
         this.finalTarget = p_37332_;
         this.currentMoveDirection = Direction.UP;
@@ -80,6 +98,7 @@ public class PetEndRodProjectile extends Projectile {
             p_37357_.putInt("Dir", this.currentMoveDirection.get3DDataValue());
         }
 
+        p_37357_.putInt("Color", this.getColor());
         p_37357_.putInt("Steps", this.flightSteps);
         p_37357_.putDouble("TXD", this.targetDeltaX);
         p_37357_.putDouble("TYD", this.targetDeltaY);
@@ -89,6 +108,7 @@ public class PetEndRodProjectile extends Projectile {
     @Override
     protected void readAdditionalSaveData(CompoundTag p_37353_) {
         super.readAdditionalSaveData(p_37353_);
+        this.setColor(p_37353_.getInt("Color"));
         this.flightSteps = p_37353_.getInt("Steps");
         this.targetDeltaX = p_37353_.getDouble("TXD");
         this.targetDeltaY = p_37353_.getDouble("TYD");
@@ -105,6 +125,17 @@ public class PetEndRodProjectile extends Projectile {
 
     @Override
     protected void defineSynchedData() {
+        this.entityData.define(COLOR, 0xFFFFFF);
+    }
+
+    private static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(PetEndRodProjectile.class, EntityDataSerializers.INT);
+
+    public int getColor() {
+        return this.entityData.get(COLOR);
+    }
+
+    public void setColor(int value) {
+        this.entityData.set(COLOR, value);
     }
 
     @Nullable
@@ -122,13 +153,13 @@ public class PetEndRodProjectile extends Projectile {
         if (this.finalTarget == null) {
             blockpos = this.blockPosition().below();
         } else {
-            d0 = (double)this.finalTarget.getBbHeight() * 0.5D;
+            d0 = (double) this.finalTarget.getBbHeight() * 0.5D;
             blockpos = BlockPos.containing(this.finalTarget.getX(), this.finalTarget.getY() + d0, this.finalTarget.getZ());
         }
 
-        double d1 = (double)blockpos.getX() + 0.5D;
-        double d2 = (double)blockpos.getY() + d0;
-        double d3 = (double)blockpos.getZ() + 0.5D;
+        double d1 = (double) blockpos.getX() + 0.5D;
+        double d2 = (double) blockpos.getY() + d0;
+        double d3 = (double) blockpos.getZ() + 0.5D;
         Direction direction = null;
         if (!blockpos.closerToCenterThan(this.position(), 2.0D)) {
             BlockPos blockpos1 = this.blockPosition();
@@ -159,16 +190,16 @@ public class PetEndRodProjectile extends Projectile {
 
             direction = Direction.getRandom(this.random);
             if (list.isEmpty()) {
-                for(int i = 5; !this.level().isEmptyBlock(blockpos1.relative(direction)) && i > 0; --i) {
+                for (int i = 5; !this.level().isEmptyBlock(blockpos1.relative(direction)) && i > 0; --i) {
                     direction = Direction.getRandom(this.random);
                 }
             } else {
                 direction = list.get(this.random.nextInt(list.size()));
             }
 
-            d1 = this.getX() + (double)direction.getStepX();
-            d2 = this.getY() + (double)direction.getStepY();
-            d3 = this.getZ() + (double)direction.getStepZ();
+            d1 = this.getX() + (double) direction.getStepX();
+            d2 = this.getY() + (double) direction.getStepY();
+            d3 = this.getZ() + (double) direction.getStepZ();
         }
 
         this.setMoveDirection(direction);
@@ -195,7 +226,7 @@ public class PetEndRodProjectile extends Projectile {
         super.tick();
         if (!this.level().isClientSide) {
             if (this.finalTarget == null && this.targetId != null) {
-                this.finalTarget = ((ServerLevel)this.level()).getEntity(this.targetId);
+                this.finalTarget = ((ServerLevel) this.level()).getEntity(this.targetId);
                 if (this.finalTarget == null) {
                     this.targetId = null;
                 }
@@ -250,8 +281,12 @@ public class PetEndRodProjectile extends Projectile {
     }
 
     @Override
-    protected boolean canHitEntity(Entity p_37341_) {
-        return super.canHitEntity(p_37341_) && !p_37341_.noPhysics;
+    protected boolean canHitEntity(Entity entity) {
+        return super.canHitEntity(entity) && !entity.noPhysics
+                && (entity == this.finalTarget || (entity instanceof Mob mob && (
+                mob.getTarget() == this.getOwner()
+                        || (this.getOwner() instanceof Mob owner && owner.getTarget() == entity)
+        )));
     }
 
     @Override
@@ -274,13 +309,13 @@ public class PetEndRodProjectile extends Projectile {
         super.onHitEntity(p_37345_);
         Entity entity = p_37345_.getEntity();
         Entity entity1 = this.getOwner();
-        LivingEntity livingentity = entity1 instanceof LivingEntity ? (LivingEntity)entity1 : null;
+        LivingEntity livingentity = entity1 instanceof LivingEntity ? (LivingEntity) entity1 : null;
         boolean flag = entity.hurt(this.damageSources().mobProjectile(this, livingentity), 4.0F);
         if (flag) {
             this.doEnchantDamageEffects(livingentity, entity);
             if (entity instanceof LivingEntity) {
-                LivingEntity livingentity1 = (LivingEntity)entity;
-                livingentity1.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 200), MoreObjects.firstNonNull(entity1, this));
+                LivingEntity livingentity1 = (LivingEntity) entity;
+                livingentity1.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 1), MoreObjects.firstNonNull(entity1, this));
             }
         }
 
@@ -289,7 +324,7 @@ public class PetEndRodProjectile extends Projectile {
     @Override
     protected void onHitBlock(BlockHitResult p_37343_) {
         super.onHitBlock(p_37343_);
-        ((ServerLevel)this.level()).sendParticles(ParticleTypes.EXPLOSION, this.getX(), this.getY(), this.getZ(), 2, 0.2D, 0.2D, 0.2D, 0.0D);
+        ((ServerLevel) this.level()).sendParticles(ParticleTypes.EXPLOSION, this.getX(), this.getY(), this.getZ(), 2, 0.2D, 0.2D, 0.2D, 0.0D);
         this.playSound(SoundEvents.SHULKER_BULLET_HIT, 1.0F, 1.0F);
     }
 
@@ -313,7 +348,7 @@ public class PetEndRodProjectile extends Projectile {
     public boolean hurt(DamageSource p_37338_, float p_37339_) {
         if (!this.level().isClientSide) {
             this.playSound(SoundEvents.SHULKER_BULLET_HURT, 1.0F, 1.0F);
-            ((ServerLevel)this.level()).sendParticles(ParticleTypes.CRIT, this.getX(), this.getY(), this.getZ(), 15, 0.2D, 0.2D, 0.2D, 0.0D);
+            ((ServerLevel) this.level()).sendParticles(ParticleTypes.CRIT, this.getX(), this.getY(), this.getZ(), 15, 0.2D, 0.2D, 0.2D, 0.0D);
             this.destroy();
         }
 

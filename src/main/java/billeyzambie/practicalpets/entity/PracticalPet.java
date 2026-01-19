@@ -260,19 +260,24 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     private boolean anyEquipmentIsBrave = false;
 
     public void refreshAnyEquipmentIsBrave() {
+        boolean hasBraveEquipment = false;
+        Optional<PetCosmetic.Slot> rangedSlot = Optional.empty();
         for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
             ItemStack cosmeticStack = this.getEquippedItem(slot);
             if (
                     !cosmeticStack.isEmpty()
                             && cosmeticStack.getItem() instanceof PetCosmetic cosmetic
-                            && cosmetic.causesBravery(cosmeticStack)
             ) {
-                this.anyEquipmentIsBrave = true;
-                return;
+                if (cosmetic.causesBravery(cosmeticStack)) {
+                    hasBraveEquipment = true;
+                }
+                if (rangedSlot.isEmpty() && cosmetic.canPerformRangedAttack(cosmeticStack)) {
+                    rangedSlot = Optional.of(slot);
+                }
             }
         }
-        this.anyEquipmentIsBrave = false;
-        this.refreshCanShootFromSlot();
+        this.anyEquipmentIsBrave = hasBraveEquipment;
+        this.canShootFromSlot = rangedSlot;
     }
 
     public boolean anyEquipmentIsBrave() {
@@ -899,21 +904,6 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     private static final EntityDataAccessor<Integer> DATA_REMAINING_ANGER_TIME = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.INT);
 
     private Optional<PetCosmetic.Slot> canShootFromSlot = Optional.empty();
-
-    private void refreshCanShootFromSlot() {
-        for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
-            ItemStack cosmeticStack = this.getEquippedItem(slot);
-            if (
-                    !cosmeticStack.isEmpty()
-                            && cosmeticStack.getItem() instanceof PetCosmetic cosmetic
-                            && cosmetic.canPerformRangedAttack(cosmeticStack)
-            ) {
-                this.canShootFromSlot = Optional.of(slot);
-                return;
-            }
-        }
-        this.canShootFromSlot = Optional.empty();
-    }
 
     public boolean canPerformRangedAttack() {
         return this.canPerformInnateRangedAttack() || this.canPerformCosmeticRangedAttack();

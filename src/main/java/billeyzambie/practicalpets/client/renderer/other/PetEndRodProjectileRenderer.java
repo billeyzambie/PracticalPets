@@ -43,11 +43,20 @@ public class PetEndRodProjectileRenderer extends EntityRenderer<PetEndRodProject
 
     @Override
     public void render(@NotNull PetEndRodProjectile entity, float entityYaw, float partialticks, @NotNull PoseStack poseStack, @NotNull MultiBufferSource buffer, int packedLight) {
+
         VertexConsumer vertexconsumer = buffer.getBuffer(RenderType.entityTranslucent(TEXTURE));
         poseStack.pushPose();
-        poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialticks, entity.yRotO, entity.getYRot())));
-        poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialticks, entity.xRotO, entity.getXRot())));
+
+        poseStack.mulPose(Axis.XP.rotationDegrees(90f));
+        poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialticks, entity.yRotO, entity.getYRot())));
+        poseStack.mulPose(Axis.XP.rotationDegrees(-Mth.lerp(partialticks, entity.xRotO, entity.getXRot())));
+
+        int color = entity.getColor();
+        float r = (color >> 16 & 255) / 255f;
+        float g = (color >> 8 & 255) / 255f;
+        float b = (color & 255) / 255f;
+
+        this.model.renderToBuffer(poseStack, vertexconsumer, packedLight, OverlayTexture.NO_OVERLAY, r, g, b, 1.0F);
         poseStack.popPose();
-        this.model.renderToBuffer(poseStack, vertexconsumer, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
     }
 }
