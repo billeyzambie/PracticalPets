@@ -1,10 +1,13 @@
 {
+  "entity.practicalpets.pet_end_rod_projectile": "Pet End Rod",
   "entity.practicalpets.banana_duck": "Banana Duck",
   "item.practicalpets.banana_duck_spawn_egg": "Banana Duck Spawn Egg",
   "entity.practicalpets.duck": "Duck",
   "item.practicalpets.duck_spawn_egg": "Duck Spawn Egg",
   "entity.practicalpets.rat": "Rat",
   "item.practicalpets.rat_spawn_egg": "Rat Spawn Egg",
+  "entity.practicalpets.pigeon": "Pigeon",
+  "item.practicalpets.pigeon_spawn_egg": "Pigeon Spawn Egg",
   "item.practicalpets.poultry_banana": "Poultry Banana",
   "block.practicalpets.banana_peel": "Banana Peel",
   "item.practicalpets.banana_peel": "Banana Peel",
@@ -34,5 +37,6 @@
   "ui.practicalpets.chat.level_down": "%s has been downgraded to level %s.",
   "ui.practicalpets.chat.got_founders_hat": "The first 5 pets you tame will be equipped with a limited-time %s! When/if the mod gets popular, the founder's hat will become unobtainable in survival. This is pet #%s out of 5.",
   "ui.practicalpets.info.item.anniversary_pet_hat_0": "The %s makes a pet level up twice as fast.",
-  "command.practicalpets.set_pet_level.success": "Set %s's level to %s."
+  "command.practicalpets.set_pet_level.success": "Set %s's level to %s.",
+  "tooltip.practicalpets.pet_end_rod_launcher": "Right-click with end rods to put them in"
 }

@@ -4,22 +4,14 @@ package billeyzambie.practicalpets.client.model.entity.otherpet;// Made with Blo
 
 
 import billeyzambie.animationcontrollers.Animatable;
-import billeyzambie.animationcontrollers.MathAnimationDefinition;
 import billeyzambie.animationcontrollers.PracticalPetModel;
-import billeyzambie.practicalpets.client.animation.dinosaur.BananaDuckAnimation;
-import billeyzambie.practicalpets.client.animation.dinosaur.DuckAnimation;
-import billeyzambie.practicalpets.client.animation.dinosaur.RatAnimation;
-import billeyzambie.practicalpets.entity.dinosaur.Duck;
+import billeyzambie.practicalpets.client.animation.otherpet.RatAnimation;
 import billeyzambie.practicalpets.entity.otherpet.Rat;
 import billeyzambie.practicalpets.misc.PPAnimationControllers;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.animation.AnimationDefinition;
-import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,7 +53,6 @@ public class RatModel extends PracticalPetModel<Rat> {
 	}
 
 	List<ModelPart> pathToBackpack;
-
 	@Override
 	public List<ModelPart> pathToBackpack() {
 		return pathToBackpack;

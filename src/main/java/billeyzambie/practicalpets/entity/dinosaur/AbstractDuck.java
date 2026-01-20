@@ -135,7 +135,7 @@ public abstract class AbstractDuck extends PracticalPet {
             }
             else {
                 int nextFlapTime = this.getIdleFlapTime() + 1;
-                //pause the idle flap timer while sitting
+                //hold the idle flap timer while sitting
                 if (!this.isInSittingPose() || wasIdleFlapping || nextFlapTime < 0) {
                     this.setIdleFlapTime(nextFlapTime);
                 }

@@ -2,6 +2,7 @@ package billeyzambie.practicalpets.misc;
 
 import billeyzambie.practicalpets.entity.dinosaur.BananaDuck;
 import billeyzambie.practicalpets.entity.dinosaur.Duck;
+import billeyzambie.practicalpets.entity.dinosaur.Pigeon;
 import billeyzambie.practicalpets.entity.otherpet.Rat;
 import billeyzambie.practicalpets.entity.other.PetEndRodProjectile;
 import net.minecraft.world.entity.EntityType;
@@ -41,9 +42,15 @@ public class PPEntities {
     );
     public static final RegistryObject<EntityType<Rat>> RAT = REGISTRY.register(
             "rat",
-            () -> EntityType.Builder.of(Rat::new, MobCategory.AMBIENT)
+            () -> EntityType.Builder.of(Rat::new, MobCategory.CREATURE)
                     .sized(0.6f, 0.33f)
                     .build("rat")
+    );
+    public static final RegistryObject<EntityType<Pigeon>> PIGEON = REGISTRY.register(
+            "pigeon",
+            () -> EntityType.Builder.of(Pigeon::new, MobCategory.CREATURE)
+                    .sized(0.4f, 0.65f)
+                    .build("pigeon")
     );
 
     @SubscribeEvent
@@ -52,7 +59,7 @@ public class PPEntities {
                 BANANA_DUCK.get(),
                 BananaDuck.createMobAttributes()
                         .add(Attributes.MAX_HEALTH, 6)
-                        .add(Attributes.MOVEMENT_SPEED, 0.25)
+                        .add(Attributes.MOVEMENT_SPEED, 0.2)
                         .add(Attributes.ATTACK_DAMAGE, 2)
                         .build()
         );
@@ -70,6 +77,14 @@ public class PPEntities {
                         .add(Attributes.MAX_HEALTH, 10)
                         .add(Attributes.MOVEMENT_SPEED, 0.2)
                         .add(Attributes.ATTACK_DAMAGE, 2)
+                        .build()
+        );
+        event.put(
+                PIGEON.get(),
+                Pigeon.createMobAttributes()
+                        .add(Attributes.MAX_HEALTH, 4)
+                        .add(Attributes.MOVEMENT_SPEED, 0.2)
+                        .add(Attributes.ATTACK_DAMAGE, 1)
                         .build()
         );
 

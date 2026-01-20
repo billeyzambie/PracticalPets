@@ -32,8 +32,12 @@ public class PPSpawns {
                     PPEntities.DUCK.get(),
                     20, 4, 8
             ));
-            builder.getMobSpawnSettings().getSpawner(MobCategory.AMBIENT).add(new MobSpawnSettings.SpawnerData(
+            builder.getMobSpawnSettings().getSpawner(MobCategory.CREATURE).add(new MobSpawnSettings.SpawnerData(
                     PPEntities.RAT.get(),
+                    20, 4, 8
+            ));
+            builder.getMobSpawnSettings().getSpawner(MobCategory.CREATURE).add(new MobSpawnSettings.SpawnerData(
+                    PPEntities.PIGEON.get(),
                     20, 4, 8
             ));
         }
@@ -76,6 +80,14 @@ public class PPSpawns {
                 SpawnPlacements.Type.NO_RESTRICTIONS,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Rat::ratCanSpawn,
+                SpawnPlacementRegisterEvent.Operation.REPLACE
+        );
+
+        event.register(
+                PPEntities.PIGEON.get(),
+                SpawnPlacements.Type.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                Animal::checkAnimalSpawnRules,
                 SpawnPlacementRegisterEvent.Operation.REPLACE
         );
     }

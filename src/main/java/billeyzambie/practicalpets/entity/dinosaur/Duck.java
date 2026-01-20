@@ -14,6 +14,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -56,7 +57,7 @@ public class Duck extends AbstractDuck {
     public float oFlap;
     public float flapping = 1.0F;
 
-    public static double MOVEMENT_SPEED = 0.25;
+    public static double MOVEMENT_SPEED = 0.2;
 
     public Duck(EntityType<? extends TamableAnimal> entityType, Level level) {
         super(entityType, level);
@@ -90,6 +91,11 @@ public class Duck extends AbstractDuck {
     ) {
         if (!Animal.checkAnimalSpawnRules(type, level, reason, pos, rng)) return false;
 
+        if (level.getBiome(pos).is(BiomeTags.IS_RIVER)) {
+            return true;
+        }
+
+        //Make them spawn in lakes too:
         final int R = 4;
         final BlockPos ground = pos.below();
         final BlockPos.MutableBlockPos p = new BlockPos.MutableBlockPos();
@@ -140,7 +146,7 @@ public class Duck extends AbstractDuck {
             return HealOverride.defineNutrition(2);
         if (itemStack.is(Items.GLISTERING_MELON_SLICE))
             return HealOverride.defineNutrition(6);
-        //Bread is bad for ducks
+        //Bread isn't very good for ducks
         if (itemStack.is(Items.BREAD))
             return HealOverride.override(1);
         return super.healOverride(itemStack);
@@ -161,6 +167,10 @@ public class Duck extends AbstractDuck {
         return 3;
     }
 
+    @Override
+    protected @NotNull ResourceLocation getDefaultLootTable() {
+        return PPUtil.CHICKEN_LOOT;
+    }
 
     @Override
     protected SoundEvent getAmbientSound() {

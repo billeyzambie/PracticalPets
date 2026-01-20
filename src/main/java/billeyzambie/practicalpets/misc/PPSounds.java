@@ -29,6 +29,12 @@ public class PPSounds {
     public static final RegistryObject<SoundEvent> DUCK_DEATH = REGISTRY.register("duck_death",
             () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("practicalpets", "duck_death")));
 
+    public static final RegistryObject<SoundEvent> PIGEON_AMBIENT = REGISTRY.register("pigeon_ambient",
+            () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("practicalpets", "pigeon_ambient")));
+
+    public static final RegistryObject<SoundEvent> PIGEON_HURT = REGISTRY.register("pigeon_hurt",
+            () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("practicalpets", "pigeon_hurt")));
+
     public static final RegistryObject<SoundEvent> PET_LEVEL_UP = REGISTRY.register("pet_level_up",
             () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("practicalpets", "pet_level_up")));
 

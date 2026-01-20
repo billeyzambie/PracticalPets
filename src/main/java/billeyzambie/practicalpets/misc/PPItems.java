@@ -114,4 +114,8 @@ public class PPItems {
             "rat_spawn_egg",
             () -> new ForgeSpawnEggItem(PPEntities.RAT, 0x718794, 0xffd1b3, new Item.Properties())
     );
+    public static final RegistryObject<ForgeSpawnEggItem> PIGEON_SPAWN_EGG = register(
+            "pigeon_spawn_egg",
+            () -> new ForgeSpawnEggItem(PPEntities.PIGEON, 0x303437, 0xC5D7E4, new Item.Properties())
+    );
 }

@@ -20,6 +20,8 @@ import net.minecraftforge.items.IItemHandler;
 
 public class PPUtil {
 
+    public static ResourceLocation CHICKEN_LOOT = new ResourceLocation("minecraft", "entities/chicken");
+
     public static void clear(IItemHandler h) {
         for (int i = 0; i < h.getSlots(); i++) {
             ItemStack s = h.getStackInSlot(i);

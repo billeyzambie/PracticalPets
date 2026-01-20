@@ -202,7 +202,7 @@ public class Rat extends PracticalPet implements CookingPet {
     }
 
     public static boolean ratCanSpawn(EntityType<? extends Animal> entityType, LevelAccessor levelAccessor, MobSpawnType spawnType, BlockPos blockPos, RandomSource random) {
-        return spawnType == MobSpawnType.SPAWNER || !levelAccessor.canSeeSky(blockPos) && blockPos.getY() <= 60 && blockPos.getY() > 0
+        return spawnType == MobSpawnType.SPAWNER || !levelAccessor.canSeeSky(blockPos) && blockPos.getY() > 0
                 && checkMobSpawnRules(entityType, levelAccessor, spawnType, blockPos, random)
                 && levelAccessor.getRawBrightness(blockPos, 0) < 9;
     }

@@ -47,6 +47,38 @@
       }
     ]
   },
+  "pigeon_ambient": {
+    "sounds": [
+      {
+        "name": "practicalpets:pigeon_ambient1",
+        "stream": false
+      },
+      {
+        "name": "practicalpets:pigeon_ambient2",
+        "stream": false
+      },
+      {
+        "name": "practicalpets:pigeon_ambient3",
+        "stream": false
+      },
+      {
+        "name": "practicalpets:pigeon_ambient4",
+        "stream": false
+      }
+    ]
+  },
+  "pigeon_hurt": {
+    "sounds": [
+      {
+        "name": "practicalpets:pigeon_hurt1",
+        "stream": false
+      },
+      {
+        "name": "practicalpets:pigeon_hurt2",
+        "stream": false
+      }
+    ]
+  },
   "pet_level_up": {
     "sounds": [
       {

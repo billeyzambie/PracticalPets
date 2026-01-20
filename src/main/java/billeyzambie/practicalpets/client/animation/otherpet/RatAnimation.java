@@ -1,4 +1,4 @@
-package billeyzambie.practicalpets.client.animation.dinosaur;// Save this class in your mod and generate all required imports
+package billeyzambie.practicalpets.client.animation.otherpet;// Save this class in your mod and generate all required imports
 
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
