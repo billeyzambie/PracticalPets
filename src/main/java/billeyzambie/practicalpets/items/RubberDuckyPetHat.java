@@ -3,7 +3,7 @@ package billeyzambie.practicalpets.items;
 import billeyzambie.practicalpets.misc.PPSounds;
 import billeyzambie.practicalpets.misc.PracticalPets;
 import billeyzambie.practicalpets.entity.PracticalPet;
-import billeyzambie.practicalpets.network.ModNetworking;
+import billeyzambie.practicalpets.misc.PPNetworking;
 import billeyzambie.practicalpets.network.PetHatSquishAnimPacket;
 import billeyzambie.practicalpets.util.DelayedTaskManager;
 import net.minecraft.resources.ResourceLocation;
@@ -73,7 +73,7 @@ public class RubberDuckyPetHat extends Item implements AttachablePetCosmetic, Dy
 
     public static void playRubberDuckyPetHatSquishAnimation(PracticalPet wearer) {
         wearer.playSound(PPSounds.DUCK_AMBIENT.get(), 1f, 1.5f + wearer.getRandom().nextFloat() * 0.2f);
-        ModNetworking.CHANNEL.send(
+        PPNetworking.CHANNEL.send(
                 PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> wearer),
                 new PetHatSquishAnimPacket(wearer.getId())
         );

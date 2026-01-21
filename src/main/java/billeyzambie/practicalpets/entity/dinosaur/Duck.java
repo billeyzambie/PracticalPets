@@ -5,7 +5,7 @@ import billeyzambie.practicalpets.misc.PPItems;
 import billeyzambie.practicalpets.misc.PPSounds;
 import billeyzambie.practicalpets.goal.DuckFollowParentGoal;
 import billeyzambie.practicalpets.network.DuckBiteFloorAnimPacket;
-import billeyzambie.practicalpets.network.ModNetworking;
+import billeyzambie.practicalpets.misc.PPNetworking;
 import billeyzambie.practicalpets.misc.PPTags;
 import billeyzambie.practicalpets.util.PPUtil;
 import billeyzambie.practicalpets.util.WeightedList;
@@ -325,7 +325,7 @@ public class Duck extends AbstractDuck {
     }
 
     private void sendBiteFloorAnimation() {
-        ModNetworking.CHANNEL.send(
+        PPNetworking.CHANNEL.send(
                 PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> this),
                 new DuckBiteFloorAnimPacket(this.getId())
         );

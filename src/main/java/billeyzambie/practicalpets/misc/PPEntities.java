@@ -84,6 +84,7 @@ public class PPEntities {
                 Pigeon.createMobAttributes()
                         .add(Attributes.MAX_HEALTH, 4)
                         .add(Attributes.MOVEMENT_SPEED, 0.2)
+                        .add(Attributes.FLYING_SPEED, 0.5)
                         .add(Attributes.ATTACK_DAMAGE, 1)
                         .build()
         );

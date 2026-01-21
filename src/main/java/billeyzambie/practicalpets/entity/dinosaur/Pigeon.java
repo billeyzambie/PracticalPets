@@ -1,9 +1,11 @@
 package billeyzambie.practicalpets.entity.dinosaur;
 
 import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.goal.ParrotWanderGoal;
 import billeyzambie.practicalpets.misc.PPEntities;
 import billeyzambie.practicalpets.misc.PPSounds;
 import billeyzambie.practicalpets.util.PPUtil;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -11,10 +13,16 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.control.MoveControl;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
@@ -25,6 +33,7 @@ import java.util.HashMap;
 public class Pigeon extends PracticalPet {
     public Pigeon(EntityType<? extends TamableAnimal> entityType, Level level) {
         super(entityType, level);
+        this.navigation = new GroundPathNavigation(this, level);
     }
 
     private static final HashMap<Integer, Integer> VARIANT_SPAWN_WEIGHTS = new HashMap<>() {{
@@ -104,8 +113,6 @@ public class Pigeon extends PracticalPet {
         return super.healOverride(itemStack);
     }
 
-    public final AnimationState biteFloorAnimationState = new AnimationState();
-
     @Override
     protected SoundEvent getAmbientSound() {
         return PPSounds.PIGEON_AMBIENT.get();
@@ -151,6 +158,44 @@ public class Pigeon extends PracticalPet {
         return baby;
     }
 
+    @Override
+    protected PathNavigation createNavigation(Level level) {
+        if (this.isInWalkMode()) {
+            return super.createNavigation(level);
+        } else {
+            FlyingPathNavigation flyingpathnavigation = new FlyingPathNavigation(this, level);
+            flyingpathnavigation.setCanOpenDoors(false);
+            flyingpathnavigation.setCanFloat(true);
+            flyingpathnavigation.setCanPassDoors(true);
+            return flyingpathnavigation;
+        }
+    }
+
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        boolean result = super.hurt(source, amount);
+        if (result && this.isInWalkMode()) {
+            this.toFlyMode();
+        }
+        return result;
+    }
+
+    @Override
+    public void setTarget(@Nullable LivingEntity p_21544_) {
+        super.setTarget(p_21544_);
+        if (this.getTarget() != null && this.isInWalkMode()) {
+            this.toFlyMode();
+        }
+    }
+
+    @Override
+    protected @Nullable Goal createStrollGoal() {
+        if (this.isInWalkMode())
+            return super.createStrollGoal();
+        else
+            return new ParrotWanderGoal(this, 1f);
+    }
+
     //copied from vanilla chicken
     public float flap;
     public float flapSpeed;
@@ -161,26 +206,115 @@ public class Pigeon extends PracticalPet {
     private int pickRandomBiteFloorTime() {
         return this.random.nextInt(2400, 4800);
     }
+
     private int timeToBiteFloor = this.pickRandomBiteFloorTime();
+
+    public enum MovementMode {WALKING, FLYING, IN_MISSION}
+
+    private MovementMode movementMode = MovementMode.WALKING;
+
+    public boolean isInWalkMode() {
+        return this.movementMode == MovementMode.WALKING;
+    }
+
+    public void toWalkMode() {
+        movementMode = MovementMode.WALKING;
+        this.moveControl = new MoveControl(this);
+        this.navigation = this.createNavigation(this.level());
+        this.movementSwitchTime = this.pickRandomMovementSwitchTime();
+        this.refreshStrollGoal();
+    }
+
+    public void toFlyMode() {
+        movementMode = MovementMode.FLYING;
+        this.setFlyingMovement();
+        this.movementSwitchTime = this.pickRandomMovementSwitchTime();
+        this.refreshStrollGoal();
+    }
+
+    private void setFlyingMovement() {
+        this.moveControl = new FlyingMoveControl(this, 10, false);
+        this.navigation = this.createNavigation(this.level());
+    }
+
+    private int pickRandomMovementSwitchTime() {
+        return this.isInWalkMode() ? this.random.nextInt(600, 1200) : 100;
+    }
+
+    private int movementSwitchTime = this.pickRandomMovementSwitchTime();
+
+    public enum MissionPhase {NONE, STARTED, TRAVELING, ARRIVED}
+
+    private MissionPhase missionPhase = MissionPhase.NONE;
+
+    public boolean isInMission() {
+        return missionPhase != MissionPhase.NONE;
+    }
+
+    @Override
+    public boolean shouldFollowOwner() {
+        return super.shouldFollowOwner() && !this.isInMission();
+    }
 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
         this.timeToBiteFloor = compoundTag.getInt("TimeToBiteFloor");
+        this.movementMode = MovementMode.values()[compoundTag.getInt("MovementMode")];
+        this.movementSwitchTime = compoundTag.getInt("MovementSwitchTime");
+        this.missionPhase = MissionPhase.values()[compoundTag.getInt("MissionPhase")];
+
+        if (!this.isInWalkMode()) {
+            this.setFlyingMovement();
+        }
     }
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
         compoundTag.putInt("TimeToBiteFloor", timeToBiteFloor);
+        compoundTag.putInt("MovementMode", movementMode.ordinal());
+        compoundTag.putInt("MovementSwitchTime", movementSwitchTime);
+        compoundTag.putInt("MissionPhase", missionPhase.ordinal());
     }
 
     @Override
     public void aiStep() {
         super.aiStep();
-        Vec3 vec3 = this.getDeltaMovement();
-        if (!this.onGround() && vec3.y < 0.0D) {
-            this.setDeltaMovement(vec3.multiply(1.0D, 0.6D, 1.0D));
+
+        if (!this.level().isClientSide()) {
+            switch (this.movementMode) {
+                case WALKING: {
+                    Path path = this.getNavigation().getPath();
+                    if (path != null) {
+                        BlockPos target = path.getTarget();
+                        if (target.getY() >= this.getY() + 1.5 || this.blockPosition().distToCenterSqr(target.getCenter()) > 100) {
+                            this.toFlyMode();
+                        }
+                    }
+
+                    if (--this.movementSwitchTime <= 0) {
+                        this.toFlyMode();
+                    }
+
+                    break;
+                }
+                case FLYING: {
+                    if (--this.movementSwitchTime <= 0 && this.onGround() && !this.hasTarget()) {
+                        this.toWalkMode();
+                    }
+                    break;
+                }
+                case IN_MISSION: {
+                    this.tickMission();
+                    break;
+                }
+            }
+
+            if (--this.timeToBiteFloor <= 0 && this.onGround() && !this.isInSittingPose() && this.isInWalkMode()) {
+                this.sendRandomIdle1Packet();
+                this.timeToBiteFloor = this.pickRandomBiteFloorTime();
+            }
         }
 
         //Copied from vanilla chicken
@@ -194,9 +328,12 @@ public class Pigeon extends PracticalPet {
         this.flapping *= 0.9F;
         this.flap += this.flapping * 2.0F;
 
-        if (!this.level().isClientSide() && --this.timeToBiteFloor <= 0 && this.onGround() && !this.isInSittingPose()) {
-            this.timeToBiteFloor = this.pickRandomBiteFloorTime();
-            this.biteFloorAnimationState.start(this.tickCount);
+        Vec3 vec3 = this.getDeltaMovement();
+        if (!this.onGround() && vec3.y < 0.0D) {
+            this.setDeltaMovement(vec3.multiply(1.0D, 0.6D, 1.0D));
         }
+    }
+
+    private void tickMission() {
     }
 }

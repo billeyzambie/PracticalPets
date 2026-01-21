@@ -2,6 +2,8 @@ package billeyzambie.practicalpets.entity;
 
 import billeyzambie.animationcontrollers.ACData;
 import billeyzambie.animationcontrollers.ACEntity;
+import billeyzambie.practicalpets.misc.PPNetworking;
+import billeyzambie.practicalpets.network.RandomIdle1AnimPacket;
 import billeyzambie.practicalpets.ui.PracticalPetMenu;
 import billeyzambie.practicalpets.items.RubberDuckyPetHat;
 import billeyzambie.practicalpets.misc.PPItems;
@@ -44,6 +46,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -123,10 +126,10 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         compoundTag.putBoolean("ShouldFollowOwner", this.shouldFollowOwner());
         compoundTag.putInt("PetLevel", this.petLevel());
         compoundTag.putFloat("PetXP", this.petXP());
-        compoundTag.put("HeadItem", getHeadItem().save(new CompoundTag()));
-        compoundTag.put("NeckItem", getNeckItem().save(new CompoundTag()));
-        compoundTag.put("BackItem", getBackItem().save(new CompoundTag()));
-        compoundTag.put("BodyItem", getBodyItem().save(new CompoundTag()));
+        compoundTag.put("HeadItem", this.getHeadItem().save(new CompoundTag()));
+        compoundTag.put("NeckItem", this.getNeckItem().save(new CompoundTag()));
+        compoundTag.put("BackItem", this.getBackItem().save(new CompoundTag()));
+        compoundTag.put("BodyItem", this.getBodyItem().save(new CompoundTag()));
         compoundTag.putInt("Variant", this.getVariant());
         compoundTag.putBoolean("IsRainbow", this.isRainbow());
         this.addPersistentAngerSaveData(compoundTag);
@@ -167,7 +170,16 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
             }
         }
 
-        throw new AssertionError("I don't this this will ever happen (error in pickRandomWeightedVariant in PracticalPet.java)");
+        throw new AssertionError("I don't think this will ever happen (error in pickRandomWeightedVariant in PracticalPet.java)");
+    }
+
+    public final AnimationState randomIdle1AnimationState = new AnimationState();
+
+    protected void sendRandomIdle1Packet() {
+        PPNetworking.CHANNEL.send(
+                PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> this),
+                new RandomIdle1AnimPacket(this.getId())
+        );
     }
 
     public ItemStack getEquippedItem(PetCosmetic.Slot slot) {
@@ -405,6 +417,8 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         this.heal(healAmount);
     }
 
+    private Goal strollGoal = null;
+
     @Override
     protected void registerGoals() {
         if (shouldRegisterFloatGoal())
@@ -414,7 +428,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         this.goalSelector.addGoal(30, new RangedAttackIfShouldGoal(this, this.getMeleeAttackSpeedMultiplier(), 20, 40, 20f));
         this.goalSelector.addGoal(50, new MeleeAttackIfShouldGoal(this, this.getMeleeAttackSpeedMultiplier(), false));
         this.goalSelector.addGoal(55, new PPBegGoal(this));
-        this.goalSelector.addGoal(60, new FollowOwnerWanderableGoal(this, this.getFollowOwnerSpeed(), 10.0F, 5.0F, false));
+        this.goalSelector.addGoal(60, new FollowOwnerWanderableGoal(this, this.getFollowOwnerSpeed(), 7.0F, 5.0F, false));
         this.goalSelector.addGoal(70, new PredicateTemptGoal(this, this.getFollowOwnerSpeed(), PracticalPet::isFood, false));
 
         Goal followParentGoal = createFollowParentGoal();
@@ -423,9 +437,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
 
         this.goalSelector.addGoal(90, new BreedGoal(this, 0.8D));
 
-        Goal strollGoal = createStrollGoal();
-        if (strollGoal != null)
-            this.goalSelector.addGoal(100, strollGoal);
+        this.refreshStrollGoal();
 
         this.goalSelector.addGoal(120, new LookAtPlayerGoal(this, Player.class, 10.0F));
         this.goalSelector.addGoal(120, new RandomLookAroundGoal(this));
@@ -439,6 +451,17 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         this.targetSelector.addGoal(30, new OwnerHurtTargetIfShouldGoal(this));
         if (this.shouldRegisterSpreadingAnger())
             this.targetSelector.addGoal(40, new ResetUniversalAngerTargetGoal<>(this, true));
+    }
+
+    protected void refreshStrollGoal() {
+        if (this.strollGoal != null) {
+            this.goalSelector.removeGoal(this.strollGoal);
+        }
+        Goal strollGoal = this.createStrollGoal();
+        if (strollGoal != null) {
+            this.strollGoal = strollGoal;
+            this.goalSelector.addGoal(100, strollGoal);
+        }
     }
 
     protected double getFollowOwnerSpeed() {

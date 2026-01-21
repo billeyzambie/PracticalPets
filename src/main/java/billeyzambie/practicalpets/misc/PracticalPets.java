@@ -2,7 +2,6 @@ package billeyzambie.practicalpets.misc;
 
 import billeyzambie.practicalpets.client.PPMenus;
 import billeyzambie.practicalpets.ui.PracticalPetScreen;
-import billeyzambie.practicalpets.network.ModNetworking;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import net.minecraft.client.Minecraft;
@@ -115,7 +114,7 @@ public class PracticalPets
        //// Some common setup code
        //LOGGER.info("HELLO FROM COMMON SETUP");
 
-       ModNetworking.register();
+       PPNetworking.register();
        //if (Config.logDirtBlock)
        //    LOGGER.info("DIRT BLOCK >> {}", ForgeRegistries.BLOCKS.getKey(Blocks.DIRT));
 

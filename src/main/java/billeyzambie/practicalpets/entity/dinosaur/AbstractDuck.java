@@ -2,7 +2,7 @@ package billeyzambie.practicalpets.entity.dinosaur;
 
 import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.network.DuckIdleFlapPacket;
-import billeyzambie.practicalpets.network.ModNetworking;
+import billeyzambie.practicalpets.misc.PPNetworking;
 import billeyzambie.practicalpets.network.QuackAnimPacket;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.*;
@@ -91,7 +91,7 @@ public abstract class AbstractDuck extends PracticalPet {
     public void playAmbientSound() {
         super.playAmbientSound();
         if (!this.level().isClientSide && this.getTarget() == null) {
-            ModNetworking.CHANNEL.send(
+            PPNetworking.CHANNEL.send(
                     PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> this),
                     new QuackAnimPacket(this.getId())
             );
@@ -102,7 +102,7 @@ public abstract class AbstractDuck extends PracticalPet {
     public void playHurtSound(@NotNull DamageSource damageSource) {
         super.playHurtSound(damageSource);
         if (!this.level().isClientSide && this.getTarget() == null) {
-            ModNetworking.CHANNEL.send(
+            PPNetworking.CHANNEL.send(
                     PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> this),
                     new QuackAnimPacket(this.getId())
             );
@@ -141,7 +141,7 @@ public abstract class AbstractDuck extends PracticalPet {
                 }
             }
             if (this.isIdleFlapping() || wasIdleFlapping)
-                ModNetworking.CHANNEL.send(
+                PPNetworking.CHANNEL.send(
                         PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> this),
                         new DuckIdleFlapPacket(this.getId(), this.getIdleFlapTime())
                 );

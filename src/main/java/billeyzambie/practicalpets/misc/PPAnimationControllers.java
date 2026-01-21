@@ -5,6 +5,7 @@ import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.entity.dinosaur.AbstractDuck;
 import billeyzambie.practicalpets.entity.dinosaur.BananaDuck;
 import billeyzambie.practicalpets.entity.otherpet.Rat;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 
 import java.util.List;
@@ -45,6 +46,28 @@ public class PPAnimationControllers {
                             -> ((TamableAnimal) entity).isInSittingPose()
             )
             .build();
+
+    public static final AnimationController SIMPLE_ATTACK = new AnimationController("simple_attack", List.of(
+            new AnimationController.State(
+                    Animatable.NO_ANIMATIONS,
+                    List.of(
+                            AnimationController.TransitionPredicate.NEVER,
+                            (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                                    -> ((LivingEntity) entity).attackAnim > 0
+                    ),
+                    0.1f
+            ),
+            new AnimationController.State(
+                    List.of(new KeyframeAnimationReference(
+                            "attack"
+                    )),
+                    List.of(
+                            (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                                    -> ((LivingEntity) entity).attackAnim == 0
+                    ),
+                    0.1f
+            )
+    ));
 
     public static final AnimationController BANANA_DUCK_FLAP_AND_IF_ANGRY = BinaryAnimationControllerBuilder.start("simple_flap")
             .otherStateAnimations(new OtherAnimationReference("flap"))

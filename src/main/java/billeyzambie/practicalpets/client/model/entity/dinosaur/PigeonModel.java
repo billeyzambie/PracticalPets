@@ -6,21 +6,15 @@ package billeyzambie.practicalpets.client.model.entity.dinosaur;// Made with Blo
 import billeyzambie.animationcontrollers.Animatable;
 import billeyzambie.animationcontrollers.PracticalPetModel;
 import billeyzambie.practicalpets.client.animation.dinosaur.PigeonAnimation;
-import billeyzambie.practicalpets.client.animation.otherpet.RatAnimation;
-import billeyzambie.practicalpets.entity.dinosaur.Duck;
 import billeyzambie.practicalpets.entity.dinosaur.Pigeon;
 import billeyzambie.practicalpets.misc.PPAnimationControllers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.animation.AnimationDefinition;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.animal.Pig;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -39,6 +33,7 @@ public class PigeonModel extends PracticalPetModel<Pigeon> {
 
     private final HashMap<String, AnimationDefinition> keyframeAnimationHashMap = new HashMap<>() {{
         put("sit", PigeonAnimation.sit);
+        put("attack", PigeonAnimation.attack);
     }};
 
     @Override
@@ -183,7 +178,9 @@ public class PigeonModel extends PracticalPetModel<Pigeon> {
             float ampMulti = 4f;
             this.animateWalk(PigeonAnimation.walk, limbSwing, limbSwingAmount, freqMulti, ampMulti);
 
-            this.animate(entity.biteFloorAnimationState, PigeonAnimation.eatfloor, ageInTicks);
+            if (!entity.hasTarget())
+                this.animate(entity.randomIdle1AnimationState, PigeonAnimation.eatfloor, ageInTicks);
+            PPAnimationControllers.SIMPLE_ATTACK.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
         }
 
         PPAnimationControllers.SIMPLE_SIT.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
