@@ -176,6 +176,7 @@ public class PigeonModel extends PracticalPetModel<Pigeon> {
         if (!entity.isInSittingPose()) {
             float freqMulti = 3f;
             float ampMulti = 4f;
+            ampMulti *= PPAnimationControllers.ON_GROUND_BLEND.calculate(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
             this.animateWalk(PigeonAnimation.walk, limbSwing, limbSwingAmount, freqMulti, ampMulti);
 
             if (!entity.hasTarget())

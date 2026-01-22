@@ -2,6 +2,7 @@ package billeyzambie.practicalpets.entity;
 
 import billeyzambie.animationcontrollers.ACData;
 import billeyzambie.animationcontrollers.ACEntity;
+import billeyzambie.animationcontrollers.BVCData;
 import billeyzambie.practicalpets.misc.PPNetworking;
 import billeyzambie.practicalpets.network.RandomIdle1AnimPacket;
 import billeyzambie.practicalpets.ui.PracticalPetMenu;
@@ -62,6 +63,13 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     @Override
     public HashMap<String, ACData> getACData() {
         return ACData;
+    }
+
+    HashMap<String, BVCData> BVCData = new HashMap<>();
+
+    @Override
+    public HashMap<String, BVCData> getBVCData() {
+        return BVCData;
     }
 
     public enum FollowMode {

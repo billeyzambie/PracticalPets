@@ -55,7 +55,7 @@ public class PPAnimationControllers {
                             (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
                                     -> ((LivingEntity) entity).attackAnim > 0
                     ),
-                    0.1f
+                    0
             ),
             new AnimationController.State(
                     List.of(new KeyframeAnimationReference(
@@ -237,5 +237,9 @@ public class PPAnimationControllers {
                     0.2f
             )
     ));
+
+    public static final BlendValueController ON_GROUND_BLEND = new BlendValueController("on_ground", 0.2f, (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+            -> entity.onGround()
+    );
 
 }

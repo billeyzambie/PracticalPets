@@ -33,7 +33,6 @@ import java.util.HashMap;
 public class Pigeon extends PracticalPet {
     public Pigeon(EntityType<? extends TamableAnimal> entityType, Level level) {
         super(entityType, level);
-        this.navigation = new GroundPathNavigation(this, level);
     }
 
     private static final HashMap<Integer, Integer> VARIANT_SPAWN_WEIGHTS = new HashMap<>() {{
@@ -278,44 +277,52 @@ public class Pigeon extends PracticalPet {
         compoundTag.putInt("MissionPhase", missionPhase.ordinal());
     }
 
+
+    @Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+
+        switch (this.movementMode) {
+            case WALKING: {
+                Path path = this.getNavigation().getPath();
+                if (path != null) {
+                    BlockPos target = path.getTarget();
+                    if (target.getY() >= this.getY() + 1.5 || this.blockPosition().distToCenterSqr(target.getCenter()) > 100) {
+                        this.toFlyMode();
+                    }
+                }
+
+                if (--this.movementSwitchTime <= 0) {
+                    this.toFlyMode();
+                }
+
+                break;
+            }
+            case FLYING: {
+                if (--this.movementSwitchTime <= 0 && this.onGround() && !this.hasTarget()) {
+                    this.toWalkMode();
+                }
+                break;
+            }
+            case IN_MISSION: {
+                this.tickMission();
+                break;
+            }
+        }
+
+        if (--this.timeToBiteFloor <= 0 && this.onGround() && this.isInWalkMode()) {
+            if (!this.isInSittingPose())
+                this.sendRandomIdle1Packet();
+            this.timeToBiteFloor = this.pickRandomBiteFloorTime();
+        }
+
+    }
+
     @Override
     public void aiStep() {
         super.aiStep();
 
-        if (!this.level().isClientSide()) {
-            switch (this.movementMode) {
-                case WALKING: {
-                    Path path = this.getNavigation().getPath();
-                    if (path != null) {
-                        BlockPos target = path.getTarget();
-                        if (target.getY() >= this.getY() + 1.5 || this.blockPosition().distToCenterSqr(target.getCenter()) > 100) {
-                            this.toFlyMode();
-                        }
-                    }
-
-                    if (--this.movementSwitchTime <= 0) {
-                        this.toFlyMode();
-                    }
-
-                    break;
-                }
-                case FLYING: {
-                    if (--this.movementSwitchTime <= 0 && this.onGround() && !this.hasTarget()) {
-                        this.toWalkMode();
-                    }
-                    break;
-                }
-                case IN_MISSION: {
-                    this.tickMission();
-                    break;
-                }
-            }
-
-            if (--this.timeToBiteFloor <= 0 && this.onGround() && !this.isInSittingPose() && this.isInWalkMode()) {
-                this.sendRandomIdle1Packet();
-                this.timeToBiteFloor = this.pickRandomBiteFloorTime();
-            }
-        }
+        this.updateSwingTime();
 
         //Copied from vanilla chicken
         this.oFlap = this.flap;
