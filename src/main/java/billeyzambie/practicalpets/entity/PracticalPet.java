@@ -260,19 +260,24 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     private boolean anyEquipmentIsBrave = false;
 
     public void refreshAnyEquipmentIsBrave() {
+        boolean hasBraveEquipment = false;
+        Optional<PetCosmetic.Slot> rangedSlot = Optional.empty();
         for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
             ItemStack cosmeticStack = this.getEquippedItem(slot);
             if (
                     !cosmeticStack.isEmpty()
                             && cosmeticStack.getItem() instanceof PetCosmetic cosmetic
-                            && cosmetic.causesBravery(cosmeticStack)
             ) {
-                this.anyEquipmentIsBrave = true;
-                return;
+                if (cosmetic.causesBravery(cosmeticStack)) {
+                    hasBraveEquipment = true;
+                }
+                if (rangedSlot.isEmpty() && cosmetic.canPerformRangedAttack(cosmeticStack)) {
+                    rangedSlot = Optional.of(slot);
+                }
             }
         }
-        this.anyEquipmentIsBrave = false;
-        this.refreshCanShootFromSlot();
+        this.anyEquipmentIsBrave = hasBraveEquipment;
+        this.canShootFromSlot = rangedSlot;
     }
 
     public boolean anyEquipmentIsBrave() {
