@@ -23,7 +23,7 @@ public class PetBackStrapLayer<T extends PracticalPet, M extends PracticalPetMod
 
     @Override
     public void render(@NotNull PoseStack p_117058_, @NotNull MultiBufferSource p_117059_, int p_117060_, @NotNull T pet, float p_117062_, float p_117063_, float p_117064_, float p_117065_, float p_117066_, float p_117067_) {
-        if (pet.getBackItem().isEmpty())
+        if (pet.getBackItem().isEmpty() || pet.hideEquipment())
             return;
 
         float prevRed = this.getParentModel().redMultiplier;

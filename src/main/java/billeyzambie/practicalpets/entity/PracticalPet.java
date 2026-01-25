@@ -431,10 +431,12 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     protected void registerGoals() {
         if (shouldRegisterFloatGoal())
             this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(10, new PanicIfShouldGoal(this, 1.3D));
+        Goal panicGoal = this.createPanicGoal();
+        if (panicGoal != null)
+            this.goalSelector.addGoal(10, panicGoal);
         this.goalSelector.addGoal(20, new SitWhenOrderedToGoal(this));
-        this.goalSelector.addGoal(30, new RangedAttackIfShouldGoal(this, this.getMeleeAttackSpeedMultiplier(), 20, 40, 20f));
-        this.goalSelector.addGoal(50, new MeleeAttackIfShouldGoal(this, this.getMeleeAttackSpeedMultiplier(), false));
+        this.goalSelector.addGoal(30, new RangedAttackIfShouldGoal(this, this.createMeleeAttackSpeedMultiplier(), 20, 40, 20f));
+        this.goalSelector.addGoal(50, new MeleeAttackIfShouldGoal(this, this.createMeleeAttackSpeedMultiplier(), false));
         this.goalSelector.addGoal(55, new PPBegGoal(this));
         this.goalSelector.addGoal(60, new FollowOwnerWanderableGoal(this, this.getFollowOwnerSpeed(), 7.0F, 5.0F, false));
         this.goalSelector.addGoal(70, new PredicateTemptGoal(this, this.getFollowOwnerSpeed(), PracticalPet::isFood, false));
@@ -461,6 +463,14 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
             this.targetSelector.addGoal(40, new ResetUniversalAngerTargetGoal<>(this, true));
     }
 
+    protected @Nullable Goal createPanicGoal() {
+        return new PanicIfShouldGoal(this, this.createPanicSpeedMultiplier());
+    }
+
+    protected double createPanicSpeedMultiplier() {
+        return 1.3D;
+    }
+
     protected void refreshStrollGoal() {
         if (this.strollGoal != null) {
             this.goalSelector.removeGoal(this.strollGoal);
@@ -476,7 +486,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         return 1.25D;
     }
 
-    protected double getMeleeAttackSpeedMultiplier() {
+    protected double createMeleeAttackSpeedMultiplier() {
         return 1.25;
     }
 
@@ -709,6 +719,10 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
             this.spawnAtLocation(stack);
             this.setEquippedItem(ItemStack.EMPTY, slot);
         }
+    }
+
+    public boolean hideEquipment() {
+        return false;
     }
 
     @Override

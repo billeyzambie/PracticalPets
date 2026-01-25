@@ -411,7 +411,7 @@ public class Rat extends PracticalPet implements CookingPet {
     }
 
     @Override
-    protected double getMeleeAttackSpeedMultiplier() {
+    protected double createMeleeAttackSpeedMultiplier() {
         return 1.5;
     }
 

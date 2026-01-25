@@ -56,6 +56,7 @@ public class Duck extends AbstractDuck {
     public float oFlapSpeed;
     public float oFlap;
     public float flapping = 1.0F;
+    private float nextFlap = 1.0F;
 
     public static double MOVEMENT_SPEED = 0.2;
 
@@ -476,5 +477,13 @@ public class Duck extends AbstractDuck {
 
     }
 
+    @Override
+    protected boolean isFlapping() {
+        return this.flyDist > this.nextFlap;
+    }
 
+    @Override
+    protected void onFlap() {
+        this.nextFlap = this.flyDist + this.flapSpeed / 2.0F;
+    }
 }

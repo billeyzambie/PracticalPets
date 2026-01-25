@@ -10,8 +10,6 @@ import net.minecraft.client.animation.KeyframeAnimations;
 import net.minecraft.util.Mth;
 import org.joml.Vector3f;
 
-import java.util.HashMap;
-
 /**
  * Made with Blockbench 4.12.4
  * Exported for Minecraft version 1.19 or later with Mojang mappings
@@ -20,7 +18,7 @@ import java.util.HashMap;
  *
  *
  */
-public class DuckAnimation {
+public class DuckAnimations {
     public static final MathAnimationDefinition water_wave = MathAnimationBuilder.start().addBoneFunction(
             "body",
             MathAnimationDefinition.AnimationChannel.POSITION,

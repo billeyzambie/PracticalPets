@@ -92,6 +92,7 @@ public class PracticalPets
         PPSounds.REGISTRY.register(modEventBus);
         PPEntities.REGISTRY.register(modEventBus);
         PPMenus.REGISTRY.register(modEventBus);
+        PPSerializers.REGISTRY.register(modEventBus);
         MinecraftForge.EVENT_BUS.register(PPEvents.class);
 
         //

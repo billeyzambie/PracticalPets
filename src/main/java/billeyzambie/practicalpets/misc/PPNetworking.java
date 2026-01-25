@@ -5,7 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 
-//ai generated, hopefully it doesn't crash servers or anything
+//ai generated, hopefully it doesn't crash or anything
 
 public class PPNetworking {
     private static final String PROTOCOL_VERSION = "1";
@@ -38,5 +38,9 @@ public class PPNetworking {
                 RandomIdle1AnimPacket::encode,
                 RandomIdle1AnimPacket::decode,
                 RandomIdle1AnimPacket::handle);
+        CHANNEL.registerMessage(id++, PigeonSendPacket.class,
+                PigeonSendPacket::encode,
+                PigeonSendPacket::decode,
+                PigeonSendPacket::handle);
     }
 }

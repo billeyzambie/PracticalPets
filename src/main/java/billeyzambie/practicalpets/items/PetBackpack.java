@@ -1,13 +1,13 @@
 package billeyzambie.practicalpets.items;
 
 import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.misc.ConfigurableBundleItem;
 import billeyzambie.practicalpets.misc.PracticalPets;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-public class PetBackpack extends BundleItem implements AttachablePetCosmetic, DyeableItem {
+public class PetBackpack extends ConfigurableBundleItem implements AttachablePetCosmetic, DyeableItem {
     public PetBackpack() {
         super(new Properties().stacksTo(1));
     }

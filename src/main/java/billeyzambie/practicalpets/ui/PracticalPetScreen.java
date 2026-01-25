@@ -1,6 +1,8 @@
 package billeyzambie.practicalpets.ui;
 
 import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.entity.dinosaur.Pigeon;
+import net.minecraft.client.Minecraft;
 import billeyzambie.practicalpets.misc.PracticalPets;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -23,6 +25,7 @@ public class PracticalPetScreen extends AbstractContainerScreen<PracticalPetMenu
             new ResourceLocation(PracticalPets.MODID, "textures/gui/slot/pet_body.png");
 
     PracticalPet pet;
+    private PigeonSendButton pigeonSendButton;
 
     public PracticalPetScreen(PracticalPetMenu menu, Inventory playerInventory, Component component) {
         super(menu, playerInventory, component);
@@ -30,6 +33,27 @@ public class PracticalPetScreen extends AbstractContainerScreen<PracticalPetMenu
         this.imageWidth = 176;
         this.imageHeight = 184;
         this.inventoryLabelY += 18;
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        if (pet instanceof Pigeon pigeon) {
+            this.addRenderableWidget(this.pigeonSendButton = new PigeonSendButton(
+                    this.leftPos + 178,
+                    this.topPos + 18,
+                    button -> Minecraft.getInstance().setScreen(new PigeonSendScreen(pigeon)),
+                    pigeon
+            ));
+        }
+    }
+
+    @Override
+    protected void containerTick() {
+        super.containerTick();
+        if (this.pigeonSendButton != null) {
+            this.pigeonSendButton.tick();
+        }
     }
 
     @Override
@@ -69,5 +93,10 @@ public class PracticalPetScreen extends AbstractContainerScreen<PracticalPetMenu
         this.renderBackground(graphics);
         super.render(graphics, mouseX, mouseY, partialTicks);
         this.renderTooltip(graphics, mouseX, mouseY);
+        if (this.pigeonSendButton != null && this.pigeonSendButton.isHovered()) {
+            Component tooltipComponent = this.pigeonSendButton.getTooltipComponent();
+            if (tooltipComponent != null)
+                graphics.renderTooltip(this.font, tooltipComponent, mouseX, mouseY);
+        }
     }
 }

@@ -5,7 +5,7 @@ package billeyzambie.practicalpets.client.model.entity.dinosaur;// Made with Blo
 
 import billeyzambie.animationcontrollers.Animatable;
 import billeyzambie.animationcontrollers.PracticalPetModel;
-import billeyzambie.practicalpets.client.animation.dinosaur.PigeonAnimation;
+import billeyzambie.practicalpets.client.animation.dinosaur.PigeonAnimations;
 import billeyzambie.practicalpets.entity.dinosaur.Pigeon;
 import billeyzambie.practicalpets.misc.PPAnimationControllers;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -32,8 +32,8 @@ public class PigeonModel extends PracticalPetModel<Pigeon> {
     }
 
     private final HashMap<String, AnimationDefinition> keyframeAnimationHashMap = new HashMap<>() {{
-        put("sit", PigeonAnimation.sit);
-        put("attack", PigeonAnimation.attack);
+        put("sit", PigeonAnimations.sit);
+        put("attack", PigeonAnimations.attack);
     }};
 
     @Override
@@ -168,24 +168,23 @@ public class PigeonModel extends PracticalPetModel<Pigeon> {
     public void setupAnim(@NotNull Pigeon entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
         if (entity.isBaby()) {
-            head.xScale += 0.5f;
-            head.yScale += 0.5f;
-            head.zScale += 0.5f;
+            head.xScale *= 1.5f;
+            head.yScale *= 1.5f;
+            head.zScale *= 1.5f;
         }
 
         if (!entity.isInSittingPose()) {
             float freqMulti = 3f;
             float ampMulti = 4f;
             ampMulti *= PPAnimationControllers.ON_GROUND_BLEND.calculate(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
-            this.animateWalk(PigeonAnimation.walk, limbSwing, limbSwingAmount, freqMulti, ampMulti);
+            this.animateWalk(PigeonAnimations.walk, limbSwing, limbSwingAmount, freqMulti, ampMulti);
 
             if (!entity.hasTarget())
-                this.animate(entity.randomIdle1AnimationState, PigeonAnimation.eatfloor, ageInTicks);
+                this.animate(entity.randomIdle1AnimationState, PigeonAnimations.eatfloor, ageInTicks);
             PPAnimationControllers.SIMPLE_ATTACK.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
         }
 
         PPAnimationControllers.SIMPLE_SIT.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
-
 
         float partialTick = ageInTicks % 1f;
         float f = Mth.lerp(partialTick, entity.oFlap, entity.flap);

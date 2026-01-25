@@ -72,7 +72,7 @@ public abstract class PracticalPetRenderer<T extends Mob, M extends PracticalPet
         super.render(entity, entityYaw, partialticks, poseStack, buffer, packedLight);
 
         if (entity instanceof PracticalPet pet) {
-            for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
+            if (!pet.hideEquipment()) for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
                 ItemStack cosmeticStack = pet.getEquippedItem(slot);
                 if (!cosmeticStack.isEmpty() && cosmeticStack.getItem() instanceof AttachablePetCosmetic cosmetic) {
 

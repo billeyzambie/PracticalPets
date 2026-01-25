@@ -5,13 +5,10 @@ package billeyzambie.practicalpets.client.model.entity.dinosaur;// Made with Blo
 
 import billeyzambie.animationcontrollers.Animatable;
 import billeyzambie.animationcontrollers.PracticalPetModel;
-import billeyzambie.animationcontrollers.MathAnimationDefinition;
 import billeyzambie.practicalpets.misc.PPAnimationControllers;
-import billeyzambie.practicalpets.client.animation.dinosaur.BananaDuckAnimation;
-import billeyzambie.practicalpets.client.animation.dinosaur.DuckAnimation;
+import billeyzambie.practicalpets.client.animation.dinosaur.BananaDuckAnimations;
+import billeyzambie.practicalpets.client.animation.dinosaur.DuckAnimations;
 import billeyzambie.practicalpets.entity.dinosaur.BananaDuck;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.KeyframeAnimations;
 import net.minecraft.client.model.EntityModel;
@@ -28,12 +25,12 @@ import java.util.List;
 public class BananaDuckModel extends PracticalPetModel<BananaDuck> {
 
     private final HashMap<String, AnimationDefinition> keyframeAnimationHashMap = new HashMap<>() {{
-        put("sit", BananaDuckAnimation.sit);
-        put("angry", BananaDuckAnimation.angry);
-        put("idle_flap", DuckAnimation.idle_flap);
+        put("sit", BananaDuckAnimations.sit);
+        put("angry", BananaDuckAnimations.angry);
+        put("idle_flap", DuckAnimations.idle_flap);
     }};
     private final HashMap<String, Animatable> mathAnimationHashMap = new HashMap<>() {{
-        put("flap", BananaDuckAnimation.flap);
+        put("flap", BananaDuckAnimations.flap);
     }};
 
     @Override
@@ -238,20 +235,20 @@ public class BananaDuckModel extends PracticalPetModel<BananaDuck> {
         super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 
         if (entity.isBaby()) {
-            KeyframeAnimations.animate(this, DuckAnimation.ling, 0, 1, ANIMATION_VECTOR_CACHE);
+            KeyframeAnimations.animate(this, DuckAnimations.ling, 0, 1, ANIMATION_VECTOR_CACHE);
         }
 
         boolean isMakingBanana =
                 entity.makingBananaAnimationState.isStarted()
                         && entity.makingBananaAnimationState.getAccumulatedTime() / 1000f
-                        < BananaDuckAnimation.make_banana.lengthInSeconds();
+                        < BananaDuckAnimations.make_banana.lengthInSeconds();
 
         if (isMakingBanana)
             bananaMakingShake(entity.makingBananaAnimationState.getAccumulatedTime() / 1000f);
         else
-            this.animate(entity.quackAnimationState, DuckAnimation.quack, ageInTicks);
+            this.animate(entity.quackAnimationState, DuckAnimations.quack, ageInTicks);
 
-        this.animate(entity.makingBananaAnimationState, BananaDuckAnimation.make_banana, ageInTicks);
+        this.animate(entity.makingBananaAnimationState, BananaDuckAnimations.make_banana, ageInTicks);
 
         PPAnimationControllers.SIMPLE_SIT.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
         PPAnimationControllers.BANANA_DUCK_FLAP_AND_IF_ANGRY.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
@@ -259,7 +256,7 @@ public class BananaDuckModel extends PracticalPetModel<BananaDuck> {
         PPAnimationControllers.DUCK_IDLE_FLAP.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
 
         if (!entity.isInSittingPose())
-            this.animateWalk(BananaDuckAnimation.walk, limbSwing, limbSwingAmount, 3f, 2f);
+            this.animateWalk(DuckAnimations.walk32, limbSwing, limbSwingAmount, 3f, 2f);
 
     }
 

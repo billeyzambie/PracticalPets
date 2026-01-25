@@ -15,7 +15,7 @@ import org.joml.Vector3f;
  *
  * @author Author
  */
-public class BananaDuckAnimation extends AbstractDuckAnimation {
+public class BananaDuckAnimations extends AbstractDuckAnimations {
     public static final MathAnimationDefinition flap = MathAnimationBuilder.start()
             .addBoneFunction(
                     "wing1",

@@ -38,5 +38,16 @@
   "ui.practicalpets.chat.got_founders_hat": "The first 5 pets you tame will be equipped with a limited-time %s! When/if the mod gets popular, the founder's hat will become unobtainable in survival. This is pet #%s out of 5.",
   "ui.practicalpets.info.item.anniversary_pet_hat_0": "The %s makes a pet level up twice as fast.",
   "command.practicalpets.set_pet_level.success": "Set %s's level to %s.",
-  "tooltip.practicalpets.pet_end_rod_launcher": "Right-click with end rods to fill"
+  "tooltip.practicalpets.pet_end_rod_launcher": "Right-click with end rods to fill",
+  "ui.practicalpets.pigeon_send.title": "Send pigeon to player",
+  "ui.practicalpets.pigeon_send.send": "Send %s",
+  "ui.practicalpets.pigeon_send.cancel": "Cancel",
+  "ui.practicalpets.pigeon_send.search": "Search players",
+  "ui.practicalpets.pigeon_send.need_backpack": "Equip the pigeon with a pet backpack to send items to players.",
+  "ui.practicalpets.pigeon_send.need_backpack_item": "The backpack must have at least one item for the pigeon to be sent.",
+  "ui.practicalpets.pigeon_send.need_levels": "You must have at least 1 level to send the pigeon.",
+  "ui.practicalpets.pigeon_send.no_targets": "There are no players to send the pigeon to. Players must be in the same dimension and more than 32 blocks away.",
+  "ui.practicalpets.pigeon_send.target_left": "Oops, looks like %s left!",
+  "ui.practicalpets.pigeon_send.target_success": "You have received some items from %s's %s!",
+  "ui.practicalpets.pigeon_send.sender_success": "Successfully sent %s to %s!"
 }

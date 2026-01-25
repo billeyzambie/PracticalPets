@@ -70,7 +70,7 @@ public class PPEvents {
         );
         pets.forEach(pet -> {
             pet.teleportTo(player.getX(), player.getY(), player.getZ());
-            pet.moveTo(player.getX(), player.getY(), player.getZ());
+            //pet.moveTo(player.getX(), player.getY(), player.getZ()); did nothing
         });
     }
 

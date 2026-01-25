@@ -229,7 +229,7 @@ public abstract class ConfigurableBundleItem extends Item {
         }
     }
 
-    protected int getContentWeight(ItemStack bundleStack) {
+    public int getContentWeight(ItemStack bundleStack) {
         return getContents(bundleStack)
                 .mapToInt(contentStack ->
                         this.getWeight(bundleStack, contentStack) * contentStack.getCount())
@@ -287,7 +287,7 @@ public abstract class ConfigurableBundleItem extends Item {
         return Optional.empty();
     }
 
-    private static boolean dropContents(ItemStack bundleStack, Player player) {
+    public boolean dropContents(ItemStack bundleStack, Player player) {
         CompoundTag tag = bundleStack.getOrCreateTag();
         if (!tag.contains(TAG_ITEMS)) {
             return false;

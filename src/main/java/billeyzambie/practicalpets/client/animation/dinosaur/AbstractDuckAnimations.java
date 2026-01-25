@@ -5,7 +5,7 @@ import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.Keyframe;
 import net.minecraft.client.animation.KeyframeAnimations;
 
-public class AbstractDuckAnimation {
+public class AbstractDuckAnimations {
 
     public static final AnimationDefinition look_at_target = AnimationDefinition.Builder.withLength(0.0F).looping()
             .addAnimation("head", new AnimationChannel(AnimationChannel.Targets.ROTATION,

@@ -2,6 +2,7 @@ package billeyzambie.practicalpets.ui;
 
 import billeyzambie.practicalpets.client.PPMenus;
 import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.entity.dinosaur.Pigeon;
 import billeyzambie.practicalpets.items.PetCosmetic;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;

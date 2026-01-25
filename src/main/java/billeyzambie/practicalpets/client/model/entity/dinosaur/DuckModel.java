@@ -4,14 +4,10 @@ package billeyzambie.practicalpets.client.model.entity.dinosaur;// Made with Blo
 
 
 import billeyzambie.animationcontrollers.Animatable;
-import billeyzambie.animationcontrollers.MathAnimationDefinition;
 import billeyzambie.animationcontrollers.PracticalPetModel;
 import billeyzambie.practicalpets.misc.PPAnimationControllers;
-import billeyzambie.practicalpets.client.animation.dinosaur.BananaDuckAnimation;
-import billeyzambie.practicalpets.client.animation.dinosaur.DuckAnimation;
+import billeyzambie.practicalpets.client.animation.dinosaur.DuckAnimations;
 import billeyzambie.practicalpets.entity.dinosaur.Duck;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.KeyframeAnimations;
 import net.minecraft.client.model.geom.ModelPart;
@@ -167,11 +163,11 @@ public class DuckModel extends PracticalPetModel<Duck> {
         if (this.dontshowonbaby != null)
             this.dontshowonbaby.visible = !entity.isBaby();
         if (entity.isBaby()) {
-            KeyframeAnimations.animate(this, DuckAnimation.ling, 0, 1, ANIMATION_VECTOR_CACHE);
+            KeyframeAnimations.animate(this, DuckAnimations.ling, 0, 1, ANIMATION_VECTOR_CACHE);
         }
 
-        this.animate(entity.biteFloorAnimationState, DuckAnimation.pickupbread, ageInTicks);
-        this.animate(entity.quackAnimationState, DuckAnimation.quack, ageInTicks);
+        this.animate(entity.biteFloorAnimationState, DuckAnimations.pickupbread, ageInTicks);
+        this.animate(entity.quackAnimationState, DuckAnimations.quack, ageInTicks);
 
         PPAnimationControllers.SIMPLE_SIT.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
         PPAnimationControllers.SIMPLE_ANGRY.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
@@ -179,7 +175,7 @@ public class DuckModel extends PracticalPetModel<Duck> {
         PPAnimationControllers.DUCK_WATER_WAVE.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, Mth.clamp(1 - 2 * limbSwingAmount, 0, 1));
 
         if (!entity.isInSittingPose()) {
-            this.animateWalk(BananaDuckAnimation.walk, limbSwing, limbSwingAmount, 3f, 4f);
+            this.animateWalk(DuckAnimations.walk32, limbSwing, limbSwingAmount, 3f, 4f);
         }
 
         float partialTick = ageInTicks % 1f;
@@ -204,12 +200,12 @@ public class DuckModel extends PracticalPetModel<Duck> {
     }
 
     private final HashMap<String, AnimationDefinition> keyframeAnimationHashMap = new HashMap<>() {{
-        put("sit", DuckAnimation.sit);
-        put("angry", DuckAnimation.angry);
-        put("idle_flap", DuckAnimation.idle_flap);
+        put("sit", DuckAnimations.sit);
+        put("angry", DuckAnimations.angry);
+        put("idle_flap", DuckAnimations.idle_flap);
     }};
     private final HashMap<String, Animatable> mathAnimationHashMap = new HashMap<>() {{
-        put("water_wave", DuckAnimation.water_wave);
+        put("water_wave", DuckAnimations.water_wave);
     }};
 
     @Override

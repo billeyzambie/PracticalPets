@@ -5,7 +5,7 @@ package billeyzambie.practicalpets.client.model.entity.otherpet;// Made with Blo
 
 import billeyzambie.animationcontrollers.Animatable;
 import billeyzambie.animationcontrollers.PracticalPetModel;
-import billeyzambie.practicalpets.client.animation.otherpet.RatAnimation;
+import billeyzambie.practicalpets.client.animation.otherpet.RatAnimations;
 import billeyzambie.practicalpets.entity.otherpet.Rat;
 import billeyzambie.practicalpets.misc.PPAnimationControllers;
 import net.minecraft.client.animation.AnimationDefinition;
@@ -25,9 +25,9 @@ public class RatModel extends PracticalPetModel<Rat> {
 	}
 
 	private final HashMap<String, AnimationDefinition> keyframeAnimationHashMap = new HashMap<>() {{
-		put("sit", RatAnimation.sit);
-		put("sit2", RatAnimation.sit2);
-		put("cook", RatAnimation.cook);
+		put("sit", RatAnimations.sit);
+		put("sit2", RatAnimations.sit2);
+		put("cook", RatAnimations.cook);
 	}};
 
 	@Override
@@ -207,12 +207,12 @@ public class RatModel extends PracticalPetModel<Rat> {
 
 			//smoothen the transition from the walk to the run and vice versa
 			if (diff > 0) {
-				this.animateWalk(RatAnimation.walk, limbSwing, limbSwingAmount * Mth.clamp(1 - diff / 4, 0, 1), freqMulti, ampMulti);
-				this.animateWalk(RatAnimation.run, limbSwing, limbSwingAmount * Mth.clamp(diff / 4, 0, 1), freqMulti, ampMulti);
+				this.animateWalk(RatAnimations.walk, limbSwing, limbSwingAmount * Mth.clamp(1 - diff / 4, 0, 1), freqMulti, ampMulti);
+				this.animateWalk(RatAnimations.run, limbSwing, limbSwingAmount * Mth.clamp(diff / 4, 0, 1), freqMulti, ampMulti);
 			}
 			else {
-				this.animateWalk(RatAnimation.walk, limbSwing, limbSwingAmount * Mth.clamp(-diff / 4, 0, 1), freqMulti, ampMulti);
-				this.animateWalk(RatAnimation.run, limbSwing, limbSwingAmount * Mth.clamp(1 + diff / 4, 0, 1), freqMulti, ampMulti);
+				this.animateWalk(RatAnimations.walk, limbSwing, limbSwingAmount * Mth.clamp(-diff / 4, 0, 1), freqMulti, ampMulti);
+				this.animateWalk(RatAnimations.run, limbSwing, limbSwingAmount * Mth.clamp(1 + diff / 4, 0, 1), freqMulti, ampMulti);
 			}
 
 			tail.yRot += Mth.cos(limbSwing * freqMulti * Mth.PI * 5.33f / 20f) * limbSwingAmount * ampMulti * Mth.PI / 36f;

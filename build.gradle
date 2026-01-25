@@ -89,8 +89,25 @@ minecraft {
         }
 
         client {
-            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
+            workingDirectory project.file('run')
+
             property 'forge.enabledGameTestNamespaces', mod_id
+        }
+
+        clientB {
+            parent runs.client
+            workingDirectory project.file('runB')
+
+            property 'forge.enabledGameTestNamespaces', mod_id
+            args '--username', 'DevB'
+        }
+
+        clientC {
+            parent runs.client
+            workingDirectory project.file('runC')
+
+            property 'forge.enabledGameTestNamespaces', mod_id
+            args '--username', 'DevC'
         }
 
         server {

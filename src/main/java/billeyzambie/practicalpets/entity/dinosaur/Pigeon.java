@@ -1,13 +1,26 @@
 package billeyzambie.practicalpets.entity.dinosaur;
 
 import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.goal.FlyPanicGoal;
+import billeyzambie.practicalpets.goal.PanicIfShouldGoal;
 import billeyzambie.practicalpets.goal.ParrotWanderGoal;
+import billeyzambie.practicalpets.goal.PigeonFlyAroundGoal;
+import billeyzambie.practicalpets.items.PetBackpack;
 import billeyzambie.practicalpets.misc.PPEntities;
+import billeyzambie.practicalpets.misc.PPSerializers;
 import billeyzambie.practicalpets.misc.PPSounds;
 import billeyzambie.practicalpets.util.PPUtil;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializer;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
@@ -17,8 +30,9 @@ import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
-import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -29,6 +43,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 public class Pigeon extends PracticalPet {
     public Pigeon(EntityType<? extends TamableAnimal> entityType, Level level) {
@@ -172,6 +187,9 @@ public class Pigeon extends PracticalPet {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
+        if (this.getMissionPhase() == MissionPhase.TRAVELING) {
+            return false;
+        }
         boolean result = super.hurt(source, amount);
         if (result && this.isInWalkMode()) {
             this.toFlyMode();
@@ -188,11 +206,22 @@ public class Pigeon extends PracticalPet {
     }
 
     @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(1, new PigeonFlyAroundGoal(this, this.createPanicSpeedMultiplier()));
+    }
+
+    @Override
     protected @Nullable Goal createStrollGoal() {
         if (this.isInWalkMode())
             return super.createStrollGoal();
         else
             return new ParrotWanderGoal(this, 1f);
+    }
+
+    @Override
+    protected @Nullable Goal createPanicGoal() {
+        return new FlyPanicGoal(this, this.createPanicSpeedMultiplier());
     }
 
     //copied from vanilla chicken
@@ -201,6 +230,7 @@ public class Pigeon extends PracticalPet {
     public float oFlapSpeed;
     public float oFlap;
     public float flapping = 1.0F;
+    private float nextFlap = 1.0F;
 
     private int pickRandomBiteFloorTime() {
         return this.random.nextInt(2400, 4800);
@@ -244,10 +274,29 @@ public class Pigeon extends PracticalPet {
 
     public enum MissionPhase {NONE, STARTED, TRAVELING, ARRIVED}
 
-    private MissionPhase missionPhase = MissionPhase.NONE;
+    /*Mission phase needs to be on the client too, to make the pigeon invisible
+     while it's "traveling"*/
+    private static final EntityDataAccessor<MissionPhase> MISSION_PHASE = SynchedEntityData.defineId(
+            Pigeon.class,
+            PPSerializers.PIGEON_MISSION_PHASE.get()
+    );
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(MISSION_PHASE, MissionPhase.NONE);
+    }
+
+    public MissionPhase getMissionPhase() {
+        return this.entityData.get(MISSION_PHASE);
+    }
+
+    public void setMissionPhase(MissionPhase missionPhase) {
+        this.entityData.set(MISSION_PHASE, missionPhase);
+    }
 
     public boolean isInMission() {
-        return missionPhase != MissionPhase.NONE;
+        return this.getMissionPhase() != MissionPhase.NONE;
     }
 
     @Override
@@ -255,17 +304,38 @@ public class Pigeon extends PracticalPet {
         return super.shouldFollowOwner() && !this.isInMission();
     }
 
+    private UUID missionTargetUUID;
+    private String missionTargetName;
+    //So that the game can tell the target the sender's name even if the sender left.
+    private String missionOwnerName;
+    private ResourceLocation missionOriginDimension;
+    private BlockPos missionOriginPosition;
+
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
         this.timeToBiteFloor = compoundTag.getInt("TimeToBiteFloor");
         this.movementMode = MovementMode.values()[compoundTag.getInt("MovementMode")];
         this.movementSwitchTime = compoundTag.getInt("MovementSwitchTime");
-        this.missionPhase = MissionPhase.values()[compoundTag.getInt("MissionPhase")];
+        this.setMissionPhase(MissionPhase.values()[compoundTag.getInt("MissionPhase")]);
+
+        if (compoundTag.hasUUID("MissionTargetUUID")) {
+            this.missionTargetUUID = compoundTag.getUUID("MissionTargetUUID");
+            this.missionTargetName = compoundTag.getString("MissionTargetName");
+            this.missionOwnerName = compoundTag.getString("MissionOwnerName");
+            this.missionOriginPosition = new BlockPos(
+                    compoundTag.getInt("MissionOriginX"),
+                    compoundTag.getInt("MissionOriginY"),
+                    compoundTag.getInt("MissionOriginZ")
+            );
+            this.missionOriginDimension = new ResourceLocation(compoundTag.getString("MissionOriginDimension"));
+        }
 
         if (!this.isInWalkMode()) {
             this.setFlyingMovement();
         }
+
+        this.refreshStrollGoal();
     }
 
     @Override
@@ -274,7 +344,16 @@ public class Pigeon extends PracticalPet {
         compoundTag.putInt("TimeToBiteFloor", timeToBiteFloor);
         compoundTag.putInt("MovementMode", movementMode.ordinal());
         compoundTag.putInt("MovementSwitchTime", movementSwitchTime);
-        compoundTag.putInt("MissionPhase", missionPhase.ordinal());
+        compoundTag.putInt("MissionPhase", this.getMissionPhase().ordinal());
+        if (missionTargetUUID != null) {
+            compoundTag.putUUID("MissionTargetUUID", missionTargetUUID);
+            compoundTag.putString("MissionTargetName", missionTargetName);
+            compoundTag.putString("MissionOwnerName", missionOwnerName);
+            compoundTag.putString("MissionOriginDimension", this.missionOriginDimension.toString());
+            compoundTag.putInt("MissionOriginX", this.missionOriginPosition.getX());
+            compoundTag.putInt("MissionOriginY", this.missionOriginPosition.getY());
+            compoundTag.putInt("MissionOriginZ", this.missionOriginPosition.getZ());
+        }
     }
 
 
@@ -283,7 +362,7 @@ public class Pigeon extends PracticalPet {
         super.customServerAiStep();
 
         switch (this.movementMode) {
-            case WALKING: {
+            case WALKING -> {
                 Path path = this.getNavigation().getPath();
                 if (path != null) {
                     BlockPos target = path.getTarget();
@@ -296,17 +375,14 @@ public class Pigeon extends PracticalPet {
                     this.toFlyMode();
                 }
 
-                break;
             }
-            case FLYING: {
+            case FLYING -> {
                 if (--this.movementSwitchTime <= 0 && this.onGround() && !this.hasTarget()) {
                     this.toWalkMode();
                 }
-                break;
             }
-            case IN_MISSION: {
+            case IN_MISSION -> {
                 this.tickMission();
-                break;
             }
         }
 
@@ -341,6 +417,128 @@ public class Pigeon extends PracticalPet {
         }
     }
 
+    @Override
+    public boolean isInvisible() {
+        return this.getMissionPhase() == MissionPhase.TRAVELING || super.isInvisible();
+    }
+
+    @Override
+    public boolean hideEquipment() {
+        return this.getMissionPhase() == MissionPhase.TRAVELING || super.hideEquipment();
+    }
+
     private void tickMission() {
+        switch (this.getMissionPhase()) {
+            case STARTED -> {
+                if (--this.movementSwitchTime <= 0) {
+                    this.movementSwitchTime = this.pickRandomMovementSwitchTime();
+                    this.setMissionPhase(MissionPhase.TRAVELING);
+                }
+            }
+            case TRAVELING -> {
+                if (--this.movementSwitchTime <= 0) {
+                    this.movementSwitchTime = this.pickRandomMovementSwitchTime();
+                    this.setMissionPhase(MissionPhase.ARRIVED);
+                    Player target = this.level().getPlayerByUUID(this.missionTargetUUID);
+                    if (target == null) {
+                        if (this.getOwner() != null) {
+                            this.getOwner().sendSystemMessage(Component.translatable(
+                                    "ui.practicalpets.pigeon_send.target_left",
+                                    this.missionTargetName
+                            ).withStyle(ChatFormatting.RED));
+                        }
+                        this.returnFromMission();
+                    } else {
+                        ItemStack backStack = this.getBackItem();
+                        Item backItem = backStack.getItem();
+                        if (
+                                backItem instanceof PetBackpack backpack
+                                        && backpack.getContentWeight(backStack) > 0
+                        ) {
+                            backpack.dropContents(backStack, target);
+                            target.sendSystemMessage(Component.translatable(
+                                    "ui.practicalpets.pigeon_send.target_success",
+                                    this.missionOwnerName,
+                                    this.getDisplayName()
+                            ).withStyle(ChatFormatting.GREEN));
+                            this.teleportTo(target.getX(), target.getY(), target.getZ());
+                            this.setMissionPhase(MissionPhase.ARRIVED);
+                        }
+                        else {
+                            this.returnFromMission();
+                        }
+
+                    }
+                }
+            }
+            case ARRIVED -> {
+                if (--this.movementSwitchTime <= 0) {
+                    this.returnFromMission();
+                    LivingEntity owner = this.getOwner();
+                    if (!(owner instanceof Player player))
+                        return;
+                    player.sendSystemMessage(Component.translatable(
+                            "ui.practicalpets.pigeon_send.sender_success",
+                            this.getDisplayName(),
+                            this.missionTargetName
+                    ).withStyle(ChatFormatting.GREEN));
+                }
+            }
+        }
+    }
+
+    public void startMission(Player target) {
+        LivingEntity owner = this.getOwner();
+        if (!(owner instanceof Player player))
+            return;
+        this.missionOwnerName = player.getDisplayName().getString();
+
+        this.toFlyMode();
+        this.movementMode = MovementMode.IN_MISSION;
+        this.setMissionPhase(MissionPhase.STARTED);
+
+        this.missionTargetUUID = target.getUUID();
+        this.missionTargetName = target.getDisplayName().getString();
+
+        this.missionOriginDimension = this.level().dimension().location();
+        this.missionOriginPosition = this.blockPosition();
+    }
+
+    public void returnFromMission() {
+        this.setMissionPhase(MissionPhase.NONE);
+        this.toFlyMode();
+        this.setFollowMode(FollowMode.FOLLOWING);
+        MinecraftServer server = this.getServer();
+        if (server == null)
+            return;
+        ResourceKey<Level> targetDimension = ResourceKey.create(
+                Registries.DIMENSION,
+                this.missionOriginDimension
+        );
+        ServerLevel targetLevel = server.getLevel(targetDimension);
+        if (targetLevel == null)
+            return;
+        Entity entity = this.changeDimension(targetLevel);
+        Pigeon pigeonToTeleport = entity instanceof Pigeon pigeon ? pigeon : this;
+        if (pigeonToTeleport.level().dimension().equals(targetDimension))
+            pigeonToTeleport.teleportTo(
+                    this.missionOriginPosition.getX() + 0.5,
+                    this.missionOriginPosition.getY(),
+                    this.missionOriginPosition.getZ() + 0.5
+            );
+    }
+
+    public boolean isInvalidMissionTarget(Player target) {
+        return target.distanceToSqr(this) < 32 * 32 || !this.level().dimension().equals(target.level().dimension());
+    }
+
+    @Override
+    protected boolean isFlapping() {
+        return this.flyDist > this.nextFlap;
+    }
+
+    @Override
+    protected void onFlap() {
+        this.nextFlap = this.flyDist + this.flapSpeed / 2.0F;
     }
 }
