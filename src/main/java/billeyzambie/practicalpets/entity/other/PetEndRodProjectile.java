@@ -1,7 +1,6 @@
 package billeyzambie.practicalpets.entity.other;
 
 import billeyzambie.practicalpets.entity.PracticalPet;
-import billeyzambie.practicalpets.entity.otherpet.Rat;
 import billeyzambie.practicalpets.items.DyeableItem;
 import billeyzambie.practicalpets.misc.PPEntities;
 import com.google.common.base.MoreObjects;

@@ -35,6 +35,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -88,48 +89,57 @@ public class Duck extends AbstractDuck {
             LevelAccessor level,
             MobSpawnType reason,
             BlockPos pos,
-            RandomSource rng
+            RandomSource random
     ) {
-        if (!Animal.checkAnimalSpawnRules(type, level, reason, pos, rng)) return false;
+        if (!Animal.checkAnimalSpawnRules(type, level, reason, pos, random)) return false;
 
         if (level.getBiome(pos).is(BiomeTags.IS_RIVER)) {
             return true;
         }
 
-        //Make them spawn in lakes too:
-        final int R = 4;
+        final int R = 6;
         final BlockPos ground = pos.below();
         final BlockPos.MutableBlockPos p = new BlockPos.MutableBlockPos();
 
-        for (int dz = -R; dz <= R; dz++) {
-            for (int dx = -R; dx <= R; dx++) {
-                p.set(ground.getX() + dx, ground.getY(), ground.getZ() + dz);
-                if (!level.hasChunkAt(p)) continue;
+            for (int dz = -R; dz <= R; dz++) {
+                for (int dx = -R; dx <= R; dx++) {
+                    p.set(ground.getX() + dx, ground.getY(), ground.getZ() + dz);
+                    if (!level.hasChunkAt(p)) continue;
 
-                if (level.getFluidState(p).is(FluidTags.WATER)) {
-                    BlockPos airPos = p.above();
-                    if (!level.hasChunkAt(airPos)) continue;
-                    if (level.getBlockState(airPos).isAir()
-                            && level.canSeeSkyFromBelowWater(airPos)) {
-                        return true;
+                    if (level.getFluidState(p).is(FluidTags.WATER)
+                            && level.canSeeSkyFromBelowWater(p)) {
+                            return true;
                     }
-                }
 
-                p.move(0, 1, 0);
-                if (level.hasChunkAt(p) && level.getFluidState(p).is(FluidTags.WATER)) {
-                    BlockPos airPos = p.above();
-                    if (level.hasChunkAt(airPos)
-                            && level.getBlockState(airPos).isAir()
-                            && level.canSeeSkyFromBelowWater(airPos)) {
-                        return true;
+                    p.move(0, 1, 0);
+                    if (level.hasChunkAt(p) && level.getFluidState(p).is(FluidTags.WATER)) {
+                        BlockPos airPos = p.above();
+                        if (level.hasChunkAt(airPos)
+                                && level.getBlockState(airPos).isAir()
+                                && level.canSeeSkyFromBelowWater(airPos)) {
+                            return true;
+                        }
                     }
+                    p.move(0, -1, 0);
                 }
-                p.move(0, -1, 0);
             }
-        }
         return false;
     }
 
+    //unused
+    public static boolean duckCanSpawnInWater(
+            EntityType<Duck> type,
+            LevelAccessor level,
+            MobSpawnType reason,
+            BlockPos pos,
+            RandomSource random
+    ) {
+        return reason == MobSpawnType.SPAWNER || (
+                level.getBlockState(pos).getFluidState().is(Fluids.WATER)
+                        && level.canSeeSkyFromBelowWater(pos)
+                        && Animal.isBrightEnoughToSpawn(level, pos)
+        );
+    }
 
     @Override
     public boolean isTameItem(ItemStack itemStack) {
@@ -485,5 +495,13 @@ public class Duck extends AbstractDuck {
     @Override
     protected void onFlap() {
         this.nextFlap = this.flyDist + this.flapSpeed / 2.0F;
+    }
+
+    @Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+        if (this.isInWater()) {
+            this.setOrderedToSit(false);
+        }
     }
 }

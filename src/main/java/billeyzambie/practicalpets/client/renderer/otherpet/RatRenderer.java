@@ -4,6 +4,7 @@ import billeyzambie.practicalpets.client.PPRenders;
 import billeyzambie.practicalpets.client.layer.PetBackStrapLayer;
 import billeyzambie.practicalpets.client.layer.RatPatternLayer;
 import billeyzambie.practicalpets.client.model.entity.otherpet.RatModel;
+import billeyzambie.practicalpets.client.renderer.ItemHoldingEntityRenderer;
 import billeyzambie.practicalpets.client.renderer.PracticalPetRenderer;
 import billeyzambie.practicalpets.entity.otherpet.Rat;
 import billeyzambie.practicalpets.misc.PracticalPets;
@@ -16,11 +17,13 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class RatRenderer extends PracticalPetRenderer<Rat, RatModel> {
+public class RatRenderer extends PracticalPetRenderer<Rat, RatModel> implements ItemHoldingEntityRenderer {
     private final ItemInHandRenderer itemInHandRenderer;
 
     public RatRenderer(EntityRendererProvider.Context context) {
@@ -53,26 +56,14 @@ public class RatRenderer extends PracticalPetRenderer<Rat, RatModel> {
     }
 
     @Override
+    public ItemInHandRenderer getItemInHandRenderer() {
+        return this.itemInHandRenderer;
+    }
+
+    @Override
     public void render(@NotNull Rat entity, float entityYaw, float partialticks, @NotNull PoseStack poseStack, @NotNull MultiBufferSource buffer, int packedLight) {
         super.render(entity, entityYaw, partialticks, poseStack, buffer, packedLight);
-
-        poseStack.pushPose();
-
-        //entityYaw only updated when the pet is walking for some reason, so I didn't use it
-        float bodyYaw = Mth.lerp(partialticks, entity.yBodyRotO, entity.yBodyRot);
-        poseStack.mulPose(Axis.YP.rotationDegrees(-bodyYaw));
-
-        poseStack.mulPose(Axis.XP.rotationDegrees(180));
-        poseStack.translate(0, -24f / 16f, 0);
-        for (ModelPart part : this.getModel().pathToItem()) {
-            part.translateAndRotate(poseStack);
-        }
-        poseStack.mulPose(Axis.XP.rotationDegrees(180));
-
-        ItemStack itemstack = entity.getItemBySlot(EquipmentSlot.MAINHAND);
-        this.itemInHandRenderer.renderItem(entity, itemstack, ItemDisplayContext.GROUND, false, poseStack, buffer, packedLight);
-
-        poseStack.popPose();
+        this.renderItem(this, entity, partialticks, poseStack, buffer, packedLight);
     }
 
 }

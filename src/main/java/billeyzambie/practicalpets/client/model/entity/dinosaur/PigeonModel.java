@@ -6,11 +6,13 @@ package billeyzambie.practicalpets.client.model.entity.dinosaur;// Made with Blo
 import billeyzambie.animationcontrollers.Animatable;
 import billeyzambie.animationcontrollers.PracticalPetModel;
 import billeyzambie.practicalpets.client.animation.dinosaur.PigeonAnimations;
+import billeyzambie.practicalpets.client.model.entity.ItemHoldingEntityModel;
 import billeyzambie.practicalpets.entity.dinosaur.Pigeon;
 import billeyzambie.practicalpets.misc.PPAnimationControllers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.animation.AnimationDefinition;
+import net.minecraft.client.animation.KeyframeAnimations;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
@@ -20,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.List;
 
-public class PigeonModel extends PracticalPetModel<Pigeon> {
+public class PigeonModel extends PracticalPetModel<Pigeon> implements ItemHoldingEntityModel {
     @Override
     public ModelPart root() {
         return ooo;
@@ -64,6 +66,12 @@ public class PigeonModel extends PracticalPetModel<Pigeon> {
         return pathToBackpack;
     }
 
+    List<ModelPart> pathToItem;
+    @Override
+    public List<ModelPart> pathToItem() {
+        return pathToItem;
+    }
+
     private final ModelPart ooo;
     private final ModelPart body_walking;
     private final ModelPart bodynolegs;
@@ -75,6 +83,7 @@ public class PigeonModel extends PracticalPetModel<Pigeon> {
     private final ModelPart necc;
     private final ModelPart head;
     private final ModelPart nose;
+    private final ModelPart item;
     private final ModelPart bone;
     private final ModelPart bone2;
     private final ModelPart hat;
@@ -98,6 +107,7 @@ public class PigeonModel extends PracticalPetModel<Pigeon> {
         this.necc = this.bodynolegs.getChild("necc");
         this.head = this.necc.getChild("head");
         this.nose = this.head.getChild("nose");
+        this.item = this.nose.getChild("item");
         this.bone = this.nose.getChild("bone");
         this.bone2 = this.nose.getChild("bone2");
         this.hat = this.head.getChild("hat");
@@ -112,6 +122,7 @@ public class PigeonModel extends PracticalPetModel<Pigeon> {
         this.pathToHat = List.of(ooo, body_walking, bodynolegs, necc, head, hat);
         this.pathToBowtie = List.of(ooo, body_walking, bodynolegs, necc, bowtie);
         this.pathToBackpack = List.of(ooo, body_walking, bodynolegs, body1, backpack);
+        this.pathToItem = List.of(ooo, body_walking, bodynolegs, necc, head, nose, item);
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -141,9 +152,11 @@ public class PigeonModel extends PracticalPetModel<Pigeon> {
 
         PartDefinition nose = head.addOrReplaceChild("nose", CubeListBuilder.create(), PartPose.offset(0.0F, 0.5F, -2.0F));
 
+        PartDefinition item = nose.addOrReplaceChild("item", CubeListBuilder.create(), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 1.5708F, 0.0F, 0.0F));
+
         PartDefinition bone = nose.addOrReplaceChild("bone", CubeListBuilder.create().texOffs(0, 16).addBox(-0.5F, -0.5F, -2.0F, 1.0F, 0.5F, 2.0F, new CubeDeformation(0.01F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-        PartDefinition bone2 = nose.addOrReplaceChild("bone2", CubeListBuilder.create().texOffs(0, 16).addBox(-0.5F, 0.0F, -2.0F, 1.0F, 0.5F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition bone2 = nose.addOrReplaceChild("bone2", CubeListBuilder.create().texOffs(0, 19).addBox(-0.5F, 0.0F, -2.0F, 1.0F, 0.5F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
         PartDefinition hat = head.addOrReplaceChild("hat", CubeListBuilder.create(), PartPose.offset(0.0F, -2.0F, -0.5F));
 
@@ -193,6 +206,12 @@ public class PigeonModel extends PracticalPetModel<Pigeon> {
 
         this.wing0.zRot += flap;
         this.wing1.zRot -= flap;
+
+        if (!entity.getMainHandItem().isEmpty()) {
+            //Open mouth
+            this.bone.xRot = -5 * Mth.DEG_TO_RAD;
+            this.bone2.xRot = -12.5f * Mth.DEG_TO_RAD;
+        }
     }
 
     @Override

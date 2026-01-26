@@ -438,8 +438,8 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         this.goalSelector.addGoal(30, new RangedAttackIfShouldGoal(this, this.createMeleeAttackSpeedMultiplier(), 20, 40, 20f));
         this.goalSelector.addGoal(50, new MeleeAttackIfShouldGoal(this, this.createMeleeAttackSpeedMultiplier(), false));
         this.goalSelector.addGoal(55, new PPBegGoal(this));
-        this.goalSelector.addGoal(60, new FollowOwnerWanderableGoal(this, this.getFollowOwnerSpeed(), 7.0F, 5.0F, false));
-        this.goalSelector.addGoal(70, new PredicateTemptGoal(this, this.getFollowOwnerSpeed(), PracticalPet::isFood, false));
+        this.goalSelector.addGoal(60, new FollowOwnerWanderableGoal(this, this.createFollowOwnerSpeed(), 7.0F, 5.0F, false));
+        this.goalSelector.addGoal(70, new PredicateTemptGoal(this, this.createFollowOwnerSpeed(), PracticalPet::isFood, false));
 
         Goal followParentGoal = createFollowParentGoal();
         if (followParentGoal != null)
@@ -482,7 +482,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         }
     }
 
-    protected double getFollowOwnerSpeed() {
+    protected double createFollowOwnerSpeed() {
         return 1.25D;
     }
 

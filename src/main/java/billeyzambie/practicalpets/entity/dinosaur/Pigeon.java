@@ -1,10 +1,7 @@
 package billeyzambie.practicalpets.entity.dinosaur;
 
 import billeyzambie.practicalpets.entity.PracticalPet;
-import billeyzambie.practicalpets.goal.FlyPanicGoal;
-import billeyzambie.practicalpets.goal.PanicIfShouldGoal;
-import billeyzambie.practicalpets.goal.ParrotWanderGoal;
-import billeyzambie.practicalpets.goal.PigeonFlyAroundGoal;
+import billeyzambie.practicalpets.goal.*;
 import billeyzambie.practicalpets.items.PetBackpack;
 import billeyzambie.practicalpets.misc.PPEntities;
 import billeyzambie.practicalpets.misc.PPSerializers;
@@ -16,12 +13,12 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -31,17 +28,19 @@ import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.Path;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.*;
 import net.minecraftforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -208,7 +207,8 @@ public class Pigeon extends PracticalPet {
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(1, new PigeonFlyAroundGoal(this, this.createPanicSpeedMultiplier()));
+        this.goalSelector.addGoal(52, new DropHeldItemToOwnerGoal(this, this.createFollowOwnerSpeed(), true));
+        this.goalSelector.addGoal(51, new PigeonGetDroppedItemGoal(this, this.createFollowOwnerSpeed()));
     }
 
     @Override
@@ -331,6 +331,10 @@ public class Pigeon extends PracticalPet {
             this.missionOriginDimension = new ResourceLocation(compoundTag.getString("MissionOriginDimension"));
         }
 
+        int targetItemId = compoundTag.getInt("targetItemEntityId");
+        if (this.level().getEntity(targetItemId) instanceof ItemEntity itemEntity)
+            targetItemEntity = itemEntity;
+
         if (!this.isInWalkMode()) {
             this.setFlyingMovement();
         }
@@ -354,6 +358,10 @@ public class Pigeon extends PracticalPet {
             compoundTag.putInt("MissionOriginY", this.missionOriginPosition.getY());
             compoundTag.putInt("MissionOriginZ", this.missionOriginPosition.getZ());
         }
+
+        if (targetItemEntity != null) {
+            compoundTag.putInt("targetItemEntityId", targetItemEntity.getId());
+        }
     }
 
 
@@ -371,13 +379,13 @@ public class Pigeon extends PracticalPet {
                     }
                 }
 
-                if (--this.movementSwitchTime <= 0) {
+                if (--this.movementSwitchTime <= 0 || this.targetItemEntity != null) {
                     this.toFlyMode();
                 }
 
             }
             case FLYING -> {
-                if (--this.movementSwitchTime <= 0 && this.onGround() && !this.hasTarget()) {
+                if (--this.movementSwitchTime <= 0 && this.onGround() && !this.hasTarget() && this.targetItemEntity == null) {
                     this.toWalkMode();
                 }
             }
@@ -392,6 +400,8 @@ public class Pigeon extends PracticalPet {
             this.timeToBiteFloor = this.pickRandomBiteFloorTime();
         }
 
+        if (targetItemEntity != null && targetItemEntity.isRemoved())
+            this.targetItemEntity = null;
     }
 
     @Override
@@ -463,8 +473,7 @@ public class Pigeon extends PracticalPet {
                             ).withStyle(ChatFormatting.GREEN));
                             this.teleportTo(target.getX(), target.getY(), target.getZ());
                             this.setMissionPhase(MissionPhase.ARRIVED);
-                        }
-                        else {
+                        } else {
                             this.returnFromMission();
                         }
 
@@ -541,4 +550,39 @@ public class Pigeon extends PracticalPet {
     protected void onFlap() {
         this.nextFlap = this.flyDist + this.flapSpeed / 2.0F;
     }
+
+    @Nullable
+    private ItemEntity targetItemEntity;
+
+    @Nullable
+    public ItemEntity getTargetItemEntity() {
+        return this.targetItemEntity;
+    }
+
+    @Override
+    public boolean shouldDropHeldItemToOwner() {
+        return true;
+    }
+
+    public static void makePigeonPickUpTargetItem(ServerPlayer player) {
+        HitResult hit = player.pick(32f, 0f, false);
+        if (
+                hit instanceof BlockHitResult blockHit
+        ) {
+            AABB itemBox = AABB.ofSize(blockHit.getLocation(), 1.1, 1.1, 1.1);
+            ItemEntity itemEntity = player.level().getEntitiesOfClass(ItemEntity.class, itemBox).get(0);
+            if (itemEntity != null) {
+                player.level().getEntitiesOfClass(
+                                Pigeon.class,
+                                player.getBoundingBox().inflate(64),
+                                p -> p.isOwnedBy(player) && !p.isOrderedToSit() && p.targetItemEntity == null && p.isAlive()
+                        ).stream().min(Comparator.comparingDouble(p -> p.distanceToSqr(player)))
+
+                        .ifPresent(pigeon -> {
+                            pigeon.targetItemEntity = itemEntity;
+                        });
+            }
+        }
+    }
+
 }

@@ -42,5 +42,9 @@ public class PPNetworking {
                 PigeonSendPacket::encode,
                 PigeonSendPacket::decode,
                 PigeonSendPacket::handle);
+        CHANNEL.registerMessage(id++, PlayerPunchAirPacket.class,
+                PlayerPunchAirPacket::encode,
+                PlayerPunchAirPacket::decode,
+                PlayerPunchAirPacket::handle);
     }
 }
