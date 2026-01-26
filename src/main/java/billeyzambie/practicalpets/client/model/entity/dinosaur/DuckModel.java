@@ -175,7 +175,10 @@ public class DuckModel extends PracticalPetModel<Duck> {
         PPAnimationControllers.DUCK_WATER_WAVE.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, Mth.clamp(1 - 2 * limbSwingAmount, 0, 1));
 
         if (!entity.isInSittingPose()) {
+            float prevBodyY = this.body.y;
             this.animateWalk(DuckAnimations.walk32, limbSwing, limbSwingAmount, 3f, 4f);
+            if (entity.isInWater())
+                this.body.y = prevBodyY;
         }
 
         float partialTick = ageInTicks % 1f;

@@ -27,7 +27,7 @@ public class DropHeldItemToOwnerGoal extends FollowOwnerGoal {
     public boolean canContinueToUse() {
         if (pet.getOwner() == null) return false;
         if (pet.getMainHandItem().isEmpty()) return false;
-        if (pet.shouldDropHeldItemToOwner()) return false;
+        if (!pet.shouldDropHeldItemToOwner()) return false;
         return super.canContinueToUse();
     }
 

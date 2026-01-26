@@ -30,7 +30,7 @@ public class PPSpawns {
         if (isTemperateAnimalBiome(biome)) {
             builder.getMobSpawnSettings().getSpawner(MobCategory.CREATURE).add(new MobSpawnSettings.SpawnerData(
                     PPEntities.DUCK.get(),
-                    20, 4, 8
+                    40, 4, 8
             ));
             builder.getMobSpawnSettings().getSpawner(MobCategory.CREATURE).add(new MobSpawnSettings.SpawnerData(
                     PPEntities.RAT.get(),
@@ -38,7 +38,7 @@ public class PPSpawns {
             ));
             builder.getMobSpawnSettings().getSpawner(MobCategory.CREATURE).add(new MobSpawnSettings.SpawnerData(
                     PPEntities.PIGEON.get(),
-                    20, 4, 8
+                    10, 4, 8
             ));
         }
 
@@ -77,7 +77,7 @@ public class PPSpawns {
 
         event.register(
                 PPEntities.RAT.get(),
-                SpawnPlacements.Type.NO_RESTRICTIONS,
+                SpawnPlacements.Type.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Rat::ratCanSpawn,
                 SpawnPlacementRegisterEvent.Operation.REPLACE
@@ -86,7 +86,7 @@ public class PPSpawns {
         event.register(
                 PPEntities.PIGEON.get(),
                 SpawnPlacements.Type.ON_GROUND,
-                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                Heightmap.Types.MOTION_BLOCKING,
                 Animal::checkAnimalSpawnRules,
                 SpawnPlacementRegisterEvent.Operation.REPLACE
         );

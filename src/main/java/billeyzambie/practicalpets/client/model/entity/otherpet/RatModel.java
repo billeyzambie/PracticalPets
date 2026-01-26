@@ -6,6 +6,7 @@ package billeyzambie.practicalpets.client.model.entity.otherpet;// Made with Blo
 import billeyzambie.animationcontrollers.Animatable;
 import billeyzambie.animationcontrollers.PracticalPetModel;
 import billeyzambie.practicalpets.client.animation.otherpet.RatAnimations;
+import billeyzambie.practicalpets.client.model.entity.ItemHoldingEntityModel;
 import billeyzambie.practicalpets.entity.otherpet.Rat;
 import billeyzambie.practicalpets.misc.PPAnimationControllers;
 import net.minecraft.client.animation.AnimationDefinition;
@@ -18,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.List;
 
-public class RatModel extends PracticalPetModel<Rat> {
+public class RatModel extends PracticalPetModel<Rat> implements ItemHoldingEntityModel {
 	@Override
 	public ModelPart root() {
 		return ooo;
@@ -59,7 +60,8 @@ public class RatModel extends PracticalPetModel<Rat> {
 	}
 
 	List<ModelPart> pathToItem;
-	public List<ModelPart> pathToItem() {
+	@Override
+    public List<ModelPart> pathToItem() {
 		return pathToItem;
 	}
 
