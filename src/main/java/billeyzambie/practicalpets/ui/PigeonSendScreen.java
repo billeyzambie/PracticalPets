@@ -232,7 +232,7 @@ public class PigeonSendScreen extends Screen {
                 }
 
                 Player target = minecraft.level.getPlayerByUUID(entry.playerId);
-                if (target == null || pigeon.isInvalidMissionTarget(target)) {
+                if (target != null && pigeon.isInvalidMissionTarget(target)) {
                     continue;
                 }
 

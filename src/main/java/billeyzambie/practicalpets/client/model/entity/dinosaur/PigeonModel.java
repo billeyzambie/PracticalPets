@@ -9,6 +9,7 @@ import billeyzambie.practicalpets.client.animation.dinosaur.PigeonAnimations;
 import billeyzambie.practicalpets.client.model.entity.ItemHoldingEntityModel;
 import billeyzambie.practicalpets.entity.dinosaur.Pigeon;
 import billeyzambie.practicalpets.misc.PPAnimationControllers;
+import billeyzambie.practicalpets.util.PPUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.animation.AnimationDefinition;
@@ -49,24 +50,28 @@ public class PigeonModel extends PracticalPetModel<Pigeon> implements ItemHoldin
     }
 
     List<ModelPart> pathToBowtie;
+
     @Override
     public List<ModelPart> pathToBowtie() {
         return pathToBowtie;
     }
 
     List<ModelPart> pathToHat;
+
     @Override
     public List<ModelPart> pathToHat() {
         return pathToHat;
     }
 
     List<ModelPart> pathToBackpack;
+
     @Override
     public List<ModelPart> pathToBackpack() {
         return pathToBackpack;
     }
 
     List<ModelPart> pathToItem;
+
     @Override
     public List<ModelPart> pathToItem() {
         return pathToItem;
@@ -125,15 +130,37 @@ public class PigeonModel extends PracticalPetModel<Pigeon> implements ItemHoldin
         this.pathToItem = List.of(ooo, body_walking, bodynolegs, necc, head, nose, item);
     }
 
+
     public static LayerDefinition createBodyLayer() {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
 
         PartDefinition ooo = partdefinition.addOrReplaceChild("ooo", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));
 
-        PartDefinition body_walking = ooo.addOrReplaceChild("body_walking", CubeListBuilder.create(), PartPose.offset(0.0F, -3.0F, 1.0F));
+        PartDefinition body_walking = ooo.addOrReplaceChild("body_walking", CubeListBuilder.create(), PartPose.offset(0.0F, -4.0F, 0.0F));
 
-        PartDefinition bodynolegs = body_walking.addOrReplaceChild("bodynolegs", CubeListBuilder.create(), PartPose.offset(0.0F, 1.0F, -1.0F));
+        PartDefinition bodynolegs = body_walking.addOrReplaceChild("bodynolegs", CubeListBuilder.create(), PartPose.offset(0.0F, 2.0F, 0.0F));
+
+        PartDefinition necc = bodynolegs.addOrReplaceChild("necc", CubeListBuilder.create().texOffs(12, 0).addBox(-1.5F, -1.0F, -0.5F, 3.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -6.0F, -3.0F));
+
+        PartDefinition head = necc.addOrReplaceChild("head", CubeListBuilder.create().texOffs(13, 9).mirror().addBox(-1.5F, -2.0F, -2.0F, 3.0F, 3.0F, 3.0F, new CubeDeformation(0.01F)).mirror(false)
+                .texOffs(20, 2).addBox(-1.5F, -2.0F, -2.0F, 3.0F, 3.0F, 3.0F, new CubeDeformation(-0.09F)), PartPose.offset(0.0F, -2.0F, 0.5F));
+
+        PartDefinition nose = head.addOrReplaceChild("nose", CubeListBuilder.create(), PartPose.offset(0.0F, 0.5F, -2.0F));
+
+        PartDefinition bone = nose.addOrReplaceChild("bone", CubeListBuilder.create().texOffs(0, 16).addBox(-0.5F, -0.5F, -2.0F, 1.0F, 0.5F, 2.0F, new CubeDeformation(0.01F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+        PartDefinition bone2 = nose.addOrReplaceChild("bone2", CubeListBuilder.create().texOffs(0, 19).addBox(-0.5F, 0.0F, -2.0F, 1.0F, 0.5F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+        PartDefinition item = nose.addOrReplaceChild("item", CubeListBuilder.create(), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 1.5708F, 0.0F, 0.0F));
+
+        PartDefinition hat = head.addOrReplaceChild("hat", CubeListBuilder.create(), PartPose.offset(0.0F, -2.0F, -0.5F));
+
+        PartDefinition upper_eyelids = head.addOrReplaceChild("upper_eyelids", CubeListBuilder.create().texOffs(14, 13).addBox(-1.52F, 0.0F, -0.6F, 3.04F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -2.0F, -0.4F));
+
+        PartDefinition lower_eyelids = head.addOrReplaceChild("lower_eyelids", CubeListBuilder.create().texOffs(20, 15).mirror().addBox(-1.52F, -1.0F, -0.6F, 3.04F, 1.0F, 1.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(0.0F, 1.0F, -0.4F));
+
+        PartDefinition bowtie = necc.addOrReplaceChild("bowtie", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, -0.5F));
 
         PartDefinition body1 = bodynolegs.addOrReplaceChild("body1", CubeListBuilder.create().texOffs(0, 0).addBox(-2.0F, -4.0F, -2.0F, 4.0F, 8.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -3.0F, 0.0F, 0.6981F, 0.0F, 0.0F));
 
@@ -145,32 +172,11 @@ public class PigeonModel extends PracticalPetModel<Pigeon> implements ItemHoldin
 
         PartDefinition backpack = body1.addOrReplaceChild("backpack", CubeListBuilder.create(), PartPose.offsetAndRotation(0.0F, -0.5F, 2.0F, -1.5708F, 0.0F, 0.0F));
 
-        PartDefinition necc = bodynolegs.addOrReplaceChild("necc", CubeListBuilder.create().texOffs(12, 0).addBox(-1.5F, -1.0F, -0.5F, 3.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -6.0F, -3.0F));
-
-        PartDefinition head = necc.addOrReplaceChild("head", CubeListBuilder.create().texOffs(13, 9).mirror().addBox(-1.5F, -2.0F, -2.0F, 3.0F, 3.0F, 3.0F, new CubeDeformation(0.01F)).mirror(false)
-                .texOffs(20, 2).addBox(-1.5F, -2.0F, -2.0F, 3.0F, 3.0F, 3.0F, new CubeDeformation(-0.09F)), PartPose.offset(0.0F, -2.0F, 0.5F));
-
-        PartDefinition nose = head.addOrReplaceChild("nose", CubeListBuilder.create(), PartPose.offset(0.0F, 0.5F, -2.0F));
-
-        PartDefinition item = nose.addOrReplaceChild("item", CubeListBuilder.create(), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 1.5708F, 0.0F, 0.0F));
-
-        PartDefinition bone = nose.addOrReplaceChild("bone", CubeListBuilder.create().texOffs(0, 16).addBox(-0.5F, -0.5F, -2.0F, 1.0F, 0.5F, 2.0F, new CubeDeformation(0.01F)), PartPose.offset(0.0F, 0.0F, 0.0F));
-
-        PartDefinition bone2 = nose.addOrReplaceChild("bone2", CubeListBuilder.create().texOffs(0, 19).addBox(-0.5F, 0.0F, -2.0F, 1.0F, 0.5F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
-
-        PartDefinition hat = head.addOrReplaceChild("hat", CubeListBuilder.create(), PartPose.offset(0.0F, -2.0F, -0.5F));
-
-        PartDefinition upper_eyelids = head.addOrReplaceChild("upper_eyelids", CubeListBuilder.create().texOffs(14, 13).addBox(-1.52F, 0.0F, -0.6F, 3.04F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -2.0F, -0.4F));
-
-        PartDefinition lower_eyelids = head.addOrReplaceChild("lower_eyelids", CubeListBuilder.create().texOffs(20, 15).mirror().addBox(-1.52F, -1.0F, -0.6F, 3.04F, 1.0F, 1.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(0.0F, 1.0F, -0.4F));
-
-        PartDefinition bowtie = necc.addOrReplaceChild("bowtie", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, -0.5F));
-
-        PartDefinition leg0 = body_walking.addOrReplaceChild("leg0", CubeListBuilder.create().texOffs(0, 1).mirror().addBox(-0.5F, 0.0F, 0.0F, 1.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(-1.5F, 1.0F, -1.0F));
+        PartDefinition leg0 = body_walking.addOrReplaceChild("leg0", CubeListBuilder.create().texOffs(0, 1).mirror().addBox(-0.5F, 0.0F, 0.0F, 1.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(-1.5F, 2.0F, 0.0F));
 
         PartDefinition foot0 = leg0.addOrReplaceChild("foot0", CubeListBuilder.create().texOffs(14, 4).mirror().addBox(-1.5F, 0.0F, -2.0F, 3.0F, 0.0F, 2.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(0.0F, 2.0F, 0.0F));
 
-        PartDefinition leg1 = body_walking.addOrReplaceChild("leg1", CubeListBuilder.create().texOffs(0, 1).addBox(-0.5F, 0.0F, 0.0F, 1.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(1.5F, 1.0F, -1.0F));
+        PartDefinition leg1 = body_walking.addOrReplaceChild("leg1", CubeListBuilder.create().texOffs(0, 1).addBox(-0.5F, 0.0F, 0.0F, 1.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(1.5F, 2.0F, 0.0F));
 
         PartDefinition foot1 = leg1.addOrReplaceChild("foot1", CubeListBuilder.create().texOffs(14, 4).addBox(-1.5F, 0.0F, -2.0F, 3.0F, 0.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 2.0F, 0.0F));
 
@@ -180,6 +186,8 @@ public class PigeonModel extends PracticalPetModel<Pigeon> implements ItemHoldin
     @Override
     public void setupAnim(@NotNull Pigeon entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+        float partialTick = ageInTicks % 1f;
+
         if (entity.isBaby()) {
             head.xScale *= 1.5f;
             head.yScale *= 1.5f;
@@ -187,19 +195,33 @@ public class PigeonModel extends PracticalPetModel<Pigeon> implements ItemHoldin
         }
 
         if (!entity.isInSittingPose()) {
+            float groundBlend = PPAnimationControllers.ON_GROUND_BLEND.calculate(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
             float freqMulti = 3f;
             float ampMulti = 4f;
-            ampMulti *= PPAnimationControllers.ON_GROUND_BLEND.calculate(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
+            ampMulti *= groundBlend;
             this.animateWalk(PigeonAnimations.walk, limbSwing, limbSwingAmount, freqMulti, ampMulti);
 
-            if (!entity.hasTarget())
-                this.animate(entity.randomIdle1AnimationState, PigeonAnimations.eatfloor, ageInTicks);
+            this.animate(entity.randomIdle1AnimationState, PigeonAnimations.eatfloor, ageInTicks, groundBlend);
+            //an attempt to make it not turn its head while the eat floor animation is playing
+            float headRotMultiplier = 1 - Mth.clamp(-this.bodynolegs.xRot * Mth.RAD_TO_DEG / 30, 0, 1);
+
+            float flyPoseValue = Mth.clamp(2 * limbSwingAmount * (1 - groundBlend), 0, 1);
+            //flyPoseValue = 1;
+
+            headRotMultiplier *= 1 - flyPoseValue;
+
+            this.head.xRot *= headRotMultiplier;
+            this.head.yRot *= headRotMultiplier;
+
+            KeyframeAnimations.animate(this, PigeonAnimations.fly_pose, 0, flyPoseValue, ANIMATION_VECTOR_CACHE);
+
+            this.body_walking.xRot = entity.getViewXRot(partialTick) * flyPoseValue * Mth.DEG_TO_RAD;
+
             PPAnimationControllers.SIMPLE_ATTACK.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
         }
 
         PPAnimationControllers.SIMPLE_SIT.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
 
-        float partialTick = ageInTicks % 1f;
         float f = Mth.lerp(partialTick, entity.oFlap, entity.flap);
         float f1 = Mth.lerp(partialTick, entity.oFlapSpeed, entity.flapSpeed);
         float flap = (Mth.sin(f) + 1.0F) * f1;
@@ -210,7 +232,7 @@ public class PigeonModel extends PracticalPetModel<Pigeon> implements ItemHoldin
         if (!entity.getMainHandItem().isEmpty()) {
             //Open mouth
             this.bone.xRot = -5 * Mth.DEG_TO_RAD;
-            this.bone2.xRot = -12.5f * Mth.DEG_TO_RAD;
+            this.bone2.xRot = 12.5f * Mth.DEG_TO_RAD;
         }
     }
 

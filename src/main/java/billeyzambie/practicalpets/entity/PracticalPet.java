@@ -322,8 +322,8 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     protected void setAttributesAccordingToPetLevel() {
         int level = this.petLevel();
         double progress1to10 = (level - 1) / 9d;
-        if (progress1to10 < 1)
-            progress1to10 *= progress1to10;
+        //if (progress1to10 < 1)
+        //    progress1to10 *= progress1to10;
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(
                 Math.round(Mth.lerp(progress1to10, getLevel1MaxHealth(), getLevel10MaxHealth()) / 2d) * 2
         );

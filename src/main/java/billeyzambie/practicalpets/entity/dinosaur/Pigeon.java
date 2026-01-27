@@ -21,6 +21,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
@@ -207,6 +209,7 @@ public class Pigeon extends PracticalPet {
     @Override
     protected void registerGoals() {
         super.registerGoals();
+        this.goalSelector.addGoal(1, new PigeonFlyAroundGoal(this, this.createPanicSpeedMultiplier()));
         this.goalSelector.addGoal(52, new DropHeldItemToOwnerGoal(this, this.createFollowOwnerSpeed(), true));
         this.goalSelector.addGoal(51, new PigeonGetDroppedItemGoal(this, this.createFollowOwnerSpeed()));
     }
@@ -233,7 +236,7 @@ public class Pigeon extends PracticalPet {
     private float nextFlap = 1.0F;
 
     private int pickRandomBiteFloorTime() {
-        return this.random.nextInt(2400, 4800);
+        return this.random.nextInt(600, 1200);
     }
 
     private int timeToBiteFloor = this.pickRandomBiteFloorTime();
@@ -301,7 +304,7 @@ public class Pigeon extends PracticalPet {
 
     @Override
     public boolean shouldFollowOwner() {
-        return super.shouldFollowOwner() && !this.isInMission();
+        return super.shouldFollowOwner() && !this.isInMission() && this.getTargetItemEntity() == null;
     }
 
     private UUID missionTargetUUID;
@@ -331,9 +334,14 @@ public class Pigeon extends PracticalPet {
             this.missionOriginDimension = new ResourceLocation(compoundTag.getString("MissionOriginDimension"));
         }
 
-        int targetItemId = compoundTag.getInt("targetItemEntityId");
-        if (this.level().getEntity(targetItemId) instanceof ItemEntity itemEntity)
-            targetItemEntity = itemEntity;
+        if (
+                compoundTag.hasUUID("TargetItemEntityUUID")
+                        && this.level() instanceof ServerLevel level
+                        && level.getEntity(compoundTag.getUUID("TargetItemEntityUUID"))
+                        instanceof ItemEntity itemEntity
+        ) {
+            this.targetItemEntity = itemEntity;
+        }
 
         if (!this.isInWalkMode()) {
             this.setFlyingMovement();
@@ -360,10 +368,9 @@ public class Pigeon extends PracticalPet {
         }
 
         if (targetItemEntity != null) {
-            compoundTag.putInt("targetItemEntityId", targetItemEntity.getId());
+            compoundTag.putUUID("TargetItemEntityUUID", targetItemEntity.getUUID());
         }
     }
-
 
     @Override
     protected void customServerAiStep() {
@@ -374,7 +381,11 @@ public class Pigeon extends PracticalPet {
                 Path path = this.getNavigation().getPath();
                 if (path != null) {
                     BlockPos target = path.getTarget();
-                    if (target.getY() >= this.getY() + 1.5 || this.blockPosition().distToCenterSqr(target.getCenter()) > 100) {
+                    if (
+                            target.getY() >= this.getY() + 1.5
+                                    || target.getY() < this.getY() - 1.5
+                                    || this.blockPosition().distToCenterSqr(target.getCenter()) > 100
+                    ) {
                         this.toFlyMode();
                     }
                 }
@@ -387,6 +398,7 @@ public class Pigeon extends PracticalPet {
             case FLYING -> {
                 if (--this.movementSwitchTime <= 0 && this.onGround() && !this.hasTarget() && this.targetItemEntity == null) {
                     this.toWalkMode();
+                    this.setDeltaMovement(Vec3.ZERO);
                 }
             }
             case IN_MISSION -> {
@@ -394,14 +406,11 @@ public class Pigeon extends PracticalPet {
             }
         }
 
-        if (--this.timeToBiteFloor <= 0 && this.onGround() && this.isInWalkMode()) {
-            if (!this.isInSittingPose())
+        if (--this.timeToBiteFloor <= 0 && this.onGround() && this.getNavigation().isDone()) {
+            if (!this.isInSittingPose() && this.isInWalkMode())
                 this.sendRandomIdle1Packet();
             this.timeToBiteFloor = this.pickRandomBiteFloorTime();
         }
-
-        if (targetItemEntity != null && targetItemEntity.isRemoved())
-            this.targetItemEntity = null;
     }
 
     @Override
@@ -425,6 +434,9 @@ public class Pigeon extends PracticalPet {
         if (!this.onGround() && vec3.y < 0.0D) {
             this.setDeltaMovement(vec3.multiply(1.0D, 0.6D, 1.0D));
         }
+
+        if (!this.level().isClientSide && targetItemEntity != null && targetItemEntity.isRemoved())
+            this.targetItemEntity = null;
     }
 
     @Override
@@ -435,6 +447,11 @@ public class Pigeon extends PracticalPet {
     @Override
     public boolean hideEquipment() {
         return this.getMissionPhase() == MissionPhase.TRAVELING || super.hideEquipment();
+    }
+
+    @Override
+    public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
+        return this.isInMission() ? InteractionResult.PASS : super.mobInteract(player, hand);
     }
 
     private void tickMission() {
@@ -472,7 +489,6 @@ public class Pigeon extends PracticalPet {
                                     this.getDisplayName()
                             ).withStyle(ChatFormatting.GREEN));
                             this.teleportTo(target.getX(), target.getY(), target.getZ());
-                            this.setMissionPhase(MissionPhase.ARRIVED);
                         } else {
                             this.returnFromMission();
                         }
@@ -511,6 +527,8 @@ public class Pigeon extends PracticalPet {
 
         this.missionOriginDimension = this.level().dimension().location();
         this.missionOriginPosition = this.blockPosition();
+
+        this.setFollowMode(FollowMode.FOLLOWING);
     }
 
     public void returnFromMission() {
@@ -541,22 +559,16 @@ public class Pigeon extends PracticalPet {
         return target.distanceToSqr(this) < 32 * 32 || !this.level().dimension().equals(target.level().dimension());
     }
 
-    @Override
-    protected boolean isFlapping() {
-        return this.flyDist > this.nextFlap;
-    }
-
-    @Override
-    protected void onFlap() {
-        this.nextFlap = this.flyDist + this.flapSpeed / 2.0F;
-    }
-
     @Nullable
     private ItemEntity targetItemEntity;
 
     @Nullable
     public ItemEntity getTargetItemEntity() {
         return this.targetItemEntity;
+    }
+
+    public void removeTargetItemEntity() {
+        this.targetItemEntity = null;
     }
 
     @Override

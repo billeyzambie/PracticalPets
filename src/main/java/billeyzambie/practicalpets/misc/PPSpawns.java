@@ -30,7 +30,7 @@ public class PPSpawns {
         if (isTemperateAnimalBiome(biome)) {
             builder.getMobSpawnSettings().getSpawner(MobCategory.CREATURE).add(new MobSpawnSettings.SpawnerData(
                     PPEntities.DUCK.get(),
-                    40, 4, 8
+                    80, 4, 8
             ));
             builder.getMobSpawnSettings().getSpawner(MobCategory.CREATURE).add(new MobSpawnSettings.SpawnerData(
                     PPEntities.RAT.get(),

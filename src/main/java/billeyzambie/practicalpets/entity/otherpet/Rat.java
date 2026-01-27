@@ -16,6 +16,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
@@ -202,7 +203,10 @@ public class Rat extends PracticalPet implements CookingPet {
     }
 
     public static boolean ratCanSpawn(EntityType<? extends Animal> entityType, LevelAccessor levelAccessor, MobSpawnType spawnType, BlockPos blockPos, RandomSource random) {
-        return spawnType == MobSpawnType.SPAWNER || !levelAccessor.canSeeSky(blockPos) && blockPos.getY() > 0
+        return spawnType == MobSpawnType.SPAWNER
+                || levelAccessor.getBiome(blockPos).is(Tags.Biomes.IS_SWAMP) && random.nextBoolean()
+                || levelAccessor.getBiome(blockPos).is(BiomeTags.IS_FOREST) && random.nextBoolean()
+                || !levelAccessor.canSeeSky(blockPos) && blockPos.getY() > 0
                 && checkMobSpawnRules(entityType, levelAccessor, spawnType, blockPos, random)
                 && levelAccessor.getRawBrightness(blockPos, 0) < 9;
     }

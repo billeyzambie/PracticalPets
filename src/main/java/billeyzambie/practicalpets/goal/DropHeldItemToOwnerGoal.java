@@ -2,12 +2,11 @@ package billeyzambie.practicalpets.goal;
 
 import billeyzambie.practicalpets.entity.PracticalPet;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
-public class DropHeldItemToOwnerGoal extends FollowOwnerGoal {
+public class DropHeldItemToOwnerGoal extends FollowOwnerWanderableGoal {
     private final PracticalPet pet;
 
     public DropHeldItemToOwnerGoal(PracticalPet pet, double speedModifier, boolean canFly) {
@@ -20,7 +19,7 @@ public class DropHeldItemToOwnerGoal extends FollowOwnerGoal {
         if (pet.getOwner() == null) return false;
         if (pet.getMainHandItem().isEmpty()) return false;
         if (!pet.shouldDropHeldItemToOwner()) return false;
-        return super.canUse();
+        return this.vanillaFollowOwnerCanUse();
     }
 
     @Override

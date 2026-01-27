@@ -488,16 +488,6 @@ public class Duck extends AbstractDuck {
     }
 
     @Override
-    protected boolean isFlapping() {
-        return this.flyDist > this.nextFlap;
-    }
-
-    @Override
-    protected void onFlap() {
-        this.nextFlap = this.flyDist + this.flapSpeed / 2.0F;
-    }
-
-    @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
         if (this.isInWater()) {

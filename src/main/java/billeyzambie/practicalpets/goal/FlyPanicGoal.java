@@ -29,6 +29,13 @@ public class FlyPanicGoal extends PanicIfShouldGoal {
         }
     }
 
+    @Override
+    public void start() {
+        super.start();
+        this.mob.setXRot(-this.mob.getXRot());
+        this.mob.setYRot(-this.mob.getYRot());
+    }
+
     @Nullable
     protected Vec3 getPosition() {
         Vec3 vec3 = this.mob.getViewVector(0.0F);

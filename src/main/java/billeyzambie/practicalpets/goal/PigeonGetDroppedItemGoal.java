@@ -3,12 +3,12 @@ package billeyzambie.practicalpets.goal;
 import billeyzambie.practicalpets.entity.dinosaur.Pigeon;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.item.ItemEntity;
 
 public class PigeonGetDroppedItemGoal extends Goal {
     private final Pigeon pigeon;
     private final double speedModifier;
+    private int timeToGet;
 
     public PigeonGetDroppedItemGoal(Pigeon pigeon, double speedModifier) {
         this.pigeon = pigeon;
@@ -22,7 +22,14 @@ public class PigeonGetDroppedItemGoal extends Goal {
     }
 
     @Override
+    public void start() {
+        super.start();
+        timeToGet = 200;
+    }
+
+    @Override
     public void tick() {
+        super.tick();
         ItemEntity targetItemEntity = this.pigeon.getTargetItemEntity();
         if (targetItemEntity != null) {
             this.pigeon.getNavigation().moveTo(targetItemEntity, this.speedModifier);
@@ -31,7 +38,11 @@ public class PigeonGetDroppedItemGoal extends Goal {
                 this.pigeon.setItemSlot(EquipmentSlot.MAINHAND, targetItemEntity.getItem());
                 targetItemEntity.discard();
             }
+            if (--timeToGet <= 0) {
+                this.pigeon.removeTargetItemEntity();
+            }
+
         }
-        super.tick();
     }
+
 }

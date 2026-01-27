@@ -65,6 +65,7 @@ public class PigeonSendButton extends Button {
                 LocalPlayer player = Minecraft.getInstance().player;
                 if (player != null && (player.experienceLevel > 0 || player.getAbilities().instabuild)) {
                     this.active = true;
+                    this.tooltip = null;
                 }
                 else {
                     this.tooltip = NOT_ENOUGH_LEVELS;
