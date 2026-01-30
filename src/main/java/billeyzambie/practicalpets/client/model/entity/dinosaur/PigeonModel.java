@@ -215,7 +215,7 @@ public class PigeonModel extends PracticalPetModel<Pigeon> implements ItemHoldin
 
             KeyframeAnimations.animate(this, PigeonAnimations.fly_pose, 0, flyPoseValue, ANIMATION_VECTOR_CACHE);
 
-            this.body_walking.xRot = entity.getViewXRot(partialTick) * flyPoseValue * Mth.DEG_TO_RAD;
+            this.body_walking.xRot += entity.getViewXRot(partialTick) * flyPoseValue * Mth.DEG_TO_RAD;
 
             PPAnimationControllers.SIMPLE_ATTACK.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
         }

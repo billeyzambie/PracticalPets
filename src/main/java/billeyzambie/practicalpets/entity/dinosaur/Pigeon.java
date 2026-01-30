@@ -270,7 +270,7 @@ public class Pigeon extends PracticalPet {
     }
 
     private int pickRandomMovementSwitchTime() {
-        return this.isInWalkMode() ? this.random.nextInt(600, 1200) : 100;
+        return this.isInWalkMode() ? this.random.nextInt(300, 600) : 100;
     }
 
     private int movementSwitchTime = this.pickRandomMovementSwitchTime();
@@ -376,6 +376,9 @@ public class Pigeon extends PracticalPet {
     protected void customServerAiStep() {
         super.customServerAiStep();
 
+        if (targetItemEntity != null && targetItemEntity.isRemoved())
+            this.targetItemEntity = null;
+
         switch (this.movementMode) {
             case WALKING -> {
                 Path path = this.getNavigation().getPath();
@@ -389,6 +392,9 @@ public class Pigeon extends PracticalPet {
                         this.toFlyMode();
                     }
                 }
+
+                if (!this.onGround())
+                    --this.movementSwitchTime;
 
                 if (--this.movementSwitchTime <= 0 || this.targetItemEntity != null) {
                     this.toFlyMode();
@@ -406,8 +412,8 @@ public class Pigeon extends PracticalPet {
             }
         }
 
-        if (--this.timeToBiteFloor <= 0 && this.onGround() && this.getNavigation().isDone()) {
-            if (!this.isInSittingPose() && this.isInWalkMode())
+        if (--this.timeToBiteFloor <= 0 && this.getNavigation().isDone()) {
+            if (!this.isInSittingPose() && this.isInWalkMode() && this.onGround())
                 this.sendRandomIdle1Packet();
             this.timeToBiteFloor = this.pickRandomBiteFloorTime();
         }
@@ -434,9 +440,6 @@ public class Pigeon extends PracticalPet {
         if (!this.onGround() && vec3.y < 0.0D) {
             this.setDeltaMovement(vec3.multiply(1.0D, 0.6D, 1.0D));
         }
-
-        if (!this.level().isClientSide && targetItemEntity != null && targetItemEntity.isRemoved())
-            this.targetItemEntity = null;
     }
 
     @Override

@@ -33,11 +33,6 @@ public class PracticalPetScreen extends AbstractContainerScreen<PracticalPetMenu
         this.imageWidth = 176;
         this.imageHeight = 184;
         this.inventoryLabelY += 18;
-    }
-
-    @Override
-    protected void init() {
-        super.init();
         if (pet instanceof Pigeon pigeon) {
             this.addRenderableWidget(this.pigeonSendButton = new PigeonSendButton(
                     this.leftPos + 178,
@@ -45,7 +40,13 @@ public class PracticalPetScreen extends AbstractContainerScreen<PracticalPetMenu
                     button -> Minecraft.getInstance().setScreen(new PigeonSendScreen(pigeon)),
                     pigeon
             ));
+            this.imageWidth += 2 + this.pigeonSendButton.getWidth();
         }
+    }
+
+    @Override
+    protected void init() {
+        super.init();
     }
 
     @Override

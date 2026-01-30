@@ -45,9 +45,10 @@ public class AnniversaryPetHatModel<T extends Entity> extends HierarchicalModel<
 	public void setupAnim(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		if (entity instanceof ACEntity mob) {
 			float headSizeX = mob.headSizeX();
-            float headSizeZ = mob.headSizeZ();
+			float headSizeY = mob.headSizeY();
+			float headSizeZ = mob.headSizeZ();
 
-			if (headSizeX < 5 && headSizeZ < 5) {
+			if (headSizeX < 5 && headSizeZ < 5 && headSizeY > 2) {
 				this.root().y += 1; //moves it 1 pixel down (somehow)
 				this.root().xScale *= (headSizeX + 1) / 4;
 				this.root().zScale *= (headSizeZ + 1) / 4;

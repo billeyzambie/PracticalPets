@@ -5,6 +5,7 @@ import billeyzambie.practicalpets.entity.dinosaur.Duck;
 import billeyzambie.practicalpets.entity.dinosaur.Pigeon;
 import billeyzambie.practicalpets.entity.otherpet.Rat;
 import billeyzambie.practicalpets.entity.other.PetEndRodProjectile;
+import billeyzambie.practicalpets.entity.otherpet.StickBug;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -52,6 +53,12 @@ public class PPEntities {
                     .sized(0.4f, 0.65f)
                     .build("pigeon")
     );
+    public static final RegistryObject<EntityType<StickBug>> STICK_BUG = REGISTRY.register(
+            "stick_bug",
+            () -> EntityType.Builder.of(StickBug::new, MobCategory.CREATURE)
+                    .sized(0.6f, 0.4f)
+                    .build("stick_bug")
+    );
 
     @SubscribeEvent
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
@@ -85,6 +92,14 @@ public class PPEntities {
                         .add(Attributes.MAX_HEALTH, 4)
                         .add(Attributes.MOVEMENT_SPEED, 0.2)
                         .add(Attributes.FLYING_SPEED, 0.6)
+                        .add(Attributes.ATTACK_DAMAGE, 1)
+                        .build()
+        );
+        event.put(
+                STICK_BUG.get(),
+                StickBug.createMobAttributes()
+                        .add(Attributes.MAX_HEALTH, 2)
+                        .add(Attributes.MOVEMENT_SPEED, 0.2)
                         .add(Attributes.ATTACK_DAMAGE, 1)
                         .build()
         );

@@ -199,7 +199,7 @@ public class RatModel extends PracticalPetModel<Rat> implements ItemHoldingEntit
 			float freqMulti = 3f;
 			float ampMulti = 6f;
 
-			if (entity.getDeltaMovement().horizontalDistance() >= 0.09) {
+			if (entity.getDeltaMovement().horizontalDistanceSqr() >= 0.09 * 0.09) {
 				entity.lastRunTime = ageInTicks;
 			}
 			else {

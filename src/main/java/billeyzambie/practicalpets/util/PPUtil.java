@@ -4,6 +4,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -81,5 +82,19 @@ public class PPUtil {
         }
 
 
+    }
+
+    /** Computes sine in degrees and then multiplies the result by Mth.DEG_TO_RAD.
+     * Used to port math animations from bedrock without constantly having to write * Mth.DEG_TO_RAD.
+     * Also converts the time from ticks to seconds, with the / 20f. */
+    public static float bedrockSin(float value) {
+        return Mth.sin(value / 20f * Mth.DEG_TO_RAD) * Mth.DEG_TO_RAD;
+    }
+
+    /** Computes cosine in degrees and then multiplies the result by Mth.DEG_TO_RAD.
+     * Used to port math animations from bedrock without constantly having to write * Mth.DEG_TO_RAD.
+     * Also converts the time from ticks to seconds, with the / 20f. */
+    public static float bedrockCos(float value) {
+        return Mth.cos(value / 20f * Mth.DEG_TO_RAD) * Mth.DEG_TO_RAD;
     }
 }

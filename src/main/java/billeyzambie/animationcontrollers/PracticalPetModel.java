@@ -11,6 +11,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.HashMap;
@@ -25,6 +26,7 @@ public abstract class PracticalPetModel<T extends Entity> extends HierarchicalMo
     public abstract List<ModelPart> pathToBowtie();
     public abstract List<ModelPart> pathToHat();
     public abstract List<ModelPart> pathToBackpack();
+    @Nullable
     public abstract ModelPart head();
 
     @Override
@@ -49,12 +51,17 @@ public abstract class PracticalPetModel<T extends Entity> extends HierarchicalMo
     }
 
     protected void applyHeadRotation(float pNetHeadYaw, float pHeadPitch) {
-        this.head().yRot += pNetHeadYaw * ((float) Math.PI / 180F);
-        this.head().xRot += pHeadPitch * ((float) Math.PI / 180F);
+        ModelPart head = this.head();
+        if (head != null) {
+            head.yRot += pNetHeadYaw * ((float) Math.PI / 180F);
+            head.xRot += pHeadPitch * ((float) Math.PI / 180F);
+        }
     }
 
     protected void hurtAnimation(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        this.head().xRot += 9 * ((float) Math.PI / 180F);
+        ModelPart head = this.head();
+        if (head != null)
+            head.xRot += 9 * ((float) Math.PI / 180F);
         this.root().x += (float) (Math.sin(ageInTicks * 100 * Mth.PI / 180f) / 15f);
     }
 

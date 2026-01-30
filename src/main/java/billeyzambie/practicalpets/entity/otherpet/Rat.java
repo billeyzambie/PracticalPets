@@ -18,6 +18,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -64,6 +65,7 @@ public class Rat extends PracticalPet implements CookingPet {
         this.entityData.define(IS_ALBINO, false);
         this.entityData.define(IS_COOKING, false);
     }
+
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
@@ -250,7 +252,7 @@ public class Rat extends PracticalPet implements CookingPet {
     public boolean isTameItem(ItemStack itemStack) {
         return itemStack.is(Tags.Items.CROPS)
                 || itemStack.is(Tags.Items.SEEDS)
-                ||itemStack.is(PPTags.Items.FRUITS)
+                || itemStack.is(PPTags.Items.FRUITS)
                 || super.isTameItem(itemStack);
     }
 
@@ -298,7 +300,21 @@ public class Rat extends PracticalPet implements CookingPet {
                         && entity instanceof LivingEntity living
                         && mobCanBeRobbed(living)
         ) {
-            this.setItemSlot(EquipmentSlot.MAINHAND, living.getMainHandItem());
+            ItemStack enemyItem = living.getMainHandItem();
+            if (enemyItem.isDamageableItem()) {
+                float randomFloat = this.getRandom().nextFloat();
+                float randomFloat2 = 1;
+                //Make higher levels give better durability
+                for (int i = 0; i < this.petLevel(); i++) {
+                    randomFloat2 *= randomFloat;
+                }
+                enemyItem.setDamageValue(Mth.lerpInt(
+                        randomFloat2,
+                        enemyItem.getDamageValue(),
+                        enemyItem.getMaxDamage()
+                ));
+            }
+            this.setItemSlot(EquipmentSlot.MAINHAND, enemyItem);
             living.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
         }
         return result;

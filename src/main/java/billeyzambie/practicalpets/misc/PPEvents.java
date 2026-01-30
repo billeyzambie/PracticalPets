@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -76,6 +77,7 @@ public class PPEvents {
         );
         pets.forEach(pet -> {
             pet.teleportTo(player.getX(), player.getY(), player.getZ());
+            pet.setDeltaMovement(Vec3.ZERO);
         });
     }
 

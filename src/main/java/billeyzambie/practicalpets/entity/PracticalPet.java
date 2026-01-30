@@ -3,16 +3,14 @@ package billeyzambie.practicalpets.entity;
 import billeyzambie.animationcontrollers.ACData;
 import billeyzambie.animationcontrollers.ACEntity;
 import billeyzambie.animationcontrollers.BVCData;
-import billeyzambie.practicalpets.misc.PPNetworking;
+import billeyzambie.practicalpets.entity.dinosaur.Pigeon;
+import billeyzambie.practicalpets.misc.*;
 import billeyzambie.practicalpets.network.RandomIdle1AnimPacket;
 import billeyzambie.practicalpets.ui.PracticalPetMenu;
 import billeyzambie.practicalpets.items.RubberDuckyPetHat;
-import billeyzambie.practicalpets.misc.PPItems;
-import billeyzambie.practicalpets.misc.PPSounds;
 import billeyzambie.practicalpets.goal.*;
 import billeyzambie.practicalpets.items.PetCosmetic;
 import billeyzambie.practicalpets.items.PetHat;
-import billeyzambie.practicalpets.misc.PracticalPets;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
@@ -538,16 +536,24 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     @Override
     public boolean doHurtTarget(@NotNull Entity entity) {
         boolean result = super.doHurtTarget(entity);
-        if (result && entity instanceof Mob) {
+        this.doHurtEffect(entity, result);
+        return result;
+    }
+
+    public void doHurtEffect(@NotNull Entity entity, boolean entityGotHurt) {
+        if (entityGotHurt && entity instanceof Mob mob) {
             float amount = 1;
-            if (!entity.isAlive())
-                amount += 2;
+            if (!mob.isAlive())
+                amount += mob.getMaxHealth() / 10;
             addPetXP(amount);
         }
         if (this.getHeadItem().getItem() instanceof RubberDuckyPetHat) {
             RubberDuckyPetHat.applyEffect(this, entity);
         }
-        return result;
+    }
+
+    public boolean damageEntity(Entity target, float amount) {
+        return target.hurt(this.damageSources().mobAttack(this), amount);
     }
 
     public boolean shouldntFollowParent() {
@@ -983,5 +989,26 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         if (equippedItem instanceof PetCosmetic cosmeticItem) {
             cosmeticItem.performRangedAttack(equippedStack, this, target, distanceFactor);
         }
+    }
+
+    @Override
+    public AgeableMob getBreedOffspring(@NotNull ServerLevel level, @NotNull AgeableMob partner) {
+        PracticalPet baby = (PracticalPet) this.getType().create(level);
+
+        if (baby != null) {
+            if (this.isTame()) {
+                baby.setOwnerUUID(this.getOwnerUUID());
+                baby.setTame(true);
+            }
+
+            if (partner.getClass() == this.getClass() && partner instanceof PracticalPet pet) {
+                if (this.random.nextBoolean())
+                    baby.setVariant(this.getVariant());
+                else
+                    baby.setVariant(pet.getVariant());
+            }
+        }
+
+        return baby;
     }
 }

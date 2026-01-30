@@ -118,4 +118,8 @@ public class PPItems {
             "pigeon_spawn_egg",
             () -> new ForgeSpawnEggItem(PPEntities.PIGEON, 0x303437, 0xC5D7E4, new Item.Properties())
     );
+    public static final RegistryObject<ForgeSpawnEggItem> STICK_BUG_SPAWN_EGG = register(
+            "stick_bug_spawn_egg",
+            () -> new ForgeSpawnEggItem(PPEntities.STICK_BUG, 0xBF9E67, 0x159F02, new Item.Properties())
+    );
 }

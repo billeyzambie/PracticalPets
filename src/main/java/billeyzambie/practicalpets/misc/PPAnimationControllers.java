@@ -1,11 +1,13 @@
 package billeyzambie.practicalpets.misc;
 
 import billeyzambie.animationcontrollers.*;
+import billeyzambie.practicalpets.entity.DancingEntity;
 import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.entity.dinosaur.AbstractDuck;
 import billeyzambie.practicalpets.entity.dinosaur.BananaDuck;
 import billeyzambie.practicalpets.entity.otherpet.Rat;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
 
 import java.util.List;
@@ -47,6 +49,15 @@ public class PPAnimationControllers {
             )
             .build();
 
+    public static final AnimationController SIMPLE_DANCE = BinaryAnimationControllerBuilder.start("simple_dance")
+            .otherStateAnimations(new KeyframeAnimationReference("dance"))
+            .blendTime(0.2f)
+            .transitionPredicate(
+                    (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                            -> entity instanceof DancingEntity dancing && dancing.isDancing()
+            )
+            .build();
+
     public static final AnimationController SIMPLE_ATTACK = new AnimationController("simple_attack", List.of(
             new AnimationController.State(
                     Animatable.NO_ANIMATIONS,
@@ -69,12 +80,21 @@ public class PPAnimationControllers {
             )
     ));
 
-    public static final AnimationController BANANA_DUCK_FLAP_AND_IF_ANGRY = BinaryAnimationControllerBuilder.start("simple_flap")
+    public static final AnimationController BANANA_DUCK_FLAP_AND_IF_ANGRY = BinaryAnimationControllerBuilder.start("banana_duck_flap_and_if_not_angry")
             .otherStateAnimations(new OtherAnimationReference("flap"))
             .blendTime(0.1f)
             .transitionPredicate(
                     (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
                             -> entity instanceof BananaDuck bananaDuck && (bananaDuck.duckIsFlapping() || bananaDuck.hasTarget())
+            )
+            .build();
+
+    public static final AnimationController ON_GROUND_AND_NOT_ANGRY = BinaryAnimationControllerBuilder.start("on_ground_and_not_angry")
+            .otherStateAnimations(new KeyframeAnimationReference("on_ground"))
+            .blendTime(0.2f)
+            .transitionPredicate(
+                    (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                            -> entity instanceof PracticalPet pet && pet.onGround() && !pet.hasTarget()
             )
             .build();
 

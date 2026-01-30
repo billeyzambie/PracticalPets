@@ -199,27 +199,6 @@ public class Duck extends AbstractDuck {
     }
 
     @Override
-    public AgeableMob getBreedOffspring(@NotNull ServerLevel level, @NotNull AgeableMob partner) {
-        Duck baby = PPEntities.DUCK.get().create(level);
-
-        if (baby != null) {
-            if (this.isTame()) {
-                baby.setOwnerUUID(this.getOwnerUUID());
-                baby.setTame(true);
-            }
-
-            if (partner instanceof Duck duckPartner) {
-                if (this.random.nextBoolean())
-                    baby.setVariant(this.getVariant());
-                else
-                    baby.setVariant(duckPartner.getVariant());
-            }
-        }
-
-        return baby;
-    }
-
-    @Override
     protected void registerGoals() {
         super.registerGoals();
         this.getNavigation().setCanFloat(true);
@@ -301,9 +280,11 @@ public class Duck extends AbstractDuck {
 
     private void tickBiteFloor() {
         boolean navigationIsDone = this.getNavigation().isDone();
+        float randomFloat = this.getRandom().nextFloat();
+        randomFloat *= randomFloat;
         if (
                 navigationIsDone && !this.navigationWasDone
-                        && this.getRandom().nextFloat() * (10 - (this.petLevel() - 1) * 2f / 9) < 1
+                        && randomFloat * (10 - 2f * (this.petLevel() - 1) / 9f) < 1
         ) {
 
             BlockState blockState = this.level().getBlockState(this.blockPosition());
@@ -493,5 +474,16 @@ public class Duck extends AbstractDuck {
         if (this.isInWater()) {
             this.setOrderedToSit(false);
         }
+    }
+
+
+    @Override
+    protected boolean isFlapping() {
+        return this.flyDist > this.nextFlap;
+    }
+
+    @Override
+    protected void onFlap() {
+        this.nextFlap = this.flyDist + this.flapSpeed / 2.0F;
     }
 }

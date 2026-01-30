@@ -64,7 +64,7 @@ public class RubberDuckyPetHat extends Item implements AttachablePetCosmetic, Dy
             if (wearer.isAlive() && target.isAlive()) {
                 Vec3 direction2 = target.position().subtract(wearer.position()).normalize().scale(0.2);
                 target.push(direction2.x, 0.1, direction2.z);
-                target.hurt(wearer.damageSources().mobAttack(wearer), 3);
+                wearer.damageEntity(target, 3);
             }
         }, 10);
 
