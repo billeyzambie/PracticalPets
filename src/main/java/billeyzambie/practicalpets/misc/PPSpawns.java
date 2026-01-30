@@ -40,6 +40,10 @@ public class PPSpawns {
                     PPEntities.PIGEON.get(),
                     10, 4, 8
             ));
+            builder.getMobSpawnSettings().getSpawner(MobCategory.CREATURE).add(new MobSpawnSettings.SpawnerData(
+                    PPEntities.STICK_BUG.get(),
+                    10, 4, 8
+            ));
         }
 
     }
@@ -52,6 +56,13 @@ public class PPSpawns {
                 || biome.is(BiomeTags.IS_FOREST)
                 || biome.is(Tags.Biomes.IS_LUSH)
                 || biome.is(Tags.Biomes.IS_WET)
+        ) && !biome.is(Tags.Biomes.IS_HOT)
+                && !biome.is(Tags.Biomes.IS_COLD);
+    }
+
+    private static boolean isStickBugBiome(Holder<Biome> biome) {
+        return (biome.is(BiomeTags.IS_JUNGLE)
+                || biome.is(BiomeTags.IS_FOREST)
         ) && !biome.is(Tags.Biomes.IS_HOT)
                 && !biome.is(Tags.Biomes.IS_COLD);
     }
@@ -85,6 +96,14 @@ public class PPSpawns {
 
         event.register(
                 PPEntities.PIGEON.get(),
+                SpawnPlacements.Type.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING,
+                Animal::checkAnimalSpawnRules,
+                SpawnPlacementRegisterEvent.Operation.REPLACE
+        );
+
+        event.register(
+                PPEntities.STICK_BUG.get(),
                 SpawnPlacements.Type.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING,
                 Animal::checkAnimalSpawnRules,

@@ -34,7 +34,7 @@ public class PigeonGetDroppedItemGoal extends Goal {
         if (targetItemEntity != null) {
             this.pigeon.getNavigation().moveTo(targetItemEntity, this.speedModifier);
 
-            if (this.pigeon.distanceToSqr(targetItemEntity) < 1) {
+            if (this.pigeon.distanceToSqr(targetItemEntity) < 3) {
                 this.pigeon.setItemSlot(EquipmentSlot.MAINHAND, targetItemEntity.getItem());
                 targetItemEntity.discard();
             }

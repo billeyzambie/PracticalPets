@@ -188,8 +188,7 @@ public class StickBugModel extends PracticalPetModel<StickBug> {
         float partialTick = ageInTicks % 1f;
 
         PPAnimationControllers.ON_GROUND_AND_NOT_ANGRY.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
-        PPAnimationControllers.SIMPLE_SIT.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
-        PPAnimationControllers.SIMPLE_DANCE.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
+        PPAnimationControllers.SIT_OR_DANCE.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
 
         float f = Mth.lerp(partialTick, entity.oFlap, entity.flap);
         float f1 = Mth.lerp(partialTick, entity.oFlapSpeed, entity.flapSpeed);

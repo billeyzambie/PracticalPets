@@ -258,6 +258,45 @@ public class PPAnimationControllers {
             )
     ));
 
+    public static final AnimationController SIT_OR_DANCE = new AnimationController("sit_or_dance", List.of(
+            new AnimationController.State(
+                    Animatable.NO_ANIMATIONS,
+                    List.of(
+                            AnimationController.TransitionPredicate.NEVER,
+                            (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                                    -> entity instanceof DancingEntity dancingEntity && dancingEntity.isDancing(),
+                            (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                                    -> entity instanceof TamableAnimal tamableAnimal && tamableAnimal.isInSittingPose()
+                    ),
+                    0.1f
+            ),
+            new AnimationController.State(
+                    List.of(new KeyframeAnimationReference(
+                            "dance"
+                    )),
+                    List.of(
+                            (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                                    -> entity instanceof DancingEntity dancingEntity && !dancingEntity.isDancing(),
+                            AnimationController.TransitionPredicate.NEVER,
+                            AnimationController.TransitionPredicate.NEVER
+                    ),
+                    0.2f
+            ),
+            new AnimationController.State(
+                    List.of(new KeyframeAnimationReference(
+                            "sit"
+                    )),
+                    List.of(
+                            (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                                    -> entity instanceof TamableAnimal tamableAnimal && !tamableAnimal.isInSittingPose(),
+                            (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                                    -> entity instanceof DancingEntity dancingEntity && dancingEntity.isDancing(),
+                            AnimationController.TransitionPredicate.NEVER
+                    ),
+                    0.1f
+            )
+    ));
+
     public static final BlendValueController ON_GROUND_BLEND = new BlendValueController("on_ground", 0.2f, (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
             -> entity.onGround()
     );

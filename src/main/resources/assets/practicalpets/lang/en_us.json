@@ -50,7 +50,8 @@
   "ui.practicalpets.pigeon_send.need_levels": "You must have at least 1 level to send the pigeon.",
   "ui.practicalpets.pigeon_send.no_targets": "There are no players to send the pigeon to. Players must be in the same dimension and more than 32 blocks away.",
   "ui.practicalpets.pigeon_send.target_left": "Oops, looks like %s left!",
-  "ui.practicalpets.pigeon_send.target_success": "You have received some items from %s's %s!",
   "ui.practicalpets.pigeon_send.sender_success": "Successfully sent %s to %s!",
-  "death.attack.practicalpets.stick_bugged": "%s got stick bugged"
+  "ui.practicalpets.pigeon_send.target_success": "You have received some items from %s's %s!",
+  "death.attack.practicalpets.stick_bugged": "%s got stick bugged",
+  "death.attack.practicalpets.stick_bugged.player": "%s got stick bugged by %s"
 }

@@ -44,7 +44,7 @@ public class FollowOwnerWanderableGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if (!this.pet.shouldFollowOwner())
+        if (!this.pet.shouldFollowOwner() || this.pet.getTarget() != null)
             return false;
         return this.vanillaFollowOwnerCanUse();
     }

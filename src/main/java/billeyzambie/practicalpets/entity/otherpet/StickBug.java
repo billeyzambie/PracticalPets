@@ -4,8 +4,11 @@ import billeyzambie.practicalpets.entity.DancingEntity;
 import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.misc.PPDamageTypes;
 import billeyzambie.practicalpets.misc.PPTags;
-import billeyzambie.practicalpets.util.PPUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -16,7 +19,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
@@ -106,6 +108,11 @@ public class StickBug extends PracticalPet implements DancingEntity {
     }
 
     @Override
+    protected double createMeleeAttackSpeedMultiplier() {
+        return 2;
+    }
+
+    @Override
     public boolean isTameItem(ItemStack itemStack) {
         return itemStack.is(Tags.Items.CROPS)
                 || itemStack.is(Tags.Items.SEEDS)
@@ -144,7 +151,11 @@ public class StickBug extends PracticalPet implements DancingEntity {
 
     @Override
     public boolean damageEntity(Entity target, float amount) {
-        return target.hurt(PPDamageTypes.stickBuggedDamage((ServerLevel) this.level()), amount);
+        return target.hurt(PPDamageTypes.stickBuggedDamage(
+                (ServerLevel) this.level(),
+                this.getOwner(),
+                this.getPosition(0)
+        ), amount);
     }
 
     @Override
@@ -159,7 +170,7 @@ public class StickBug extends PracticalPet implements DancingEntity {
     }
 
     @Override
-    public void setRecordPlayingNearby(BlockPos p_29395_, boolean p_29396_) {
+    public void setRecordPlayingNearby(@NotNull BlockPos p_29395_, boolean p_29396_) {
         this.jukebox = p_29395_;
         this.dancingToJukebox = p_29396_;
     }
@@ -187,7 +198,7 @@ public class StickBug extends PracticalPet implements DancingEntity {
     }
 
     public boolean shouldFlap() {
-        return !this.onGround()|| this.hasTarget();
+        return !this.onGround() || this.hasTarget();
     }
 
     @Override
@@ -200,9 +211,13 @@ public class StickBug extends PracticalPet implements DancingEntity {
         this.nextFlap = this.flyDist + this.flapSpeed / 2.0F;
     }
 
-    private boolean isRandomDancing() {
-        //TODO: implement stick bug random dancing
-        return false;
+    @Override
+    public void setTarget(@Nullable LivingEntity target) {
+        super.setTarget(target);
+        if (target == null) {
+            this.angryTime = 0;
+            this.setIsAngryInvisible(false);
+        }
     }
 
     @Override
@@ -210,6 +225,84 @@ public class StickBug extends PracticalPet implements DancingEntity {
         return this.isDancingToJukebox() || this.isRandomDancing();
     }
 
+    //the time it's been angry, this increases with time
+    private int angryTime = 0;
+    //the time left for the random dance, this decreases with time
+    private int randomDanceTime = 0;
+
+    private static final EntityDataAccessor<Boolean> ANGRY_INVISIBLE = SynchedEntityData.defineId(StickBug.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> RANDOM_DANCING = SynchedEntityData.defineId(StickBug.class, EntityDataSerializers.BOOLEAN);
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(ANGRY_INVISIBLE, false);
+        this.entityData.define(RANDOM_DANCING, false);
+    }
+
+    public void setIsRandomDancing(boolean value) {
+        this.entityData.set(RANDOM_DANCING, value);
+    }
+
+    public boolean isRandomDancing() {
+        return this.entityData.get(RANDOM_DANCING);
+    }
+
+    public void setIsAngryInvisible(boolean value) {
+        this.entityData.set(ANGRY_INVISIBLE, value);
+    }
+
+    public boolean isAngryInvisible() {
+        return this.entityData.get(ANGRY_INVISIBLE);
+    }
+
+    @Override
+    public boolean isInvisible() {
+        return this.isAngryInvisible() && this.isAlive() || super.isInvisible();
+    }
+
+    @Override
+    public void readAdditionalSaveData(@NotNull CompoundTag compoundTag) {
+        super.readAdditionalSaveData(compoundTag);
+        this.angryTime = compoundTag.getInt("StickBugAngryTime");
+        this.randomDanceTime = compoundTag.getInt("RandomDanceTime");
+        this.setIsRandomDancing(compoundTag.getBoolean("IsRandomDancing"));
+        this.setIsAngryInvisible(compoundTag.getBoolean("IsAngryInvisible"));
+    }
+
+    @Override
+    public void addAdditionalSaveData(@NotNull CompoundTag compoundTag) {
+        super.addAdditionalSaveData(compoundTag);
+        compoundTag.putInt("StickBugAngryTime", this.angryTime);
+        compoundTag.putInt("RandomDanceTime", this.randomDanceTime);
+        compoundTag.putBoolean("IsRandomDancing", this.isRandomDancing());
+        compoundTag.putBoolean("IsAngryInvisible", this.isAngryInvisible());
+    }
+
+    boolean navigationWasDone = true;
+
+    @Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+        if (this.getTarget() != null && ++this.angryTime >= 10) {
+            this.setIsAngryInvisible(true);
+        }
+        if (this.randomDanceTime > 0 && --this.randomDanceTime == 0) {
+            this.setIsRandomDancing(false);
+        }
+
+        boolean navigationDone = this.getNavigation().isDone();
+
+        if (!navigationDone) {
+            this.setIsRandomDancing(false);
+        }
+        else if (!navigationWasDone && this.random.nextInt(10) == 0) {
+            this.randomDanceTime = this.random.nextInt(200, 400);
+            this.setIsRandomDancing(true);
+        }
+
+        this.navigationWasDone = navigationDone;
+    }
 
     @Override
     protected @Nullable SoundEvent getAmbientSound() {
