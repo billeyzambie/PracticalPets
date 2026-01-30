@@ -13,6 +13,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -119,6 +120,7 @@ public class StickBug extends PracticalPet implements DancingEntity {
     public boolean isTameItem(ItemStack itemStack) {
         return itemStack.is(Tags.Items.CROPS)
                 || itemStack.is(Tags.Items.SEEDS)
+                || itemStack.is(ItemTags.LEAVES)
                 || itemStack.is(PPTags.Items.FRUITS)
                 || super.isTameItem(itemStack);
     }
