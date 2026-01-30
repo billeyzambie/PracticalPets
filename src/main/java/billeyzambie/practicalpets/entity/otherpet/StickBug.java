@@ -2,6 +2,7 @@ package billeyzambie.practicalpets.entity.otherpet;
 
 import billeyzambie.practicalpets.entity.DancingEntity;
 import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.misc.PPBlocks;
 import billeyzambie.practicalpets.misc.PPDamageTypes;
 import billeyzambie.practicalpets.misc.PPTags;
 import net.minecraft.core.BlockPos;
@@ -23,6 +24,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.PotatoBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
@@ -284,7 +287,7 @@ public class StickBug extends PracticalPet implements DancingEntity {
     @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
-        if (this.getTarget() != null && ++this.angryTime >= 10) {
+        if (this.getTarget() != null && ++this.angryTime >= 15) {
             this.setIsAngryInvisible(true);
         }
         if (this.randomDanceTime > 0 && --this.randomDanceTime == 0) {
@@ -296,9 +299,17 @@ public class StickBug extends PracticalPet implements DancingEntity {
         if (!navigationDone) {
             this.setIsRandomDancing(false);
         }
-        else if (!navigationWasDone && this.random.nextInt(10) == 0) {
+        else if (!navigationWasDone && this.random.nextInt(10) <= this.petLevel() / 2) {
             this.randomDanceTime = this.random.nextInt(200, 400);
             this.setIsRandomDancing(true);
+            BlockPos inBlockPos = this.getOnPos().above();
+            BlockState blockState = this.level().getBlockState(inBlockPos);
+            if (blockState.getBlock() instanceof PotatoBlock potatoBlock && potatoBlock.getAge(blockState) == potatoBlock.getMaxAge()) {
+                this.level().setBlock(inBlockPos, PPBlocks.POTATO_STICKS.get().defaultBlockState(), PotatoBlock.UPDATE_CLIENTS);
+                if (this.level() instanceof ServerLevel serverLevel) {
+                    serverLevel.levelEvent(2005, inBlockPos, 0);
+                }
+            }
         }
 
         this.navigationWasDone = navigationDone;

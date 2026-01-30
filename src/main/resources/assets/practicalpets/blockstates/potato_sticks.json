@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "practicalpets:block/potato_sticks"
+    },
+    "age=1": {
+      "model": "practicalpets:block/potato_sticks"
+    },
+    "age=2": {
+      "model": "practicalpets:block/potato_sticks"
+    },
+    "age=3": {
+      "model": "practicalpets:block/potato_sticks"
+    },
+    "age=4": {
+      "model": "practicalpets:block/potato_sticks"
+    },
+    "age=5": {
+      "model": "practicalpets:block/potato_sticks"
+    },
+    "age=6": {
+      "model": "practicalpets:block/potato_sticks"
+    },
+    "age=7": {
+      "model": "practicalpets:block/potato_sticks"
+    }
+  }
+}

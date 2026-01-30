@@ -2,11 +2,8 @@ package billeyzambie.practicalpets.misc;
 
 import billeyzambie.practicalpets.items.*;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.BowlFoodItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraftforge.common.ForgeSpawnEggItem;
@@ -78,7 +75,17 @@ public class PPItems {
     );
     public static final RegistryObject<Item> CHICKEN_NUGGET = register(
             "chicken_nugget",
-            () -> new Item(new Item.Properties().food(new FoodProperties.Builder().meat().nutrition(1).fast().saturationMod(0.6f).build()))
+            () -> new CustomUseDurationItem(
+                    new Item.Properties().food(new FoodProperties.Builder().meat().nutrition(1).fast().saturationMod(0.6f).build()),
+                    4
+            )
+    );
+    public static final RegistryObject<Item> POTATO_STICK = register(
+            "potato_stick",
+            () -> new CustomUseDurationItem(
+                    new Item.Properties().food(new FoodProperties.Builder().nutrition(2).fast().saturationMod(0.6f).build()),
+                    2
+            )
     );
 
     public static final RegistryObject<Item> ANNIVERSARY_PET_HAT_0 = register(
