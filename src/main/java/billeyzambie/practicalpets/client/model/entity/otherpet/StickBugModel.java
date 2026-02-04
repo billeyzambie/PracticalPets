@@ -214,7 +214,7 @@ public class StickBugModel extends PracticalPetModel<StickBug> {
 
         body.yRot += -sin;
         body.zRot += sin * 3;
-        body.y += Mth.abs(cos * 0.5f);
+        body.y += Mth.abs(cos * 0.5f * Mth.RAD_TO_DEG);
 
         left_leg.yRot += -sin * 20;
         left_leg.zRot += -cos * 10;

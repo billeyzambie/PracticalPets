@@ -83,7 +83,7 @@ public class StickBug extends PracticalPet implements DancingEntity {
 
     @Override
     public float headSizeX() {
-        return 3;
+        return 2;
     }
 
     @Override

@@ -841,36 +841,41 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     public static final String FOUNDERS_HATS_CLAIMED_TAG_ID = PracticalPets.MODID + ":founders_hats_claimed";
     @Override
     public void tame(@NotNull Player player) {
-        // Only run if this is the first time it's tamed, since I plan to add owner switching later.
-        // And also only if it doesn't have a bowtie already,
-        // in case I make some pets rarely spawn with a special kind of bowtie or something
-        if (!this.isTame() && this.getNeckItem().isEmpty()) {
-            ItemStack bowtie = new ItemStack(PPItems.PET_BOWTIE.get());
+        if (!this.level().isClientSide()) {
+            // Only run if this is the first time it's tamed, since I plan to add owner switching later.
+            // And also only if it doesn't have a bowtie already,
+            // in case I make some pets rarely spawn with a special kind of bowtie or something
+            if (!this.isTame() && this.getNeckItem().isEmpty()) {
+                ItemStack bowtie = new ItemStack(PPItems.PET_BOWTIE.get());
 
-            float hue = this.getRandom().nextFloat();
-            int rgb = Color.HSBtoRGB(hue, 1, 1);
+                float hue = this.getRandom().nextFloat();
+                int rgb = Color.HSBtoRGB(hue, 1, 1);
 
-            CompoundTag tag = new CompoundTag();
-            CompoundTag display = new CompoundTag();
-            display.putInt("color", rgb);
-            tag.put("display", display);
-            bowtie.setTag(tag);
+                CompoundTag tag = new CompoundTag();
+                CompoundTag display = new CompoundTag();
+                display.putInt("color", rgb);
+                tag.put("display", display);
+                bowtie.setTag(tag);
 
-            this.setNeckItem(bowtie);
-        }
+                this.setNeckItem(bowtie);
+            }
 
-        int foundersHatsClaimed = player.getPersistentData().getInt(FOUNDERS_HATS_CLAIMED_TAG_ID);
-        if (
-                this.getHeadItem().isEmpty()
-                        //&& LocalDate.now().isBefore(FOUNDERS_HAT_END_DATE)
-                        && foundersHatsClaimed < 5
-        ) {
-            ItemStack foundersHat = new ItemStack(PPItems.ANNIVERSARY_PET_HAT_0.get());
-            this.setHeadItem(foundersHat);
-            player.getPersistentData().putInt(FOUNDERS_HATS_CLAIMED_TAG_ID, foundersHatsClaimed + 1);
-            player.sendSystemMessage(Component.translatable("ui.practicalpets.chat.got_founders_hat", foundersHat.getDisplayName(), foundersHatsClaimed + 1));
-            player.sendSystemMessage(Component.translatable("ui.practicalpets.info.item.anniversary_pet_hat_0", foundersHat.getDisplayName()));
-            player.playSound(PPSounds.PET_LEVEL_UP.get());
+            CompoundTag persistentData = player.getPersistentData();
+            CompoundTag persistedData = persistentData.getCompound(Player.PERSISTED_NBT_TAG);
+            int foundersHatsClaimed = persistedData.getInt(FOUNDERS_HATS_CLAIMED_TAG_ID);
+            if (
+                    this.getHeadItem().isEmpty()
+                            //&& LocalDate.now().isBefore(FOUNDERS_HAT_END_DATE)
+                            && foundersHatsClaimed < 5
+            ) {
+                ItemStack foundersHat = new ItemStack(PPItems.ANNIVERSARY_PET_HAT_0.get());
+                this.setHeadItem(foundersHat);
+                persistedData.putInt(FOUNDERS_HATS_CLAIMED_TAG_ID, foundersHatsClaimed + 1);
+                persistentData.put(Player.PERSISTED_NBT_TAG, persistedData);
+                player.sendSystemMessage(Component.translatable("ui.practicalpets.chat.got_founders_hat", foundersHat.getDisplayName(), foundersHatsClaimed + 1));
+                player.sendSystemMessage(Component.translatable("ui.practicalpets.info.item.anniversary_pet_hat_0", foundersHat.getDisplayName()));
+                player.playSound(PPSounds.PET_LEVEL_UP.get());
+            }
         }
         super.tame(player);
     }
