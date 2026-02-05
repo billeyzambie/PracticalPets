@@ -87,14 +87,22 @@ public class PPUtil {
     /** Computes sine in degrees and then multiplies the result by Mth.DEG_TO_RAD.
      * Used to port math animations from bedrock without constantly having to write * Mth.DEG_TO_RAD.
      * Also converts the time from ticks to seconds, with the / 20f. */
-    public static float bedrockSin(float value) {
+    public static float bedrockSinAngle(float value) {
         return Mth.sin(value / 20f * Mth.DEG_TO_RAD) * Mth.DEG_TO_RAD;
     }
 
     /** Computes cosine in degrees and then multiplies the result by Mth.DEG_TO_RAD.
      * Used to port math animations from bedrock without constantly having to write * Mth.DEG_TO_RAD.
      * Also converts the time from ticks to seconds, with the / 20f. */
-    public static float bedrockCos(float value) {
+    public static float bedrockCosAngle(float value) {
         return Mth.cos(value / 20f * Mth.DEG_TO_RAD) * Mth.DEG_TO_RAD;
+    }
+
+    public static float bedrockSin(float value) {
+        return Mth.sin(value / 20f * Mth.DEG_TO_RAD);
+    }
+
+    public static float bedrockCos(float value) {
+        return Mth.cos(value / 20f * Mth.DEG_TO_RAD);
     }
 }

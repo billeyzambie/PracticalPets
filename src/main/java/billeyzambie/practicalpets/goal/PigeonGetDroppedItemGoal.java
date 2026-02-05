@@ -5,6 +5,8 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.item.ItemEntity;
 
+import java.util.EnumSet;
+
 public class PigeonGetDroppedItemGoal extends Goal {
     private final Pigeon pigeon;
     private final double speedModifier;
@@ -13,6 +15,7 @@ public class PigeonGetDroppedItemGoal extends Goal {
     public PigeonGetDroppedItemGoal(Pigeon pigeon, double speedModifier) {
         this.pigeon = pigeon;
         this.speedModifier = speedModifier;
+        this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
     }
 
     @Override

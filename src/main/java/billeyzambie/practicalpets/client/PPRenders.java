@@ -1,6 +1,7 @@
 package billeyzambie.practicalpets.client;
 
 import billeyzambie.practicalpets.client.model.entity.dinosaur.*;
+import billeyzambie.practicalpets.client.model.entity.otherpet.GiraffeCatModel;
 import billeyzambie.practicalpets.client.model.entity.otherpet.RatModel;
 import billeyzambie.practicalpets.client.model.entity.otherpet.StickBugModel;
 import billeyzambie.practicalpets.client.model.entity.pet_equipment.*;
@@ -8,6 +9,7 @@ import billeyzambie.practicalpets.client.renderer.dinosaur.BananaDuckRenderer;
 import billeyzambie.practicalpets.client.renderer.dinosaur.DuckRenderer;
 import billeyzambie.practicalpets.client.renderer.dinosaur.PigeonRenderer;
 import billeyzambie.practicalpets.client.renderer.other.PetEndRodProjectileRenderer;
+import billeyzambie.practicalpets.client.renderer.otherpet.GiraffeCatRenderer;
 import billeyzambie.practicalpets.client.renderer.otherpet.RatRenderer;
 import billeyzambie.practicalpets.client.renderer.otherpet.StickBugRenderer;
 import billeyzambie.practicalpets.entity.other.PetEndRodProjectile;
@@ -40,6 +42,9 @@ public class PPRenders {
     );
     public static final ModelLayerLocation STICK_BUG = new ModelLayerLocation(
             new ResourceLocation(PracticalPets.MODID, "stick_bug_layer"), "main"
+    );
+    public static final ModelLayerLocation GIRAFFE_CAT = new ModelLayerLocation(
+            new ResourceLocation(PracticalPets.MODID, "giraffe_cat_layer"), "main"
     );
 
     public static final ModelLayerLocation BANANA_DUCK_ARMOR = new ModelLayerLocation(
@@ -78,6 +83,7 @@ public class PPRenders {
         event.registerEntityRenderer(PPEntities.RAT.get(), RatRenderer::new);
         event.registerEntityRenderer(PPEntities.PIGEON.get(), PigeonRenderer::new);
         event.registerEntityRenderer(PPEntities.STICK_BUG.get(), StickBugRenderer::new);
+        event.registerEntityRenderer(PPEntities.GIRAFFE_CAT.get(), GiraffeCatRenderer::new);
     }
     @SubscribeEvent
     public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
@@ -88,6 +94,7 @@ public class PPRenders {
         event.registerLayerDefinition(PPRenders.RAT, RatModel::createBodyLayer);
         event.registerLayerDefinition(PPRenders.PIGEON, PigeonModel::createBodyLayer);
         event.registerLayerDefinition(PPRenders.STICK_BUG, StickBugModel::createBodyLayer);
+        event.registerLayerDefinition(PPRenders.GIRAFFE_CAT, GiraffeCatModel::createBodyLayer);
 
         event.registerLayerDefinition(PPRenders.BANANA_DUCK_ARMOR, BananaDuckArmorModel::createBodyLayer);
         event.registerLayerDefinition(PPRenders.DUCK_ARMOR, DuckArmorModel::createBodyLayer);

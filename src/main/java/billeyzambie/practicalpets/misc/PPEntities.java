@@ -3,6 +3,7 @@ package billeyzambie.practicalpets.misc;
 import billeyzambie.practicalpets.entity.dinosaur.BananaDuck;
 import billeyzambie.practicalpets.entity.dinosaur.Duck;
 import billeyzambie.practicalpets.entity.dinosaur.Pigeon;
+import billeyzambie.practicalpets.entity.otherpet.GiraffeCat;
 import billeyzambie.practicalpets.entity.otherpet.Rat;
 import billeyzambie.practicalpets.entity.other.PetEndRodProjectile;
 import billeyzambie.practicalpets.entity.otherpet.StickBug;
@@ -59,6 +60,12 @@ public class PPEntities {
                     .sized(0.6f, 0.4f)
                     .build("stick_bug")
     );
+    public static final RegistryObject<EntityType<GiraffeCat>> GIRAFFE_CAT = REGISTRY.register(
+            "giraffe_cat",
+            () -> EntityType.Builder.of(GiraffeCat::new, MobCategory.CREATURE)
+                    .sized(0.6f, 0.7f)
+                    .build("giraffe_cat")
+    );
 
     @SubscribeEvent
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
@@ -101,6 +108,14 @@ public class PPEntities {
                         .add(Attributes.MAX_HEALTH, 2)
                         .add(Attributes.MOVEMENT_SPEED, 0.2)
                         .add(Attributes.ATTACK_DAMAGE, 1)
+                        .build()
+        );
+        event.put(
+                GIRAFFE_CAT.get(),
+                GiraffeCat.createMobAttributes()
+                        .add(Attributes.MAX_HEALTH, 20)
+                        .add(Attributes.MOVEMENT_SPEED, 0.25)
+                        .add(Attributes.ATTACK_DAMAGE, 4)
                         .build()
         );
 

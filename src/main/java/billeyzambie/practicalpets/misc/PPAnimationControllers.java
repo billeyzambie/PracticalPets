@@ -5,9 +5,9 @@ import billeyzambie.practicalpets.entity.DancingEntity;
 import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.entity.dinosaur.AbstractDuck;
 import billeyzambie.practicalpets.entity.dinosaur.BananaDuck;
+import billeyzambie.practicalpets.entity.otherpet.GiraffeCat;
 import billeyzambie.practicalpets.entity.otherpet.Rat;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
 
 import java.util.List;
@@ -296,6 +296,127 @@ public class PPAnimationControllers {
                     0.1f
             )
     ));
+
+    public static final AnimationController GIRAFFE_CAT_SNEAK_OR_SIT = new AnimationController("giraffe_cat_sneak_or_sit", List.of(
+            new AnimationController.State(
+                    List.of(new KeyframeAnimationReference(
+                            "walk_pose"
+                    )),
+                    List.of(
+                            AnimationController.TransitionPredicate.NEVER,
+                            (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                                    -> entity instanceof TamableAnimal tamableAnimal
+                                    && tamableAnimal.isInSittingPose(),
+                            (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                                    -> entity.isCrouching()
+                    ),
+                    0.1f
+            ),
+            new AnimationController.State(
+                    List.of(new KeyframeAnimationReference(
+                            "sit"
+                    )),
+                    List.of(
+                            (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                                    -> entity instanceof TamableAnimal tamableAnimal
+                                    && !tamableAnimal.isInSittingPose() && !tamableAnimal.isCrouching(),
+                            AnimationController.TransitionPredicate.NEVER,
+                            (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                                    -> entity instanceof TamableAnimal tamableAnimal
+                                    && !tamableAnimal.isInSittingPose()
+                    ),
+                    0.1f
+            ),
+            new AnimationController.State(
+                    List.of(new KeyframeAnimationReference(
+                            "sneak_pose"
+                    )),
+                    List.of(
+                            (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                                    -> entity instanceof TamableAnimal tamableAnimal
+                                    && !tamableAnimal.isInSittingPose() && !tamableAnimal.isCrouching(),
+                            (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                                    -> !entity.isCrouching(),
+                            AnimationController.TransitionPredicate.NEVER
+                    ),
+                    0.1f
+            )
+    ));
+
+    public static final AnimationController GIRAFFE_CAT_BASE = new AnimationController("giraffe_cat_ability", List.of(
+            new AnimationController.State(
+                    List.of(
+                            new OtherAnimationReference("controller.giraffe_cat_sneak_or_sit"),
+                            new OtherAnimationReference("controller.giraffe_cat_bend_over")
+                    ),
+                    List.of(
+                            AnimationController.TransitionPredicate.NEVER,
+                            (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                                    -> entity instanceof GiraffeCat giraffeCat
+                                    && giraffeCat.isYeeting(),
+                            (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                                    -> entity instanceof GiraffeCat giraffeCat
+                                    && giraffeCat.isDigging(),
+                            (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                                    -> entity instanceof GiraffeCat giraffeCat
+                                    && giraffeCat.isLadder()
+                    ),
+                    0.1f
+            ),
+            new AnimationController.State(
+                    List.of(
+                            new OtherAnimationReference("controller.giraffe_cat_sneak_or_sit"),
+                            new KeyframeAnimationReference("yeet")
+                    ),
+                    List.of(
+                            (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                                    -> entity instanceof GiraffeCat giraffeCat
+                                    && !giraffeCat.isYeeting(),
+                            AnimationController.TransitionPredicate.NEVER,
+                            AnimationController.TransitionPredicate.NEVER,
+                            AnimationController.TransitionPredicate.NEVER
+                    ),
+                    0.1f
+            ),
+            new AnimationController.State(
+                    List.of(
+                            new KeyframeAnimationReference("dig")
+                    ),
+                    List.of(
+                            AnimationController.TransitionPredicate.NEVER,
+                            (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                                    -> entity instanceof GiraffeCat giraffeCat
+                                    && !giraffeCat.isDigging(),
+                            AnimationController.TransitionPredicate.NEVER,
+                            AnimationController.TransitionPredicate.NEVER
+                    ),
+                    0.1f
+            ),
+            new AnimationController.State(
+                    List.of(
+                            new KeyframeAnimationReference("ladder")
+                    ),
+                    List.of(
+                            AnimationController.TransitionPredicate.NEVER,
+                            AnimationController.TransitionPredicate.NEVER,
+                            (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                                    -> entity instanceof GiraffeCat giraffeCat
+                                    && !giraffeCat.isLadder(),
+                            AnimationController.TransitionPredicate.NEVER
+                    ),
+                    0.1f
+            )
+    ));
+
+    public static final AnimationController GIRAFFE_CAT_BEND_OVER = BinaryAnimationControllerBuilder
+            .start("giraffe_cat_bend_over")
+            .toOtherBlendTime(0.1f)
+            .toDefaultBlendTime(0.2f)
+            .transitionPredicate((model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                    -> entity instanceof GiraffeCat giraffeCat
+                    && giraffeCat.shouldBendOver()
+            ).otherStateAnimations(new KeyframeAnimationReference("bend_over"))
+            .build();
 
     public static final BlendValueController ON_GROUND_BLEND = new BlendValueController("on_ground", 0.2f, (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
             -> entity.onGround()

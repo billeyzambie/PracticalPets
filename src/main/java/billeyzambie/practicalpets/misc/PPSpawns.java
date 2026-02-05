@@ -40,8 +40,18 @@ public class PPSpawns {
                     PPEntities.PIGEON.get(),
                     10, 4, 8
             ));
+        }
+
+        if (isStickBugBiome(biome)) {
             builder.getMobSpawnSettings().getSpawner(MobCategory.CREATURE).add(new MobSpawnSettings.SpawnerData(
                     PPEntities.STICK_BUG.get(),
+                    10, 4, 8
+            ));
+        }
+
+        if (biome.is(BiomeTags.IS_SAVANNA)) {
+            builder.getMobSpawnSettings().getSpawner(MobCategory.CREATURE).add(new MobSpawnSettings.SpawnerData(
+                    PPEntities.GIRAFFE_CAT.get(),
                     10, 4, 8
             ));
         }
@@ -106,6 +116,14 @@ public class PPSpawns {
                 PPEntities.STICK_BUG.get(),
                 SpawnPlacements.Type.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING,
+                Animal::checkAnimalSpawnRules,
+                SpawnPlacementRegisterEvent.Operation.REPLACE
+        );
+
+        event.register(
+                PPEntities.GIRAFFE_CAT.get(),
+                SpawnPlacements.Type.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Animal::checkAnimalSpawnRules,
                 SpawnPlacementRegisterEvent.Operation.REPLACE
         );

@@ -12,7 +12,6 @@ import billeyzambie.practicalpets.util.PPUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.animation.AnimationDefinition;
-import net.minecraft.client.animation.KeyframeAnimations;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
@@ -206,11 +205,12 @@ public class StickBugModel extends PracticalPetModel<StickBug> {
     private static final float WALK_AMP_MULTI = 2;
 
     public void animateWalk(float limbSwing, float limbSwingAmount) {
+        //The animation looked backwards for some reason so I put the -
         float time = -limbSwing * WALK_FREQ_MULTI;
         float amp = limbSwingAmount * WALK_AMP_MULTI;
 
-        float sin = amp * PPUtil.bedrockSin(time * 720);
-        float cos = amp * PPUtil.bedrockCos(time * 720);
+        float sin = amp * PPUtil.bedrockSinAngle(time * 720);
+        float cos = amp * PPUtil.bedrockCosAngle(time * 720);
 
         body.yRot += -sin;
         body.zRot += sin * 3;

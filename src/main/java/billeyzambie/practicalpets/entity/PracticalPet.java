@@ -348,6 +348,10 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         return isTameItem(itemStack) || isFoodThatDoesntTame(itemStack);
     }
 
+    public boolean shouldTempt(@NotNull ItemStack itemStack) {
+        return isTame() ? isFood(itemStack) : isTameItem(itemStack);
+    }
+
     public boolean isTameItem(ItemStack itemStack) {
         return false;
     }
@@ -434,10 +438,10 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
             this.goalSelector.addGoal(10, panicGoal);
         this.goalSelector.addGoal(20, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(30, new RangedAttackIfShouldGoal(this, this.createMeleeAttackSpeedMultiplier(), 20, 40, 20f));
-        this.goalSelector.addGoal(50, new MeleeAttackIfShouldGoal(this, this.createMeleeAttackSpeedMultiplier(), false));
+        this.goalSelector.addGoal(50, this.createMeleeAttackGoal());
         this.goalSelector.addGoal(55, new PPBegGoal(this));
         this.goalSelector.addGoal(60, new FollowOwnerWanderableGoal(this, this.createFollowOwnerSpeed(), 7.0F, 5.0F, false));
-        this.goalSelector.addGoal(70, new PredicateTemptGoal(this, this.createFollowOwnerSpeed(), PracticalPet::isFood, false));
+        this.goalSelector.addGoal(70, new PredicateTemptGoal(this, this.createFollowOwnerSpeed(), PracticalPet::shouldTempt, false));
 
         Goal followParentGoal = createFollowParentGoal();
         if (followParentGoal != null)
@@ -459,6 +463,10 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         this.targetSelector.addGoal(30, new OwnerHurtTargetIfShouldGoal(this));
         if (this.shouldRegisterSpreadingAnger())
             this.targetSelector.addGoal(40, new ResetUniversalAngerTargetGoal<>(this, true));
+    }
+
+    protected @NotNull Goal createMeleeAttackGoal() {
+        return new MeleeAttackIfShouldGoal(this, this.createMeleeAttackSpeedMultiplier(), false);
     }
 
     protected @Nullable Goal createPanicGoal() {
