@@ -1,13 +1,18 @@
 package billeyzambie.practicalpets.entity.otherpet;
 
 import billeyzambie.practicalpets.entity.PracticalPet;
-import billeyzambie.practicalpets.goal.MeleeAttackIfShouldGoal;
 import billeyzambie.practicalpets.goal.OcelotAttackIfShouldGoal;
+import billeyzambie.practicalpets.misc.PPEntities;
 import billeyzambie.practicalpets.misc.PPSerializers;
+import billeyzambie.practicalpets.util.PPUtil;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
@@ -16,12 +21,16 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.ai.goal.OcelotAttackGoal;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.animal.CatVariant;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -64,12 +73,12 @@ public class GiraffeCat extends PracticalPet {
 
     @Override
     public int getLevel10MaxHealth() {
-        return 200;
+        return 120;
     }
 
     @Override
     public int getLevel10AttackDamage() {
-        return 25;
+        return 21;
     }
 
     @Override
@@ -105,7 +114,8 @@ public class GiraffeCat extends PracticalPet {
 
     @Override
     protected float getStandingEyeHeight(@NotNull Pose p_21131_, @NotNull EntityDimensions p_21132_) {
-        return 24.5f / 16 * this.getScale();
+        float eyeHeightInPixels = shouldBendOver() ? 24.5f : 14.5f;
+        return eyeHeightInPixels / 16f * this.getScale();
     }
 
     @Override
@@ -137,19 +147,19 @@ public class GiraffeCat extends PracticalPet {
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
-        compoundTag.putBoolean("IsCatHybrid", this.isCatHybrid());
-        compoundTag.putBoolean("IsSnoutless", this.isSnoutless());
-        compoundTag.putInt("CurrentAbility", this.getCurrentAbility().ordinal());
-        compoundTag.putInt("LadderHeight", this.getLadderHeight());
+        this.setCatHybrid(compoundTag.getBoolean("IsCatHybrid"));
+        this.setSnoutless(compoundTag.getBoolean("IsSnoutless"));
+        this.setCurrentAbility(CurrentAbility.values()[compoundTag.getInt("CurrentAbility")]);
+        this.setLadderHeight(compoundTag.getInt("LadderHeight"));
     }
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
-        this.setCatHybrid(compoundTag.getBoolean("IsCatHybrid"));
-        this.setSnoutless(compoundTag.getBoolean("IsSnoutless"));
-        this.setCurrentAbility(CurrentAbility.values()[compoundTag.getInt("CurrentAbility")]);
-        this.setLadderHeight(compoundTag.getInt("LadderHeight"));
+        compoundTag.putBoolean("IsCatHybrid", this.isCatHybrid());
+        compoundTag.putBoolean("IsSnoutless", this.isSnoutless());
+        compoundTag.putInt("CurrentAbility", this.getCurrentAbility().ordinal());
+        compoundTag.putInt("LadderHeight", this.getLadderHeight());
     }
 
     public boolean isCatHybrid() {
@@ -202,6 +212,12 @@ public class GiraffeCat extends PracticalPet {
         this.entityData.set(LADDER_HEIGHT, Mth.clamp(height, 2, 64));
     }
 
+    private static final Vec3 NECK_BOTTOM_RIGHT = new Vec3(2, 13, -6);
+    private static final Vec3 NECK_TOP_LEFT = new Vec3(-2, 26, -10);
+    private static final Vec3 SIT_NECK_OFFSET = new Vec3(0, -7, 0);
+
+    private static final boolean SPAWN_DEBUG_PARTICLES = false;
+
     @Override
     public void customServerAiStep() {
         super.customServerAiStep();
@@ -222,6 +238,45 @@ public class GiraffeCat extends PracticalPet {
             this.setSprinting(false);
         }
 
+        if (this.tickCount % 2 == 1) {
+            this.tickSolidBlockAbove();
+        }
+    }
+
+    private void tickSolidBlockAbove() {
+        Vec3 neckBottomRightInModel = NECK_BOTTOM_RIGHT;
+        Vec3 neckTopLeftInModel = NECK_TOP_LEFT;
+
+        if (this.isInSittingPose()) {
+            neckBottomRightInModel = neckBottomRightInModel.add(SIT_NECK_OFFSET);
+            neckTopLeftInModel = neckTopLeftInModel.add(SIT_NECK_OFFSET);
+        }
+
+        Vec3 neckBottomRight = PPUtil.modelToWorldPosition(this, neckBottomRightInModel);
+        Vec3 neckTopLeft = PPUtil.modelToWorldPosition(this, neckTopLeftInModel);
+        AABB neckBox = new AABB(neckBottomRight, neckTopLeft);
+
+        if (SPAWN_DEBUG_PARTICLES && this.level() instanceof ServerLevel serverLevel) {
+            serverLevel.sendParticles(
+                    ParticleTypes.FLAME,
+                    neckBottomRight.x, neckBottomRight.y, neckBottomRight.z,
+                    1,
+                    0, 0, 0,
+                    0
+            );
+            serverLevel.sendParticles(
+                    ParticleTypes.FLAME,
+                    neckTopLeft.x, neckTopLeft.y, neckTopLeft.z,
+                    1,
+                    0, 0, 0,
+                    0
+            );
+        }
+
+        BlockPos blockPosInFront = PPUtil.getBlockPosInFront(this);
+        boolean sturdyBlockFaceInFront = this.level().getBlockState(blockPosInFront)
+                .isFaceSturdy(this.level(), blockPosInFront, this.getDirection().getOpposite());
+        this.setSolidBlockAbove(!sturdyBlockFaceInFront && !this.level().noCollision(this, neckBox));
     }
 
     @Override
@@ -260,4 +315,65 @@ public class GiraffeCat extends PracticalPet {
     public float getVoicePitch() {
         return super.getVoicePitch() * 0.9f;
     }
+
+    @Override
+    public boolean canMate(@NotNull Animal animal) {
+        if (animal == this) {
+            return false;
+        } else if (!(animal instanceof GiraffeCat) && !(animal instanceof Cat)) {
+            return false;
+        } else {
+            return this.isInLove() && animal.isInLove();
+        }
+    }
+
+    @Override
+    public AgeableMob getBreedOffspring(@NotNull ServerLevel level, @NotNull AgeableMob partner) {
+        GiraffeCat baby = PPEntities.GIRAFFE_CAT.get().create(level);
+
+        if (baby != null) {
+            if (this.isTame()) {
+                baby.setOwnerUUID(this.getOwnerUUID());
+                baby.setTame(true);
+            }
+
+            if (partner instanceof GiraffeCat giraffeCat) {
+                if (this.random.nextBoolean()) {
+                    baby.setVariant(this.getVariant());
+                    baby.setCatHybrid(this.isCatHybrid());
+                } else {
+                    baby.setVariant(giraffeCat.getVariant());
+                    baby.setCatHybrid(giraffeCat.isCatHybrid());
+                }
+
+                if (this.random.nextBoolean()) {
+                    baby.setSnoutless(this.isSnoutless());
+                } else {
+                    baby.setSnoutless(giraffeCat.isSnoutless());
+                }
+            }
+
+            else if (partner instanceof Cat cat) {
+                baby.setCatHybrid(true);
+                baby.setVariant(CAT_VARIANT_TO_INT.getOrDefault(cat.getVariant(), 10));
+            }
+        }
+
+        return baby;
+    }
+
+    public static final HashMap<CatVariant, Integer> CAT_VARIANT_TO_INT = new HashMap<>() {{
+        int i = 0;
+        put(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.WHITE), i++);
+        put(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.BLACK), i++);
+        put(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.RED), i++);
+        put(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.SIAMESE), i++);
+        put(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.BRITISH_SHORTHAIR), i++);
+        put(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.CALICO), i++);
+        put(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.PERSIAN), i++);
+        put(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.RAGDOLL), i++);
+        put(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.TABBY), i++);
+        put(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.ALL_BLACK), i++);
+        put(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.JELLIE), i++);
+    }};
 }

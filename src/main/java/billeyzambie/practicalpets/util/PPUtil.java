@@ -1,5 +1,6 @@
 package billeyzambie.practicalpets.util;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
@@ -9,9 +10,11 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -104,5 +107,17 @@ public class PPUtil {
 
     public static float bedrockCos(float value) {
         return Mth.cos(value / 20f * Mth.DEG_TO_RAD);
+    }
+
+    public static Vec3 modelToWorldPosition(LivingEntity entity, Vec3 positionInModel) {
+        return positionInModel
+                .scale(1 / 16f)
+                .yRot(-entity.yBodyRot * Mth.DEG_TO_RAD + Mth.PI)
+                .scale(entity.getScale())
+                .add(entity.position());
+    }
+
+    public static BlockPos getBlockPosInFront(LivingEntity entity) {
+        return entity.blockPosition().relative(entity.getDirection());
     }
 }

@@ -447,7 +447,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         if (followParentGoal != null)
             this.goalSelector.addGoal(80, followParentGoal);
 
-        this.goalSelector.addGoal(90, new BreedGoal(this, 0.8D));
+        this.goalSelector.addGoal(90, new BreedGoal(this, 0.8D, TamableAnimal.class));
 
         this.refreshStrollGoal();
 

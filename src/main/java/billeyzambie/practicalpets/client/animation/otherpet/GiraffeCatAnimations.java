@@ -8,7 +8,7 @@ import net.minecraft.client.animation.KeyframeAnimations;
 /**
  * Made with Blockbench 5.0.7
  * Exported for Minecraft version 1.19 or later with Mojang mappings
- * @author Author
+ * @author billeyzambie
  */
 public class GiraffeCatAnimations {
 
@@ -213,7 +213,7 @@ public class GiraffeCatAnimations {
 			new Keyframe(0.0F, KeyframeAnimations.posVec(0.01F, 0.0F, 2.0F), AnimationChannel.Interpolations.LINEAR)
 		))
 		.addAnimation("neck2", new AnimationChannel(AnimationChannel.Targets.POSITION, 
-			new Keyframe(0.0F, KeyframeAnimations.posVec(0.0F, 0.5F, 0.25F), AnimationChannel.Interpolations.LINEAR)
+			new Keyframe(0.0F, KeyframeAnimations.posVec(0.0F, -0.5F, 0.25F), AnimationChannel.Interpolations.LINEAR)
 		))
 		.build();
 

@@ -10,6 +10,7 @@ import billeyzambie.practicalpets.entity.otherpet.GiraffeCat;
 import billeyzambie.practicalpets.misc.PracticalPets;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 public class GiraffeCatRenderer extends PracticalPetRenderer<GiraffeCat, GiraffeCatModel> {
     public GiraffeCatRenderer(EntityRendererProvider.Context context) {
@@ -25,11 +26,25 @@ public class GiraffeCatRenderer extends PracticalPetRenderer<GiraffeCat, Giraffe
             new ResourceLocation(PracticalPets.MODID, "textures/entity/giraffe_cat/giraffe4.png")
     };
 
+    private static final ResourceLocation[] CAT_TEXTURES = {
+            new ResourceLocation(PracticalPets.MODID, "textures/entity/giraffe_cat/white.png"),
+            new ResourceLocation(PracticalPets.MODID, "textures/entity/giraffe_cat/tuxedo.png"),
+            new ResourceLocation(PracticalPets.MODID, "textures/entity/giraffe_cat/redtabby.png"),
+            new ResourceLocation(PracticalPets.MODID, "textures/entity/giraffe_cat/siamesecat.png"),
+            new ResourceLocation(PracticalPets.MODID, "textures/entity/giraffe_cat/britishshorthair.png"),
+            new ResourceLocation(PracticalPets.MODID, "textures/entity/giraffe_cat/calico.png"),
+            new ResourceLocation(PracticalPets.MODID, "textures/entity/giraffe_cat/persian.png"),
+            new ResourceLocation(PracticalPets.MODID, "textures/entity/giraffe_cat/ragdoll.png"),
+            new ResourceLocation(PracticalPets.MODID, "textures/entity/giraffe_cat/tabby.png"),
+            new ResourceLocation(PracticalPets.MODID, "textures/entity/giraffe_cat/jellie.png"),
+            new ResourceLocation(PracticalPets.MODID, "textures/entity/giraffe_cat/allblackcat.png")
+    };
+
     private static final ResourceLocation BACK_STRAP_TEXTURE =
             new ResourceLocation(PracticalPets.MODID, "textures/entity/giraffe_cat/back_strap.png");
 
     @Override
-    public ResourceLocation getTextureLocation(GiraffeCat giraffecat) {
-        return GIRAFFE_TEXTURES[giraffecat.getVariant()];
+    public @NotNull ResourceLocation getTextureLocation(GiraffeCat giraffecat) {
+        return (giraffecat.isCatHybrid() ? CAT_TEXTURES : GIRAFFE_TEXTURES)[giraffecat.getVariant()];
     }
 }
