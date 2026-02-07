@@ -2,6 +2,7 @@ package billeyzambie.practicalpets.client;
 
 import billeyzambie.practicalpets.client.model.entity.dinosaur.*;
 import billeyzambie.practicalpets.client.model.entity.otherpet.GiraffeCatModel;
+import billeyzambie.practicalpets.client.model.entity.otherpet.GiraffeCatNeckPieceModel;
 import billeyzambie.practicalpets.client.model.entity.otherpet.RatModel;
 import billeyzambie.practicalpets.client.model.entity.otherpet.StickBugModel;
 import billeyzambie.practicalpets.client.model.entity.pet_equipment.*;
@@ -45,6 +46,10 @@ public class PPRenders {
     );
     public static final ModelLayerLocation GIRAFFE_CAT = new ModelLayerLocation(
             new ResourceLocation(PracticalPets.MODID, "giraffe_cat_layer"), "main"
+    );
+
+    public static final ModelLayerLocation GIRAFFE_CAT_NECK_PIECE = new ModelLayerLocation(
+            new ResourceLocation(PracticalPets.MODID, "giraffe_cat_neck_piece_layer"), "main"
     );
 
     public static final ModelLayerLocation BANANA_DUCK_ARMOR = new ModelLayerLocation(
@@ -95,6 +100,8 @@ public class PPRenders {
         event.registerLayerDefinition(PPRenders.PIGEON, PigeonModel::createBodyLayer);
         event.registerLayerDefinition(PPRenders.STICK_BUG, StickBugModel::createBodyLayer);
         event.registerLayerDefinition(PPRenders.GIRAFFE_CAT, GiraffeCatModel::createBodyLayer);
+
+        event.registerLayerDefinition(PPRenders.GIRAFFE_CAT_NECK_PIECE, GiraffeCatNeckPieceModel::createBodyLayer);
 
         event.registerLayerDefinition(PPRenders.BANANA_DUCK_ARMOR, BananaDuckArmorModel::createBodyLayer);
         event.registerLayerDefinition(PPRenders.DUCK_ARMOR, DuckArmorModel::createBodyLayer);

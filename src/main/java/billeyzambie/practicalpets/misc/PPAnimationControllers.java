@@ -341,7 +341,7 @@ public class PPAnimationControllers {
                     ),
                     0.1f
             )
-    ));
+    ), true);
 
     public static final AnimationController GIRAFFE_CAT_BASE = new AnimationController("giraffe_cat_ability", List.of(
             new AnimationController.State(
@@ -383,10 +383,10 @@ public class PPAnimationControllers {
                             new KeyframeAnimationReference("dig")
                     ),
                     List.of(
-                            AnimationController.TransitionPredicate.NEVER,
                             (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
                                     -> entity instanceof GiraffeCat giraffeCat
                                     && !giraffeCat.isDigging(),
+                            AnimationController.TransitionPredicate.NEVER,
                             AnimationController.TransitionPredicate.NEVER,
                             AnimationController.TransitionPredicate.NEVER
                     ),
@@ -397,11 +397,11 @@ public class PPAnimationControllers {
                             new KeyframeAnimationReference("ladder")
                     ),
                     List.of(
-                            AnimationController.TransitionPredicate.NEVER,
-                            AnimationController.TransitionPredicate.NEVER,
                             (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
                                     -> entity instanceof GiraffeCat giraffeCat
                                     && !giraffeCat.isLadder(),
+                            AnimationController.TransitionPredicate.NEVER,
+                            AnimationController.TransitionPredicate.NEVER,
                             AnimationController.TransitionPredicate.NEVER
                     ),
                     0.1f

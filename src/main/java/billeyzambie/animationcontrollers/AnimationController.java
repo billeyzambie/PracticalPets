@@ -70,10 +70,16 @@ public class AnimationController implements Animatable {
 
     List<State> states;
     String name;
+    private final boolean dontTransitionAt0animTime;
 
-    public AnimationController(String name, List<State> states) {
+    public AnimationController(String name, List<State> states, boolean dontTransitionAt0animTime) {
         this.name = name;
         this.states = states;
+        this.dontTransitionAt0animTime = dontTransitionAt0animTime;
+    }
+
+    public AnimationController(String name, List<State> states) {
+        this(name, states, false);
     }
 
     @Override
@@ -192,7 +198,14 @@ public class AnimationController implements Animatable {
                         );
                     }
 
-                    acData.setStateIndex(i, ageInTicks);
+
+                    acData.setStateIndex(
+                            i,
+                            ageInTicks,
+                            this.dontTransitionAt0animTime ? -nextState.blendOutTime : 0
+                    );
+
+
                     break;
                 }
             }

@@ -5,10 +5,12 @@ import billeyzambie.practicalpets.entity.StayStillGoalMob;
 import billeyzambie.practicalpets.goal.OcelotAttackIfShouldGoal;
 import billeyzambie.practicalpets.goal.StayStillGoal;
 import billeyzambie.practicalpets.misc.PPEntities;
+import billeyzambie.practicalpets.misc.PPEvents;
 import billeyzambie.practicalpets.misc.PPSerializers;
 import billeyzambie.practicalpets.misc.PPSounds;
 import billeyzambie.practicalpets.util.PPUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -25,8 +27,11 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.CatVariant;
@@ -36,13 +41,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.Set;
 
 public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
     public GiraffeCat(EntityType<? extends TamableAnimal> entityType, Level level) {
@@ -211,7 +217,7 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
     }
 
     public boolean shouldBendOver() {
-        return this.hasSolidBlockAbove() || this.isCrouching();
+        return this.noCurrentAbility() && (this.hasSolidBlockAbove() || this.isCrouching());
     }
 
     public CurrentAbility getCurrentAbility() {
@@ -320,10 +326,19 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
             );
         }
 
-        BlockPos blockPosInFront = PPUtil.getBlockPosInFront(this);
-        boolean sturdyBlockFaceInFront = this.level().getBlockState(blockPosInFront)
-                .isFaceSturdy(this.level(), blockPosInFront, this.getDirection().getOpposite());
-        this.setSolidBlockAbove(!sturdyBlockFaceInFront && !this.level().noCollision(this, neckBox));
+        boolean result = false;
+
+        for (VoxelShape voxelshape : this.level().getBlockCollisions(this, neckBox)) {
+            if (voxelshape.min(Direction.Axis.Y) <= neckBox.min(Direction.Axis.Y)) {
+                break;
+            }
+            if (!voxelshape.isEmpty()) {
+                result = true;
+                break;
+            }
+        }
+
+        this.setSolidBlockAbove(result);
     }
 
     @Override
@@ -439,17 +454,20 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
         this.setCurrentAbility(CurrentAbility.LADDER);
         this.setLadderHeight(2);
         this.playSound(PPSounds.GROW.get());
-        this.setFollowMode(FollowMode.SITTING);
+
+        this.setOrderedToSit(true);
 
         float roundedOwnerYRot = Math.round(owner.getYRot() / 45) * 45;
         this.setYRot(roundedOwnerYRot);
+        this.setYBodyRot(roundedOwnerYRot);
+        this.setYHeadRot(roundedOwnerYRot);
         this.teleportTo(
                 Math.floor(this.position().x) + 0.5,
                 this.position().y,
                 Math.floor(this.position().z) + 0.5
         );
 
-        BlockPos blockInFront = PPUtil.getBlockPosInFront(this);
+        BlockPos blockInFront = PPUtil.getBlockPosInFront(this).above();
         BlockPos blockAbove = this.blockPosition().above();
 
         if (PPUtil.isSolid(this, blockAbove.above()) || PPUtil.isSolid(this, blockAbove)) {
@@ -483,31 +501,117 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
     }
 
     public void stopLadder() {
+        if (!this.isLadder())
+            return;
         this.setCurrentAbility(CurrentAbility.NONE);
         this.setLadderHeight(2);
         this.playSound(PPSounds.SHRINK.get());
-        this.setFollowMode(FollowMode.FOLLOWING);
     }
 
     @Override
-    public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
+    public void emptyInteraction(Player player) {
         if (this.isLadder()) {
-            if (!this.level().isClientSide()) {
-                if (player.isSecondaryUseActive()) {
-                    this.setLadderHeight(this.getLadderHeight() - 1);
-                }
-                else {
-                    this.setLadderHeight(this.getLadderHeight() + 1);
-                }
+            if (player.isSecondaryUseActive()) {
+                this.setLadderHeight(this.getLadderHeight() - 1);
             }
-            return InteractionResult.SUCCESS;
+            else {
+                this.setLadderHeight(this.getLadderHeight() + 1);
+            }
+
         }
-        return super.mobInteract(player, hand);
+        else {
+            super.emptyInteraction(player);
+        }
     }
 
+    @Override
+    public boolean isPushable() {
+        return !this.isLadder() && super.isPushable();
+    }
+
+    @Override
+    protected void doPush(Entity p_20971_) {
+        if (!this.isLadder())
+            super.doPush(p_20971_);
+    }
+
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        if (this.isLadder()) {
+            this.stopLadder();
+            if (this.getOwner() == null || source.getEntity() != this.getOwner())
+                this.setFollowMode(FollowMode.FOLLOWING);
+            return false;
+        }
+        return super.hurt(source, amount);
+    }
 
     public static final float SITTING_NECK_TOP = 15 / 16f;
     public static final float SITTING_NECK_BOTTOM = 3 / 16f;
+    public static final float STANDING_NECK_BOTTOM = 10 / 16f;
     public static final float NECK_HEIGHT = 12 / 16f;
 
+    private float visibleLadderHeight = SITTING_NECK_TOP;
+    private float visibleLadderHeightO = SITTING_NECK_TOP;
+    private float visibleLadderVelocity = 0;
+
+    public float getVisibleLadderHeight(float partialTick) {
+        return this.isAlive() ? Mth.lerp(partialTick, visibleLadderHeightO, visibleLadderHeight) : SITTING_NECK_TOP;
+    }
+
+    private static final float LADDER_HEIGHT_G = 0.08f;
+
+    public boolean isNeckStretched() {
+        return this.getVisibleLadderHeight(1) != SITTING_NECK_TOP;
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (this.level().isClientSide) {
+            this.visibleLadderHeightO = this.visibleLadderHeight;
+            float targetHeight = this.isLadder() ? this.getLadderHeight() : SITTING_NECK_TOP;
+            if (targetHeight > visibleLadderHeight) {
+                this.visibleLadderVelocity += LADDER_HEIGHT_G;
+                this.visibleLadderHeight = Math.min(targetHeight, this.visibleLadderHeight + this.visibleLadderVelocity);
+            } else if (targetHeight < visibleLadderHeight) {
+                this.visibleLadderVelocity -= LADDER_HEIGHT_G;
+                this.visibleLadderHeight = Math.max(targetHeight, this.visibleLadderHeight + this.visibleLadderVelocity);
+            } else {
+                this.visibleLadderVelocity = 0;
+            }
+        } else switch (this.getCurrentAbility()) {
+            case YEETING -> this.tickYeeting();
+            case DIGGING -> this.tickDigging();
+            case LADDER -> this.tickLadder();
+        }
+    }
+
+    private static final TargetingConditions NON_COMBAT = TargetingConditions.forNonCombat();
+
+    private void tickLadder() {
+
+        this.level().getNearbyPlayers(NON_COMBAT, this, this.getBoundingBox().inflate(0, this.getLadderHeight() - 1, 0))
+                .forEach(player -> {
+                    player.fallDistance = 0;
+                    if (!player.onGround()) {
+                        if (player.isShiftKeyDown()) {
+                            player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 5, 0, false, false), this);
+                        } else {
+                            player.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 5, 2, false, false), this);
+                        }
+
+                        if (this.isOwnedBy(player) && this.followMode() != FollowMode.WANDERING) {
+                            PPEvents.climbedGiraffeCats.put(player, this);
+                        }
+                    }
+                });
+    }
+
+    private void tickYeeting() {
+    }
+
+    private void tickDigging() {
+    }
 }

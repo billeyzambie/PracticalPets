@@ -16,6 +16,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -182,7 +183,7 @@ public class StickBugModel extends PracticalPetModel<StickBug> {
     }
 
     @Override
-    public void setupAnim(StickBug entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(@NotNull StickBug entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
         float partialTick = ageInTicks % 1f;
 
@@ -214,7 +215,7 @@ public class StickBugModel extends PracticalPetModel<StickBug> {
 
         body.yRot += -sin;
         body.zRot += sin * 3;
-        body.y += Mth.abs(cos * 0.5f * Mth.RAD_TO_DEG);
+        body.y -= Mth.abs(cos * 0.5f * Mth.RAD_TO_DEG);
 
         left_leg.yRot += -sin * 20;
         left_leg.zRot += -cos * 10;

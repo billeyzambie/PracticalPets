@@ -58,6 +58,5 @@
   "ui.practicalpets.pigeon_send.target_success": "You have received some items from %s's %s!",
   "death.attack.practicalpets.stick_bugged": "%s got stick bugged",
   "death.attack.practicalpets.stick_bugged.player": "%s got stick bugged by %s",
-  "ui.practicalpets.giraffe_cat_ladder.activate": "Enter ladder mode",
-  "ui.practicalpets.giraffe_cat_ladder.deactivate": "Exit ladder mode"
+  "ui.practicalpets.giraffe_cat_ladder.activate": "Enter ladder mode"
 }

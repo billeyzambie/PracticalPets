@@ -92,16 +92,12 @@ public class PetAbilityButton extends Button {
         }
     }
 
-    private static final Component ACTIVATE_LADDER_TOOLTIP = Component.translatable("ui.practicalpets.giraffe_cat_ladder.activate").withStyle(ChatFormatting.GRAY);
-    private static final Component DEACTIVATE_LADDER_TOOLTIP = Component.translatable("ui.practicalpets.giraffe_cat_ladder.deactivate").withStyle(ChatFormatting.GRAY);
+    private static final Component ACTIVATE_LADDER_TOOLTIP = Component.translatable("ui.practicalpets.giraffe_cat_ladder.activate");
 
     private void giraffeCatTick() {
         GiraffeCat giraffeCat = (GiraffeCat) pet;
         this.active = true;
-        if (giraffeCat.isLadder()) {
-            this.tooltip = DEACTIVATE_LADDER_TOOLTIP;
-        }
-        else if (giraffeCat.noCurrentAbility()) {
+        if (giraffeCat.noCurrentAbility()) {
             this.tooltip = ACTIVATE_LADDER_TOOLTIP;
         }
         else {

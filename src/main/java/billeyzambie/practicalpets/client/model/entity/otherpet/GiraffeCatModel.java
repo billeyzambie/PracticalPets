@@ -66,6 +66,11 @@ public class GiraffeCatModel extends PracticalPetModel<GiraffeCat> {
         return pathToBackpack;
     }
 
+    final List<ModelPart> pathToNeck2;
+    public List<ModelPart> pathToNeck2() {
+        return pathToNeck2;
+    }
+
 
     private final ModelPart ooo;
     private final ModelPart bone;
@@ -117,6 +122,7 @@ public class GiraffeCatModel extends PracticalPetModel<GiraffeCat> {
 		this.pathToHat = List.of(ooo, bone, body, bodynohead, neck2, neck, head2, head, hat);
 		this.pathToBowtie = List.of(ooo, bone, body, bodynohead, neck2, neck, bowtie);
 		this.pathToBackpack = List.of(ooo, bone, body, bodynohead, bodyxd, backpack);
+        this.pathToNeck2 = List.of(ooo, bone, body, bodynohead, neck2);
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -144,7 +150,7 @@ public class GiraffeCatModel extends PracticalPetModel<GiraffeCat> {
         PartDefinition neck = neck2.addOrReplaceChild("neck", CubeListBuilder.create().texOffs(23, 3).addBox(-2.0F, -10.0F, -1.5F, 4.0F, 12.0F, 3.0F, new CubeDeformation(0.01F))
                 .texOffs(53, 0).addBox(0.0F, -10.0F, 1.5F, 0.0F, 9.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -2.01F, -0.3F, 0.0873F, 0.0F, 0.0F));
 
-        PartDefinition bowtie = neck.addOrReplaceChild("bowtie", CubeListBuilder.create(), PartPose.offset(0.0F, -1.0F, -1.7F));
+        PartDefinition bowtie = neck.addOrReplaceChild("bowtie", CubeListBuilder.create(), PartPose.offset(0.0F, -1.0F, -1.6F));
 
         PartDefinition head2 = neck.addOrReplaceChild("head2", CubeListBuilder.create(), PartPose.offset(0.0F, -10.0F, 0.5F));
 
@@ -177,6 +183,9 @@ public class GiraffeCatModel extends PracticalPetModel<GiraffeCat> {
     @Override
     public void setupAnim(@NotNull GiraffeCat entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+
+        float partialTick = ageInTicks % 1f;
+
         if (entity.isBaby()) {
             head.xScale *= 1.5f;
             head.yScale *= 1.5f;
@@ -187,13 +196,11 @@ public class GiraffeCatModel extends PracticalPetModel<GiraffeCat> {
 
         PPAnimationControllers.GIRAFFE_CAT_BASE.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
 
-        if (!entity.isInSittingPose()) {
+        if (!entity.isInSittingPose() && !entity.isLadder()) {
             this.animateWalk(limbSwing, limbSwingAmount, entity);
         }
 
-        if (entity.isLadder()) {
-            this.neck.y -= (entity.getLadderHeight() - GiraffeCat.NECK_HEIGHT - GiraffeCat.SITTING_NECK_BOTTOM) * 16;
-        }
+        this.neck.y -= (entity.getVisibleLadderHeight(partialTick) - GiraffeCat.NECK_HEIGHT - GiraffeCat.SITTING_NECK_BOTTOM) * 16;
 
     }
 
@@ -243,7 +250,7 @@ public class GiraffeCatModel extends PracticalPetModel<GiraffeCat> {
         this.frontLegR.z -= Mth.cos(frontLegRPhase) * amp;
 
         this.body.zRot += Mth.sin(time) * amp * 2 * Mth.DEG_TO_RAD;
-        this.body.y -= Mth.abs(Mth.sin(time) * amp);
+        this.body.y += Mth.abs(Mth.sin(time) * amp);
 
     }
 

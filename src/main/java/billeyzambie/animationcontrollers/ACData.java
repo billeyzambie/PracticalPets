@@ -14,11 +14,15 @@ public class ACData {
         return stateIndex;
     }
 
-    public void setStateIndex(int stateIndex, float timeStateStarted) {
+    public void setStateIndex(int stateIndex, float timeStateStarted, float timePreviousStateStartedOffset) {
         this.previousStateIndex = this.stateIndex;
-        this.timePreviousStateStarted = this.timeStateStarted;
+        this.timePreviousStateStarted = this.timeStateStarted + timePreviousStateStartedOffset;
         this.stateIndex = stateIndex;
         this.timeStateStarted = timeStateStarted;
+    }
+
+    public void setStateIndex(int stateIndex, float timeStateStarted) {
+        this.setStateIndex(stateIndex, timeStateStarted, 0);
     }
 
     public int getPreviousStateIndex() {

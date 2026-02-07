@@ -187,13 +187,10 @@ public class GiraffeCatAnimations {
 		.addAnimation("neck2", new AnimationChannel(AnimationChannel.Targets.POSITION, 
 			new Keyframe(0.0F, KeyframeAnimations.posVec(0.0F, 0.0F, -0.2F), AnimationChannel.Interpolations.LINEAR)
 		))
-		.addAnimation("bowtie", new AnimationChannel(AnimationChannel.Targets.SCALE, 
-			new Keyframe(0.0F, KeyframeAnimations.scaleVec(1.0F, -4.0F, 1.0F), AnimationChannel.Interpolations.LINEAR)
-		))
 		.build();
 
 	public static final AnimationDefinition yeet = AnimationDefinition.Builder.withLength(1.5F)
-		.addAnimation("neck", new AnimationChannel(AnimationChannel.Targets.ROTATION, 
+		.addAnimation("neck", new AnimationChannel(AnimationChannel.Targets.ROTATION,
 			new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
 			new Keyframe(0.9583F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
 			new Keyframe(1.0417F, KeyframeAnimations.degreeVec(55.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
@@ -203,7 +200,7 @@ public class GiraffeCatAnimations {
 		.build();
 
 	public static final AnimationDefinition bend_over = AnimationDefinition.Builder.withLength(0.0F).looping()
-		.addAnimation("neck", new AnimationChannel(AnimationChannel.Targets.ROTATION, 
+		.addAnimation("neck", new AnimationChannel(AnimationChannel.Targets.ROTATION,
 			new Keyframe(0.0F, KeyframeAnimations.degreeVec(85.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
 		))
 		.addAnimation("head", new AnimationChannel(AnimationChannel.Targets.ROTATION, 
@@ -263,7 +260,7 @@ public class GiraffeCatAnimations {
 			new Keyframe(1.2083F, KeyframeAnimations.degreeVec(150.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
 			new Keyframe(1.3333F, KeyframeAnimations.degreeVec(150.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
 		))
-		.addAnimation("neck", new AnimationChannel(AnimationChannel.Targets.POSITION, 
+		.addAnimation("neck", new AnimationChannel(AnimationChannel.Targets.POSITION,
 			new Keyframe(0.0F, KeyframeAnimations.posVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
 			new Keyframe(0.25F, KeyframeAnimations.posVec(0.0F, -1.0F, 2.0F), AnimationChannel.Interpolations.CATMULLROM),
 			new Keyframe(0.5F, KeyframeAnimations.posVec(0.0F, -2.0F, 2.0F), AnimationChannel.Interpolations.CATMULLROM),

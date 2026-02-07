@@ -1,0 +1,1 @@
+there are no mixins in the mod but I tried and failed to make one for detecting if the jump key is held by a player for the giraffe cat neck climbing, but I kept most mixin related files for whenever I need mixins 

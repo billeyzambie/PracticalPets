@@ -801,20 +801,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
 
                     InteractionResult interactionresult = super.mobInteract(player, hand);
                     if (!interactionresult.consumesAction() && this.canSitStand()) {
-                        if (player.isSecondaryUseActive()) {
-                            NetworkHooks.openScreen(
-                                    (ServerPlayer) player,
-                                    new SimpleMenuProvider(
-                                            (id, inv, p) -> new PracticalPetMenu(id, inv, this),
-                                            this.getName()
-                                    ),
-                                    buf -> buf.writeVarInt(this.getId())
-                            );
-                        }
-                        else {
-                            incrementFollowMode();
-                            player.displayClientMessage(Component.translatable("action.practicalpets." + followMode().toString()).withStyle(ChatFormatting.GREEN), true);
-                        }
+                        emptyInteraction(player);
                     }
 
                     return interactionresult;
@@ -841,6 +828,23 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
             }
 
             return interactionresult1;
+        }
+    }
+
+    protected void emptyInteraction(Player player) {
+        if (player.isSecondaryUseActive()) {
+            NetworkHooks.openScreen(
+                    (ServerPlayer) player,
+                    new SimpleMenuProvider(
+                            (id, inv, p) -> new PracticalPetMenu(id, inv, this),
+                            this.getName()
+                    ),
+                    buf -> buf.writeVarInt(this.getId())
+            );
+        }
+        else {
+            incrementFollowMode();
+            player.displayClientMessage(Component.translatable("action.practicalpets." + followMode().toString()).withStyle(ChatFormatting.GREEN), true);
         }
     }
 
