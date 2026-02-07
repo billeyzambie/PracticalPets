@@ -17,6 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import javax.swing.text.html.parser.Entity;
 
 public class GiraffeCatNeckPieceModel extends HierarchicalModel<GiraffeCat> {
+	public static final float INFLATE_VALUE = 0.02F;
 	private final ModelPart neck;
 
 	public GiraffeCatNeckPieceModel(ModelPart root) {
@@ -27,7 +28,7 @@ public class GiraffeCatNeckPieceModel extends HierarchicalModel<GiraffeCat> {
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();
 
-		PartDefinition neck = partdefinition.addOrReplaceChild("neck", CubeListBuilder.create().texOffs(23, 3).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 3.0F, new CubeDeformation(0.02F))
+		PartDefinition neck = partdefinition.addOrReplaceChild("neck", CubeListBuilder.create().texOffs(23, 3).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 3.0F, new CubeDeformation(INFLATE_VALUE))
 				.texOffs(53, 0).addBox(-0.01F, 3.0F, 1.0F, 0.0F, 9.0F, 2.0F, new CubeDeformation(0.0F))
 				.texOffs(53, 3).addBox(-0.01F, 0.0F, 1.0F, 0.0F, 3.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 

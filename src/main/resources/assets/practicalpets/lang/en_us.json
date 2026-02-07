@@ -58,5 +58,7 @@
   "ui.practicalpets.pigeon_send.target_success": "You have received some items from %s's %s!",
   "death.attack.practicalpets.stick_bugged": "%s got stick bugged",
   "death.attack.practicalpets.stick_bugged.player": "%s got stick bugged by %s",
-  "ui.practicalpets.giraffe_cat_ladder.activate": "Enter ladder mode"
+  "ui.practicalpets.giraffe_cat_ladder.activate": "Enter ladder mode",
+  "tooltip.practicalpets.dead_pet_bowtie": "RIP %s%s%s was in %s%s%s",
+  "tooltip.practicalpets.dead_pet_bowtie_named": "RIP %s the %s%s%s was in %s%s%s"
 }

@@ -202,7 +202,7 @@ public class AnimationController implements Animatable {
                     acData.setStateIndex(
                             i,
                             ageInTicks,
-                            this.dontTransitionAt0animTime ? -nextState.blendOutTime : 0
+                            this.dontTransitionAt0animTime ? -nextState.blendOutTime * 20 : 0
                     );
 
 

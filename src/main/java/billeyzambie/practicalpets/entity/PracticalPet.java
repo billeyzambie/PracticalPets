@@ -3,7 +3,7 @@ package billeyzambie.practicalpets.entity;
 import billeyzambie.animationcontrollers.ACData;
 import billeyzambie.animationcontrollers.ACEntity;
 import billeyzambie.animationcontrollers.BVCData;
-import billeyzambie.practicalpets.entity.dinosaur.Pigeon;
+import billeyzambie.practicalpets.items.PetBowtie;
 import billeyzambie.practicalpets.misc.*;
 import billeyzambie.practicalpets.network.RandomIdle1AnimPacket;
 import billeyzambie.practicalpets.ui.PracticalPetMenu;
@@ -15,7 +15,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -56,6 +56,7 @@ import java.util.List;
 
 public abstract class PracticalPet extends TamableAnimal implements ACEntity, NeutralMob, RangedAttackMob {
 
+    public static final MutableComponent NEWLINE = Component.literal("\n");
     HashMap<String, ACData> ACData = new HashMap<>();
 
     @Override
@@ -305,6 +306,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     public boolean shouldDefendOwner(@NotNull LivingEntity target) {
         return this.anyEquipmentIsBrave() || (this.getMaxHealth() >= 20 && this.getAttributeValue(Attributes.ATTACK_DAMAGE) >= 3);
     }
+
     public boolean shouldDefendSelf() {
         return this.anyEquipmentIsBrave() || (this.getMaxHealth() >= 20 && this.getAttributeValue(Attributes.ATTACK_DAMAGE) >= 3);
     }
@@ -409,10 +411,10 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
                 case UNCOMMON -> healAmount *= 2f;
                 case RARE -> healAmount *= 3f;
                 case EPIC -> healAmount *= 4f;
-                default -> {}
+                default -> {
+                }
             }
-        }
-        else {
+        } else {
             healAmount = foodProperties.getNutrition();
             if (healOverride != null) {
                 switch (healOverride.type()) {
@@ -672,7 +674,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
 
     private void playLevelUpSound() {
         this.level().playSound(null, this.blockPosition(), PPSounds.PET_LEVEL_UP.get(), SoundSource.NEUTRAL,
-                1.0F, (float)Math.pow(2, (this.petLevel() - 2) / 12d));
+                1.0F, (float) Math.pow(2, (this.petLevel() - 2) / 12d));
     }
 
     /**
@@ -723,12 +725,43 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         dropAllEquipment();
     }
 
+    private Component deathMessage = Component.empty();
+
+    @Override
+    public void die(DamageSource p_21809_) {
+        this.deathMessage = this.getCombatTracker().getDeathMessage();
+        super.die(p_21809_);
+    }
+
     public void dropAllEquipment() {
         for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
             ItemStack stack = this.getEquippedItem(slot).copy();
-            if (!this.isAlive() && this.hasCustomName()) {
-                Component itemName = this.getDisplayName().copy().setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD));
-                stack.setHoverName(itemName);
+            Item item = stack.getItem();
+            if (!this.isAlive() && item instanceof PetBowtie bowtieItem) {
+                if (this.hasCustomName()) bowtieItem.putDeadPetInfo(stack, Component.translatable(
+                        "tooltip.practicalpets.dead_pet_bowtie_named",
+                        this.getDisplayName(),
+                        this.getTypeName(),
+                        NEWLINE,
+                        this.getDisplayName(),
+                        Component.translatable("ui.practicalpets.pet_level",
+                                Component.literal(String.valueOf(this.petLevel())).withStyle(ChatFormatting.BLUE)
+                                ).withStyle(ChatFormatting.LIGHT_PURPLE),
+                        NEWLINE,
+                        this.deathMessage
+                ).withStyle(ChatFormatting.GOLD));
+                else bowtieItem.putDeadPetInfo(stack, Component.translatable(
+                        "tooltip.practicalpets.dead_pet_bowtie",
+                        this.getDisplayName(),
+                        NEWLINE,
+                        this.getDisplayName(),
+                        Component.translatable("ui.practicalpets.pet_level",
+                                Component.literal(String.valueOf(this.petLevel())).withStyle(ChatFormatting.BLUE)
+                        ).withStyle(ChatFormatting.LIGHT_PURPLE),
+                        NEWLINE,
+                        this.deathMessage
+
+                ).withStyle(ChatFormatting.GOLD));
             }
             this.spawnAtLocation(stack);
             this.setEquippedItem(ItemStack.EMPTY, slot);
@@ -775,7 +808,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
             if (this.isTame() && this.isOwnedBy(player)) {
                 return InteractionResult.SUCCESS;
             } else {
-                return !this.isTameItem(itemstack) || !(this.getHealth() < this.getMaxHealth() ) && this.isTame() ? InteractionResult.PASS : InteractionResult.SUCCESS;
+                return !this.isTameItem(itemstack) || !(this.getHealth() < this.getMaxHealth()) && this.isTame() ? InteractionResult.PASS : InteractionResult.SUCCESS;
             }
         } else {
             if (this.isTame()) {
@@ -801,7 +834,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
 
                     InteractionResult interactionresult = super.mobInteract(player, hand);
                     if (!interactionresult.consumesAction() && this.canSitStand()) {
-                        emptyInteraction(player);
+                        this.emptyOwnerInteraction(player, itemstack);
                     }
 
                     return interactionresult;
@@ -831,7 +864,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         }
     }
 
-    protected void emptyInteraction(Player player) {
+    protected void emptyOwnerInteraction(Player player, ItemStack itemStack) {
         if (player.isSecondaryUseActive()) {
             NetworkHooks.openScreen(
                     (ServerPlayer) player,
@@ -841,8 +874,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
                     ),
                     buf -> buf.writeVarInt(this.getId())
             );
-        }
-        else {
+        } else {
             incrementFollowMode();
             player.displayClientMessage(Component.translatable("action.practicalpets." + followMode().toString()).withStyle(ChatFormatting.GREEN), true);
         }
@@ -851,6 +883,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     public static final LocalDate FOUNDERS_HAT_END_DATE = LocalDate.of(2025, 8, 1);
 
     public static final String FOUNDERS_HATS_CLAIMED_TAG_ID = PracticalPets.MODID + ":founders_hats_claimed";
+
     @Override
     public void tame(@NotNull Player player) {
         if (!this.level().isClientSide()) {

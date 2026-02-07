@@ -24,8 +24,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -39,6 +37,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
@@ -48,7 +47,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
-import java.util.Set;
 
 public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
     public GiraffeCat(EntityType<? extends TamableAnimal> entityType, Level level) {
@@ -509,18 +507,20 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
     }
 
     @Override
-    public void emptyInteraction(Player player) {
-        if (this.isLadder()) {
+    public void emptyOwnerInteraction(Player player, ItemStack itemStack) {
+        if (itemStack.is(Items.LADDER)) {
+            this.toggleLadder();
+        }
+        else if (this.isLadder()) {
             if (player.isSecondaryUseActive()) {
                 this.setLadderHeight(this.getLadderHeight() - 1);
             }
             else {
                 this.setLadderHeight(this.getLadderHeight() + 1);
             }
-
         }
         else {
-            super.emptyInteraction(player);
+            super.emptyOwnerInteraction(player, itemStack);
         }
     }
 
@@ -607,6 +607,24 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
                         }
                     }
                 });
+    }
+
+    public void ownerLandedAfterClimbing() {
+        if (!(this.getOwner() instanceof Player owner))
+            return;
+        Vec3 playerPos = owner.position();
+        if (
+                this.isAlive()
+                        && this.isLadder()
+                        && playerPos.y >= this.position().y
+                        && this.followMode() != PracticalPet.FollowMode.WANDERING
+        ) {
+            this.teleportTo(playerPos.x, playerPos.y, playerPos.z);
+            this.stopLadder();
+            this.setOrderedToSit(false);
+            this.setShouldFollowOwner(true);
+        }
+        PPEvents.climbedGiraffeCats.remove(owner);
     }
 
     private void tickYeeting() {

@@ -4,7 +4,7 @@ import billeyzambie.practicalpets.misc.PracticalPets;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
-public class AnniversaryPetHat extends PetHat{
+public class AnniversaryPetHat extends PetHat {
     public AnniversaryPetHat(String modelTextureName, float xpMultiplier, Properties properties) {
         super(modelTextureName, xpMultiplier, properties);
         this.modelEmissiveTexture = new ResourceLocation(
