@@ -86,5 +86,37 @@
         "stream": false
       }
     ]
+  },
+  "grow": {
+    "sounds": [
+      {
+        "name": "practicalpets:grow",
+        "stream": false
+      }
+    ]
+  },
+  "grow2": {
+    "sounds": [
+      {
+        "name": "practicalpets:grow2",
+        "stream": false
+      }
+    ]
+  },
+  "shrink": {
+    "sounds": [
+      {
+        "name": "practicalpets:shrink",
+        "stream": false
+      }
+    ]
+  },
+  "shrink2": {
+    "sounds": [
+      {
+        "name": "practicalpets:shrink2",
+        "stream": false
+      }
+    ]
   }
 }

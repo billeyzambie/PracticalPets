@@ -261,7 +261,7 @@ public class BananaDuckModel extends PracticalPetModel<BananaDuck> {
     }
 
     @Override
-    protected void applyHeadRotation(float pNetHeadYaw, float pHeadPitch) {
+    protected void applyHeadRotation(float pNetHeadYaw, float pHeadPitch, @NotNull BananaDuck bananaDuck) {
         this.head.yRot += pNetHeadYaw * ((float) Math.PI / 180F);
         this.head.xRot += pHeadPitch * ((float) Math.PI / 180F) / 2;
         this.lol.xRot += pHeadPitch * ((float) Math.PI / 180F) / 2;

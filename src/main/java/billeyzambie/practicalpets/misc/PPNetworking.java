@@ -46,5 +46,9 @@ public class PPNetworking {
                 PlayerPunchAirPacket::encode,
                 PlayerPunchAirPacket::decode,
                 PlayerPunchAirPacket::handle);
+        CHANNEL.registerMessage(id++, GiraffeCatLadderButtonPacket.class,
+                GiraffeCatLadderButtonPacket::encode,
+                GiraffeCatLadderButtonPacket::decode,
+                GiraffeCatLadderButtonPacket::handle);
     }
 }

@@ -1,9 +1,12 @@
 package billeyzambie.practicalpets.entity.otherpet;
 
 import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.entity.StayStillGoalMob;
 import billeyzambie.practicalpets.goal.OcelotAttackIfShouldGoal;
+import billeyzambie.practicalpets.goal.StayStillGoal;
 import billeyzambie.practicalpets.misc.PPEntities;
 import billeyzambie.practicalpets.misc.PPSerializers;
+import billeyzambie.practicalpets.misc.PPSounds;
 import billeyzambie.practicalpets.util.PPUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -12,23 +15,28 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.CatVariant;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -36,15 +44,15 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 
-public class GiraffeCat extends PracticalPet {
+public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
     public GiraffeCat(EntityType<? extends TamableAnimal> entityType, Level level) {
         super(entityType, level);
     }
 
     private static final HashMap<Integer, Integer> VARIANT_SPAWN_WEIGHTS = new HashMap<>() {{
-        put(0, 50);
-        put(1, 50);
-        put(2, 50);
+        put(0, 33);
+        put(1, 33);
+        put(2, 33);
         put(3, 2);
         put(4, 3);
     }};
@@ -63,12 +71,12 @@ public class GiraffeCat extends PracticalPet {
 
     @Override
     public int getLevel1MaxHealth() {
-        return 20;
+        return 16;
     }
 
     @Override
     public int getLevel1AttackDamage() {
-        return 4;
+        return 3;
     }
 
     @Override
@@ -94,6 +102,21 @@ public class GiraffeCat extends PracticalPet {
     @Override
     public float headSizeZ() {
         return 5;
+    }
+
+    @Override
+    public boolean shouldDefendSelf() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldDefendOwner(@NotNull LivingEntity target) {
+        return true;
+    }
+
+    @Override
+    protected boolean shouldRegisterSpreadingAnger() {
+        return true;
     }
 
     @Override
@@ -130,6 +153,7 @@ public class GiraffeCat extends PracticalPet {
     private static final EntityDataAccessor<Boolean> IS_SNOUTLESS = SynchedEntityData.defineId(GiraffeCat.class, EntityDataSerializers.BOOLEAN);
 
     public enum CurrentAbility {NONE, YEETING, DIGGING, LADDER}
+
     private static final EntityDataAccessor<CurrentAbility> CURRENT_ABILITY = SynchedEntityData.defineId(GiraffeCat.class, PPSerializers.GIRAFFE_CAT_ABILITY.get());
 
     private static final EntityDataAccessor<Integer> LADDER_HEIGHT = SynchedEntityData.defineId(GiraffeCat.class, EntityDataSerializers.INT);
@@ -165,6 +189,7 @@ public class GiraffeCat extends PracticalPet {
     public boolean isCatHybrid() {
         return this.entityData.get(IS_CAT_HYBRID);
     }
+
     public void setCatHybrid(boolean value) {
         this.entityData.set(IS_CAT_HYBRID, value);
     }
@@ -172,6 +197,7 @@ public class GiraffeCat extends PracticalPet {
     public boolean isSnoutless() {
         return this.entityData.get(IS_SNOUTLESS);
     }
+
     public void setSnoutless(boolean value) {
         this.entityData.set(IS_SNOUTLESS, value);
     }
@@ -179,9 +205,11 @@ public class GiraffeCat extends PracticalPet {
     public boolean hasSolidBlockAbove() {
         return this.entityData.get(SOLID_BLOCK_ABOVE);
     }
+
     public void setSolidBlockAbove(boolean value) {
         this.entityData.set(SOLID_BLOCK_ABOVE, value);
     }
+
     public boolean shouldBendOver() {
         return this.hasSolidBlockAbove() || this.isCrouching();
     }
@@ -189,18 +217,23 @@ public class GiraffeCat extends PracticalPet {
     public CurrentAbility getCurrentAbility() {
         return this.entityData.get(CURRENT_ABILITY);
     }
+
     public void setCurrentAbility(CurrentAbility value) {
         this.entityData.set(CURRENT_ABILITY, value);
     }
+
     public boolean noCurrentAbility() {
         return this.getCurrentAbility() == CurrentAbility.NONE;
     }
+
     public boolean isYeeting() {
         return this.getCurrentAbility() == CurrentAbility.YEETING;
     }
+
     public boolean isDigging() {
         return this.getCurrentAbility() == CurrentAbility.DIGGING;
     }
+
     public boolean isLadder() {
         return this.getCurrentAbility() == CurrentAbility.LADDER;
     }
@@ -208,8 +241,22 @@ public class GiraffeCat extends PracticalPet {
     public int getLadderHeight() {
         return this.entityData.get(LADDER_HEIGHT);
     }
+
     public void setLadderHeight(int height) {
-        this.entityData.set(LADDER_HEIGHT, Mth.clamp(height, 2, 64));
+        if (height < 2) {
+            height = 2;
+            if (this.isLadder())
+                this.stopLadder();
+        }
+        if (height > 64) {
+            height = 64;
+        }
+        int prevHeight = this.getLadderHeight();
+        if (height > prevHeight)
+            this.playSound(PPSounds.GROW2.get());
+        else if (height < prevHeight)
+            this.playSound(PPSounds.SHRINK2.get());
+        this.entityData.set(LADDER_HEIGHT, height);
     }
 
     private static final Vec3 NECK_BOTTOM_RIGHT = new Vec3(2, 13, -6);
@@ -293,16 +340,7 @@ public class GiraffeCat extends PracticalPet {
     }
 
     @Override
-    public int getAmbientSoundInterval() {
-        return 120;
-    }
-
-    public void hiss() {
-        this.playSound(SoundEvents.CAT_HISS, this.getSoundVolume(), this.getVoicePitch());
-    }
-
-    @Override
-    protected SoundEvent getHurtSound(DamageSource p_28160_) {
+    protected SoundEvent getHurtSound(@NotNull DamageSource p_28160_) {
         return SoundEvents.CAT_HURT;
     }
 
@@ -313,7 +351,7 @@ public class GiraffeCat extends PracticalPet {
 
     @Override
     public float getVoicePitch() {
-        return super.getVoicePitch() * 0.9f;
+        return super.getVoicePitch() * 0.8f;
     }
 
     @Override
@@ -351,11 +389,10 @@ public class GiraffeCat extends PracticalPet {
                 } else {
                     baby.setSnoutless(giraffeCat.isSnoutless());
                 }
-            }
-
-            else if (partner instanceof Cat cat) {
+            } else if (partner instanceof Cat cat) {
                 baby.setCatHybrid(true);
                 baby.setVariant(CAT_VARIANT_TO_INT.getOrDefault(cat.getVariant(), 10));
+                baby.setSnoutless(this.isSnoutless());
             }
         }
 
@@ -376,4 +413,101 @@ public class GiraffeCat extends PracticalPet {
         put(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.ALL_BLACK), i++);
         put(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.JELLIE), i++);
     }};
+
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(1, new StayStillGoal(this));
+    }
+
+    @Override
+    public boolean shouldStayStill() {
+        return !this.noCurrentAbility();
+    }
+
+    public void toggleLadder() {
+        if (this.noCurrentAbility())
+            this.becomeLadder();
+        else if (this.isLadder())
+            this.stopLadder();
+    }
+
+    public void becomeLadder() {
+        if (!this.noCurrentAbility() || !(this.getOwner() instanceof Player owner))
+            return;
+
+        this.setCurrentAbility(CurrentAbility.LADDER);
+        this.setLadderHeight(2);
+        this.playSound(PPSounds.GROW.get());
+        this.setFollowMode(FollowMode.SITTING);
+
+        float roundedOwnerYRot = Math.round(owner.getYRot() / 45) * 45;
+        this.setYRot(roundedOwnerYRot);
+        this.teleportTo(
+                Math.floor(this.position().x) + 0.5,
+                this.position().y,
+                Math.floor(this.position().z) + 0.5
+        );
+
+        BlockPos blockInFront = PPUtil.getBlockPosInFront(this);
+        BlockPos blockAbove = this.blockPosition().above();
+
+        if (PPUtil.isSolid(this, blockAbove.above()) || PPUtil.isSolid(this, blockAbove)) {
+            MinecraftServer server = this.getServer();
+            assert server != null : "GiraffeCat::becomeLadder called on client";
+            server.execute(this::stopLadder);
+            return;
+        }
+
+        //If the giraffe cat has a solid block in front of it, try to predict how tall the player wants it to be
+        if (!PPUtil.isSolid(this, blockInFront))
+            return;
+
+        blockAbove = blockAbove.above();
+
+        for (int ladderHeight = 2; ladderHeight <= 64; ladderHeight++) {
+            blockInFront = blockInFront.above();
+            blockAbove = blockAbove.above();
+            if (
+                    (
+                            !PPUtil.isSolid(this, blockInFront)
+                                    && !PPUtil.isSolid(this, blockInFront.above())
+                    )
+                            || PPUtil.isSolid(this, blockAbove)
+                            || ladderHeight == 64
+            ) {
+                this.setLadderHeight(ladderHeight);
+                return;
+            }
+        }
+    }
+
+    public void stopLadder() {
+        this.setCurrentAbility(CurrentAbility.NONE);
+        this.setLadderHeight(2);
+        this.playSound(PPSounds.SHRINK.get());
+        this.setFollowMode(FollowMode.FOLLOWING);
+    }
+
+    @Override
+    public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
+        if (this.isLadder()) {
+            if (!this.level().isClientSide()) {
+                if (player.isSecondaryUseActive()) {
+                    this.setLadderHeight(this.getLadderHeight() - 1);
+                }
+                else {
+                    this.setLadderHeight(this.getLadderHeight() + 1);
+                }
+            }
+            return InteractionResult.SUCCESS;
+        }
+        return super.mobInteract(player, hand);
+    }
+
+
+    public static final float SITTING_NECK_TOP = 15 / 16f;
+    public static final float SITTING_NECK_BOTTOM = 3 / 16f;
+    public static final float NECK_HEIGHT = 12 / 16f;
+
 }

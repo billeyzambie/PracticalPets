@@ -131,7 +131,7 @@ public class GiraffeCatModel extends PracticalPetModel<GiraffeCat> {
 
         PartDefinition bodynohead = body.addOrReplaceChild("bodynohead", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-        PartDefinition bodyxd = bodynohead.addOrReplaceChild("bodyxd", CubeListBuilder.create().texOffs(54, 25).addBox(-2.0F, -3.0F, 0.0F, 4.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition bodyxd = bodynohead.addOrReplaceChild("bodyxd", CubeListBuilder.create().texOffs(54, 25).addBox(-2.0F, -3.0F, 0.0F, 4.0F, 6.0F, 1.0F, new CubeDeformation(0.01F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
         PartDefinition bodyxd_r1 = bodyxd.addOrReplaceChild("bodyxd_r1", CubeListBuilder.create().texOffs(20, 0).addBox(-2.0F, -8.0F, -3.0F, 4.0F, 16.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 1.5708F, 0.0F, 0.0F));
 
@@ -190,6 +190,11 @@ public class GiraffeCatModel extends PracticalPetModel<GiraffeCat> {
         if (!entity.isInSittingPose()) {
             this.animateWalk(limbSwing, limbSwingAmount, entity);
         }
+
+        if (entity.isLadder()) {
+            this.neck.y -= (entity.getLadderHeight() - GiraffeCat.NECK_HEIGHT - GiraffeCat.SITTING_NECK_BOTTOM) * 16;
+        }
+
     }
 
 
@@ -243,10 +248,12 @@ public class GiraffeCatModel extends PracticalPetModel<GiraffeCat> {
     }
 
     @Override
-    protected void applyHeadRotation(float pNetHeadYaw, float pHeadPitch) {
-        neck.yRot += pNetHeadYaw * ((float) Math.PI / 180F);
-        neck.xRot += pHeadPitch * ((float) Math.PI / 180F) / 2;
-        head.xRot += pHeadPitch * ((float) Math.PI / 180F) / 2;
+    protected void applyHeadRotation(float pNetHeadYaw, float pHeadPitch, GiraffeCat giraffeCat) {
+        if (giraffeCat.noCurrentAbility()) {
+            neck.yRot += pNetHeadYaw * ((float) Math.PI / 180F);
+            neck.xRot += pHeadPitch * ((float) Math.PI / 180F) / 2;
+            head.xRot += pHeadPitch * ((float) Math.PI / 180F) / 2;
+        }
     }
 
     @Override

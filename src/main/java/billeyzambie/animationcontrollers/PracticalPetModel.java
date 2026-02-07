@@ -47,10 +47,10 @@ public abstract class PracticalPetModel<T extends Entity> extends HierarchicalMo
             }
         }
 
-        this.applyHeadRotation(netHeadYaw, headPitch);
+        this.applyHeadRotation(netHeadYaw, headPitch, entity);
     }
 
-    protected void applyHeadRotation(float pNetHeadYaw, float pHeadPitch) {
+    protected void applyHeadRotation(float pNetHeadYaw, float pHeadPitch, @NotNull T entity) {
         ModelPart head = this.head();
         if (head != null) {
             head.yRot += pNetHeadYaw * ((float) Math.PI / 180F);

@@ -8,13 +8,25 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import org.jetbrains.annotations.NotNull;
 
 public class DefendSelfIfShouldGoal extends HurtByTargetGoal {
-    public DefendSelfIfShouldGoal(PathfinderMob mob, Class<?>... entityClass) {
+    PracticalPet pet;
+    public DefendSelfIfShouldGoal(PracticalPet mob, Class<?>... entityClass) {
         super(mob, entityClass);
+        this.pet = mob;
+    }
+
+    @Override
+    public boolean canUse() {
+        return this.pet.shouldDefendSelf() && super.canUse();
+    }
+
+    @Override
+    public boolean canContinueToUse() {
+        return this.pet.shouldDefendSelf() && super.canContinueToUse();
     }
 
     @Override
     protected void alertOther(@NotNull Mob mob, @NotNull LivingEntity target) {
-        if (mob instanceof PracticalPet pet && pet.shouldDefendSelf())
+        if (this.pet.shouldDefendSelf())
             super.alertOther(mob, target);
     }
 }

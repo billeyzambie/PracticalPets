@@ -191,7 +191,7 @@ public class DuckModel extends PracticalPetModel<Duck> {
     }
 
     @Override
-    protected void applyHeadRotation(float pNetHeadYaw, float pHeadPitch) {
+    protected void applyHeadRotation(float pNetHeadYaw, float pHeadPitch, @NotNull Duck duck) {
         this.head.yRot += pNetHeadYaw * ((float) Math.PI / 180F);
         this.head.xRot += pHeadPitch * ((float) Math.PI / 180F) / 2;
         this.lol.xRot += pHeadPitch * ((float) Math.PI / 180F) / 2;

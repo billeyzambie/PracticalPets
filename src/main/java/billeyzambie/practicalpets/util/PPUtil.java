@@ -13,6 +13,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -119,5 +120,13 @@ public class PPUtil {
 
     public static BlockPos getBlockPosInFront(LivingEntity entity) {
         return entity.blockPosition().relative(entity.getDirection());
+    }
+
+    public static boolean isSolid(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+        return !blockState.getCollisionShape(blockGetter, blockPos).isEmpty();
+    }
+
+    public static boolean isSolid(LivingEntity entity, BlockPos blockPos) {
+        return !entity.level().getBlockState(blockPos).getCollisionShape(entity.level(), blockPos).isEmpty();
     }
 }

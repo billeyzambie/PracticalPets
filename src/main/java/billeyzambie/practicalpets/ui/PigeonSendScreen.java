@@ -36,7 +36,6 @@ public class PigeonSendScreen extends Screen {
     private final Pigeon pigeon;
     private PlayerList playerList;
     private Button sendButton;
-    private Button cancelButton;
     private EditBox searchBox;
     private String lastSearch = "";
     private int leftPos;
@@ -77,7 +76,7 @@ public class PigeonSendScreen extends Screen {
                 button -> sendSelectedPlayer()
         ).pos(this.leftPos + 8, buttonY).size(78, 20).build());
 
-        this.cancelButton = this.addRenderableWidget(Button.builder(
+        Button cancelButton = this.addRenderableWidget(Button.builder(
                 Component.translatable("ui.practicalpets.pigeon_send.cancel"),
                 button -> onClose()
         ).pos(this.leftPos + 90, buttonY).size(78, 20).build());

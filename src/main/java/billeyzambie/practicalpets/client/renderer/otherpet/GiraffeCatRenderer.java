@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class GiraffeCatRenderer extends PracticalPetRenderer<GiraffeCat, GiraffeCatModel> {
     public GiraffeCatRenderer(EntityRendererProvider.Context context) {
-        super(context, new GiraffeCatModel(context.bakeLayer(PPRenders.GIRAFFE_CAT)), 0.4f);
+        super(context, new GiraffeCatModel(context.bakeLayer(PPRenders.GIRAFFE_CAT)), 0.5f);
         this.addLayer(new PetBackStrapLayer<>(this, BACK_STRAP_TEXTURE));
     }
 
@@ -45,6 +45,8 @@ public class GiraffeCatRenderer extends PracticalPetRenderer<GiraffeCat, Giraffe
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(GiraffeCat giraffecat) {
-        return (giraffecat.isCatHybrid() ? CAT_TEXTURES : GIRAFFE_TEXTURES)[giraffecat.getVariant()];
+        return giraffecat.isCatHybrid()
+                ? CAT_TEXTURES[giraffecat.getVariant() % CAT_TEXTURES.length]
+                : GIRAFFE_TEXTURES[giraffecat.getVariant() % GIRAFFE_TEXTURES.length];
     }
 }

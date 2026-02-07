@@ -113,9 +113,9 @@ public class PPEntities {
         event.put(
                 GIRAFFE_CAT.get(),
                 GiraffeCat.createMobAttributes()
-                        .add(Attributes.MAX_HEALTH, 20)
+                        .add(Attributes.MAX_HEALTH, 16)
                         .add(Attributes.MOVEMENT_SPEED, 0.25)
-                        .add(Attributes.ATTACK_DAMAGE, 4)
+                        .add(Attributes.ATTACK_DAMAGE, 3)
                         .build()
         );
 

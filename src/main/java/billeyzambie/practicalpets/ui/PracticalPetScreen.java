@@ -2,6 +2,9 @@ package billeyzambie.practicalpets.ui;
 
 import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.entity.dinosaur.Pigeon;
+import billeyzambie.practicalpets.entity.otherpet.GiraffeCat;
+import billeyzambie.practicalpets.misc.PPNetworking;
+import billeyzambie.practicalpets.network.GiraffeCatLadderButtonPacket;
 import net.minecraft.client.Minecraft;
 import billeyzambie.practicalpets.misc.PracticalPets;
 import net.minecraft.client.gui.GuiGraphics;
@@ -11,6 +14,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nullable;
 
 public class PracticalPetScreen extends AbstractContainerScreen<PracticalPetMenu> {
     private static final ResourceLocation TEXTURE =
@@ -25,7 +30,8 @@ public class PracticalPetScreen extends AbstractContainerScreen<PracticalPetMenu
             new ResourceLocation(PracticalPets.MODID, "textures/gui/slot/pet_body.png");
 
     PracticalPet pet;
-    private PigeonSendButton pigeonSendButton;
+    @Nullable
+    private PetAbilityButton petAbilityButton;
 
     public PracticalPetScreen(PracticalPetMenu menu, Inventory playerInventory, Component component) {
         super(menu, playerInventory, component);
@@ -33,27 +39,43 @@ public class PracticalPetScreen extends AbstractContainerScreen<PracticalPetMenu
         this.imageWidth = 176;
         this.imageHeight = 184;
         this.inventoryLabelY += 18;
-        if (pet instanceof Pigeon pigeon) {
-            this.addRenderableWidget(this.pigeonSendButton = new PigeonSendButton(
-                    this.leftPos + 178,
-                    this.topPos + 18,
-                    button -> Minecraft.getInstance().setScreen(new PigeonSendScreen(pigeon)),
-                    pigeon
-            ));
-            this.imageWidth += 2 + this.pigeonSendButton.getWidth();
-        }
     }
 
     @Override
     protected void init() {
         super.init();
+
+        if (pet instanceof Pigeon pigeon) {
+            this.addRenderableWidget(this.petAbilityButton = new PetAbilityButton(
+                    this.leftPos + 178,
+                    this.topPos + 18,
+                    button -> Minecraft.getInstance().setScreen(new PigeonSendScreen(pigeon)),
+                    pet,
+                    new ResourceLocation(PracticalPets.MODID, "textures/gui/mail_icon.png")
+            ));
+        }
+        else if (pet instanceof GiraffeCat) {
+            this.addRenderableWidget(this.petAbilityButton = new PetAbilityButton(
+                    this.leftPos + 178,
+                    this.topPos + 18,
+                    button -> {
+                        this.onClose();
+                        PPNetworking.CHANNEL.sendToServer(new GiraffeCatLadderButtonPacket(pet.getId()));
+                    },
+                    pet,
+                    new ResourceLocation(PracticalPets.MODID, "textures/gui/ladder_icon.png")
+            ));
+        }
+
+        if (this.petAbilityButton != null)
+            this.imageWidth += 2 + this.petAbilityButton.getWidth();
     }
 
     @Override
     protected void containerTick() {
         super.containerTick();
-        if (this.pigeonSendButton != null) {
-            this.pigeonSendButton.tick();
+        if (this.petAbilityButton != null) {
+            this.petAbilityButton.tick();
         }
     }
 
@@ -94,8 +116,8 @@ public class PracticalPetScreen extends AbstractContainerScreen<PracticalPetMenu
         this.renderBackground(graphics);
         super.render(graphics, mouseX, mouseY, partialTicks);
         this.renderTooltip(graphics, mouseX, mouseY);
-        if (this.pigeonSendButton != null && this.pigeonSendButton.isHovered()) {
-            Component tooltipComponent = this.pigeonSendButton.getTooltipComponent();
+        if (this.petAbilityButton != null && this.petAbilityButton.isHovered()) {
+            Component tooltipComponent = this.petAbilityButton.getTooltipComponent();
             if (tooltipComponent != null)
                 graphics.renderTooltip(this.font, tooltipComponent, mouseX, mouseY);
         }
