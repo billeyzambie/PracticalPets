@@ -3,14 +3,11 @@ package billeyzambie.practicalpets.entity;
 import billeyzambie.animationcontrollers.ACData;
 import billeyzambie.animationcontrollers.ACEntity;
 import billeyzambie.animationcontrollers.BVCData;
-import billeyzambie.practicalpets.items.PetBowtie;
+import billeyzambie.practicalpets.items.*;
 import billeyzambie.practicalpets.misc.*;
 import billeyzambie.practicalpets.network.RandomIdle1AnimPacket;
 import billeyzambie.practicalpets.ui.PracticalPetMenu;
-import billeyzambie.practicalpets.items.RubberDuckyPetHat;
 import billeyzambie.practicalpets.goal.*;
-import billeyzambie.practicalpets.items.PetCosmetic;
-import billeyzambie.practicalpets.items.PetHat;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
@@ -914,6 +911,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
                             && foundersHatsClaimed < 5
             ) {
                 ItemStack foundersHat = new ItemStack(PPItems.ANNIVERSARY_PET_HAT_0.get());
+                AnniversaryPetHat.putPlayerName(foundersHat, player.getName().getString());
                 this.setHeadItem(foundersHat);
                 persistedData.putInt(FOUNDERS_HATS_CLAIMED_TAG_ID, foundersHatsClaimed + 1);
                 persistentData.put(Player.PERSISTED_NBT_TAG, persistedData);

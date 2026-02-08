@@ -616,7 +616,7 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
         if (
                 this.isAlive()
                         && this.isLadder()
-                        && playerPos.y >= this.position().y
+                        && playerPos.y > this.position().y
                         && this.followMode() != PracticalPet.FollowMode.WANDERING
         ) {
             this.teleportTo(playerPos.x, playerPos.y, playerPos.z);

@@ -28,7 +28,7 @@ public class KeyframeAnimationReference implements Animatable {
         KeyframeAnimations.animate(
                 model,
                 animationDefinition,
-                (long) (50f * ageInTicks),
+                (long) (50f * animTime),
                 blendWeight,
                 ANIMATION_VECTOR_CACHE
         );
