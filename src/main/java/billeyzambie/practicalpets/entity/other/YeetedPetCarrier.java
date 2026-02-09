@@ -42,7 +42,6 @@ public class YeetedPetCarrier extends Projectile {
         Vec3 targetPosition = target.position();
         float yeetTime = 20 * (
                 (float) Math.sqrt(owner.distanceToSqr(targetPosition))
-                + (float) Math.max(0, target.getY() - owner.getY()) / 2f
         ) / BLOCKS_THAT_TAKE_A_SECOND_TO_REACH;
         Vec3 toPosition = targetPosition.add(target.getDeltaMovement().scale(yeetTime));
         Vec3 fromPosition = owner.position();
