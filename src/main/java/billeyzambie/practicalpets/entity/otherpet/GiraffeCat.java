@@ -2,7 +2,7 @@ package billeyzambie.practicalpets.entity.otherpet;
 
 import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.entity.StayStillGoalMob;
-import billeyzambie.practicalpets.entity.other.ThrownPetCarrier;
+import billeyzambie.practicalpets.entity.other.YeetedPetCarrier;
 import billeyzambie.practicalpets.goal.GiraffeCatPickUpPetGoal;
 import billeyzambie.practicalpets.goal.GiraffeCatMeleeAttackGoal;
 import billeyzambie.practicalpets.goal.StayStillGoal;
@@ -714,9 +714,9 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
         if (this.hasRider() && this.getPassengers().get(0) instanceof TamableAnimal rider) {
             LivingEntity target = this.getYeetTarget();
             if (target != null) {
-                ThrownPetCarrier thrownPetCarrier = new ThrownPetCarrier(this, rider, target);
+                YeetedPetCarrier yeetedPetCarrier = new YeetedPetCarrier(this, rider, target);
                 this.playSound(SoundEvents.SNOW_GOLEM_SHOOT, 1.0F, 0.4F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-                this.level().addFreshEntity(thrownPetCarrier);
+                this.level().addFreshEntity(yeetedPetCarrier);
 
             }
         }

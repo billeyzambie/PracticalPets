@@ -303,15 +303,10 @@ public class Rat extends PracticalPet implements CookingPet {
             ItemStack enemyItem = living.getMainHandItem();
             if (enemyItem.isDamageableItem()) {
                 float randomFloat = this.getRandom().nextFloat();
-                float randomFloat2 = 1;
-                //Make higher levels give better durability
-                for (int i = 0; i < this.petLevel(); i++) {
-                    randomFloat2 *= randomFloat;
-                }
                 enemyItem.setDamageValue(Mth.lerpInt(
-                        randomFloat2,
-                        enemyItem.getDamageValue(),
-                        enemyItem.getMaxDamage()
+                        Math.min(1, randomFloat + (this.petLevel() - 1) / 9f),
+                        enemyItem.getMaxDamage(),
+                        enemyItem.getDamageValue()
                 ));
             }
             this.setItemSlot(EquipmentSlot.MAINHAND, enemyItem);

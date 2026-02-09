@@ -6,7 +6,6 @@ import billeyzambie.practicalpets.misc.PPEvents;
 import billeyzambie.practicalpets.util.PPUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,18 +22,16 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-
-public class ThrownPetCarrier extends Projectile {
+public class YeetedPetCarrier extends Projectile {
 
     public static final int BLOCKS_THAT_TAKE_A_SECOND_TO_REACH = 10;
 
-    public ThrownPetCarrier(EntityType<? extends ThrownPetCarrier> p_37391_, Level p_37392_) {
+    public YeetedPetCarrier(EntityType<? extends YeetedPetCarrier> p_37391_, Level p_37392_) {
         super(p_37391_, p_37392_);
         this.setUpBoundingBox();
     }
 
-    public ThrownPetCarrier(GiraffeCat owner, TamableAnimal pet, LivingEntity target) {
+    public YeetedPetCarrier(GiraffeCat owner, TamableAnimal pet, LivingEntity target) {
         this(PPEntities.THROWN_PET_CARRIER.get(), owner.level());
         this.setPos(owner.getX(), owner.getY() + owner.getPassengersRidingOffset(), owner.getZ());
         this.setOwner(owner);
@@ -45,7 +42,7 @@ public class ThrownPetCarrier extends Projectile {
         Vec3 targetPosition = target.position();
         float yeetTime = 20 * (
                 (float) Math.sqrt(owner.distanceToSqr(targetPosition))
-                + (float) Math.abs(owner.getY() - target.getY()) / 2f
+                + (float) Math.max(0, target.getY() - owner.getY()) / 2f
         ) / BLOCKS_THAT_TAKE_A_SECOND_TO_REACH;
         Vec3 toPosition = targetPosition.add(target.getDeltaMovement().scale(yeetTime));
         Vec3 fromPosition = owner.position();
@@ -144,6 +141,8 @@ public class ThrownPetCarrier extends Projectile {
     private void copyTargetTo(TamableAnimal pet) {
         pet.setTarget(target);
         PPEvents.yeetedPetsThatGotTarget.add(pet);
+        //Probably does nothing
+        pet.getNavigation().stop();
     }
 
     @Override

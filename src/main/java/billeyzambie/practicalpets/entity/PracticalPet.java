@@ -489,7 +489,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     }
 
     protected double createFollowOwnerSpeed() {
-        return 1.25D;
+        return 1.1D;
     }
 
     protected double createMeleeAttackSpeedMultiplier() {

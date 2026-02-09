@@ -3,7 +3,7 @@ package billeyzambie.practicalpets.misc;
 import billeyzambie.practicalpets.entity.dinosaur.BananaDuck;
 import billeyzambie.practicalpets.entity.dinosaur.Duck;
 import billeyzambie.practicalpets.entity.dinosaur.Pigeon;
-import billeyzambie.practicalpets.entity.other.ThrownPetCarrier;
+import billeyzambie.practicalpets.entity.other.YeetedPetCarrier;
 import billeyzambie.practicalpets.entity.otherpet.GiraffeCat;
 import billeyzambie.practicalpets.entity.otherpet.Rat;
 import billeyzambie.practicalpets.entity.other.PetEndRodProjectile;
@@ -29,9 +29,9 @@ public class PPEntities {
                     .sized(0.3125F, 0.3125F)
                     .build("pet_end_rod_projectile")
     );
-    public static final RegistryObject<EntityType<ThrownPetCarrier>> THROWN_PET_CARRIER = REGISTRY.register(
+    public static final RegistryObject<EntityType<YeetedPetCarrier>> THROWN_PET_CARRIER = REGISTRY.register(
             "thrown_pet_carrier",
-            () -> EntityType.Builder.<ThrownPetCarrier>of(ThrownPetCarrier::new, MobCategory.CREATURE)
+            () -> EntityType.Builder.<YeetedPetCarrier>of(YeetedPetCarrier::new, MobCategory.CREATURE)
                     .sized(0.5f, 0.5f)
                     .build("thrown_pet_carrier")
     );
