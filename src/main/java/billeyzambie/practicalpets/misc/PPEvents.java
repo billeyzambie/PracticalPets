@@ -11,20 +11,34 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-import java.util.WeakHashMap;
+import java.util.*;
 
 @Mod.EventBusSubscriber
 public class PPEvents {
-    private static List<TamableAnimal> pets;
+    public static final Set<TamableAnimal> yeetedPetsThatGotTarget = new HashSet<>();
+
+    //Fix vanilla cats being angry at the air forever after being yeeted
+    @SubscribeEvent
+    public static void onLivingTick(LivingEvent.LivingTickEvent event) {
+        if (
+                !(event.getEntity() instanceof TamableAnimal pet)
+                || pet.level().isClientSide()
+                || !yeetedPetsThatGotTarget.contains(pet)
+        ) {
+            return;
+        }
+        if (pet.getTarget() == null || !pet.getTarget().isAlive()) {
+            pet.setTarget(null);
+            yeetedPetsThatGotTarget.remove(pet);
+        }
+    }
 
     @SubscribeEvent
     public static void onEntityLoad(EntityJoinLevelEvent event) {

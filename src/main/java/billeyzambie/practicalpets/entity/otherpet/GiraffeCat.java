@@ -2,7 +2,9 @@ package billeyzambie.practicalpets.entity.otherpet;
 
 import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.entity.StayStillGoalMob;
-import billeyzambie.practicalpets.goal.OcelotAttackIfShouldGoal;
+import billeyzambie.practicalpets.entity.other.ThrownPetCarrier;
+import billeyzambie.practicalpets.goal.GiraffeCatPickUpPetGoal;
+import billeyzambie.practicalpets.goal.GiraffeCatMeleeAttackGoal;
 import billeyzambie.practicalpets.goal.StayStillGoal;
 import billeyzambie.practicalpets.misc.PPEntities;
 import billeyzambie.practicalpets.misc.PPEvents;
@@ -141,13 +143,13 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
 
     @Override
     protected float getStandingEyeHeight(@NotNull Pose p_21131_, @NotNull EntityDimensions p_21132_) {
-        float eyeHeightInPixels = shouldBendOver() ? 24.5f : 14.5f;
+        float eyeHeightInPixels = shouldBendOver() ?  14.5f : 24.5f;
         return eyeHeightInPixels / 16f * this.getScale();
     }
 
     @Override
     protected @NotNull Goal createMeleeAttackGoal() {
-        return new OcelotAttackIfShouldGoal(this);
+        return new GiraffeCatMeleeAttackGoal(this);
     }
 
     private static final EntityDataAccessor<Boolean> SOLID_BLOCK_ABOVE = SynchedEntityData.defineId(GiraffeCat.class, EntityDataSerializers.BOOLEAN);
@@ -179,6 +181,7 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
         this.setSnoutless(compoundTag.getBoolean("IsSnoutless"));
         this.setCurrentAbility(CurrentAbility.values()[compoundTag.getInt("CurrentAbility")]);
         this.setLadderHeight(compoundTag.getInt("LadderHeight"));
+        this.timeInAbility = compoundTag.getInt("TimeInAbility");
     }
 
     @Override
@@ -188,6 +191,7 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
         compoundTag.putBoolean("IsSnoutless", this.isSnoutless());
         compoundTag.putInt("CurrentAbility", this.getCurrentAbility().ordinal());
         compoundTag.putInt("LadderHeight", this.getLadderHeight());
+        compoundTag.putInt("TimeInAbility", this.timeInAbility);
     }
 
     public boolean isCatHybrid() {
@@ -364,7 +368,7 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
 
     @Override
     public float getVoicePitch() {
-        return super.getVoicePitch() * 0.8f;
+        return super.getVoicePitch() * 0.7f;
     }
 
     @Override
@@ -431,6 +435,7 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(1, new StayStillGoal(this));
+        this.goalSelector.addGoal(29, new GiraffeCatPickUpPetGoal(this, 1.5f));
     }
 
     @Override
@@ -446,7 +451,7 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
     }
 
     public void becomeLadder() {
-        if (!this.noCurrentAbility() || !(this.getOwner() instanceof Player owner))
+        if (!this.noCurrentAbility() || !(this.getOwner() instanceof Player owner) || this.isBaby())
             return;
 
         this.setCurrentAbility(CurrentAbility.LADDER);
@@ -530,7 +535,7 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
     }
 
     @Override
-    protected void doPush(Entity p_20971_) {
+    protected void doPush(@NotNull Entity p_20971_) {
         if (!this.isLadder())
             super.doPush(p_20971_);
     }
@@ -565,6 +570,8 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
         return this.getVisibleLadderHeight(1) != SITTING_NECK_TOP;
     }
 
+    private int timeInAbility = 0;
+
     @Override
     public void tick() {
         super.tick();
@@ -581,10 +588,14 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
             } else {
                 this.visibleLadderVelocity = 0;
             }
-        } else switch (this.getCurrentAbility()) {
-            case YEETING -> this.tickYeeting();
-            case DIGGING -> this.tickDigging();
-            case LADDER -> this.tickLadder();
+        }
+        else {
+            switch (this.getCurrentAbility()) {
+                case YEETING -> this.tickYeeting();
+                case DIGGING -> this.tickDigging();
+                case LADDER -> this.tickLadder();
+            }
+            this.timeInAbility++;
         }
     }
 
@@ -627,7 +638,94 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
         PPEvents.climbedGiraffeCats.remove(owner);
     }
 
+    public float yeetStartClientTime = 0;
+    public boolean wasClientYeeting = false;
+
+    @Override
+    public @Nullable LivingEntity getControllingPassenger() {
+        return null;
+    }
+
+    @Override
+    public double getPassengersRidingOffset() {
+        return 13 / 16f;
+    }
+
+    @Override
+    protected void positionRider(@NotNull Entity entity, @NotNull MoveFunction moveFunction) {
+        super.positionRider(entity, moveFunction);
+        entity.setYRot(this.yBodyRot);
+        entity.setYBodyRot(this.yBodyRot);
+        entity.setYHeadRot(this.yBodyRot);
+    }
+
+    @Override
+    protected boolean canAddPassenger(@NotNull Entity entity) {
+        return entity instanceof Mob && super.canAddPassenger(entity);
+    }
+    
+    public boolean canPickUp(TamableAnimal pet) {
+        return pet.isAlive()
+                && this.isAlliedTo(pet)
+                && !(pet instanceof GiraffeCat)
+                && !pet.isOrderedToSit();
+    }
+
+    public void startYeeting(Mob mob) {
+        if (!this.noCurrentAbility())
+            return;
+        this.timeInAbility = 0;
+        this.setCurrentAbility(CurrentAbility.YEETING);
+        mob.startRiding(this, true);
+    }
+
+    private void lookAtYeetTarget() {
+        LivingEntity target = this.getYeetTarget();
+        if (target != null)
+            this.lookAt(target, 360f, 360f);
+    }
+
+    @Nullable
+    private LivingEntity getYeetTarget() {
+        LivingEntity target = this.getTarget();
+        if (target != null)
+            return target;
+        else if (this.hasRider() && this.getPassengers().get(0) instanceof Mob rider) {
+            return rider.getTarget();
+        }
+        return null;
+    }
+
+    public boolean hasRider() {
+        return !this.getPassengers().isEmpty();
+    }
+
     private void tickYeeting() {
+        if (this.timeInAbility == 20) {
+            this.yeet();
+        }
+        else if (this.timeInAbility >= 30) {
+            this.stopYeeting();
+        }
+        this.lookAtYeetTarget();
+    }
+
+    private void yeet() {
+        if (this.hasRider() && this.getPassengers().get(0) instanceof TamableAnimal rider) {
+            LivingEntity target = this.getYeetTarget();
+            if (target != null) {
+                ThrownPetCarrier thrownPetCarrier = new ThrownPetCarrier(this, rider, target);
+                this.playSound(SoundEvents.SNOW_GOLEM_SHOOT, 1.0F, 0.4F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+                this.level().addFreshEntity(thrownPetCarrier);
+
+            }
+        }
+        this.ejectPassengers();
+    }
+
+    private void stopYeeting() {
+        this.setCurrentAbility(CurrentAbility.NONE);
+        this.ejectPassengers(); // just in case
     }
 
     private void tickDigging() {

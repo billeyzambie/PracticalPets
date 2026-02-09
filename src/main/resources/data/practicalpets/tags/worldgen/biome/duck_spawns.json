@@ -1,7 +1,0 @@
-{
-  "replace": false,
-  "values": [
-    "#minecraft:animal_spawns",
-    "#minecraft:is_river"
-  ]
-}

@@ -13,6 +13,7 @@ import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -25,6 +26,8 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.IItemHandler;
+
+import java.util.UUID;
 
 public class PPUtil {
 
@@ -137,6 +140,12 @@ public class PPUtil {
         double dx = b.x - a.x;
         double dz = b.z - a.z;
         return dx * dx + dz * dz;
+    }
+
+    public static boolean petsShareOwner(TamableAnimal pet1, TamableAnimal pet2) {
+        UUID ownerId = pet1.getOwnerUUID();
+        return ownerId != null
+                && ownerId.equals(pet2.getOwnerUUID());
     }
 
 }

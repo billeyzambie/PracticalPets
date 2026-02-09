@@ -8,6 +8,7 @@ import billeyzambie.practicalpets.misc.*;
 import billeyzambie.practicalpets.network.RandomIdle1AnimPacket;
 import billeyzambie.practicalpets.ui.PracticalPetMenu;
 import billeyzambie.practicalpets.goal.*;
+import billeyzambie.practicalpets.util.PPUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
@@ -551,7 +552,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         if (entityGotHurt && entity instanceof Mob mob) {
             float amount = 1;
             if (!mob.isAlive())
-                amount += mob.getMaxHealth() / 10;
+                amount += mob.getMaxHealth() / 20;
             addPetXP(amount);
         }
         if (this.getHeadItem().getItem() instanceof RubberDuckyPetHat) {
@@ -987,7 +988,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
 
     @Override
     public void startPersistentAngerTimer() {
-        this.setRemainingPersistentAngerTime(PERSISTENT_ANGER_TIME.sample(this.random));
+        this.setRemainingPersistentAngerTime(2 * PERSISTENT_ANGER_TIME.sample(this.random));
     }
 
     @Override
@@ -1058,5 +1059,14 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         }
 
         return baby;
+    }
+
+    public boolean sharesOwnerWith(TamableAnimal pet) {
+        return PPUtil.petsShareOwner(this, pet);
+    }
+
+    @Override
+    public boolean isAlliedTo(@NotNull Entity entity) {
+        return (entity instanceof TamableAnimal pet && this.sharesOwnerWith(pet)) || super.isAlliedTo(entity);
     }
 }

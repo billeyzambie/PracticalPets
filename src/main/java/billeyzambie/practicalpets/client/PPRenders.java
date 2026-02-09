@@ -9,6 +9,7 @@ import billeyzambie.practicalpets.client.model.entity.pet_equipment.*;
 import billeyzambie.practicalpets.client.renderer.dinosaur.BananaDuckRenderer;
 import billeyzambie.practicalpets.client.renderer.dinosaur.DuckRenderer;
 import billeyzambie.practicalpets.client.renderer.dinosaur.PigeonRenderer;
+import billeyzambie.practicalpets.client.renderer.other.NothingRenderer;
 import billeyzambie.practicalpets.client.renderer.other.PetEndRodProjectileRenderer;
 import billeyzambie.practicalpets.client.renderer.otherpet.GiraffeCatRenderer;
 import billeyzambie.practicalpets.client.renderer.otherpet.RatRenderer;
@@ -82,6 +83,7 @@ public class PPRenders {
     @SubscribeEvent
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(PPEntities.PET_END_ROD_PROJECTILE.get(), PetEndRodProjectileRenderer::new);
+        event.registerEntityRenderer(PPEntities.THROWN_PET_CARRIER.get(), NothingRenderer::new);
 
         event.registerEntityRenderer(PPEntities.BANANA_DUCK.get(), BananaDuckRenderer::new);
         event.registerEntityRenderer(PPEntities.DUCK.get(), DuckRenderer::new);

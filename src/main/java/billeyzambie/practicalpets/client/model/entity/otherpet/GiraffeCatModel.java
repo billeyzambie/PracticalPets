@@ -8,6 +8,7 @@ import billeyzambie.animationcontrollers.PracticalPetModel;
 import billeyzambie.practicalpets.client.animation.otherpet.GiraffeCatAnimations;
 import billeyzambie.practicalpets.entity.otherpet.GiraffeCat;
 import billeyzambie.practicalpets.misc.PPAnimationControllers;
+import billeyzambie.practicalpets.util.PPUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.animation.AnimationDefinition;
@@ -196,12 +197,25 @@ public class GiraffeCatModel extends PracticalPetModel<GiraffeCat> {
 
         PPAnimationControllers.GIRAFFE_CAT_BASE.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
 
-        if (!entity.isInSittingPose() && !entity.isLadder()) {
+        if (!entity.isInSittingPose()) {
             this.animateWalk(limbSwing, limbSwingAmount, entity);
         }
 
         this.neck.y -= (entity.getVisibleLadderHeight(partialTick) - GiraffeCat.NECK_HEIGHT - GiraffeCat.SITTING_NECK_BOTTOM) * 16;
 
+
+        //Shake the neck while the giraffe cat is yeeting
+        boolean yeeting = entity.isYeeting();
+        if (yeeting) {
+            if (!entity.wasClientYeeting) {
+                entity.yeetStartClientTime = ageInTicks;
+            }
+            float yeetTime = ageInTicks - entity.yeetStartClientTime;
+            if (yeetTime < 20f) {
+                neck.xRot -= PPUtil.bedrockSinAngle(yeetTime * 3600);
+            }
+        }
+        entity.wasClientYeeting = yeeting;
     }
 
 

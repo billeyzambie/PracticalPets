@@ -3,6 +3,7 @@ package billeyzambie.practicalpets.misc;
 import billeyzambie.practicalpets.entity.dinosaur.BananaDuck;
 import billeyzambie.practicalpets.entity.dinosaur.Duck;
 import billeyzambie.practicalpets.entity.dinosaur.Pigeon;
+import billeyzambie.practicalpets.entity.other.ThrownPetCarrier;
 import billeyzambie.practicalpets.entity.otherpet.GiraffeCat;
 import billeyzambie.practicalpets.entity.otherpet.Rat;
 import billeyzambie.practicalpets.entity.other.PetEndRodProjectile;
@@ -27,6 +28,12 @@ public class PPEntities {
             () -> EntityType.Builder.<PetEndRodProjectile>of(PetEndRodProjectile::new, MobCategory.MISC)
                     .sized(0.3125F, 0.3125F)
                     .build("pet_end_rod_projectile")
+    );
+    public static final RegistryObject<EntityType<ThrownPetCarrier>> THROWN_PET_CARRIER = REGISTRY.register(
+            "thrown_pet_carrier",
+            () -> EntityType.Builder.<ThrownPetCarrier>of(ThrownPetCarrier::new, MobCategory.CREATURE)
+                    .sized(0.5f, 0.5f)
+                    .build("thrown_pet_carrier")
     );
 
     //mobs
@@ -116,6 +123,7 @@ public class PPEntities {
                         .add(Attributes.MAX_HEALTH, 16)
                         .add(Attributes.MOVEMENT_SPEED, 0.25)
                         .add(Attributes.ATTACK_DAMAGE, 3)
+                        .add(Attributes.FOLLOW_RANGE, 64)
                         .build()
         );
 
