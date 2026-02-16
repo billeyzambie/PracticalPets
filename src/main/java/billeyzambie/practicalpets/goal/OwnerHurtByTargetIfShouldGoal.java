@@ -17,7 +17,7 @@ public class OwnerHurtByTargetIfShouldGoal extends OwnerHurtByTargetGoal {
         var owner = pet.getOwner();
         if (owner == null)
             return null;
-        return owner.getLastHurtMob();
+        return owner.getLastHurtByMob();
     }
 
     @Override
