@@ -1,15 +1,19 @@
 package billeyzambie.practicalpets.blocks;
 
+import billeyzambie.practicalpets.advancements.MiscTrigger;
+import billeyzambie.practicalpets.misc.PPAdvancementTriggers;
 import billeyzambie.practicalpets.util.DelayedTaskManager;
 import billeyzambie.practicalpets.misc.PPSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -44,11 +48,10 @@ public class BananaPeel extends Block {
 
     @Override
     public boolean canSurvive(BlockState state, LevelReader levelReader, BlockPos pos) {
-        BlockPos belowPos = pos.below();  // Position of the block below
+        BlockPos belowPos = pos.below();
         BlockState blockState = levelReader.getBlockState(pos);
         BlockState belowState = levelReader.getBlockState(belowPos);
 
-        // Check if the block below is solid and supports the banana peel
         return belowState.isFaceSturdy(levelReader, belowPos, Direction.UP) && blockState.getFluidState().isEmpty();
     }
 
@@ -79,6 +82,11 @@ public class BananaPeel extends Block {
                     if (entity.getBbHeight() > 1)
                         entity.teleportRelative(0, -0.75, 0);
                     entity.getPersistentData().remove("practicalpets_just_slipped");
+                    if (!entity.isAlive()) {
+                        Player player = entity.level().getNearestPlayer(entity, 8);
+                        if (player != null)
+                            PPAdvancementTriggers.MISC.trigger((ServerPlayer) player, MiscTrigger.Advancement.BANANA_DUCK1);
+                    }
                 }
             }, 10);
         }

@@ -6,10 +6,7 @@ import billeyzambie.practicalpets.entity.other.YeetedPetCarrier;
 import billeyzambie.practicalpets.goal.GiraffeCatPickUpPetGoal;
 import billeyzambie.practicalpets.goal.GiraffeCatMeleeAttackGoal;
 import billeyzambie.practicalpets.goal.StayStillGoal;
-import billeyzambie.practicalpets.misc.PPEntities;
-import billeyzambie.practicalpets.misc.PPEvents;
-import billeyzambie.practicalpets.misc.PPSerializers;
-import billeyzambie.practicalpets.misc.PPSounds;
+import billeyzambie.practicalpets.misc.*;
 import billeyzambie.practicalpets.util.PPUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,6 +18,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
@@ -42,8 +40,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -141,10 +142,30 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
         return foodProperties != null && foodProperties.isMeat();
     }
 
+   @Override
+   protected float getStandingEyeHeight(@NotNull Pose p_21131_, @NotNull EntityDimensions p_21132_) {
+       float eyeHeightInPixels = shouldBendOver() ?  14.5f : 24.5f;
+       if (this.isInSittingPose())
+           eyeHeightInPixels -= 7;
+       return eyeHeightInPixels / 16f * this.getScale();
+   }
+
+    private Vec3 getSuffocationPosition() {
+        return new Vec3(this.getX(), this.getY() + this.getBbHeight() * 0.85f, this.getZ());
+    }
+
     @Override
-    protected float getStandingEyeHeight(@NotNull Pose p_21131_, @NotNull EntityDimensions p_21132_) {
-        float eyeHeightInPixels = shouldBendOver() ?  14.5f : 24.5f;
-        return eyeHeightInPixels / 16f * this.getScale();
+    public boolean isInWall() {
+        if (this.noPhysics || this.isSleeping()) {
+            return false;
+        } else {
+            float f = this.getBbWidth() * 0.8F;
+            AABB aabb = AABB.ofSize(this.getSuffocationPosition(), f, 1.0E-6D, f);
+            return BlockPos.betweenClosedStream(aabb).anyMatch((p_201942_) -> {
+                BlockState blockstate = this.level().getBlockState(p_201942_);
+                return !blockstate.isAir() && blockstate.isSuffocating(this.level(), p_201942_) && Shapes.joinIsNotEmpty(blockstate.getCollisionShape(this.level(), p_201942_).move(p_201942_.getX(), p_201942_.getY(), p_201942_.getZ()), Shapes.create(aabb), BooleanOp.AND);
+            });
+        }
     }
 
     @Override
@@ -451,12 +472,15 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
     }
 
     public void becomeLadder() {
-        if (!this.noCurrentAbility() || !(this.getOwner() instanceof Player owner) || this.isBaby())
+        if (!this.noCurrentAbility() || !(this.getOwner() instanceof ServerPlayer owner) || this.isBaby())
             return;
 
         this.setCurrentAbility(CurrentAbility.LADDER);
         this.setLadderHeight(2);
         this.playSound(PPSounds.GROW.get());
+
+
+        PPAdvancementTriggers.USED_PET_ABILITY.trigger(owner, this, 0);
 
         this.setOrderedToSit(true);
 
@@ -475,7 +499,7 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
 
         if (PPUtil.isSolid(this, blockAbove.above()) || PPUtil.isSolid(this, blockAbove)) {
             MinecraftServer server = this.getServer();
-            assert server != null : "GiraffeCat::becomeLadder called on client";
+            assert server != null;
             server.execute(this::stopLadder);
             return;
         }
@@ -621,21 +645,20 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
     }
 
     public void ownerLandedAfterClimbing() {
-        if (!(this.getOwner() instanceof Player owner))
-            return;
-        Vec3 playerPos = owner.position();
-        if (
-                this.isAlive()
-                        && this.isLadder()
-                        && playerPos.y > this.position().y
-                        && this.followMode() != PracticalPet.FollowMode.WANDERING
-        ) {
-            this.teleportTo(playerPos.x, playerPos.y, playerPos.z);
-            this.stopLadder();
-            this.setOrderedToSit(false);
-            this.setShouldFollowOwner(true);
+        if (this.getOwner() instanceof Player owner) {
+            Vec3 playerPos = owner.position();
+            if (
+                    this.isAlive()
+                            && this.isLadder()
+                            && playerPos.y > this.position().y
+                            && this.followMode() != FollowMode.WANDERING
+            ) {
+                this.teleportTo(playerPos.x, playerPos.y, playerPos.z);
+                this.stopLadder();
+                this.setOrderedToSit(false);
+                this.setShouldFollowOwner(true);
+            }
         }
-        PPEvents.climbedGiraffeCats.remove(owner);
     }
 
     public float yeetStartClientTime = 0;
@@ -717,7 +740,9 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
                 YeetedPetCarrier yeetedPetCarrier = new YeetedPetCarrier(this, rider, target);
                 this.playSound(SoundEvents.SNOW_GOLEM_SHOOT, 1.0F, 0.4F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
                 this.level().addFreshEntity(yeetedPetCarrier);
-
+                if (this.getOwner() instanceof ServerPlayer owner) {
+                    PPAdvancementTriggers.USED_PET_ABILITY.trigger(owner, this, 1);
+                }
             }
         }
         this.ejectPassengers();

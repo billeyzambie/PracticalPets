@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "practicalpets:banana_peel"
+    },
+    "title": {
+      "translate": "advancement.practicalpets.banana_duck1.title"
+    },
+    "description": {
+      "translate": "advancement.practicalpets.banana_duck1.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "practicalpets:banana_duck/tame",
+  "criteria": {
+    "used": {
+      "trigger": "practicalpets:misc",
+      "conditions": {
+        "index": 0
+      }
+    }
+  }
+}

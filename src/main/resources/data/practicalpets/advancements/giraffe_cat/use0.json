@@ -1,0 +1,29 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:arrow"
+    },
+    "title": {
+      "translate": "advancement.practicalpets.giraffe_cat0.title"
+    },
+    "description": {
+      "translate": "advancement.practicalpets.giraffe_cat0.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "practicalpets:giraffe_cat/tame",
+  "criteria": {
+    "used": {
+      "trigger": "practicalpets:used_pet_ability",
+      "conditions": {
+        "pet": {
+          "type": "practicalpets:giraffe_cat"
+        },
+        "ability": 0
+      }
+    }
+  }
+}

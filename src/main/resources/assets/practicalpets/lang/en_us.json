@@ -60,5 +60,19 @@
   "death.attack.practicalpets.stick_bugged.player": "%s got stick bugged by %s",
   "ui.practicalpets.giraffe_cat_ladder.activate": "Enter ladder mode",
   "tooltip.practicalpets.dead_pet_bowtie": "RIP %s%s%s was in %s%s%s",
-  "tooltip.practicalpets.dead_pet_bowtie_named": "RIP %s the %s%s%s was in %s%s%s"
+  "tooltip.practicalpets.dead_pet_bowtie_named": "RIP %s the %s%s%s was in %s%s%s",
+  "advancement.practicalpets.root.title": "Practical Pets",
+  "advancement.practicalpets.root.desc": "Enter a world full of unique useful pets",
+  "advancement.practicalpets.giraffe_cat_tame.title": "Long-term Companion",
+  "advancement.practicalpets.giraffe_cat_tame.desc": "Tame a giraffe cat that spawns in savannas with fish or leaves",
+  "advancement.practicalpets.giraffe_cat0.title": "Neckstension",
+  "advancement.practicalpets.giraffe_cat0.desc": "Make your giraffe cat go into ladder mode",
+  "advancement.practicalpets.giraffe_cat1.title": "Cat-apult",
+  "advancement.practicalpets.giraffe_cat1.desc": "Use your giraffe cat to throw pets at your enemies",
+  "advancement.practicalpets.banana_duck_tame.title": "Appeeling Companion",
+  "advancement.practicalpets.banana_duck_tame.desc": "Tame a banana duck that spawns in jungles with bread",
+  "advancement.practicalpets.banana_duck0.title": "Is it a fruit or actually meat?",
+  "advancement.practicalpets.banana_duck0.desc": "Make a banana duck make a banana by feeding it an apple",
+  "advancement.practicalpets.banana_duck1.title": "A Goofy Weapon",
+  "advancement.practicalpets.banana_duck1.desc": "Use a banana peel to make your enemies slip to their death"
 }

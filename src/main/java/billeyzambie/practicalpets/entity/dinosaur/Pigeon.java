@@ -44,6 +44,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class Pigeon extends PracticalPet {
@@ -585,7 +586,10 @@ public class Pigeon extends PracticalPet {
                 hit instanceof BlockHitResult blockHit
         ) {
             AABB itemBox = AABB.ofSize(blockHit.getLocation(), 1.1, 1.1, 1.1);
-            ItemEntity itemEntity = player.level().getEntitiesOfClass(ItemEntity.class, itemBox).get(0);
+            List<ItemEntity> itemEntities = player.level().getEntitiesOfClass(ItemEntity.class, itemBox);
+            if (itemEntities.isEmpty())
+                return;
+            ItemEntity itemEntity = itemEntities.get(0);
             if (itemEntity != null) {
                 player.level().getEntitiesOfClass(
                                 Pigeon.class,
@@ -593,9 +597,7 @@ public class Pigeon extends PracticalPet {
                                 p -> p.isOwnedBy(player) && !p.isOrderedToSit() && p.targetItemEntity == null && p.isAlive()
                         ).stream().min(Comparator.comparingDouble(p -> p.distanceToSqr(player)))
 
-                        .ifPresent(pigeon -> {
-                            pigeon.targetItemEntity = itemEntity;
-                        });
+                        .ifPresent(pigeon -> pigeon.targetItemEntity = itemEntity);
             }
         }
     }

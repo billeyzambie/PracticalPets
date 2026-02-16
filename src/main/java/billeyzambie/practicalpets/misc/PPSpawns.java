@@ -52,7 +52,7 @@ public class PPSpawns {
         if (biome.is(BiomeTags.IS_SAVANNA)) {
             builder.getMobSpawnSettings().getSpawner(MobCategory.CREATURE).add(new MobSpawnSettings.SpawnerData(
                     PPEntities.GIRAFFE_CAT.get(),
-                    10, 4, 8
+                    20, 4, 8
             ));
         }
 

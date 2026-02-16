@@ -21,6 +21,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -41,6 +42,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
@@ -390,6 +392,12 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
      * Overrides must end with {@code return super.healOverride(itemStack)}
      */
     public HealOverride healOverride(ItemStack itemStack) {
+        if (itemStack.is(Tags.Items.CROPS))
+            return HealOverride.defineNutrition(3);
+        if (itemStack.is(Tags.Items.SEEDS))
+            return HealOverride.defineNutrition(2);
+        if (itemStack.is(ItemTags.LEAVES))
+            return HealOverride.defineNutrition(2);
         return null;
     }
 

@@ -12,6 +12,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -22,6 +23,7 @@ import java.util.*;
 
 @Mod.EventBusSubscriber
 public class PPEvents {
+
     public static final Set<TamableAnimal> yeetedPetsThatGotTarget = new HashSet<>();
 
     //Fix vanilla cats being angry at the air forever after being yeeted
@@ -58,6 +60,7 @@ public class PPEvents {
             @Nullable GiraffeCat climbedGiraffeCat = climbedGiraffeCats.get(player);
             if (climbedGiraffeCat != null && player.onGround()) {
                 climbedGiraffeCat.ownerLandedAfterClimbing();
+                climbedGiraffeCats.remove(player);
             }
         }
     }

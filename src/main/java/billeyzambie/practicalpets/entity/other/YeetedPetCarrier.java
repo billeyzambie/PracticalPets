@@ -127,7 +127,6 @@ public class YeetedPetCarrier extends Projectile {
             return;
         if (!(this.getOwner() instanceof GiraffeCat giraffeCat))
             return;
-        giraffeCat.doHurtTarget(entity);
         AttributeInstance petAttack = pet.getAttribute(Attributes.ATTACK_DAMAGE);
         if (petAttack != null) {
             if (entity == this.target) {
@@ -135,6 +134,7 @@ public class YeetedPetCarrier extends Projectile {
                 pet.doHurtTarget(target);
             }
         }
+        giraffeCat.doHurtTarget(entity);
     }
 
     private void copyTargetTo(TamableAnimal pet) {

@@ -1,15 +1,13 @@
 package billeyzambie.practicalpets.entity.dinosaur;
 
-import billeyzambie.practicalpets.misc.PPTags;
+import billeyzambie.practicalpets.misc.*;
 import billeyzambie.practicalpets.util.DelayedTaskManager;
-import billeyzambie.practicalpets.misc.PPEntities;
-import billeyzambie.practicalpets.misc.PPItems;
-import billeyzambie.practicalpets.misc.PPSounds;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -106,13 +104,16 @@ public class BananaDuck extends AbstractDuck {
                         player.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP, 1, 0.9f);
                     }
                     else {
-                        player.addEffect(new MobEffectInstance(MobEffects.WITHER, 1, 3));
+                        player.addEffect(new MobEffectInstance(MobEffects.WITHER, 20, 3));
                     }
                 }
                 DelayedTaskManager.schedule(() -> {
                     if (this.isAlive()) {
                         this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.PLAYER_BURP, this.getSoundSource(), 1.0F, this.random.nextFloat() * 0.4F + 0.8F);
                         this.spawnAtLocation(new ItemStack(PPItems.POULTRY_BANANA.get()));
+                        if (player.isAlive() && player == this.getOwner()) {
+                            PPAdvancementTriggers.USED_PET_ABILITY.trigger((ServerPlayer) player, this, 0);
+                        }
                     }
                 }, 26);
             }
@@ -135,19 +136,6 @@ public class BananaDuck extends AbstractDuck {
     @Override
     protected SoundEvent getDeathSound() {
         return PPSounds.BANANA_DUCK_DEATH.get();
-    }
-
-    @Override
-    public @Nullable AgeableMob getBreedOffspring(@NotNull ServerLevel level, @NotNull AgeableMob partner) {
-        BananaDuck baby = PPEntities.BANANA_DUCK.get().create(level);
-        if (baby != null) {
-            if (this.isTame()) {
-                baby.setOwnerUUID(this.getOwnerUUID());
-                baby.setTame(true);
-            }
-        }
-
-        return baby;
     }
 
     @Override

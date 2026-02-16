@@ -1,0 +1,42 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:cod"
+    },
+    "title": {
+      "translate": "advancement.practicalpets.giraffe_cat_tame.title"
+    },
+    "description": {
+      "translate": "advancement.practicalpets.giraffe_cat_tame.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "practicalpets:root",
+  "criteria": {
+    "tame": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "practicalpets:giraffe_cat"
+        }
+      }
+    },
+    "used": {
+      "trigger": "practicalpets:used_pet_ability",
+      "conditions": {
+        "pet": {
+          "type": "practicalpets:giraffe_cat"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "used",
+      "tame"
+    ]
+  ]
+}

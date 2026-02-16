@@ -45,7 +45,7 @@ public class PracticalPets
 
     // Creates a creative tab with the id "practicalpets:example_tab" for the example item, that is placed after the combat tab
     public static final RegistryObject<CreativeModeTab> MOD_TAB = CREATIVE_MODE_TABS.register("practicalpets", () -> CreativeModeTab.builder()
-            .icon(() -> new ItemStack(PPItems.PET_BOWTIE.get()))
+            .icon(() -> new ItemStack(PPItems.RUBBER_DUCKY_PET_HAT.get()))
             .title(Component.literal("Practical Pets"))
             .displayItems((parameters, output) -> {
                 //spawn eggs
@@ -118,6 +118,7 @@ public class PracticalPets
        //LOGGER.info("HELLO FROM COMMON SETUP");
 
        PPNetworking.register();
+       PPAdvancementTriggers.init();
        //if (Config.logDirtBlock)
        //    LOGGER.info("DIRT BLOCK >> {}", ForgeRegistries.BLOCKS.getKey(Blocks.DIRT));
 

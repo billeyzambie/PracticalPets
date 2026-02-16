@@ -1,0 +1,42 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:bread"
+    },
+    "title": {
+      "translate": "advancement.practicalpets.banana_duck_tame.title"
+    },
+    "description": {
+      "translate": "advancement.practicalpets.banana_duck_tame.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "practicalpets:root",
+  "criteria": {
+    "tame": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "practicalpets:banana_duck"
+        }
+      }
+    },
+    "used": {
+      "trigger": "practicalpets:used_pet_ability",
+      "conditions": {
+        "pet": {
+          "type": "practicalpets:banana_duck"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "used",
+      "tame"
+    ]
+  ]
+}
