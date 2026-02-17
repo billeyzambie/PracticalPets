@@ -45,7 +45,7 @@ public class PracticalPets
 
     // Creates a creative tab with the id "practicalpets:example_tab" for the example item, that is placed after the combat tab
     public static final RegistryObject<CreativeModeTab> MOD_TAB = CREATIVE_MODE_TABS.register("practicalpets", () -> CreativeModeTab.builder()
-            .icon(() -> new ItemStack(PPItems.RUBBER_DUCKY_PET_HAT.get()))
+            .icon(() -> new ItemStack(PPItems.PET_BOWTIE.get()))
             .title(Component.literal("Practical Pets"))
             .displayItems((parameters, output) -> {
                 //spawn eggs

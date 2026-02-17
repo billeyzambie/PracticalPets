@@ -1077,4 +1077,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     public boolean isAlliedTo(@NotNull Entity entity) {
         return (entity instanceof TamableAnimal pet && this.sharesOwnerWith(pet)) || super.isAlliedTo(entity);
     }
+
+    public void onDropHeldItemToOwner() {
+    }
 }

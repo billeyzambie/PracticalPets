@@ -602,7 +602,15 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
 
         if (this.level().isClientSide) {
             this.visibleLadderHeightO = this.visibleLadderHeight;
-            float targetHeight = this.isLadder() ? this.getLadderHeight() : SITTING_NECK_TOP;
+
+            float targetHeight = SITTING_NECK_TOP;
+            if (this.isLadder())
+                targetHeight = this.getLadderHeight();
+            else if (this.hasRider()) {
+                targetHeight = this.getPassengers().get(0).getBbHeight() * Mth.SQRT_OF_TWO;
+            }
+            targetHeight = Math.max(SITTING_NECK_TOP, targetHeight);
+
             if (targetHeight > visibleLadderHeight) {
                 this.visibleLadderVelocity += LADDER_HEIGHT_G;
                 this.visibleLadderHeight = Math.min(targetHeight, this.visibleLadderHeight + this.visibleLadderVelocity);

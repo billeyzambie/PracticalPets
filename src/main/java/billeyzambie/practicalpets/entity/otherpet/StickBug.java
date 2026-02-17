@@ -2,6 +2,7 @@ package billeyzambie.practicalpets.entity.otherpet;
 
 import billeyzambie.practicalpets.entity.DancingEntity;
 import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.misc.PPAdvancementTriggers;
 import billeyzambie.practicalpets.misc.PPBlocks;
 import billeyzambie.practicalpets.misc.PPDamageTypes;
 import billeyzambie.practicalpets.misc.PPTags;
@@ -11,6 +12,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
@@ -125,6 +127,8 @@ public class StickBug extends PracticalPet implements DancingEntity {
                 || super.isTameItem(itemStack);
     }
 
+    private boolean celebrateKilling;
+
     @Override
     public boolean doHurtTarget(@NotNull Entity entity) {
         float f = (float)this.getAttributeValue(Attributes.ATTACK_DAMAGE);
@@ -151,6 +155,11 @@ public class StickBug extends PracticalPet implements DancingEntity {
 
         this.doHurtEffect(entity, flag);
 
+        if (!entity.isAlive()) {
+            celebrateKilling = true;
+            if (this.getOwner() instanceof ServerPlayer player)
+                PPAdvancementTriggers.USED_PET_ABILITY.trigger(player, this, 0);
+        }
         return flag;
     }
 
@@ -301,8 +310,12 @@ public class StickBug extends PracticalPet implements DancingEntity {
         if (!navigationDone) {
             this.setIsRandomDancing(false);
         }
-        else if (!navigationWasDone && this.random.nextInt(10) <= this.petLevel() / 2) {
+        else if (!navigationWasDone && (
+                this.random.nextInt(10) <= this.petLevel() / 2
+                || this.celebrateKilling
+        )) {
             this.randomDanceTime = this.random.nextInt(200, 400);
+            this.celebrateKilling = false;
             this.setIsRandomDancing(true);
             BlockPos inBlockPos = this.getOnPos().above();
             BlockState blockState = this.level().getBlockState(inBlockPos);

@@ -1,0 +1,42 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:wheat_seeds"
+    },
+    "title": {
+      "translate": "advancement.practicalpets.pigeon_tame.title"
+    },
+    "description": {
+      "translate": "advancement.practicalpets.pigeon_tame.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "practicalpets:root",
+  "criteria": {
+    "tame": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "practicalpets:pigeon"
+        }
+      }
+    },
+    "used": {
+      "trigger": "practicalpets:used_pet_ability",
+      "conditions": {
+        "pet": {
+          "type": "practicalpets:pigeon"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "used",
+      "tame"
+    ]
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "display": {
+    "icon": {
+      "item": "practicalpets:rubber_ducky_pet_hat"
+    },
+    "title": {
+      "translate": "advancement.practicalpets.duck1.title"
+    },
+    "description": {
+      "translate": "advancement.practicalpets.duck1.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "practicalpets:duck/tame",
+  "criteria": {
+    "potato_sticks": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "practicalpets:rubber_ducky_pet_hat"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  }
+}

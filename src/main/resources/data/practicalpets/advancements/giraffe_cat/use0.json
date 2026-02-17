@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "item": "minecraft:arrow"
+      "item": "minecraft:ladder"
     },
     "title": {
       "translate": "advancement.practicalpets.giraffe_cat0.title"

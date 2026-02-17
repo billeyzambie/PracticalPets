@@ -3,6 +3,7 @@ package billeyzambie.practicalpets.entity.dinosaur;
 import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.goal.*;
 import billeyzambie.practicalpets.items.PetBackpack;
+import billeyzambie.practicalpets.misc.PPAdvancementTriggers;
 import billeyzambie.practicalpets.misc.PPEntities;
 import billeyzambie.practicalpets.misc.PPSerializers;
 import billeyzambie.practicalpets.misc.PPSounds;
@@ -504,13 +505,14 @@ public class Pigeon extends PracticalPet {
                 if (--this.movementSwitchTime <= 0) {
                     this.returnFromMission();
                     LivingEntity owner = this.getOwner();
-                    if (!(owner instanceof Player player))
+                    if (!(owner instanceof ServerPlayer player))
                         return;
                     player.sendSystemMessage(Component.translatable(
                             "ui.practicalpets.pigeon_send.sender_success",
                             this.getDisplayName(),
                             this.missionTargetName
                     ).withStyle(ChatFormatting.GREEN));
+                    PPAdvancementTriggers.USED_PET_ABILITY.trigger(player, this, 0);
                 }
             }
         }
@@ -602,4 +604,10 @@ public class Pigeon extends PracticalPet {
         }
     }
 
+    @Override
+    public void onDropHeldItemToOwner() {
+        super.onDropHeldItemToOwner();
+        if (this.getOwner() instanceof ServerPlayer player)
+            PPAdvancementTriggers.USED_PET_ABILITY.trigger(player, this, 1);
+    }
 }

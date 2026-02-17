@@ -47,6 +47,8 @@ public class DropHeldItemToOwnerGoal extends FollowOwnerWanderableGoal {
 
                 pet.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
                 pet.getNavigation().stop();
+
+                pet.onDropHeldItemToOwner();
             }
         }
     }

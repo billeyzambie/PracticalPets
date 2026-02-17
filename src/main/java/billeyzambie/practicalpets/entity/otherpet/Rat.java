@@ -4,6 +4,7 @@ import billeyzambie.practicalpets.entity.CookingPet;
 import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.goal.CookGoal;
 import billeyzambie.practicalpets.goal.DropHeldItemToOwnerGoal;
+import billeyzambie.practicalpets.misc.PPAdvancementTriggers;
 import billeyzambie.practicalpets.misc.PPEntities;
 import billeyzambie.practicalpets.misc.PPItems;
 import billeyzambie.practicalpets.misc.PPTags;
@@ -14,10 +15,10 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BiomeTags;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
@@ -154,6 +155,9 @@ public class Rat extends PracticalPet implements CookingPet {
         this.setItemSlot(EquipmentSlot.MAINHAND, newItem);
         if (this.isOrderedToSit())
             this.setFollowMode(FollowMode.FOLLOWING);
+
+        if (this.getOwner() instanceof ServerPlayer player)
+            PPAdvancementTriggers.USED_PET_ABILITY.trigger(player, this, 1);
     }
 
     @Override
@@ -311,6 +315,9 @@ public class Rat extends PracticalPet implements CookingPet {
             }
             this.setItemSlot(EquipmentSlot.MAINHAND, enemyItem);
             living.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+
+            if (this.getOwner() instanceof ServerPlayer player)
+                PPAdvancementTriggers.USED_PET_ABILITY.trigger(player, this, 0);
         }
         return result;
     }

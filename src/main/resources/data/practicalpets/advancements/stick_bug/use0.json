@@ -1,28 +1,28 @@
 {
   "display": {
     "icon": {
-      "item": "minecraft:arrow"
+      "item": "minecraft:stick"
     },
     "title": {
-      "translate": "advancement.practicalpets.giraffe_cat1.title"
+      "translate": "advancement.practicalpets.stick_bug0.title"
     },
     "description": {
-      "translate": "advancement.practicalpets.giraffe_cat1.desc"
+      "translate": "advancement.practicalpets.stick_bug0.desc"
     },
     "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false
   },
-  "parent": "practicalpets:giraffe_cat/tame",
+  "parent": "practicalpets:stick_bug/tame",
   "criteria": {
     "used": {
       "trigger": "practicalpets:used_pet_ability",
       "conditions": {
         "pet": {
-          "type": "practicalpets:giraffe_cat"
+          "type": "practicalpets:stick_bug"
         },
-        "ability": 1
+        "ability": 0
       }
     }
   }

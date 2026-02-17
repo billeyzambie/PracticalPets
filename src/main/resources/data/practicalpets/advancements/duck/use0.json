@@ -1,0 +1,32 @@
+{
+  "display": {
+    "icon": {
+      "item": "practicalpets:chicken_nugget"
+    },
+    "title": {
+      "translate": "advancement.practicalpets.duck0.title"
+    },
+    "description": {
+      "translate": "advancement.practicalpets.duck0.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "practicalpets:duck/tame",
+  "criteria": {
+    "potato_sticks": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "practicalpets:chicken_nugget"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  }
+}

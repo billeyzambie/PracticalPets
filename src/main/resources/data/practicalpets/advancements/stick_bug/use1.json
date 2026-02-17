@@ -1,0 +1,32 @@
+{
+  "display": {
+    "icon": {
+      "item": "practicalpets:potato_stick"
+    },
+    "title": {
+      "translate": "advancement.practicalpets.stick_bug1.title"
+    },
+    "description": {
+      "translate": "advancement.practicalpets.stick_bug1.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "practicalpets:stick_bug/tame",
+  "criteria": {
+    "potato_sticks": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "practicalpets:potato_stick"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  }
+}

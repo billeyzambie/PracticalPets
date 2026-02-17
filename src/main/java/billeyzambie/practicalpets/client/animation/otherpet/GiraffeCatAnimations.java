@@ -190,7 +190,7 @@ public class GiraffeCatAnimations {
 		.build();
 
 	public static final AnimationDefinition yeet = AnimationDefinition.Builder.withLength(1.5F)
-			.addAnimation("neck", new AnimationChannel(AnimationChannel.Targets.ROTATION,
+			.addAnimation("neck2", new AnimationChannel(AnimationChannel.Targets.ROTATION,
 					new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
 					new Keyframe(0.25F, KeyframeAnimations.degreeVec(-45.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
 					new Keyframe(0.5F, KeyframeAnimations.degreeVec(-63.4349F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
