@@ -13,6 +13,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -450,6 +451,10 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
         put(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.TABBY), i++);
         put(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.ALL_BLACK), i++);
         put(BuiltInRegistries.CAT_VARIANT.getOrThrow(CatVariant.JELLIE), i++);
+        put(PPCatVariants.PERRY.get(), i++);
+        put(PPCatVariants.PIZZA.get(), i++);
+        put(PPCatVariants.SUGAR.get(), i++);
+        put(PPCatVariants.LILY.get(), i++);
     }};
 
     @Override

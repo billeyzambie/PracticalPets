@@ -92,6 +92,7 @@ public class PracticalPets
         PPItems.REGISTRY.register(modEventBus);
         // Register the Deferred Register to the mod event bus so tabs get registered
         CREATIVE_MODE_TABS.register(modEventBus);
+        PPCatVariants.REGISTRY.register(modEventBus);
 
         PPSounds.REGISTRY.register(modEventBus);
         PPEntities.REGISTRY.register(modEventBus);

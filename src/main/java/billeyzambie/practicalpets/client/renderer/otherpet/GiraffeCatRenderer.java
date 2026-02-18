@@ -48,7 +48,11 @@ public class GiraffeCatRenderer extends PracticalPetRenderer<GiraffeCat, Giraffe
             new ResourceLocation(PracticalPets.MODID, "textures/entity/giraffe_cat/ragdoll.png"),
             new ResourceLocation(PracticalPets.MODID, "textures/entity/giraffe_cat/tabby.png"),
             new ResourceLocation(PracticalPets.MODID, "textures/entity/giraffe_cat/jellie.png"),
-            new ResourceLocation(PracticalPets.MODID, "textures/entity/giraffe_cat/allblackcat.png")
+            new ResourceLocation(PracticalPets.MODID, "textures/entity/giraffe_cat/allblackcat.png"),
+            new ResourceLocation(PracticalPets.MODID, "textures/entity/giraffe_cat/perry.png"),
+            new ResourceLocation(PracticalPets.MODID, "textures/entity/giraffe_cat/pizza.png"),
+            new ResourceLocation(PracticalPets.MODID, "textures/entity/giraffe_cat/sugar.png"),
+            new ResourceLocation(PracticalPets.MODID, "textures/entity/giraffe_cat/lily.png")
     };
 
     private static final ResourceLocation BACK_STRAP_TEXTURE =
