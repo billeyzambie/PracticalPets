@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 public class PetHat extends Item implements AttachablePetCosmetic {
 
     public PetHat(String modelTextureName, float xpMultiplier, Item.Properties properties) {
-        super(properties);
+        super(properties.stacksTo(1));
         this.modelTexture = new ResourceLocation(
                 PracticalPets.MODID,
                 "textures/entity/pet_equipment/" + modelTextureName + ".png"

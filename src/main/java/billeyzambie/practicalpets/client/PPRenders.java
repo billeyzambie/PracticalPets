@@ -15,6 +15,7 @@ import billeyzambie.practicalpets.client.renderer.otherpet.GiraffeCatRenderer;
 import billeyzambie.practicalpets.client.renderer.otherpet.RatRenderer;
 import billeyzambie.practicalpets.client.renderer.otherpet.StickBugRenderer;
 import billeyzambie.practicalpets.entity.other.PetEndRodProjectile;
+import billeyzambie.practicalpets.items.PlainPetHat;
 import billeyzambie.practicalpets.misc.PPEntities;
 import billeyzambie.practicalpets.misc.PracticalPets;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -79,6 +80,9 @@ public class PPRenders {
     public static final ModelLayerLocation PET_END_ROD_LAUNCHER = new ModelLayerLocation(
             new ResourceLocation(PracticalPets.MODID, "pet_end_rod_launcher_layer"), "main"
     );
+    public static final ModelLayerLocation PET_HAT = new ModelLayerLocation(
+            new ResourceLocation(PracticalPets.MODID, "pet_hat"), "main"
+    );
 
     @SubscribeEvent
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
@@ -113,5 +117,6 @@ public class PPRenders {
         event.registerLayerDefinition(PPRenders.PET_CHEF_HAT, PetChefHatModel::createBodyLayer);
         event.registerLayerDefinition(PPRenders.PET_BACKPACK, PetBackpackModel::createBodyLayer);
         event.registerLayerDefinition(PPRenders.PET_END_ROD_LAUNCHER, PetEndRodLauncherModel::createBodyLayer);
+        event.registerLayerDefinition(PPRenders.PET_HAT, PlainPetHatModel::createBodyLayer);
     }
 }

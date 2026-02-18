@@ -534,8 +534,16 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
             return false;
         for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
             ItemStack cosmeticStack = this.getEquippedItem(slot);
-            if (!cosmeticStack.isEmpty() && cosmeticStack.getItem() instanceof PetCosmetic cosmetic)
+            if (!cosmeticStack.isEmpty() && cosmeticStack.getItem() instanceof PetCosmetic cosmetic) {
                 amount *= cosmetic.damageMultiplier();
+            }
+        }
+        for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
+            ItemStack cosmeticStack = this.getEquippedItem(slot);
+            if (!cosmeticStack.isEmpty() && cosmeticStack.getItem() instanceof PetCosmetic cosmetic) {
+                if (!cosmetic.onPetHurt(cosmeticStack, this, source, amount))
+                    return false;
+            }
         }
         boolean result = super.hurt(source, amount);
         if (result) {

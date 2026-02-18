@@ -60,14 +60,15 @@ public abstract class PracticalPetRenderer<T extends Mob, M extends PracticalPet
                 PPItems.PET_END_ROD_LAUNCHER.get(),
                 new PetBackpackModel<>(context.bakeLayer(PPRenders.PET_END_ROD_LAUNCHER))
         );
+        cosmeticModels.put(
+                PPItems.PET_HAT.get(),
+                new PlainPetHatModel<>(context.bakeLayer(PPRenders.PET_HAT))
+        );
     }
 
     @Override
     public void render(T entity, float entityYaw, float partialticks, PoseStack poseStack,
                        @NotNull MultiBufferSource buffer, int packedLight) {
-
-        float scale = entity.getScale();
-        poseStack.scale(scale, scale, scale);
 
         super.render(entity, entityYaw, partialticks, poseStack, buffer, packedLight);
 

@@ -62,18 +62,20 @@ public class PracticalPets
                 //other items obtained from pets
                 output.accept(PPItems.BANANA_PEEL.get());
                 //pet equipment
-                output.accept(PPItems.LEATHER_DUCK_ARMOR.get());
-                output.accept(PPItems.GOLDEN_DUCK_ARMOR.get());
-                output.accept(PPItems.CHAINMAIL_DUCK_ARMOR.get());
-                output.accept(PPItems.IRON_DUCK_ARMOR.get());
-                output.accept(PPItems.DIAMOND_DUCK_ARMOR.get());
-                output.accept(PPItems.NETHERITE_DUCK_ARMOR.get());
+                output.accept(PPItems.PET_HAT.get());
                 output.accept(PPItems.PET_BOWTIE.get());
                 output.accept(PPItems.ANNIVERSARY_PET_HAT_0.get());
                 output.accept(PPItems.RUBBER_DUCKY_PET_HAT.get());
                 output.accept(PPItems.PET_CHEF_HAT.get());
                 output.accept(PPItems.PET_BACKPACK.get());
                 output.accept(PPItems.PET_END_ROD_LAUNCHER.get());
+                //pet-specific pet equipment
+                output.accept(PPItems.LEATHER_DUCK_ARMOR.get());
+                output.accept(PPItems.GOLDEN_DUCK_ARMOR.get());
+                output.accept(PPItems.CHAINMAIL_DUCK_ARMOR.get());
+                output.accept(PPItems.IRON_DUCK_ARMOR.get());
+                output.accept(PPItems.DIAMOND_DUCK_ARMOR.get());
+                output.accept(PPItems.NETHERITE_DUCK_ARMOR.get());
                 //output.accept(ModItems.END_ROD_DUCK_ARMOR.get());
             }).build());
 
@@ -159,7 +161,8 @@ public class PracticalPets
                     PPItems.RUBBER_DUCKY_PET_HAT.get(),
                     PPItems.PET_CHEF_HAT.get(),
                     PPItems.PET_BACKPACK.get(),
-                    PPItems.PET_END_ROD_LAUNCHER.get()
+                    PPItems.PET_END_ROD_LAUNCHER.get(),
+                    PPItems.PET_HAT.get()
             );
         }
     }
