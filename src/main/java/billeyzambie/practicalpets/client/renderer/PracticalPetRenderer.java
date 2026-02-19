@@ -69,6 +69,8 @@ public abstract class PracticalPetRenderer<T extends Mob, M extends PracticalPet
     @Override
     public void render(T entity, float entityYaw, float partialticks, PoseStack poseStack,
                        @NotNull MultiBufferSource buffer, int packedLight) {
+        float scale = entity.getScale();
+        poseStack.scale(scale, scale, scale);
 
         super.render(entity, entityYaw, partialticks, poseStack, buffer, packedLight);
 

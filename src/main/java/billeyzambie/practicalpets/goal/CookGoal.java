@@ -37,14 +37,4 @@ public class CookGoal extends Goal {
             cookingPet.cookingInterrupted();
         }
     }
-
-    @Override
-    public void tick() {
-        if (cookingPet.isCooking() && !pet.level().isClientSide()) {
-            cookingPet.incrementCookingTicks();
-            if (cookingPet.cookingTimerRanOut()) {
-                cookingPet.setIsCooking(false);
-            }
-        }
-    }
 }

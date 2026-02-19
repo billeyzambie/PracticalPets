@@ -49,9 +49,12 @@ public class Rat extends PracticalPet implements CookingPet {
     private static final EntityDataAccessor<Integer> PATTERN_TYPE = SynchedEntityData.defineId(Rat.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> IS_COOKING = SynchedEntityData.defineId(Rat.class, EntityDataSerializers.BOOLEAN);
     private int cookingTicks = 0;
-    private int holdingBowlTicks = 0;
 
     private final ItemStackHandler cookingIngredients = new ItemStackHandler(COOKING_ITEMS_NEEDED);
+    @Override
+    public ItemStackHandler getCookingIngredients() {
+        return this.cookingIngredients;
+    }
 
     public static final int PATTERN_TYPE_COUNT = 4;
     public static final int COLOR_TYPE_COUNT = 5;
@@ -73,10 +76,7 @@ public class Rat extends PracticalPet implements CookingPet {
         this.setPatternColor(compoundTag.getInt("PatternColor"));
         this.setPatternType(compoundTag.getInt("PatternType"));
         this.setIsAlbino(compoundTag.getBoolean("IsAlbino"));
-        this.setIsCooking(compoundTag.getBoolean("IsCooking"));
-        this.setCookingTicks(compoundTag.getInt("CookingTicks"));
-        this.cookingIngredients.deserializeNBT(compoundTag.getCompound("CookingIngredients"));
-        this.holdingBowlTicks = compoundTag.getInt("HoldingBowlTicks");
+        this.readCookingSaveData(compoundTag);
     }
 
     @Override
@@ -85,10 +85,7 @@ public class Rat extends PracticalPet implements CookingPet {
         compoundTag.putInt("PatternColor", this.getPatternColor());
         compoundTag.putInt("PatternType", this.getPatternType());
         compoundTag.putBoolean("IsAlbino", this.isAlbino());
-        compoundTag.putBoolean("IsCooking", this.isCooking());
-        compoundTag.putInt("CookingTicks", this.getCookingTicks());
-        compoundTag.put("CookingIngredients", this.cookingIngredients.serializeNBT());
-        compoundTag.putInt("HoldingBowlTicks", this.holdingBowlTicks);
+        this.addCookingSaveData(compoundTag);
     }
 
     public int getPatternColor() {
@@ -126,22 +123,23 @@ public class Rat extends PracticalPet implements CookingPet {
     }
 
     @Override
-    public boolean isCookingFinished() {
-        return cookingTimerRanOut() && cookingIngredientsFull();
-    }
-
-    @Override
     public boolean cookingTimerRanOut() {
         return cookingTicks >= COOK_DURATION_TICKS;
     }
 
-    private boolean cookingIngredientsFull() {
-        return PPUtil.countItems(cookingIngredients) >= COOKING_ITEMS_NEEDED;
+    @Override
+    public boolean cookingIngredientsFull() {
+        return PPUtil.countItems(this.getCookingIngredients()) >= COOKING_ITEMS_NEEDED;
+    }
+
+    @Override
+    public boolean isHoldingCookContainer() {
+        return this.getMainHandItem().is(Items.BOWL);
     }
 
     @Override
     public void cookingSuccess() {
-        PPUtil.clear(cookingIngredients);
+        PPUtil.clear(this.getCookingIngredients());
         var newItem = new ItemStack(PPItems.RATATOUILLE.get());
         int level = this.petLevel();
         if (level > 1) {
@@ -161,23 +159,13 @@ public class Rat extends PracticalPet implements CookingPet {
     }
 
     @Override
-    public void cookingInterrupted() {
-        this.setIsCooking(false);
-        this.spawnAtLocation(this.getMainHandItem().split(1));
-        PPUtil.dump(cookingIngredients, this);
-    }
-
     public int getCookingTicks() {
         return cookingTicks;
     }
 
+    @Override
     public void setCookingTicks(int cookingTicks) {
         this.cookingTicks = cookingTicks;
-    }
-
-    @Override
-    public void incrementCookingTicks() {
-        cookingTicks++;
     }
 
     public Rat(EntityType<? extends TamableAnimal> entityType, Level level) {
@@ -322,50 +310,17 @@ public class Rat extends PracticalPet implements CookingPet {
         return result;
     }
 
-    public static boolean canBeCookingIngredient(ItemStack itemStack) {
+    @Override
+    public boolean canBeCookingIngredient(ItemStack itemStack) {
         return itemStack.is(Tags.Items.CROPS) && !itemStack.is(PPTags.Items.RAT_COOK_EXCEPTIONS);
     }
 
     @Override
     public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
-        ItemStack itemstack = player.getItemInHand(hand);
-        Item item = itemstack.getItem();
-
-        boolean clientSide = this.level().isClientSide();
-        if (!this.hasTarget() && this.isWearingChefHat()) {
-            if (itemstack.is(Items.BOWL) && this.getMainHandItem().isEmpty()) {
-                if (!clientSide) {
-                    this.setItemSlot(EquipmentSlot.MAINHAND, itemstack.split(1));
-                    this.holdingBowlTicks = 0;
-                }
-                return InteractionResult.sidedSuccess(clientSide);
-            }
-            if (this.getMainHandItem().is(Items.BOWL)
-                    && canBeCookingIngredient(itemstack)
-                    && !this.cookingIngredientsFull()
-            ) {
-                if (!clientSide) {
-                    ItemHandlerHelper.insertItemStacked(cookingIngredients, itemstack.split(1), false);
-                    //give the player some extra time to put in the next ingredients
-                    this.holdingBowlTicks /= 2;
-                    if (this.cookingIngredientsFull()) {
-                        this.startCooking();
-                    }
-                }
-                return InteractionResult.sidedSuccess(clientSide);
-            }
-        }
-
+        InteractionResult cookInteract = this.cookInteract(player, hand);
+        if (cookInteract != InteractionResult.PASS)
+            return cookInteract;
         return super.mobInteract(player, hand);
-    }
-
-    private boolean isWearingChefHat() {
-        return this.getHeadItem().is(PPTags.Items.PET_CHEF_HATS);
-    }
-
-    private void startCooking() {
-        this.setIsCooking(true);
-        this.setCookingTicks(0);
     }
 
     @Override
@@ -450,7 +405,7 @@ public class Rat extends PracticalPet implements CookingPet {
             this.spawnAtLocation(itemstack);
             this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
         }
-        PPUtil.dump(cookingIngredients, this);
+        PPUtil.dump(this.getCookingIngredients(), this);
     }
 
     public float lastWalkTime = 0;
@@ -459,8 +414,6 @@ public class Rat extends PracticalPet implements CookingPet {
     @Override
     public void tick() {
         super.tick();
-        if (!this.level().isClientSide() && this.getMainHandItem().is(Items.BOWL) && !this.isCooking() && holdingBowlTicks++ > 200) {
-            this.cookingInterrupted();
-        }
+        this.tickCooking();
     }
 }
