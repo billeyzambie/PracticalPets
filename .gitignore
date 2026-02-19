@@ -26,3 +26,4 @@ runC
 
 # Files from Forge MDK
 forge*changelog.txt
+/run-data/
