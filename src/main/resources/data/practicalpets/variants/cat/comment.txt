@@ -1,0 +1,1 @@
+Needed for the variants to work when More Mob Variants is installed
