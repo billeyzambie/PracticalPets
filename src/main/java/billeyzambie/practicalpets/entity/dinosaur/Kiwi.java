@@ -1,19 +1,29 @@
 package billeyzambie.practicalpets.entity.dinosaur;
 
 import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.misc.PPItems;
+import billeyzambie.practicalpets.misc.PPSerializers;
 import billeyzambie.practicalpets.misc.PPSounds;
 import billeyzambie.practicalpets.misc.PPTags;
+import billeyzambie.practicalpets.util.PPUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -142,19 +152,104 @@ public class Kiwi extends PracticalPet {
         return this.random.nextInt(600, 1200);
     }
 
-    public enum ShearedState{SHEARABLE, INTERMEDIATE, SHEARED}
+    public enum ShearedState {SHEARABLE, INTERMEDIATE, SHEARED}
+
+    private static final EntityDataAccessor<ShearedState> SHEARED_STATE = SynchedEntityData.defineId(
+            Kiwi.class,
+            PPSerializers.KIWI_SHEARED_STATE.get()
+    );
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(SHEARED_STATE, ShearedState.SHEARABLE);
+    }
+
+    public ShearedState getShearedState() {
+        return this.entityData.get(SHEARED_STATE);
+    }
+
+    public void setShearedState(ShearedState shearedState) {
+        this.entityData.set(SHEARED_STATE, shearedState);
+    }
 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
         this.timeToBiteFloor = compoundTag.getInt("TimeToBiteFloor");
+        this.setShearedState(ShearedState.values()[compoundTag.getInt("ShearedState")]);
+        this.shearTime = compoundTag.getInt("ShearTime");
     }
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
         compoundTag.putInt("TimeToBiteFloor", timeToBiteFloor);
+        compoundTag.putInt("ShearedState", this.getShearedState().ordinal());
+        compoundTag.putInt("ShearTime", shearTime);
     }
 
+    @Override
+    public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        Item item = stack.getItem();
+        if (this.getShearedState() == ShearedState.SHEARABLE) {
+            if (item instanceof ShearsItem) {
+                if (this.level().isClientSide()) {
+                    this.level().playSound(player, this.getX(), this.getY(), this.getZ(), SoundEvents.SHEEP_SHEAR, this.getSoundSource(), 1.0F, this.random.nextFloat() * 0.4F + 0.8F);
+                    return InteractionResult.SUCCESS;
+                } else {
+                    stack.hurtAndBreak(1, player, lambdaPlayer ->
+                            lambdaPlayer.broadcastBreakEvent(hand)
+                    );
+                    this.setShearedState(ShearedState.SHEARED);
+                    this.setRandomShearTime();
+                    //Just in case a mod makes shears enchantable with fortune I guess
+                    int featherCount = this.random.nextIntBetweenInclusive(1, 2)
+                            + stack.getEnchantmentLevel(Enchantments.BLOCK_FORTUNE);
+                    this.spawnAtLocation(new ItemStack(PPItems.KIWI_FEATHERS.get(), featherCount));
+                    return InteractionResult.CONSUME;
+                }
+            }
+        } else if (item instanceof BoneMealItem) {
+            if (this.level().isClientSide()) {
+                PPUtil.playBoneMealEffectsAt(this, 15);
+                return InteractionResult.SUCCESS;
+            } else {
+                stack.shrink(1);
+                this.setNextShearedState();
+                return InteractionResult.CONSUME;
+            }
+        }
+        return super.mobInteract(player, hand);
+    }
 
+    private void setRandomShearTime() {
+        float levelProgress1to10 = (this.petLevel() - 1) / 9f;
+        int i = Math.max(10,
+                (int) Mth.lerp(levelProgress1to10, 120 * 20, 30)
+        );
+        this.shearTime = this.random.nextInt(i, i * 2);
+    }
+
+    private int shearTime;
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (!this.level().isClientSide()) {
+            ShearedState shearedState = this.getShearedState();
+            if (shearedState != ShearedState.SHEARABLE && this.shearTime-- <= 0) {
+                this.setNextShearedState();
+            }
+        }
+    }
+
+    private void setNextShearedState() {
+        switch (this.getShearedState()) {
+            case SHEARED -> this.setShearedState(ShearedState.INTERMEDIATE);
+            case INTERMEDIATE -> this.setShearedState(ShearedState.SHEARABLE);
+        }
+        this.setRandomShearTime();
+    }
 }

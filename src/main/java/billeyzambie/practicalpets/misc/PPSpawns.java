@@ -58,9 +58,9 @@ public class PPSpawns {
         }
 
         if (biome.is(BiomeTags.IS_FOREST)) {
-            builder.getMobSpawnSettings().getSpawner(MobCategory.CREATURE).add(new MobSpawnSettings.SpawnerData(
+            builder.getMobSpawnSettings().getSpawner(MobCategory.MONSTER).add(new MobSpawnSettings.SpawnerData(
                     PPEntities.KIWI.get(),
-                    10, 4, 8
+                    50, 4, 8
             ));
         }
 

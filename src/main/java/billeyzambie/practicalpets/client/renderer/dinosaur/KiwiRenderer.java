@@ -1,6 +1,7 @@
 package billeyzambie.practicalpets.client.renderer.dinosaur;
 
 import billeyzambie.practicalpets.client.PPRenders;
+import billeyzambie.practicalpets.client.layer.KiwiShearedLayer;
 import billeyzambie.practicalpets.client.layer.PetBackStrapLayer;
 import billeyzambie.practicalpets.client.model.entity.dinosaur.KiwiModel;
 import billeyzambie.practicalpets.client.renderer.PracticalPetRenderer;
@@ -13,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 public class KiwiRenderer extends PracticalPetRenderer<Kiwi, KiwiModel> {
     public KiwiRenderer(EntityRendererProvider.Context context) {
         super(context, new KiwiModel(context.bakeLayer(PPRenders.KIWI)), 0.35f);
+        this.addLayer(new KiwiShearedLayer(this));
         this.addLayer(new PetBackStrapLayer<>(this, BACK_STRAP_TEXTURE));
     }
 

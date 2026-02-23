@@ -2,12 +2,14 @@ package billeyzambie.practicalpets.util;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -15,7 +17,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -146,6 +147,25 @@ public class PPUtil {
         UUID ownerId = pet1.getOwnerUUID();
         return ownerId != null
                 && ownerId.equals(pet2.getOwnerUUID());
+    }
+
+    public static void playBoneMealEffectsAt(Entity entity, int count) {
+        Level level = entity.level();
+        RandomSource randomsource = level.getRandom();
+        double d1 = entity.getBbHeight();
+        double d0 = 0.5;
+        BlockPos blockPos = entity.blockPosition();
+        for(int i = 0; i < count; ++i) {
+            double d2 = randomsource.nextGaussian() * 0.02D;
+            double d3 = randomsource.nextGaussian() * 0.02D;
+            double d4 = randomsource.nextGaussian() * 0.02D;
+            double d5 = -d0;
+            double d6 = entity.getX() + d5 + randomsource.nextDouble() * d0 * 2.0D;
+            double d7 = entity.getY() + randomsource.nextDouble() * d1;
+            double d8 = entity.getZ() + d5 + randomsource.nextDouble() * d0 * 2.0D;
+            level.addParticle(ParticleTypes.HAPPY_VILLAGER, d6, d7, d8, d2, d3, d4);
+        }
+        level.playLocalSound(blockPos, SoundEvents.BONE_MEAL_USE, SoundSource.NEUTRAL, 1.0F, 1.0F, false);
     }
 
 }
