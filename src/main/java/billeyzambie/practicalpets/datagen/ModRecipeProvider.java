@@ -5,13 +5,13 @@ import billeyzambie.practicalpets.misc.PracticalPets;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -24,7 +24,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
     }
 
     @Override
-    protected void buildRecipes(Consumer<FinishedRecipe> consumer) {
+    protected void buildRecipes(@NotNull Consumer<FinishedRecipe> consumer) {
         duckArmorRecipe(consumer, "leather", LEATHER_DUCK_ARMOR.getId().getPath(), Items.LEATHER);
         duckArmorRecipe(consumer, "iron", IRON_DUCK_ARMOR.getId().getPath(), Items.IRON_INGOT);
         duckArmorRecipe(consumer, "golden", GOLDEN_DUCK_ARMOR.getId().getPath(), Items.GOLD_INGOT);
@@ -47,18 +47,15 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .pattern("NNN")
                 .unlockedBy("has_material", has(DIAMOND_NUGGET.get()))
                 .save(consumer, new ResourceLocation(PracticalPets.MODID, "diamond_from_nuggets"));
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, PET_BOWTIE.get())
-                .define('C', ItemTags.WOOL_CARPETS)
-                .pattern(" C ")
-                .pattern("C C")
-                .unlockedBy("has_material", has(ItemTags.WOOL_CARPETS))
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, PET_BOWTIE.get())
+                .requires(ItemTags.WOOL_CARPETS)
+                .requires(KIWI_FEATHERS.get())
+                .unlockedBy("has_material", has(KIWI_FEATHERS.get()))
                 .save(consumer, PET_BOWTIE.getId());
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, PET_CHEF_HAT.get())
-                .define('C', ItemTags.WOOL_CARPETS)
-                .pattern("CCC")
-                .pattern("CCC")
-                .pattern(" C ")
-                .unlockedBy("has_material", has(ItemTags.WOOL_CARPETS))
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, PET_CHEF_HAT.get())
+                .requires(ItemTags.WOOL)
+                .requires(KIWI_FEATHERS.get())
+                .unlockedBy("has_material", has(KIWI_FEATHERS.get()))
                 .save(consumer, PET_CHEF_HAT.getId());
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, PET_BACKPACK.get())
                 .define('F', Items.FEATHER)
@@ -70,12 +67,19 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .unlockedBy("has_material", has(Items.FEATHER))
                 .save(consumer, PET_BACKPACK.getId());
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, PET_END_ROD_LAUNCHER.get())
+                .define('K', KIWI_FEATHERS.get())
                 .define('E', Items.END_ROD)
                 .define('S', Items.STRING)
+                .pattern("K")
                 .pattern("E")
                 .pattern("S")
-                .unlockedBy("has_material", has(Items.END_ROD))
+                .unlockedBy("has_material", has(KIWI_FEATHERS.get()))
                 .save(consumer, PET_END_ROD_LAUNCHER.getId());
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, PET_HAT.get())
+                .requires(Tags.Items.LEATHER)
+                .requires(KIWI_FEATHERS.get())
+                .unlockedBy("has_material", has(KIWI_FEATHERS.get()))
+                .save(consumer, PET_HAT.getId());
     }
 
     private void duckArmorRecipe(Consumer<FinishedRecipe> consumer, String materialName, String resultId, Item ingredient) {
@@ -89,7 +93,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .save(consumer, new ResourceLocation(PracticalPets.MODID, resultId));
     }
 
-    private net.minecraft.world.item.Item getDuckArmorItem(String materialName) {
+    private Item getDuckArmorItem(String materialName) {
         return switch (materialName) {
             case "leather" -> LEATHER_DUCK_ARMOR.get();
             case "iron" -> IRON_DUCK_ARMOR.get();

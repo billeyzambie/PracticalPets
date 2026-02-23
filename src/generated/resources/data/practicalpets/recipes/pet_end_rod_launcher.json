@@ -5,11 +5,15 @@
     "E": {
       "item": "minecraft:end_rod"
     },
+    "K": {
+      "item": "practicalpets:kiwi_feathers"
+    },
     "S": {
       "item": "minecraft:string"
     }
   },
   "pattern": [
+    "K",
     "E",
     "S"
   ],

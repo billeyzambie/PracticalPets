@@ -142,6 +142,8 @@ public class Kiwi extends PracticalPet {
         return this.random.nextInt(600, 1200);
     }
 
+    public enum ShearedState{SHEARABLE, INTERMEDIATE, SHEARED}
+
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
@@ -153,4 +155,6 @@ public class Kiwi extends PracticalPet {
         super.addAdditionalSaveData(compoundTag);
         compoundTag.putInt("TimeToBiteFloor", timeToBiteFloor);
     }
+
+
 }

@@ -77,15 +77,19 @@ public class PPItems {
             "chicken_nugget",
             () -> new CustomUseDurationItem(
                     new Item.Properties().food(new FoodProperties.Builder().meat().nutrition(1).fast().saturationMod(0.6f).build()),
-                    4
+                    8
             )
     );
     public static final RegistryObject<Item> POTATO_STICK = register(
             "potato_stick",
             () -> new CustomUseDurationItem(
                     new Item.Properties().food(new FoodProperties.Builder().nutrition(2).fast().saturationMod(0.6f).build()),
-                    2
+                    4
             )
+    );
+    public static final RegistryObject<Item> KIWI_FEATHERS = register(
+            "kiwi_feathers",
+            () -> new Item(new Item.Properties())
     );
 
     public static final RegistryObject<Item> ANNIVERSARY_PET_HAT_0 = register(

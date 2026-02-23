@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "practicalpets:pet_bowtie"
+        "recipe": "practicalpets:pet_hat"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "practicalpets:pet_bowtie"
+      "practicalpets:pet_hat"
     ]
   },
   "sends_telemetry_event": false

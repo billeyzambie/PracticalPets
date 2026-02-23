@@ -3,13 +3,13 @@
   "category": "misc",
   "ingredients": [
     {
-      "tag": "minecraft:wool"
+      "tag": "forge:leather"
     },
     {
       "item": "practicalpets:kiwi_feathers"
     }
   ],
   "result": {
-    "item": "practicalpets:pet_chef_hat"
+    "item": "practicalpets:pet_hat"
   }
 }

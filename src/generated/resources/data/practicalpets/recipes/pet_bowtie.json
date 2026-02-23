@@ -1,17 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "minecraft:crafting_shapeless",
   "category": "misc",
-  "key": {
-    "C": {
+  "ingredients": [
+    {
       "tag": "minecraft:wool_carpets"
+    },
+    {
+      "item": "practicalpets:kiwi_feathers"
     }
-  },
-  "pattern": [
-    " C ",
-    "C C"
   ],
   "result": {
     "item": "practicalpets:pet_bowtie"
-  },
-  "show_notification": true
+  }
 }
