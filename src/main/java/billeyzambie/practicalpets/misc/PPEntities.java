@@ -2,6 +2,7 @@ package billeyzambie.practicalpets.misc;
 
 import billeyzambie.practicalpets.entity.dinosaur.BananaDuck;
 import billeyzambie.practicalpets.entity.dinosaur.Duck;
+import billeyzambie.practicalpets.entity.dinosaur.Kiwi;
 import billeyzambie.practicalpets.entity.dinosaur.Pigeon;
 import billeyzambie.practicalpets.entity.other.YeetedPetCarrier;
 import billeyzambie.practicalpets.entity.otherpet.GiraffeCat;
@@ -9,6 +10,7 @@ import billeyzambie.practicalpets.entity.otherpet.Rat;
 import billeyzambie.practicalpets.entity.other.PetEndRodProjectile;
 import billeyzambie.practicalpets.entity.otherpet.StickBug;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -73,6 +75,12 @@ public class PPEntities {
                     .sized(0.6f, 0.7f)
                     .build("giraffe_cat")
     );
+    public static final RegistryObject<EntityType<Kiwi>> KIWI = REGISTRY.register(
+            "kiwi",
+            () -> EntityType.Builder.of(Kiwi::new, MobCategory.CREATURE)
+                    .sized(0.5f, 0.7f)
+                    .build("kiwi")
+    );
 
     @SubscribeEvent
     public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
@@ -86,7 +94,7 @@ public class PPEntities {
         );
         event.put(
                 DUCK.get(),
-                Duck.createMobAttributes()
+                Mob.createMobAttributes()
                         .add(Attributes.MAX_HEALTH, 6)
                         .add(Attributes.MOVEMENT_SPEED, Duck.MOVEMENT_SPEED)
                         .add(Attributes.ATTACK_DAMAGE, 2)
@@ -94,7 +102,7 @@ public class PPEntities {
         );
         event.put(
                 RAT.get(),
-                Rat.createMobAttributes()
+                Mob.createMobAttributes()
                         .add(Attributes.MAX_HEALTH, 10)
                         .add(Attributes.MOVEMENT_SPEED, 0.2)
                         .add(Attributes.ATTACK_DAMAGE, 2)
@@ -102,7 +110,7 @@ public class PPEntities {
         );
         event.put(
                 PIGEON.get(),
-                Pigeon.createMobAttributes()
+                Mob.createMobAttributes()
                         .add(Attributes.MAX_HEALTH, 4)
                         .add(Attributes.MOVEMENT_SPEED, 0.2)
                         .add(Attributes.FLYING_SPEED, 0.6)
@@ -111,7 +119,7 @@ public class PPEntities {
         );
         event.put(
                 STICK_BUG.get(),
-                StickBug.createMobAttributes()
+                Mob.createMobAttributes()
                         .add(Attributes.MAX_HEALTH, 2)
                         .add(Attributes.MOVEMENT_SPEED, 0.2)
                         .add(Attributes.ATTACK_DAMAGE, 1)
@@ -119,11 +127,19 @@ public class PPEntities {
         );
         event.put(
                 GIRAFFE_CAT.get(),
-                GiraffeCat.createMobAttributes()
+                Mob.createMobAttributes()
                         .add(Attributes.MAX_HEALTH, 16)
                         .add(Attributes.MOVEMENT_SPEED, 0.25)
                         .add(Attributes.ATTACK_DAMAGE, 3)
                         .add(Attributes.FOLLOW_RANGE, 64)
+                        .build()
+        );
+        event.put(
+                KIWI.get(),
+                Mob.createMobAttributes()
+                        .add(Attributes.MAX_HEALTH, 6)
+                        .add(Attributes.MOVEMENT_SPEED, 0.2)
+                        .add(Attributes.ATTACK_DAMAGE, 2)
                         .build()
         );
 

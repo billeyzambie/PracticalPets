@@ -137,4 +137,8 @@ public class PPItems {
             "giraffe_cat_spawn_egg",
             () -> new ForgeSpawnEggItem(PPEntities.GIRAFFE_CAT, 0xFFEBCB, 0x7F6751, new Item.Properties())
     );
+    public static final RegistryObject<ForgeSpawnEggItem> KIWI_SPAWN_EGG = register(
+            "kiwi_spawn_egg",
+            () -> new ForgeSpawnEggItem(PPEntities.KIWI, 0x7CA422, 0x6E4F24, new Item.Properties())
+    );
 }

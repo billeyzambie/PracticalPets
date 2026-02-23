@@ -398,6 +398,8 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
             return HealOverride.defineNutrition(2);
         if (itemStack.is(ItemTags.LEAVES))
             return HealOverride.defineNutrition(2);
+        if (itemStack.is(Items.FERMENTED_SPIDER_EYE))
+            return HealOverride.defineNutrition(3);
         return null;
     }
 
