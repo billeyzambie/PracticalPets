@@ -1,6 +1,7 @@
 package billeyzambie.practicalpets.misc;
 
 import billeyzambie.practicalpets.entity.dinosaur.Duck;
+import billeyzambie.practicalpets.entity.dinosaur.Kiwi;
 import billeyzambie.practicalpets.entity.otherpet.Rat;
 import net.minecraft.core.Holder;
 import net.minecraft.tags.BiomeTags;
@@ -52,7 +53,14 @@ public class PPSpawns {
         if (biome.is(BiomeTags.IS_SAVANNA)) {
             builder.getMobSpawnSettings().getSpawner(MobCategory.CREATURE).add(new MobSpawnSettings.SpawnerData(
                     PPEntities.GIRAFFE_CAT.get(),
-                    20, 4, 8
+                    15, 4, 8
+            ));
+        }
+
+        if (biome.is(BiomeTags.IS_FOREST)) {
+            builder.getMobSpawnSettings().getSpawner(MobCategory.CREATURE).add(new MobSpawnSettings.SpawnerData(
+                    PPEntities.KIWI.get(),
+                    10, 4, 8
             ));
         }
 
@@ -125,6 +133,14 @@ public class PPSpawns {
                 SpawnPlacements.Type.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Animal::checkAnimalSpawnRules,
+                SpawnPlacementRegisterEvent.Operation.REPLACE
+        );
+
+        event.register(
+                PPEntities.KIWI.get(),
+                SpawnPlacements.Type.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                Kiwi::kiwiCanSpawn,
                 SpawnPlacementRegisterEvent.Operation.REPLACE
         );
     }

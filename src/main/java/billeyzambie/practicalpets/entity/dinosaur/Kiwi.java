@@ -3,22 +3,27 @@ package billeyzambie.practicalpets.entity.dinosaur;
 import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.misc.PPSounds;
 import billeyzambie.practicalpets.misc.PPTags;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Shearable;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.IForgeShearable;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 
-public class Kiwi extends PracticalPet implements IForgeShearable {
+public class Kiwi extends PracticalPet {
     public Kiwi(EntityType<? extends TamableAnimal> entityType, Level level) {
         super(entityType, level);
     }
@@ -97,5 +102,55 @@ public class Kiwi extends PracticalPet implements IForgeShearable {
     @Override
     protected @Nullable SoundEvent getDeathSound() {
         return PPSounds.KIWI_DEATH.get();
+    }
+
+    @Override
+    protected float getSoundVolume() {
+        return 0.5f;
+    }
+
+    public static boolean kiwiCanSpawn(EntityType<? extends Kiwi> p_218105_, LevelAccessor p_218106_, MobSpawnType p_218107_, BlockPos p_218108_, RandomSource p_218109_) {
+        return p_218106_.getBlockState(p_218108_.below()).is(BlockTags.ANIMALS_SPAWNABLE_ON) && isBrightEnoughToSpawn(p_218106_, p_218108_);
+    }
+
+    protected static boolean isBrightEnoughToSpawn(BlockAndTintGetter p_186210_, @NotNull BlockPos p_186211_) {
+        return p_186210_.getRawBrightness(p_186211_, 0) < 10;
+    }
+
+    @Override
+    public void aiStep() {
+        super.aiStep();
+
+        //Allow the kiwi to have an attack animation
+        this.updateSwingTime();
+    }
+
+    @Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+
+        if (--this.timeToBiteFloor <= 0 && this.getNavigation().isDone()) {
+            if (!this.isInSittingPose() && this.onGround())
+                this.sendRandomIdle1Packet();
+            this.timeToBiteFloor = this.pickRandomBiteFloorTime();
+        }
+    }
+
+    private int timeToBiteFloor = this.pickRandomBiteFloorTime();
+
+    private int pickRandomBiteFloorTime() {
+        return this.random.nextInt(600, 1200);
+    }
+
+    @Override
+    public void readAdditionalSaveData(@NotNull CompoundTag compoundTag) {
+        super.readAdditionalSaveData(compoundTag);
+        this.timeToBiteFloor = compoundTag.getInt("TimeToBiteFloor");
+    }
+
+    @Override
+    public void addAdditionalSaveData(@NotNull CompoundTag compoundTag) {
+        super.addAdditionalSaveData(compoundTag);
+        compoundTag.putInt("TimeToBiteFloor", timeToBiteFloor);
     }
 }

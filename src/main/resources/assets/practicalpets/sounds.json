@@ -118,5 +118,37 @@
         "stream": false
       }
     ]
+  },
+  "kiwi_ambient": {
+    "sounds": [
+      {
+        "name": "practicalpets:kiwi_ambient1",
+        "stream": false
+      },
+      {
+        "name": "practicalpets:kiwi_ambient2",
+        "stream": false
+      }
+    ]
+  },
+  "kiwi_hurt": {
+    "sounds": [
+      {
+        "name": "practicalpets:kiwi_hurt1",
+        "stream": false
+      },
+      {
+        "name": "practicalpets:kiwi_hurt2",
+        "stream": false
+      }
+    ]
+  },
+  "kiwi_death": {
+    "sounds": [
+      {
+        "name": "practicalpets:kiwi_death",
+        "stream": false
+      }
+    ]
   }
 }

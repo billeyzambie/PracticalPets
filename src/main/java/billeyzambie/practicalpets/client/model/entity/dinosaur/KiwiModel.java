@@ -146,7 +146,7 @@ public class KiwiModel extends PracticalPetModel<Kiwi> {
 
 		PartDefinition bone4 = beak.addOrReplaceChild("bone4", CubeListBuilder.create().texOffs(10, 22).addBox(-0.5F, 0.0F, -4.0F, 1.0F, 0.5F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		PartDefinition bowtie = head.addOrReplaceChild("bowtie", CubeListBuilder.create(), PartPose.offset(0.0F, 1.5F, -3.0F));
+		PartDefinition bowtie = head.addOrReplaceChild("bowtie", CubeListBuilder.create(), PartPose.offset(0.0F, 0.5F, -3.0F));
 
 		PartDefinition backpack = body2.addOrReplaceChild("backpack", CubeListBuilder.create(), PartPose.offset(0.0F, -7.0F, -0.5F));
 
