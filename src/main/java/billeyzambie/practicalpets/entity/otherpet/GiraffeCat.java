@@ -455,6 +455,7 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
         put(PPCatVariants.PIZZA.get(), i++);
         put(PPCatVariants.SUGAR.get(), i++);
         put(PPCatVariants.LILY.get(), i++);
+        put(PPCatVariants.BUDDER.get(), i++);
     }};
 
     @Override

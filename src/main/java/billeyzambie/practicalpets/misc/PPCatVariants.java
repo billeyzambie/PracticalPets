@@ -20,4 +20,5 @@ public class PPCatVariants {
     public static final RegistryObject<CatVariant> SUGAR = register("sugar");
 
     public static final RegistryObject<CatVariant> LILY = register("lily");
+    public static final RegistryObject<CatVariant> BUDDER = register("budder");
 }
