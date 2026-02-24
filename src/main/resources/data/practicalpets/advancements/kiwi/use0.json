@@ -1,0 +1,29 @@
+{
+  "display": {
+    "icon": {
+      "item": "practicalpets:kiwi_feathers"
+    },
+    "title": {
+      "translate": "advancement.practicalpets.kiwi0.title"
+    },
+    "description": {
+      "translate": "advancement.practicalpets.kiwi0.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "practicalpets:kiwi/tame",
+  "criteria": {
+    "used": {
+      "trigger": "practicalpets:used_pet_ability",
+      "conditions": {
+        "pet": {
+          "type": "practicalpets:kiwi"
+        },
+        "ability": 0
+      }
+    }
+  }
+}

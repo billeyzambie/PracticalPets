@@ -1,15 +1,13 @@
 package billeyzambie.practicalpets.entity.dinosaur;
 
 import billeyzambie.practicalpets.entity.PracticalPet;
-import billeyzambie.practicalpets.misc.PPItems;
-import billeyzambie.practicalpets.misc.PPSerializers;
-import billeyzambie.practicalpets.misc.PPSounds;
-import billeyzambie.practicalpets.misc.PPTags;
+import billeyzambie.practicalpets.misc.*;
 import billeyzambie.practicalpets.util.PPUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
@@ -18,6 +16,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.TamableAnimal;
@@ -27,7 +27,10 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.event.entity.living.MobEffectEvent;
+import net.minecraftforge.eventbus.api.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -208,6 +211,8 @@ public class Kiwi extends PracticalPet {
                     int featherCount = this.random.nextIntBetweenInclusive(1, 2)
                             + stack.getEnchantmentLevel(Enchantments.BLOCK_FORTUNE);
                     this.spawnAtLocation(new ItemStack(PPItems.KIWI_FEATHERS.get(), featherCount));
+                    if (player == this.getOwner())
+                        PPAdvancementTriggers.USED_PET_ABILITY.trigger((ServerPlayer) player, this, 0);
                     return InteractionResult.CONSUME;
                 }
             }
@@ -251,5 +256,16 @@ public class Kiwi extends PracticalPet {
             case INTERMEDIATE -> this.setShearedState(ShearedState.SHEARABLE);
         }
         this.setRandomShearTime();
+    }
+
+    //Make them poison immune so that they don't get poisoned by being healed with spider eyes
+    @Override
+    public boolean canBeAffected(MobEffectInstance p_33809_) {
+        if (p_33809_.getEffect() == MobEffects.POISON) {
+            MobEffectEvent.Applicable event = new MobEffectEvent.Applicable(this, p_33809_);
+            MinecraftForge.EVENT_BUS.post(event);
+            return event.getResult() == Event.Result.ALLOW;
+        }
+        return super.canBeAffected(p_33809_);
     }
 }

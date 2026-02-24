@@ -102,5 +102,11 @@
   "advancement.practicalpets.duck0.title": "Not a Diamond Nugget",
   "advancement.practicalpets.duck0.desc": "Get your duck to find a chicken nugget in grass or water. Better luck next time!",
   "advancement.practicalpets.duck1.title": "Bath Time",
-  "advancement.practicalpets.duck1.desc": "Get your duck to find a rubber ducky pet hat. It can be put on pets to help them in battle"
+  "advancement.practicalpets.duck1.desc": "Get your duck to find a rubber ducky pet hat. It can be put on pets to help them in battle",
+  "advancement.practicalpets.kiwi_tame.title": "Not That Kiwi",
+  "advancement.practicalpets.kiwi_tame.desc": "Tame a kiwi that spawns in forests with spider eyes",
+  "advancement.practicalpets.kiwi0.title": "Fresh Look",
+  "advancement.practicalpets.kiwi0.desc": "Shear a kiwi to get kiwi feathers than can craft pet equipment",
+  "advancement.practicalpets.kiwi1.title": "A Practical Accessory",
+  "advancement.practicalpets.kiwi1.desc": "Craft a pet hat that can once absorb deadly damage using kiwi feathers"
 }
