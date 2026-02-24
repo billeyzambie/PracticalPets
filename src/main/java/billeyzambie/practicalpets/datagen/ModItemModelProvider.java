@@ -33,6 +33,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleItem(PPItems.POTATO_STICK);
         simpleItem(PPItems.PET_HAT);
         simpleItem(PPItems.KIWI_FEATHERS);
+        simpleItem(PPItems.INFO_BOOK);
         //simpleItem(PPItems.PET_END_ROD_LAUNCHER);
         //simpleItem(PPItems.PET_BACKPACK);
         //simpleItem(ModItems.END_ROD_DUCK_ARMOR);

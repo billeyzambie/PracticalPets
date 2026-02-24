@@ -48,6 +48,7 @@ public class PracticalPets
             .icon(() -> new ItemStack(PPItems.PET_BOWTIE.get()))
             .title(Component.literal("Practical Pets"))
             .displayItems((parameters, output) -> {
+                output.accept(PPItems.INFO_BOOK.get());
                 //spawn eggs
                 output.accept(PPItems.BANANA_DUCK_SPAWN_EGG.get());
                 output.accept(PPItems.DUCK_SPAWN_EGG.get());

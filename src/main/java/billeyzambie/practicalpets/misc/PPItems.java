@@ -116,6 +116,10 @@ public class PPItems {
             "pet_hat",
             () -> new PlainPetHat("misc")
     );
+    public static final RegistryObject<Item> INFO_BOOK = register(
+            "info_book",
+            InfoBook::new
+    );
 
     public static final RegistryObject<ForgeSpawnEggItem> BANANA_DUCK_SPAWN_EGG = register(
             "banana_duck_spawn_egg",
