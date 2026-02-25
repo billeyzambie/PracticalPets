@@ -13,7 +13,6 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.SingleKeyCache;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.jetbrains.annotations.NotNull;
 
 public class InfoBookTextWidget extends AbstractStringWidget {
     private OptionalInt maxWidth = OptionalInt.empty();
@@ -27,7 +26,7 @@ public class InfoBookTextWidget extends AbstractStringWidget {
 
     public InfoBookTextWidget(Component p_270532_) {
         this(0, 0, p_270532_, FONT);
-        this.setColor(TEXT_COLOR).setMaxWidth(InfoBookPagePair.TEXT_MAX_WIDTH);
+        this.setColor(TEXT_COLOR).setMaxWidth(InfoBookPagePair.ELEMENT_MAX_WIDTH);
     }
 
     public InfoBookTextWidget(List<FormattedCharSequence> lines) {

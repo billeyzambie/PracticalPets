@@ -48,6 +48,12 @@ public class InfoBookScreen extends Screen {
         Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
     }
 
+    public static void setPagePairStatic(int index) {
+        if (Minecraft.getInstance().screen instanceof InfoBookScreen screen) {
+            screen.setPagePair(index);
+        }
+    }
+
     @Override
     protected void init() {
         this.leftPos = (this.width - IMAGE_WIDTH) / 2;

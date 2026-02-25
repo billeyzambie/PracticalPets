@@ -2,14 +2,19 @@ package billeyzambie.practicalpets.misc;
 
 import billeyzambie.practicalpets.client.PPMenus;
 import billeyzambie.practicalpets.ui.PracticalPetScreen;
+import billeyzambie.practicalpets.ui.infobook.InfoBookWriter;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.*;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -24,7 +29,11 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(PracticalPets.MODID)
@@ -168,6 +177,20 @@ public class PracticalPets
                     PPItems.PET_END_ROD_LAUNCHER.get(),
                     PPItems.PET_HAT.get()
             );
+        }
+
+        @SubscribeEvent
+        public static void registerClientReloadListeners (RegisterClientReloadListenersEvent event) {
+            event.registerReloadListener(new PreparableReloadListener() {
+                @Override
+                public @NotNull CompletableFuture<Void> reload(PreparationBarrier barrier, ResourceManager resources, ProfilerFiller preparationsProfiler, ProfilerFiller reloadProfiler, Executor backgroundExecutor, Executor gameExecutor) {
+                    return CompletableFuture.completedFuture(null)
+                            .thenCompose(barrier::wait)
+                            .thenRunAsync(() -> {
+                                InfoBookWriter.WRITER.writeInfoBook();
+                            }, gameExecutor);
+                }
+            });
         }
     }
 }
