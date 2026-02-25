@@ -111,6 +111,7 @@
   "advancement.practicalpets.kiwi1.title": "A Practical Accessory",
   "advancement.practicalpets.kiwi1.desc": "Craft a pet hat that can once absorb deadly damage using kiwi feathers",
   "ui.practicalpets.info_book.welcome": "Thanks for installing the §lPractical Pets§r mod! Select a pet in the contents below to learn about it",
+  "ui.practicalpets.info_book.contents": "Contents:",
   "ui.practicalpets.info_book.general.title": "GENERAL",
-  "ui.practicalpets.info_book.banana_duck.general.body": "Banana ducks spawn in jungles and are tamed with bread."
+  "ui.practicalpets.info_book.banana_duck.general.body": "Banana ducks spawn in §ljungles§r and are tamed with §lbread§r."
 }

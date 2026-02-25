@@ -25,16 +25,16 @@ public class InfoBookPetEntry extends InfoBookEntry {
     }
 
     public void appendSection(String section, InfoBookWriter writer) {
-        boolean isGeneral = section.equals("general");
+        boolean isGeneral = section.equals("general") || section.equals("leveling");
         writer.appendComponent(
                 Component.translatable(isGeneral
-                        ? "ui.practicalpets.info_book.general.title"
+                        ? "ui.practicalpets.info_book."+ section + ".title"
                         : "ui.practicalpets.info_book." + name + "." + section + ".title"
                 ).withStyle(ChatFormatting.BOLD)
         );
         writer.appendTranslatable("ui.practicalpets.info_book." + name + "." + section + ".body");
         if (!writer.currentPage().widgets.isEmpty())
-            writer.appendLiteral("");
+            writer.appendLiteral(" ");
     }
 
     @Override

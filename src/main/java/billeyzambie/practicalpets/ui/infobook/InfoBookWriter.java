@@ -1,6 +1,7 @@
 package billeyzambie.practicalpets.ui.infobook;
 
 import billeyzambie.practicalpets.misc.PracticalPets;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractStringWidget;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
@@ -9,10 +10,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 //I use the unnecessary `this` very inconsistently across the mod's source code
 public class InfoBookWriter {
+
+    public static final boolean DEBUG = false;
+
     private InfoBookWriter() {}
     public static InfoBookWriter WRITER = new InfoBookWriter();
 
@@ -60,15 +65,15 @@ public class InfoBookWriter {
         return widget;
     }
 
-    public AbstractWidget putWidgetRightOf(AbstractWidget widget, AbstractWidget newWidget, int spacing) {
-        newWidget.setY(widget.getY());
+    public AbstractWidget putWidgetRightOf(AbstractWidget widget, AbstractWidget newWidget, int spacing, int yOffset) {
+        newWidget.setY(widget.getY() + yOffset);
         newWidget.setX(widget.getX() + widget.getWidth() + spacing);
         currentPage().addRenderableWidget(newWidget);
         return newWidget;
     }
 
     public AbstractWidget putWidgetRightOf(AbstractWidget widget, AbstractWidget newWidget) {
-        return putWidgetRightOf(widget, newWidget, 1);
+        return putWidgetRightOf(widget, newWidget, 1, 0);
     }
 
     public void appendComponent(Component text) {
@@ -97,9 +102,18 @@ public class InfoBookWriter {
         appendComponent(Component.literal(text));
     }
 
+    private final HashMap<InfoBookEntry, Integer> findPagePairIndex = new HashMap<>();
+
+    public int findPagePairIndex(InfoBookEntry entry) {
+        return findPagePairIndex.get(entry);
+    }
+
     private void initialize() {
         InfoBookPagePair.PAIRS.clear();
         InfoBookPagePair.PAIRS.add(new InfoBookPagePair());
+
+        findPagePairIndex.clear();
+
         writingSinglePage = 0;
         writingAtY = 0;
     }
@@ -108,7 +122,40 @@ public class InfoBookWriter {
         initialize();
 
         appendTranslatable("ui.practicalpets.info_book.welcome");
+        appendLiteral(" ");
+        appendComponent(Component.translatable("ui.practicalpets.info_book.contents")
+                .withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.UNDERLINE)
+        );
+
+
+        for (InfoBookCategory category : InfoBookCategory.CATEGORIES) {
+            for (InfoBookEntry entry : category.entries()) {
+                AbstractWidget icon = appendWidget(new ImageWidget(16, 16, new ResourceLocation(
+                        PracticalPets.MODID,
+                        "textures/gui/info_book/icons/" + category.name() + "/" + entry.name + ".png"
+                )));
+                putWidgetRightOf(icon, new InfoBookClickableText(
+                        Component.translatable(entry.getTranslationKey()),
+                        button -> InfoBookScreen.goToPageOf(entry)
+                ), 1, 4);
+            }
+        }
+
+        if (DEBUG)
+            writeDebug();
+
+        for (InfoBookCategory category : InfoBookCategory.CATEGORIES) {
+            for (InfoBookEntry entry : category.entries()) {
+                entry.appendWidgets(this);
+                findPagePairIndex.put(entry, entry.getPagePairIndex());
+            }
+        }
+
+    }
+
+    private void writeDebug() {
         appendLiteral("pee poo §lcum§r ".repeat(30));
+
         AbstractWidget fancyDuck = appendWidget(new ImageWidget(32, 32, new ResourceLocation(
                 PracticalPets.MODID,
                 "textures/gui/fancy_duck.png"
@@ -131,13 +178,6 @@ public class InfoBookWriter {
         appendLiteral("o".repeat(300));
         appendLiteral("i".repeat(150));
         appendLiteral("u".repeat(150));
-
-        for (InfoBookCategory category : InfoBookCategory.CATEGORIES) {
-            for (InfoBookEntry entry : category.entries()) {
-                entry.appendWidgets(this);
-            }
-        }
-
     }
 
 }

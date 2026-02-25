@@ -54,6 +54,10 @@ public class InfoBookScreen extends Screen {
         }
     }
 
+    public static void goToPageOf(InfoBookEntry entry) {
+        setPagePairStatic(InfoBookWriter.WRITER.findPagePairIndex(entry));
+    }
+
     @Override
     protected void init() {
         this.leftPos = (this.width - IMAGE_WIDTH) / 2;
