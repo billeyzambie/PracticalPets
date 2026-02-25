@@ -64,7 +64,6 @@
   "death.attack.practicalpets.stick_bugged": "%s got stick bugged",
   "death.attack.practicalpets.stick_bugged.player": "%s got stick bugged by %s",
   "ui.practicalpets.giraffe_cat_ladder.activate": "Enter ladder mode",
-  "ui.practicalpets.info_book.welcome": "Thanks for installing the §lPractical Pets§r mod! Select a pet in the contents below to learn about it",
   "tooltip.practicalpets.dead_pet_bowtie": "RIP %s%s%s was in %s%s%s",
   "tooltip.practicalpets.dead_pet_bowtie_named": "RIP %s the %s%s%s was in %s%s%s",
   "advancement.practicalpets.root.title": "Practical Pets",
@@ -110,5 +109,8 @@
   "advancement.practicalpets.kiwi0.title": "Fresh Look",
   "advancement.practicalpets.kiwi0.desc": "Shear a kiwi to get kiwi feathers than can craft pet equipment",
   "advancement.practicalpets.kiwi1.title": "A Practical Accessory",
-  "advancement.practicalpets.kiwi1.desc": "Craft a pet hat that can once absorb deadly damage using kiwi feathers"
+  "advancement.practicalpets.kiwi1.desc": "Craft a pet hat that can once absorb deadly damage using kiwi feathers",
+  "ui.practicalpets.info_book.welcome": "Thanks for installing the §lPractical Pets§r mod! Select a pet in the contents below to learn about it",
+  "ui.practicalpets.info_book.general.title": "GENERAL",
+  "ui.practicalpets.info_book.banana_duck.general.body": "Banana ducks spawn in jungles and are tamed with bread."
 }
