@@ -13,18 +13,26 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.SingleKeyCache;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 public class InfoBookTextWidget extends AbstractStringWidget {
     private OptionalInt maxWidth = OptionalInt.empty();
     private OptionalInt maxRows = OptionalInt.empty();
     private final SingleKeyCache<InfoBookTextWidget.CacheKey, MultiLineLabel> cache;
 
-    private static final Font FONT = Minecraft.getInstance().font;
+    private List<FormattedCharSequence> lines = List.of();
+
+    public static final Font FONT = Minecraft.getInstance().font;
     public static final int TEXT_COLOR = 0x94745A;
 
     public InfoBookTextWidget(Component p_270532_) {
         this(0, 0, p_270532_, FONT);
         this.setColor(TEXT_COLOR).setMaxWidth(InfoBookPagePair.TEXT_MAX_WIDTH);
+    }
+
+    public InfoBookTextWidget(List<FormattedCharSequence> lines) {
+        this(Component.empty());
+        this.lines = lines;
     }
 
     public InfoBookTextWidget(int p_270325_, int p_270355_, Component p_270069_, Font p_270673_) {
@@ -43,6 +51,7 @@ public class InfoBookTextWidget extends AbstractStringWidget {
 
     public InfoBookTextWidget setMaxWidth(int p_270776_) {
         this.maxWidth = OptionalInt.of(p_270776_);
+        this.lines = FONT.split(this.getMessage(), this.maxWidth.orElse(Integer.MAX_VALUE));
         return this;
     }
 
@@ -58,23 +67,19 @@ public class InfoBookTextWidget extends AbstractStringWidget {
 
     @Override
     public int getHeight() {
-        return this.cache.getValue(this.getFreshCacheKey()).getLineCount() * 9;
+        return this.lines.size() * FONT.lineHeight;
     }
 
     @Override
     public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        Font font = Minecraft.getInstance().font;
-
-        List<FormattedCharSequence> lines =
-                font.split(this.getMessage(), this.maxWidth.orElse(Integer.MAX_VALUE));
 
         int x = this.getX();
         int y = this.getY();
         int color = this.getColor();
 
-        for (FormattedCharSequence line : lines) {
-            graphics.drawString(font, line, x, y, color, false);
-            y += font.lineHeight;
+        for (FormattedCharSequence line : this.lines) {
+            graphics.drawString(FONT, line, x, y, color, false);
+            y += FONT.lineHeight;
         }
     }
 
@@ -83,6 +88,6 @@ public class InfoBookTextWidget extends AbstractStringWidget {
     }
 
     @OnlyIn(Dist.CLIENT)
-    static record CacheKey(Component message, int maxWidth, OptionalInt maxRows) {
+    record CacheKey(Component message, int maxWidth, OptionalInt maxRows) {
     }
 }

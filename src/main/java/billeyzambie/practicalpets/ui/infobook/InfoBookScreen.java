@@ -2,6 +2,7 @@ package billeyzambie.practicalpets.ui.infobook;
 
 import billeyzambie.practicalpets.misc.PracticalPets;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
@@ -20,6 +21,10 @@ public class InfoBookScreen extends Screen {
     private static final int NAVIGATION_BUTTON_TOP_POS = IMAGE_HEIGHT + 1;
     private static final int FORWARD_BUTTON_LEFT_POS = IMAGE_WIDTH - 21;
 
+    private static final int LEFT_PAGE_NUMBER_X = 24;
+    private static final int PAGE_NUMBER_Y = IMAGE_HEIGHT - 18;
+    private static final int RIGHT_PAGE_NUMBER_X = IMAGE_WIDTH - LEFT_PAGE_NUMBER_X;
+
     private int leftPos;
     private int topPos;
     private int currentPagePairIndex = 0;
@@ -35,10 +40,10 @@ public class InfoBookScreen extends Screen {
         super(Component.translatable("item.practicalpets.info_book"));
     }
 
-    public void setPagePairIndex(int value) {
-        if (this.currentPagePairIndex == value)
+    public void setPagePair(int index) {
+        if (this.currentPagePairIndex == index)
             return;
-        this.currentPagePairIndex = value;
+        this.currentPagePairIndex = index;
         this.createWidgets();
         Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
     }
@@ -50,13 +55,33 @@ public class InfoBookScreen extends Screen {
         this.createWidgets();
     }
 
+    private static final Font FONT = Minecraft.getInstance().font;
+    public static final int PAGE_NUMBER_COLOR = 0xD1BFA1;
+
+    private int leftPageNumberOffset;
+
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(graphics);
         super.render(graphics, mouseX, mouseY, partialTicks);
+        graphics.drawString(FONT,
+                Integer.toString(this.currentPagePairIndex * 2 + 1),
+                this.leftPos + LEFT_PAGE_NUMBER_X,
+                this.topPos + PAGE_NUMBER_Y,
+                PAGE_NUMBER_COLOR,
+                false
+        );
+        String string = Integer.toString(this.currentPagePairIndex * 2 + 2);
+        graphics.drawString(FONT,
+                string,
+                this.leftPos + RIGHT_PAGE_NUMBER_X + leftPageNumberOffset,
+                this.topPos + PAGE_NUMBER_Y,
+                PAGE_NUMBER_COLOR,
+                false
+        );
     }
 
-    private InfoBookPagePair getCurrentPagePairIndex() {
+    private InfoBookPagePair getCurrentPagePair() {
         return InfoBookPagePair.PAIRS.get(currentPagePairIndex);
     }
 
@@ -119,7 +144,7 @@ public class InfoBookScreen extends Screen {
                         true
                 )
         );
-        for (InfoBookPagePair.Page page : this.getCurrentPagePairIndex().pages) {
+        for (InfoBookPagePair.Page page : this.getCurrentPagePair().pages) {
             for (InfoBookPagePair.Page.DefaultPositionWidget defaultPositionWidget : page.widgets) {
                 AbstractWidget widget = defaultPositionWidget.widget();
                 int x = defaultPositionWidget.x();
@@ -131,6 +156,8 @@ public class InfoBookScreen extends Screen {
         }
         this.forwardButton.visible = this.currentPagePairIndex < this.getNumPages() - 1;
         this.backButton.visible = this.currentPagePairIndex > 0;
+
+        this.leftPageNumberOffset = - FONT.width(Integer.toString(this.currentPagePairIndex * 2 + 2)) + 1;
     }
 
     private int getNumPages() {

@@ -11,7 +11,7 @@ public class InfoBookPagePair {
     public static final int LEFT_TEXT_LEFT_POS = 18;
     public static final int RIGHT_TEXT_LEFT_POS = LEFT_TEXT_LEFT_POS + InfoBookScreen.IMAGE_WIDTH / 2 - 5;
     public static final int TEXT_TOP_POS = 15;
-    public static final int TEXT_MAX_HEIGHT = InfoBookScreen.IMAGE_HEIGHT - 20;
+    public static final int TEXT_MAX_HEIGHT = InfoBookScreen.IMAGE_HEIGHT - 31;
     public static final int TEXT_MAX_WIDTH = InfoBookScreen.IMAGE_WIDTH / 2 - 31;
 
     public static final ArrayList<InfoBookPagePair> PAIRS = new ArrayList<>();
