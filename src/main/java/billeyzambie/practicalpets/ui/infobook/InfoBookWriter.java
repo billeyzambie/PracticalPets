@@ -46,6 +46,10 @@ public class InfoBookWriter {
         return writingSinglePage / 2;
     }
 
+    public boolean cantFitHeight(int height) {
+        return writingAtY + height > InfoBookPagePair.ELEMENT_MAX_HEIGHT;
+    }
+
     private AbstractWidget lastWidget;
 
     public AbstractWidget appendWidget(AbstractWidget widget) {
@@ -55,7 +59,7 @@ public class InfoBookWriter {
             }
         }
         int widgetHeight = widget.getHeight();
-        if (writingAtY + widgetHeight > InfoBookPagePair.ELEMENT_MAX_HEIGHT) {
+        if (cantFitHeight(widgetHeight)) {
             toNextPage();
         }
         widget.setY(writingAtY);
@@ -83,8 +87,7 @@ public class InfoBookWriter {
         for (var line : lines) {
             currentlyAddingLines.add(line);
             if (
-                    writingAtY + InfoBookTextWidget.FONT.lineHeight * (currentlyAddingLines.size() + 1)
-                    > InfoBookPagePair.ELEMENT_MAX_HEIGHT
+                    cantFitHeight(InfoBookTextWidget.FONT.lineHeight * (currentlyAddingLines.size() + 1))
             ) {
                 List<FormattedCharSequence> widgetLines = new ArrayList<>(currentlyAddingLines);
                 appendWidget(new InfoBookTextWidget(widgetLines));

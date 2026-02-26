@@ -7,22 +7,22 @@ public record InfoBookCategory(String name, List<InfoBookEntry> entries) {
             new InfoBookPetEntry("banana_duck", 58, 91, List.of(
                     "bananas", "banana_peels", "leveling"
             )),
-            new InfoBookPetEntry("duck", 58, 91, List.of(
+            new InfoBookPetEntry("duck", 61, 68, List.of(
                     "finding_items", "rubbery_ducky_pet_hat", "leveling"
             )),
-            new InfoBookPetEntry("rat", 58, 91, List.of(
+            new InfoBookPetEntry("rat", 112, 60, List.of(
                     "robbing", "cooking", "leveling"
             )),
-            new InfoBookPetEntry("pigeon", 58, 91, List.of(
+            new InfoBookPetEntry("pigeon", 60, 64, List.of(
                     "reaching_items", "sending_to_player", "leveling"
             )),
-            new InfoBookPetEntry("stick_bug", 58, 91, List.of(
+            new InfoBookPetEntry("stick_bug", 114, 73, List.of(
                     "invisibility", "potato_sticks", "leveling"
             )),
-            new InfoBookPetEntry("giraffe_cat", 58, 91, List.of(
+            new InfoBookPetEntry("giraffe_cat", 121, 116, List.of(
                     "ladder", "yeeting", "leveling"
             )),
-            new InfoBookPetEntry("kiwi", 58, 91, List.of(
+            new InfoBookPetEntry("kiwi", 65, 66, List.of(
                     "feathers", "pet_hat", "leveling"
             ))
     );
