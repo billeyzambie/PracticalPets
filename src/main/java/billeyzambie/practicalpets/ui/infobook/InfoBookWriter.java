@@ -50,12 +50,16 @@ public class InfoBookWriter {
         return writingAtY + height > InfoBookPagePair.ELEMENT_MAX_HEIGHT;
     }
 
+    public void incrementWritingAtY() {
+        writingAtY += 1;
+    }
+
     private AbstractWidget lastWidget;
 
     public AbstractWidget appendWidget(AbstractWidget widget) {
         if (lastWidget != null) {
             if (!(widget instanceof AbstractStringWidget) || !(lastWidget instanceof AbstractStringWidget)) {
-                writingAtY += 1;
+                incrementWritingAtY();
             }
         }
         int widgetHeight = widget.getHeight();

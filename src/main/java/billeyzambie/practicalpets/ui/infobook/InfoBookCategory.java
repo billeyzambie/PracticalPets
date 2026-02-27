@@ -11,16 +11,16 @@ public record InfoBookCategory(String name, List<InfoBookEntry> entries) {
                     "finding_items", "rubbery_ducky_pet_hat", "leveling"
             )),
             new InfoBookPetEntry("rat", 112, 60, List.of(
-                    "robbing", "cooking", "leveling"
+                    "robbing", "cooking", "crossbreeding", "leveling"
             )),
             new InfoBookPetEntry("pigeon", 60, 64, List.of(
                     "reaching_items", "sending_to_player", "leveling"
             )),
             new InfoBookPetEntry("stick_bug", 114, 73, List.of(
-                    "invisibility", "potato_sticks", "leveling"
+                    "invisibility", "dancing", "leveling"
             )),
             new InfoBookPetEntry("giraffe_cat", 121, 116, List.of(
-                    "ladder", "yeeting", "leveling"
+                    "ladder", "yeeting", "crossbreeding", "leveling"
             )),
             new InfoBookPetEntry("kiwi", 65, 66, List.of(
                     "feathers", "pet_hat", "leveling"
