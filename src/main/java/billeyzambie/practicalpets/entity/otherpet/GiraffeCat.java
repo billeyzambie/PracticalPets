@@ -602,9 +602,21 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
 
     private int timeInAbility = 0;
 
+    private boolean wasSitting;
+    private boolean wasBendingOver;
+
     @Override
     public void tick() {
         super.tick();
+
+
+        boolean isBendingOver = this.shouldBendOver();
+        boolean isSitting = this.isInSittingPose();
+        if (isSitting != wasSitting || isBendingOver != wasBendingOver) {
+            refreshDimensions();
+        }
+        this.wasBendingOver = isBendingOver;
+        this.wasSitting = isSitting;
 
         if (this.level().isClientSide) {
             this.visibleLadderHeightO = this.visibleLadderHeight;
