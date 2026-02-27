@@ -422,4 +422,8 @@ public class PPAnimationControllers {
             -> entity.onGround()
     );
 
+    public static final BlendValueController GIRAFFE_CAT_NO_ABILITY_BLEND = new BlendValueController("on_ground", 0.2f, (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+            -> entity instanceof GiraffeCat giraffeCat && giraffeCat.noCurrentAbility()
+    );
+
 }

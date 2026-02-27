@@ -185,6 +185,11 @@ public class GiraffeCatModel extends PracticalPetModel<GiraffeCat> {
     public void setupAnim(@NotNull GiraffeCat entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 
+        float noAbilityBlend = PPAnimationControllers.GIRAFFE_CAT_NO_ABILITY_BLEND.calculate(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
+        neck.yRot *= noAbilityBlend;
+        neck.xRot *= noAbilityBlend;
+        head.xRot *= noAbilityBlend;
+
         float partialTick = ageInTicks % 1f;
 
         if (entity.isBaby()) {
