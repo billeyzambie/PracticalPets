@@ -12,7 +12,7 @@ import java.util.EnumSet;
 import java.util.List;
 
 public class GiraffeCatPickUpPetGoal extends Goal {
-    private static final TargetingConditions PICK_UP_TARGETING = TargetingConditions.forNonCombat().range(16.0D).ignoreLineOfSight();
+    private static final TargetingConditions PICK_UP_TARGETING = TargetingConditions.forNonCombat().range(16.0D);
     private final GiraffeCat giraffeCat;
     private final Level level;
     private final double speedModifier;
