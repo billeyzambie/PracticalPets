@@ -6,10 +6,7 @@ import billeyzambie.practicalpets.misc.PPEvents;
 import billeyzambie.practicalpets.util.PPUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -19,6 +16,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,7 +26,7 @@ public class YeetedPetCarrier extends Projectile {
 
     public YeetedPetCarrier(EntityType<? extends YeetedPetCarrier> p_37391_, Level p_37392_) {
         super(p_37391_, p_37392_);
-        this.setUpBoundingBox();
+        this.refreshDimensions();
     }
 
     public YeetedPetCarrier(GiraffeCat owner, TamableAnimal pet, LivingEntity target) {
@@ -37,7 +35,7 @@ public class YeetedPetCarrier extends Projectile {
         this.setOwner(owner);
         this.target = target;
         pet.startRiding(this, true);
-        this.setUpBoundingBox();
+        this.refreshDimensions();
 
         Vec3 targetPosition = target.position();
         float yeetTime = 20 * (
@@ -55,10 +53,12 @@ public class YeetedPetCarrier extends Projectile {
         );
     }
 
-    private void setUpBoundingBox() {
+    @Override
+    public @NotNull EntityDimensions getDimensions(@NotNull Pose pose) {
         TamableAnimal pet = this.getPet();
         if (pet != null)
-            this.setBoundingBox(pet.getBoundingBox());
+            return pet.getDimensions(pet.getPose());
+        return super.getDimensions(pose);
     }
 
     private boolean hasRider() {
@@ -95,7 +95,7 @@ public class YeetedPetCarrier extends Projectile {
     @Override
     protected void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        this.setUpBoundingBox();
+        this.refreshDimensions();
         if (tag.hasUUID("TargetUUID")
                 && this.level() instanceof ServerLevel serverLevel
                 && serverLevel.getEntity(tag.getUUID("TargetUUID")) instanceof LivingEntity living
@@ -146,10 +146,12 @@ public class YeetedPetCarrier extends Projectile {
 
     @Override
     protected void onHit(@NotNull HitResult p_37406_) {
-        super.onHit(p_37406_);
-        if (!this.level().isClientSide) {
-            this.discard();
+        if (this.getPet().isInWall()) {
+            Vec3 movement = this.getDeltaMovement();
+            this.getPet().teleportRelative(-movement.x, -movement.y, -movement.z);
         }
+        super.onHit(p_37406_);
+        this.discard();
     }
 
     @Override
@@ -178,15 +180,7 @@ public class YeetedPetCarrier extends Projectile {
             this.discard();
         super.tick();
         HitResult hitresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
-
-        if (hitresult.getType() != HitResult.Type.MISS && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, hitresult)) {
-            //Undo the last position change to fix thrown pets sometimes suffocating
-            //Not sure if it worked
-            Vec3 vec3 = this.getDeltaMovement();
-            double d2 = this.getX() - vec3.x;
-            double d0 = this.getY() - vec3.y;
-            double d1 = this.getZ() - vec3.z;
-            this.setPos(d2, d0, d1);
+        if (hitresult.getType() != HitResult.Type.MISS && !ForgeEventFactory.onProjectileImpact(this, hitresult)) {
             this.onHit(hitresult);
         }
 
