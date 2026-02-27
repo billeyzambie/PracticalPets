@@ -718,7 +718,11 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
                 && this.isAlliedTo(pet)
                 && !(pet instanceof GiraffeCat)
                 && !pet.isOrderedToSit()
-                && !pet.isPassenger();
+                && !pet.isPassenger()
+                && !(
+                        this.shouldFollowOwner()
+                        && pet instanceof PracticalPet practicalPet && !practicalPet.shouldFollowOwner()
+                );
     }
 
     public void startYeeting(Mob mob) {
