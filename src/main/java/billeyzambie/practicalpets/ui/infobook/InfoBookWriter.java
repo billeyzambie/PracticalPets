@@ -139,7 +139,7 @@ public class InfoBookWriter {
             for (InfoBookEntry entry : category.entries()) {
                 AbstractWidget icon = appendWidget(new ImageWidget(16, 16, new ResourceLocation(
                         PracticalPets.MODID,
-                        "textures/gui/info_book/icons/" + category.name() + "/" + entry.name + ".png"
+                        "textures/gui/info_book/icons/" + entry.name + ".png"
                 )));
                 putWidgetRightOf(icon, new InfoBookClickableText(
                         Component.translatable(entry.getTranslationKey()),

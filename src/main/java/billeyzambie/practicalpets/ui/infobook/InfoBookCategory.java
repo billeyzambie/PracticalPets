@@ -23,7 +23,7 @@ public record InfoBookCategory(String name, List<InfoBookEntry> entries) {
                     "ladder", "yeeting", "crossbreeding", "leveling"
             )),
             new InfoBookPetEntry("kiwi", 65, 66, List.of(
-                    "feathers", "pet_hat", "leveling"
+                    "feathers", "leveling"
             ))
     );
     public static final List<InfoBookCategory> CATEGORIES = List.of(
