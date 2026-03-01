@@ -30,6 +30,7 @@ public abstract class InfoBookEntry {
                         : getSectionName(section)
                 ).withStyle(ChatFormatting.UNDERLINE)
         );
+        appendAfterSectionTitle(section, writer);
         if (!writer.currentPage().widgets.isEmpty() && !writer.cantFitHeight(1))
             writer.incrementWritingAtY();
         writer.appendTranslatable(getSectionDescription(section));
@@ -46,6 +47,11 @@ public abstract class InfoBookEntry {
         return "ui.practicalpets.info_book." + name + "." + section + ".title";
     }
 
+    public void appendAfterSectionTitle(String section, InfoBookWriter writer) {
+
+    }
+
+    //Probably unused
     public void appendAfterSection(String section, InfoBookWriter writer) {
 
     }

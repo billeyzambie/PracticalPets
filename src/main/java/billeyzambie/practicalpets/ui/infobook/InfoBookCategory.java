@@ -81,7 +81,7 @@ public record InfoBookCategory(String name, List<InfoBookEntry> entries) {
                 }
 
                 @Override
-                public void appendAfterSection(String section, InfoBookWriter writer) {
+                public void appendAfterSectionTitle(String section, InfoBookWriter writer) {
                     switch (section) {
                         case "pet_menu": {
                             writer.appendWidget(new ImageWidget(
@@ -90,7 +90,6 @@ public record InfoBookCategory(String name, List<InfoBookEntry> entries) {
                                             "textures/gui/info_book/pet_menu.png"
                                     )
                             ));
-                            writer.appendTranslatable("ui.practicalpets.info_book.misc.pet_menu.body2");
                             break;
                         }
                         case "leveling": {
