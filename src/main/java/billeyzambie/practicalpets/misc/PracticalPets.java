@@ -8,6 +8,7 @@ import com.mojang.serialization.Codec;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -54,7 +55,13 @@ public class PracticalPets
 
     // Creates a creative tab with the id "practicalpets:example_tab" for the example item, that is placed after the combat tab
     public static final RegistryObject<CreativeModeTab> MOD_TAB = CREATIVE_MODE_TABS.register("practicalpets", () -> CreativeModeTab.builder()
-            .icon(() -> new ItemStack(PPItems.PET_BOWTIE.get()))
+            .icon(() -> {
+                ItemStack stack = new ItemStack(PPItems.PET_BOWTIE.get());
+                CompoundTag colorTag = new CompoundTag();
+                colorTag.putInt("color", 0xff0000);
+                stack.getOrCreateTag().put("display", colorTag);
+                return stack;
+            })
             .title(Component.literal("Practical Pets"))
             .displayItems((parameters, output) -> {
                 output.accept(PPItems.INFO_BOOK.get());
@@ -74,8 +81,8 @@ public class PracticalPets
                 output.accept(PPItems.BANANA_PEEL.get());
                 output.accept(PPItems.KIWI_FEATHERS.get());
                 //pet equipment
-                output.accept(PPItems.PET_HAT.get());
                 output.accept(PPItems.PET_BOWTIE.get());
+                output.accept(PPItems.PET_HAT.get());
                 output.accept(PPItems.ANNIVERSARY_PET_HAT_0.get());
                 output.accept(PPItems.RUBBER_DUCKY_PET_HAT.get());
                 output.accept(PPItems.PET_CHEF_HAT.get());

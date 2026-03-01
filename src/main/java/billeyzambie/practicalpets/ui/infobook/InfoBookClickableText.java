@@ -31,7 +31,7 @@ public class InfoBookClickableText extends Button {
 
     @Override
     public void renderWidget(GuiGraphics p_283309_, int p_282710_, int p_282486_, float p_281727_) {
-        Component component = this.isHoveredOrFocused() ? this.underlinedMessage : this.message;
+        Component component = this.isHovered() ? this.underlinedMessage : this.message;
         p_283309_.drawString(FONT, component, this.getX(), this.getY(), TEXT_COLOR, false);
     }
 }

@@ -1,8 +1,6 @@
 package billeyzambie.practicalpets.ui.infobook;
 
 import billeyzambie.practicalpets.misc.PracticalPets;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
@@ -17,23 +15,6 @@ public abstract class InfoBookRenderAndSectionEntry extends InfoBookEntry {
         this.renderWidth = renderWidth;
         this.renderHeight = renderHeight;
         this.sections = sections;
-    }
-
-    public void appendSection(String section, InfoBookWriter writer) {
-        boolean isGeneral = section.equals("general") || section.equals("leveling");
-        if (writer.cantFitHeight(InfoBookTextWidget.FONT.lineHeight * 2 + 1))
-            writer.toNextPage();
-        writer.appendComponent(
-                Component.translatable(isGeneral
-                        ? "ui.practicalpets.info_book." + section + ".title"
-                        : "ui.practicalpets.info_book." + name + "." + section + ".title"
-                ).withStyle(ChatFormatting.UNDERLINE)
-        );
-        if (!writer.currentPage().widgets.isEmpty() && !writer.cantFitHeight(1))
-            writer.incrementWritingAtY();
-        writer.appendTranslatable("ui.practicalpets.info_book." + name + "." + section + ".body");
-        if (!writer.currentPage().widgets.isEmpty() && !writer.cantFitHeight(InfoBookTextWidget.FONT.lineHeight))
-            writer.appendLiteral(" ");
     }
 
     @Override

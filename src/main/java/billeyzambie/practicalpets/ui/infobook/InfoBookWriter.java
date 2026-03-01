@@ -52,6 +52,7 @@ public class InfoBookWriter {
 
     public void incrementWritingAtY() {
         writingAtY += 1;
+        lastWidget = null;
     }
 
     private AbstractWidget lastWidget;
