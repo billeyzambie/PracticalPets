@@ -256,7 +256,7 @@ public class BananaDuckModel extends PracticalPetModel<BananaDuck> {
         PPAnimationControllers.DUCK_IDLE_FLAP.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
 
         if (!entity.isInSittingPose())
-            this.animateWalk(DuckAnimations.walk32, limbSwing, limbSwingAmount, 3f, 2f);
+            this.animateWalk(BananaDuckAnimations.walk, limbSwing, limbSwingAmount, 3f, 2f);
 
     }
 
