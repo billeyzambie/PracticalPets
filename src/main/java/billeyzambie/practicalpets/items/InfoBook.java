@@ -7,6 +7,7 @@ import billeyzambie.practicalpets.ui.infobook.InfoBookEntry;
 import billeyzambie.practicalpets.ui.infobook.InfoBookScreen;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
@@ -19,7 +20,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -73,5 +76,18 @@ public class InfoBook extends Item {
             });
         }
 
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        Player player = event.getEntity();
+        CompoundTag persistentData = player.getPersistentData();
+        CompoundTag persistedData = persistentData.getCompound(Player.PERSISTED_NBT_TAG);
+        boolean gotInfoBook = persistedData.getBoolean("GotPracticalPetsInfoBook");
+        if (!gotInfoBook) {
+            player.spawnAtLocation(new ItemStack(PPItems.INFO_BOOK.get()));
+        }
+        persistedData.putBoolean("GotPracticalPetsInfoBook", true);
+        persistentData.put(Player.PERSISTED_NBT_TAG, persistedData);
     }
 }
