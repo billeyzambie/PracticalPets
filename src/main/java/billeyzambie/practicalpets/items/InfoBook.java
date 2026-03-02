@@ -20,6 +20,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -45,9 +47,14 @@ public class InfoBook extends Item {
             @NotNull InteractionHand hand
     ) {
         if (level.isClientSide()) {
-            Minecraft.getInstance().setScreen(new InfoBookScreen());
+            setInfoBookScreen();
         }
         return InteractionResultHolder.success(player.getItemInHand(hand));
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private static void setInfoBookScreen() {
+        Minecraft.getInstance().setScreen(new InfoBookScreen());
     }
 
     @Override
