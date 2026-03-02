@@ -54,6 +54,11 @@ public class RubberDuckyPetHat extends Item implements AttachablePetCosmetic, Dy
         return true;
     }
 
+    @Override
+    public float reachMultiplier(ItemStack stack) {
+        return 1.125f;
+    }
+
     public static void applyEffect(PracticalPet wearer, Entity target) {
         playRubberDuckyPetHatSquishAnimation(wearer);
 
@@ -64,7 +69,7 @@ public class RubberDuckyPetHat extends Item implements AttachablePetCosmetic, Dy
             if (wearer.isAlive() && target.isAlive()) {
                 Vec3 direction2 = target.position().subtract(wearer.position()).normalize().scale(0.2);
                 target.push(direction2.x, 0.1, direction2.z);
-                wearer.damageEntity(target, 3);
+                wearer.damageEntity(target, 1);
             }
         }, 10);
 

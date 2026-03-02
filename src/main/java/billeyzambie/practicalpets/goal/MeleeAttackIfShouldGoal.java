@@ -1,6 +1,7 @@
 package billeyzambie.practicalpets.goal;
 
 import billeyzambie.practicalpets.entity.PracticalPet;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 
@@ -20,5 +21,10 @@ public class MeleeAttackIfShouldGoal extends MeleeAttackGoal {
     @Override
     public boolean canContinueToUse() {
         return super.canContinueToUse() && !pet.canPerformRangedAttack();
+    }
+
+    @Override
+    protected double getAttackReachSqr(LivingEntity p_25556_) {
+        return super.getAttackReachSqr(p_25556_) * pet.getReachMutliplier() * pet.getReachMutliplier();
     }
 }

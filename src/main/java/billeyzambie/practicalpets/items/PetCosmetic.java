@@ -27,8 +27,11 @@ public interface PetCosmetic {
     default void performRangedAttack(ItemStack stack, PracticalPet shooter, LivingEntity target, float distanceFactor) {
 
     }
-    /** Returns false if the damage should be canceled */
+    /** Return false if the damage should be canceled */
     default boolean onPetHurt(ItemStack stack, PracticalPet pet, DamageSource source, float amount) {
         return true;
+    }
+    default float reachMultiplier(ItemStack stack) {
+        return 1;
     }
 }

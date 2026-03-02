@@ -277,10 +277,12 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     }
 
     private boolean anyEquipmentIsBrave = false;
+    private float reachMutliplier = 1;
 
     public void refreshAnyEquipmentIsBrave() {
         boolean hasBraveEquipment = false;
         Optional<PetCosmetic.Slot> rangedSlot = Optional.empty();
+        this.reachMutliplier = 1;
         for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
             ItemStack cosmeticStack = this.getEquippedItem(slot);
             if (
@@ -293,6 +295,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
                 if (rangedSlot.isEmpty() && cosmetic.canPerformRangedAttack(cosmeticStack)) {
                     rangedSlot = Optional.of(slot);
                 }
+                this.reachMutliplier *= cosmetic.reachMultiplier(cosmeticStack);
             }
         }
         this.anyEquipmentIsBrave = hasBraveEquipment;
@@ -301,6 +304,10 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
 
     public boolean anyEquipmentIsBrave() {
         return anyEquipmentIsBrave;
+    }
+
+    public float getReachMutliplier() {
+        return reachMutliplier;
     }
 
     public boolean shouldDefendOwner(@NotNull LivingEntity target) {
