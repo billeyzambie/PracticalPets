@@ -49,9 +49,17 @@ public class InfoBookScreen extends Screen {
     }
 
     public static void setPagePairStatic(int index) {
-        if (Minecraft.getInstance().screen instanceof InfoBookScreen screen) {
-            screen.setPagePair(index);
+        InfoBookScreen screen;
+        Screen currentScreen = Minecraft.getInstance().screen;
+        if (currentScreen instanceof InfoBookScreen infoBookScreen) {
+            screen = infoBookScreen;
         }
+        else {
+            InfoBookScreen infoBookScreen = new InfoBookScreen();
+            Minecraft.getInstance().setScreen(infoBookScreen);
+            screen = infoBookScreen;
+        }
+        screen.setPagePair(index);
     }
 
     public static void goToPageOf(InfoBookEntry entry) {
