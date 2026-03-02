@@ -35,8 +35,7 @@ public abstract class InfoBookEntry {
             writer.incrementWritingAtY();
         writer.appendTranslatable(getSectionDescription(section));
         appendAfterSection(section, writer);
-        if (!writer.currentPage().widgets.isEmpty() && !writer.cantFitHeight(InfoBookTextWidget.FONT.lineHeight))
-            writer.appendLiteral(" ");
+        writer.appendEmptyLineIfShould();
     }
 
     protected @NotNull String getSectionDescription(String section) {

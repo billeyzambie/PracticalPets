@@ -120,9 +120,28 @@ public class InfoBookScreen extends Screen {
         }
     }
 
+    private double totalScroll = 0;
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaScroll) {
+        if (!super.mouseScrolled(mouseX, mouseY, deltaScroll)) {
+            totalScroll += deltaScroll;
+            if (totalScroll >= 1) {
+                totalScroll = 0;
+                pageForward();
+            }
+            else if (totalScroll <= -1) {
+                totalScroll = 0;
+                pageBack();
+            }
+        }
+        return true;
+    }
+
     protected void pageBack() {
         if (this.currentPagePairIndex > 0) {
             --this.currentPagePairIndex;
+            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
         }
 
         this.createWidgets();
@@ -131,6 +150,7 @@ public class InfoBookScreen extends Screen {
     protected void pageForward() {
         if (this.currentPagePairIndex < this.getNumPages() - 1) {
             ++this.currentPagePairIndex;
+            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
         }
 
         this.createWidgets();
@@ -143,14 +163,14 @@ public class InfoBookScreen extends Screen {
                         this.y + NAVIGATION_BUTTON_TOP_POS,
                         true,
                         button -> this.pageForward(),
-                        true
+                        false // the pageForward plays the page turn sound instead
         ));
         this.backButton = this.addRenderableWidget(new PageButton(
                         this.x + BACK_BUTTON_LEFT_POS,
                         this.y + NAVIGATION_BUTTON_TOP_POS,
                         false,
                         button -> this.pageBack(),
-                        true
+                        false // the pageBack plays the page turn sound instead
         ));
         if (currentPagePairIndex > 0) {
             this.addRenderableWidget(new HomeButton(

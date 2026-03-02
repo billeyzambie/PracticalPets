@@ -126,6 +126,11 @@ public class InfoBookWriter {
         writingAtY = 0;
     }
 
+    public void appendEmptyLineIfShould() {
+        if (!currentPage().widgets.isEmpty() && !cantFitHeight(InfoBookTextWidget.FONT.lineHeight))
+            appendLiteral(" ");
+    }
+
     public void writeInfoBook() {
         initialize();
 
@@ -148,6 +153,9 @@ public class InfoBookWriter {
                 ), 1, 4);
             }
         }
+
+        appendEmptyLineIfShould();
+        appendTranslatable("ui.practicalpets.info_book.scroll_tip");
 
         if (DEBUG)
             writeDebug();
