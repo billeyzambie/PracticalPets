@@ -1,6 +1,5 @@
 package billeyzambie.practicalpets.ui.infobook;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -8,7 +7,7 @@ import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.Style;
-import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
 
 public class InfoBookClickableText extends Button {
     private final Component message;
@@ -33,5 +32,9 @@ public class InfoBookClickableText extends Button {
     public void renderWidget(GuiGraphics p_283309_, int p_282710_, int p_282486_, float p_281727_) {
         Component component = this.isHovered() ? this.underlinedMessage : this.message;
         p_283309_.drawString(FONT, component, this.getX(), this.getY(), TEXT_COLOR, false);
+    }
+
+    @Override
+    public void playDownSound(@NotNull SoundManager p_93665_) {
     }
 }
