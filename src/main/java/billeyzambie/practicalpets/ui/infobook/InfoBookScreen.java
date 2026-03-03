@@ -136,11 +136,11 @@ public class InfoBookScreen extends Screen {
             totalScroll += deltaScroll;
             if (totalScroll >= 1) {
                 totalScroll = 0;
-                pageForward();
+                pageBack();
             }
             else if (totalScroll <= -1) {
                 totalScroll = 0;
-                pageBack();
+                pageForward();
             }
         }
         return true;
