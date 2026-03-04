@@ -3,9 +3,12 @@ package billeyzambie.practicalpets.client.model.entity.otherpet;// Made with Blo
 // Paste this class into your mod and generate all required imports
 
 
+import billeyzambie.animationcontrollers.Animatable;
+import billeyzambie.animationcontrollers.PracticalPetModel;
 import billeyzambie.practicalpets.entity.otherpet.GiraffeCat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -13,10 +16,13 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.text.html.parser.Entity;
+import java.util.HashMap;
+import java.util.List;
 
-public class GiraffeCatNeckPieceModel extends HierarchicalModel<GiraffeCat> {
+public class GiraffeCatNeckPieceModel extends PracticalPetModel<GiraffeCat> {
 	public static final float INFLATE_VALUE = 0.02F;
 	private final ModelPart neck;
 
@@ -36,13 +42,38 @@ public class GiraffeCatNeckPieceModel extends HierarchicalModel<GiraffeCat> {
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-		neck.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+	public ModelPart root() {
+		return neck;
 	}
 
 	@Override
-	public ModelPart root() {
-		return neck;
+	public HashMap<String, AnimationDefinition> getKeyframeAnimationHashMap() {
+		return null;
+	}
+
+	@Override
+	public HashMap<String, Animatable> getOtherAnimationHashMap() {
+		return null;
+	}
+
+	@Override
+	public List<ModelPart> pathToBowtie() {
+		return List.of();
+	}
+
+	@Override
+	public List<ModelPart> pathToHat() {
+		return List.of();
+	}
+
+	@Override
+	public List<ModelPart> pathToBackpack() {
+		return List.of();
+	}
+
+	@Override
+	public @Nullable ModelPart head() {
+		return null;
 	}
 
 	@Override

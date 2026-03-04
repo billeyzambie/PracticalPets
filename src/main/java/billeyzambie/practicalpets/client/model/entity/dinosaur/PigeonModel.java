@@ -235,9 +235,4 @@ public class PigeonModel extends PracticalPetModel<Pigeon> implements ItemHoldin
             this.bone2.xRot = 12.5f * Mth.DEG_TO_RAD;
         }
     }
-
-    @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        ooo.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-    }
 }

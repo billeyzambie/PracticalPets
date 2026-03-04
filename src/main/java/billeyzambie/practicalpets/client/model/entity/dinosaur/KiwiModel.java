@@ -178,11 +178,6 @@ public class KiwiModel extends PracticalPetModel<Kiwi> {
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-		ooo.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-	}
-
-	@Override
 	public ModelPart root() {
 		return ooo;
 	}
