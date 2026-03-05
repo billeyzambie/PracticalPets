@@ -133,11 +133,11 @@ public class PiranhaModel extends SwimmingEntityModel<Piranha> {
 		this.animateSwim(entity.getSwimSwing(), entity.getSwimSwingAmount());
 	}
 
-	public static final float SWIM_FREQ_MULTI = 6;
+	private static final float SWIM_FREQ_MULTI = 3;
 	private static final float SWIM_AMP_MULTI = 6;
 
-	public static final float MIN_SWIM_SWING_DELTA = 0.02f;
-	public static final float MIN_SWIM_SWING_AMOUNT = 0.13f;
+	public static final float MIN_SWIM_SWING_DELTA = 0.02f * 6 / SWIM_FREQ_MULTI;
+	public static final float MIN_SWIM_SWING_AMOUNT = 0.13f * 6 / SWIM_AMP_MULTI;
 
 	public void animateSwim(float swimSwing, float swimSwingAmount) {
 		//The animation looked backwards for some reason so I put the -

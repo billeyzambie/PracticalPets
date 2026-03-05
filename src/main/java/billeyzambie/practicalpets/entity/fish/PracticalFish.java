@@ -5,6 +5,7 @@ import billeyzambie.animationcontrollers.BVCData;
 import billeyzambie.animationcontrollers.SwimmingAnimationEntity;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.AbstractSchoolingFish;
 import net.minecraft.world.level.Level;
@@ -56,9 +57,32 @@ public abstract class PracticalFish extends TamableSchoolingFish implements Swim
     public float getSwimSwingAmount() {
         return swimSwingAmount;
     }
+
     @Override
     public void setSwimSwingAmount(float value) {
         this.swimSwingAmount = value;
+    }
+
+    private float swimXRot = 0;
+    private float swimXRotO = 0;
+
+    @Override
+    public float getSwimXRot(float partialTicks) {
+        return Mth.lerp(partialTicks, swimXRotO, swimXRot);
+    }
+
+    @Override
+    public void setSwimXRot(float value) {
+        this.swimXRot = value;
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (this.level().isClientSide()) {
+            this.swimXRotO = this.swimXRot;
+            this.tickSwimAnim();
+        }
     }
 
     public PracticalFish(EntityType<? extends AbstractSchoolingFish> p_27523_, Level p_27524_) {

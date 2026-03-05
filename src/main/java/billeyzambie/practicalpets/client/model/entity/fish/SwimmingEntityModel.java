@@ -2,6 +2,7 @@ package billeyzambie.practicalpets.client.model.entity.fish;
 
 import billeyzambie.animationcontrollers.PracticalPetModel;
 import billeyzambie.animationcontrollers.SwimmingAnimationEntity;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -18,6 +19,10 @@ public abstract class SwimmingEntityModel<T extends Entity & SwimmingAnimationEn
         entity.addToSwimSwing(swimSwingDelta);
 
         entity.setSwimSwingAmount(Math.max(limbSwingAmount, entity.getMinSwimSwingAmount()));
+
+        float moveBlend = Mth.clamp(limbSwingAmount * 4, 0, 1);
+        float partialTicks = ageInTicks % 1f;
+        body().xRot += entity.getSwimXRot(partialTicks) * moveBlend;
     }
 
     @Override
@@ -25,7 +30,7 @@ public abstract class SwimmingEntityModel<T extends Entity & SwimmingAnimationEn
         boolean inWater = entity.isInWater();
         ModelPart body = this.body();
         if (inWater) {
-            body.xRot += pHeadPitch * Mth.DEG_TO_RAD / 2;
+            body.zRot += pNetHeadYaw * Mth.DEG_TO_RAD / 2;
             pHeadPitch /= 2;
         }
         ModelPart head = this.head();
