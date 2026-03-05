@@ -1,6 +1,6 @@
 package billeyzambie.practicalpets.client.renderer.otherpet;
 
-import billeyzambie.practicalpets.client.PPRenders;
+import billeyzambie.practicalpets.client.PPRenderLayers;
 import billeyzambie.practicalpets.client.layer.PetBackStrapLayer;
 import billeyzambie.practicalpets.client.model.entity.otherpet.GiraffeCatModel;
 import billeyzambie.practicalpets.client.model.entity.otherpet.GiraffeCatNeckPieceModel;
@@ -24,9 +24,9 @@ public class GiraffeCatRenderer extends PracticalPetRenderer<GiraffeCat, Giraffe
     private final GiraffeCatNeckPieceModel neckPieceModel;
 
     public GiraffeCatRenderer(EntityRendererProvider.Context context) {
-        super(context, new GiraffeCatModel(context.bakeLayer(PPRenders.GIRAFFE_CAT)), 0.5f);
+        super(context, new GiraffeCatModel(context.bakeLayer(PPRenderLayers.GIRAFFE_CAT)), 0.5f);
         this.addLayer(new PetBackStrapLayer<>(this, BACK_STRAP_TEXTURE));
-        this.neckPieceModel = new GiraffeCatNeckPieceModel(context.bakeLayer(PPRenders.GIRAFFE_CAT_NECK_PIECE));
+        this.neckPieceModel = new GiraffeCatNeckPieceModel(context.bakeLayer(PPRenderLayers.GIRAFFE_CAT_NECK_PIECE));
     }
 
     private static final ResourceLocation[] GIRAFFE_TEXTURES = {

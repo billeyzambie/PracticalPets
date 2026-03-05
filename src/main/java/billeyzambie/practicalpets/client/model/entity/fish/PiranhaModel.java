@@ -3,24 +3,22 @@ package billeyzambie.practicalpets.client.model.entity.fish;// Made with Blockbe
 // Paste this class into your mod and generate all required imports
 
 import billeyzambie.animationcontrollers.Animatable;
-import billeyzambie.animationcontrollers.PracticalPetModel;
 import billeyzambie.practicalpets.client.animation.fish.PiranhaAnimations;
-import billeyzambie.practicalpets.client.animation.otherpet.GiraffeCatAnimations;
 import billeyzambie.practicalpets.entity.fish.Piranha;
 import billeyzambie.practicalpets.misc.PPAnimationControllers;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import billeyzambie.practicalpets.util.PPUtil;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class PiranhaModel extends PracticalPetModel<Piranha> {
+public class PiranhaModel extends SwimmingEntityModel<Piranha> {
 
 	private final HashMap<String, AnimationDefinition> keyframeAnimationHashMap = new HashMap<>() {{
 		put("flip", PiranhaAnimations.flip);
@@ -130,10 +128,37 @@ public class PiranhaModel extends PracticalPetModel<Piranha> {
 	public void setupAnim(@NotNull Piranha entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 
+		PPAnimationControllers.FISH_FLOP.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
+
+		this.animateSwim(entity.getSwimSwing(), entity.getSwimSwingAmount());
+	}
+
+	private static final float SWIM_FREQ_MULTI = 3;
+	private static final float SWIM_AMP_MULTI = 2;
+
+	public static final float MIN_SWIM_SWING_DELTA = 0.05f;
+	public static final float MIN_SWIM_SWING_AMOUNT = 1 / SWIM_AMP_MULTI;
+
+	public void animateSwim(float swimSwing, float swimSwingAmount) {
+		//The animation looked backwards for some reason so I put the -
+		float time = -swimSwing * SWIM_FREQ_MULTI;
+		float amp = swimSwingAmount * SWIM_AMP_MULTI;
+
+		float phase = time * 480;
+		this.body.yRot += amp * PPUtil.bedrockSin(phase) * 2.5f;
+		this.tail.yRot += amp * PPUtil.bedrockSin(phase + 30) * 10f;
+		this.tail1.yRot += amp * PPUtil.bedrockSin(phase + 45) * 10f;
+		this.left_fin.yRot += amp * PPUtil.bedrockSin(phase + 15) * 5f;
+		this.right_fin.yRot += amp * PPUtil.bedrockSin(phase + 60) * 5f;
 	}
 
 	@Override
 	public @NotNull ModelPart root() {
 		return ooo;
+	}
+
+	@Override
+	protected @NotNull ModelPart body() {
+		return body;
 	}
 }

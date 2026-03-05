@@ -1,18 +1,19 @@
 package billeyzambie.animationcontrollers;
 
 import net.minecraft.world.entity.Entity;
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.List;
 
 public class AnimationController implements Animatable {
 
     @FunctionalInterface
-    public interface TransitionPredicate {
-        TransitionPredicate NEVER = (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, blendWeight) -> false;
+    public interface TransitionPredicate<T extends Entity & ACEntity> {
+        TransitionPredicate<?> NEVER = (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, blendWeight) -> false;
 
         boolean test(
-                PracticalPetModel<Entity> model,
-                Entity entity,
+                PracticalPetModel<T> model,
+                T entity,
                 float limbSwing,
                 float limbSwingAmount,
                 float ageInTicks,
@@ -22,17 +23,17 @@ public class AnimationController implements Animatable {
                 float blendWeight
         );
 
-        default TransitionPredicate negate() {
+        default TransitionPredicate<T> negate() {
             return (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, blendWeight)
                     -> !this.test(model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, blendWeight);
         }
     }
 
     @FunctionalInterface
-    public interface TransitionAction {
+    public interface TransitionAction<T extends Entity & ACEntity> {
         void run(
-                PracticalPetModel<Entity> model,
-                Entity entity,
+                PracticalPetModel<T> model,
+                T entity,
                 float limbSwing,
                 float limbSwingAmount,
                 float ageInTicks,
@@ -45,13 +46,13 @@ public class AnimationController implements Animatable {
 
     public static class State {
         List<Animatable> animations;
-        List<TransitionPredicate> transitions;
+        List<TransitionPredicate<?>> transitions;
         TransitionAction onEntry;
         TransitionAction onExit;
         float blendOutTime;
 
-        public State(List<Animatable> animations, List<TransitionPredicate> transitions,
-                     float blendOutTime, TransitionAction onEntry, TransitionAction onExit) {
+        public State(List<Animatable> animations, List<TransitionPredicate<?>> transitions,
+                     float blendOutTime, TransitionAction<?> onEntry, TransitionAction<?> onExit) {
             this.animations = animations;
             this.transitions = transitions;
             this.blendOutTime = blendOutTime;
@@ -59,11 +60,11 @@ public class AnimationController implements Animatable {
             this.onExit = onExit;
         }
 
-        public State(List<Animatable> animations, List<TransitionPredicate> transitions, float blendOutTime) {
+        public State(List<Animatable> animations, List<TransitionPredicate<?>> transitions, float blendOutTime) {
             this(animations, transitions, blendOutTime, null, null);
         }
 
-        public State(List<Animatable> animations, List<TransitionPredicate> transitions) {
+        public State(List<Animatable> animations, List<TransitionPredicate<?>> transitions) {
             this(animations, transitions, 0);
         }
     }
@@ -83,9 +84,9 @@ public class AnimationController implements Animatable {
     }
 
     @Override
-    public <T extends Entity> void play(
+    public <T extends Entity & ACEntity> void play(
             PracticalPetModel<T> modelT,
-            T entityT,
+            T entity,
             float limbSwing,
             float limbSwingAmount,
             float ageInTicks,
@@ -94,15 +95,11 @@ public class AnimationController implements Animatable {
             float headPitch,
             float blendWeight
     ) {
-        if (entityT instanceof ACEntity acEntity) {
-            @SuppressWarnings("unchecked")
-            PracticalPetModel<Entity> model = (PracticalPetModel<Entity>) modelT;
-
             ACData acData;
-            ACData entityACData = acEntity.getACData().get(name);
+            ACData entityACData = entity.getACData().get(name);
             boolean firstTime = false;
             if (entityACData == null) {
-                acEntity.getACData().put(name, acData = new ACData(ageInTicks));
+                entity.getACData().put(name, acData = new ACData(ageInTicks));
                 firstTime = true;
             } else {
                 acData = entityACData;
@@ -113,7 +110,7 @@ public class AnimationController implements Animatable {
 
             if (firstTime && state.onEntry != null) {
                 state.onEntry.run(
-                        model, entityT,
+                        modelT, entity,
                         limbSwing, limbSwingAmount,
                         ageInTicks,
                         0.0F,
@@ -132,8 +129,8 @@ public class AnimationController implements Animatable {
             if (transitionBlendFactor != 0.0F) {
                 for (Animatable a : state.animations) {
                     a.play(
-                            model,
-                            entityT,
+                            modelT,
+                            entity,
                             limbSwing,
                             limbSwingAmount,
                             ageInTicks,
@@ -148,8 +145,8 @@ public class AnimationController implements Animatable {
             if (transitionBlendFactor != 1.0F) {
                 for (Animatable a : previousState.animations) {
                     a.play(
-                            model,
-                            entityT,
+                            modelT,
+                            entity,
                             limbSwing,
                             limbSwingAmount,
                             ageInTicks,
@@ -161,12 +158,12 @@ public class AnimationController implements Animatable {
                 }
             }
 
-            List<TransitionPredicate> transitions = state.transitions;
+            List<TransitionPredicate<?>> transitions = state.transitions;
             for (int i = 0; i < transitions.size(); i++) {
                 TransitionPredicate predicate = transitions.get(i);
                 if (predicate != null && predicate.test(
-                        model,
-                        entityT,
+                        modelT,
+                        entity,
                         limbSwing,
                         limbSwingAmount,
                         ageInTicks,
@@ -177,7 +174,7 @@ public class AnimationController implements Animatable {
                 )) {
                     if (state.onExit != null) {
                         state.onExit.run(
-                                model, entityT,
+                                modelT, entity,
                                 limbSwing, limbSwingAmount,
                                 ageInTicks,
                                 stateTime,
@@ -189,7 +186,7 @@ public class AnimationController implements Animatable {
                     State nextState = states.get(i);
                     if (nextState.onEntry != null) {
                         nextState.onEntry.run(
-                                model, entityT,
+                                modelT, entity,
                                 limbSwing, limbSwingAmount,
                                 ageInTicks,
                                 0.0F,
@@ -209,6 +206,5 @@ public class AnimationController implements Animatable {
                     break;
                 }
             }
-        }
     }
 }

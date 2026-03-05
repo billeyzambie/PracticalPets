@@ -3,6 +3,7 @@ package billeyzambie.animationcontrollers;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.KeyframeAnimations;
 import net.minecraft.world.entity.Entity;
+import org.checkerframework.checker.units.qual.A;
 
 public class KeyframeAnimationReference implements Animatable {
     //This has just a string as a property instead of an AnimationDefinition so that animation controllers can be reused across different mobs
@@ -13,7 +14,7 @@ public class KeyframeAnimationReference implements Animatable {
     }
 
     @Override
-    public <T extends Entity> void play(
+    public <T extends Entity & ACEntity> void play(
             PracticalPetModel<T> model,
             T entity,
             float limbSwing,

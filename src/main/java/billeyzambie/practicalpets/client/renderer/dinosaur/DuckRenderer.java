@@ -1,7 +1,7 @@
 
 package billeyzambie.practicalpets.client.renderer.dinosaur;
 
-import billeyzambie.practicalpets.client.PPRenders;
+import billeyzambie.practicalpets.client.PPRenderLayers;
 import billeyzambie.practicalpets.client.layer.PetBackStrapLayer;
 import billeyzambie.practicalpets.misc.PracticalPets;
 import billeyzambie.practicalpets.client.layer.DuckArmorLayer;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class DuckRenderer extends PracticalPetRenderer<Duck, DuckModel> {
     public DuckRenderer(EntityRendererProvider.Context pContext) {
-        super(pContext, new DuckModel(pContext.bakeLayer(PPRenders.DUCK)), 0.35f);
+        super(pContext, new DuckModel(pContext.bakeLayer(PPRenderLayers.DUCK)), 0.35f);
         this.addLayer(new DuckArmorLayer(this, pContext.getModelSet()));
         this.addLayer(new PetBackStrapLayer<>(this, BACK_STRAP_TEXTURE));
     }

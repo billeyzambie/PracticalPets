@@ -1,7 +1,8 @@
 package billeyzambie.practicalpets.client.renderer;
 
+import billeyzambie.animationcontrollers.ACEntity;
 import billeyzambie.animationcontrollers.PracticalPetModel;
-import billeyzambie.practicalpets.client.PPRenders;
+import billeyzambie.practicalpets.client.PPRenderLayers;
 import billeyzambie.practicalpets.client.model.entity.pet_equipment.*;
 import billeyzambie.practicalpets.misc.PPItems;
 import billeyzambie.practicalpets.entity.PracticalPet;
@@ -29,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.List;
 
-public abstract class PracticalPetRenderer<T extends Mob, M extends PracticalPetModel<T>> extends MobRenderer<T, M> {
+public abstract class PracticalPetRenderer<T extends Mob & ACEntity, M extends PracticalPetModel<T>> extends MobRenderer<T, M> {
 
     final HashMap<Item, HierarchicalModel<T>> cosmeticModels = new HashMap<>();
 
@@ -38,31 +39,31 @@ public abstract class PracticalPetRenderer<T extends Mob, M extends PracticalPet
 
         cosmeticModels.put(
                 PPItems.PET_BOWTIE.get(),
-                new PetBowtieModel<>(context.bakeLayer(PPRenders.PET_BOWTIE))
+                new PetBowtieModel<>(context.bakeLayer(PPRenderLayers.PET_BOWTIE))
         );
         cosmeticModels.put(
                 PPItems.ANNIVERSARY_PET_HAT_0.get(),
-                new AnniversaryPetHatModel<>(context.bakeLayer(PPRenders.ANNIVERSARY_PET_HAT))
+                new AnniversaryPetHatModel<>(context.bakeLayer(PPRenderLayers.ANNIVERSARY_PET_HAT))
         );
         cosmeticModels.put(
                 PPItems.RUBBER_DUCKY_PET_HAT.get(),
-                new RubberDuckyPetHatModel<>(context.bakeLayer(PPRenders.RUBBER_DUCKY_PET_HAT))
+                new RubberDuckyPetHatModel<>(context.bakeLayer(PPRenderLayers.RUBBER_DUCKY_PET_HAT))
         );
         cosmeticModels.put(
                 PPItems.PET_CHEF_HAT.get(),
-                new PetChefHatModel<>(context.bakeLayer(PPRenders.PET_CHEF_HAT))
+                new PetChefHatModel<>(context.bakeLayer(PPRenderLayers.PET_CHEF_HAT))
         );
         cosmeticModels.put(
                 PPItems.PET_BACKPACK.get(),
-                new PetBackpackModel<>(context.bakeLayer(PPRenders.PET_BACKPACK))
+                new PetBackpackModel<>(context.bakeLayer(PPRenderLayers.PET_BACKPACK))
         );
         cosmeticModels.put(
                 PPItems.PET_END_ROD_LAUNCHER.get(),
-                new PetBackpackModel<>(context.bakeLayer(PPRenders.PET_END_ROD_LAUNCHER))
+                new PetBackpackModel<>(context.bakeLayer(PPRenderLayers.PET_END_ROD_LAUNCHER))
         );
         cosmeticModels.put(
                 PPItems.PET_HAT.get(),
-                new PlainPetHatModel<>(context.bakeLayer(PPRenders.PET_HAT))
+                new PlainPetHatModel<>(context.bakeLayer(PPRenderLayers.PET_HAT))
         );
     }
 

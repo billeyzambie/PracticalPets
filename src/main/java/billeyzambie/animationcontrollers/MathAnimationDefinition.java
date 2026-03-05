@@ -2,6 +2,7 @@ package billeyzambie.animationcontrollers;
 
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.world.entity.Entity;
+import org.checkerframework.checker.units.qual.A;
 import org.joml.Vector3f;
 
 import java.util.HashMap;
@@ -16,9 +17,9 @@ public class MathAnimationDefinition implements Animatable {
     }
 
     @FunctionalInterface
-    public interface BoneFunction {
+    public interface BoneFunction<T extends Entity & ACEntity> {
         Vector3f apply(
-                PracticalPetModel<Entity> model,
+                PracticalPetModel<T> model,
                 Entity entity,
                 float limbSwing,
                 float limbSwingAmount,
@@ -31,14 +32,14 @@ public class MathAnimationDefinition implements Animatable {
         );
     }
 
-    final HashMap<String, HashMap<AnimationChannel, BoneFunction>> boneFunctions;
+    final HashMap<String, HashMap<AnimationChannel, BoneFunction<?>>> boneFunctions;
 
-    public MathAnimationDefinition(HashMap<String, HashMap<AnimationChannel, BoneFunction>> boneFunctions) {
+    public MathAnimationDefinition(HashMap<String, HashMap<AnimationChannel, BoneFunction<?>>> boneFunctions) {
         this.boneFunctions = boneFunctions;
     }
 
     @Override
-    public <T extends Entity> void play(
+    public <T extends Entity & ACEntity> void play(
             PracticalPetModel<T> model,
             T entity,
             float limbSwing,
@@ -49,14 +50,14 @@ public class MathAnimationDefinition implements Animatable {
             float headPitch,
             float blendWeight
     ) {
-        for (Map.Entry<String, HashMap<AnimationChannel, BoneFunction>> entry : boneFunctions.entrySet()) {
+        for (Map.Entry<String, HashMap<AnimationChannel, BoneFunction<?>>> entry : boneFunctions.entrySet()) {
             String boneName = entry.getKey();
-            Map<AnimationChannel, BoneFunction> channelMap = entry.getValue();
+            HashMap<AnimationChannel, BoneFunction<?>> channelMap = entry.getValue();
 
             ModelPart bone = model.getAnyDescendantWithName(boneName).orElse(null);
             if (bone == null) continue;
 
-            for (Map.Entry<AnimationChannel, BoneFunction> channelEntry : channelMap.entrySet()) {
+            for (Map.Entry<AnimationChannel, BoneFunction<?>> channelEntry : channelMap.entrySet()) {
                 AnimationChannel channel = channelEntry.getKey();
                 BoneFunction func = channelEntry.getValue();
 
@@ -68,7 +69,7 @@ public class MathAnimationDefinition implements Animatable {
                 };
 
                 Vector3f result = func.apply(
-                        (PracticalPetModel<Entity>) model,
+                        model,
                         entity,
                         limbSwing,
                         limbSwingAmount,

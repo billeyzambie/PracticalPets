@@ -1,6 +1,6 @@
 package billeyzambie.practicalpets.client.renderer.dinosaur;
 
-import billeyzambie.practicalpets.client.PPRenders;
+import billeyzambie.practicalpets.client.PPRenderLayers;
 import billeyzambie.practicalpets.client.layer.PetBackStrapLayer;
 import billeyzambie.practicalpets.client.model.entity.dinosaur.PigeonModel;
 import billeyzambie.practicalpets.client.renderer.ItemHoldingEntityRenderer;
@@ -18,7 +18,7 @@ public class PigeonRenderer extends PracticalPetRenderer<Pigeon, PigeonModel> im
     private final ItemInHandRenderer itemInHandRenderer;
 
     public PigeonRenderer(EntityRendererProvider.Context context) {
-        super(context, new PigeonModel(context.bakeLayer(PPRenders.PIGEON)), 0.25f);
+        super(context, new PigeonModel(context.bakeLayer(PPRenderLayers.PIGEON)), 0.25f);
         this.addLayer(new PetBackStrapLayer<>(this, BACK_STRAP_TEXTURE));
         this.itemInHandRenderer = context.getItemInHandRenderer();
     }

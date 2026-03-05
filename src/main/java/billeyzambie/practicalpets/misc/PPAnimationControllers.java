@@ -418,6 +418,15 @@ public class PPAnimationControllers {
             ).otherStateAnimations(new KeyframeAnimationReference("bend_over"))
             .build();
 
+    public static final AnimationController FISH_FLOP = BinaryAnimationControllerBuilder
+            .start("fish_flip")
+            .toOtherBlendTime(0.1f)
+            .toDefaultBlendTime(0.2f)
+            .transitionPredicate((model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                    -> !entity.isInWater()
+            ).otherStateAnimations(new KeyframeAnimationReference("flip"))
+            .build();
+
     public static final BlendValueController ON_GROUND_BLEND = new BlendValueController("on_ground", 0.2f, (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
             -> entity.onGround()
     );

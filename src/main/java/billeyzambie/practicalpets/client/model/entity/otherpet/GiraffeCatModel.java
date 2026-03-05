@@ -9,8 +9,6 @@ import billeyzambie.practicalpets.client.animation.otherpet.GiraffeCatAnimations
 import billeyzambie.practicalpets.entity.otherpet.GiraffeCat;
 import billeyzambie.practicalpets.misc.PPAnimationControllers;
 import billeyzambie.practicalpets.util.PPUtil;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -217,7 +215,7 @@ public class GiraffeCatModel extends PracticalPetModel<GiraffeCat> {
             }
             float yeetTime = ageInTicks - entity.yeetStartClientTime;
             if (yeetTime < 20f) {
-                neck.xRot -= PPUtil.bedrockSinAngle(yeetTime * 3600);
+                neck.xRot -= PPUtil.bedrockSin(yeetTime * 3600);
             }
         }
         entity.wasClientYeeting = yeeting;

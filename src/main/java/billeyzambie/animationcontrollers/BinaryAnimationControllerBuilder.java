@@ -18,7 +18,7 @@ public class BinaryAnimationControllerBuilder {
     private List<Animatable> otherStateAnimations = Animatable.NO_ANIMATIONS;
     private float toOtherBlendTime = 0;
     private float toDefaultBlendTime = 0;
-    private AnimationController.TransitionPredicate transitionPredicate;
+    private AnimationController.TransitionPredicate<?> transitionPredicate;
 
     public BinaryAnimationControllerBuilder defaultStateAnimations(Animatable... anims) {
         defaultStateAnimations = Arrays.asList(anims);
@@ -44,7 +44,7 @@ public class BinaryAnimationControllerBuilder {
         return this;
     }
 
-    public BinaryAnimationControllerBuilder transitionPredicate(AnimationController.TransitionPredicate transitionPredicate) {
+    public BinaryAnimationControllerBuilder transitionPredicate(AnimationController.TransitionPredicate<?> transitionPredicate) {
         this.transitionPredicate = transitionPredicate;
         return this;
     }

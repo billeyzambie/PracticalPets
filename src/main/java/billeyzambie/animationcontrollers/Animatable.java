@@ -1,6 +1,7 @@
 package billeyzambie.animationcontrollers;
 
 import net.minecraft.world.entity.Entity;
+import org.checkerframework.checker.units.qual.A;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ public interface Animatable {
 
     public static List<Animatable> NO_ANIMATIONS = new ArrayList<>();
 
-    public <T extends Entity> void play(
+    public <T extends Entity & ACEntity> void play(
             PracticalPetModel<T> model,
             T entity,
             float limbSwing,

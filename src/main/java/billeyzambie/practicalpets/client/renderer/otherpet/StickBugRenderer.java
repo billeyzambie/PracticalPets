@@ -1,6 +1,6 @@
 package billeyzambie.practicalpets.client.renderer.otherpet;
 
-import billeyzambie.practicalpets.client.PPRenders;
+import billeyzambie.practicalpets.client.PPRenderLayers;
 import billeyzambie.practicalpets.client.layer.PetBackStrapLayer;
 import billeyzambie.practicalpets.client.model.entity.otherpet.StickBugModel;
 import billeyzambie.practicalpets.client.renderer.PracticalPetRenderer;
@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class StickBugRenderer extends PracticalPetRenderer<StickBug, StickBugModel> {
     public StickBugRenderer(EntityRendererProvider.Context context) {
-        super(context, new StickBugModel(context.bakeLayer(PPRenders.STICK_BUG)), 0.4f);
+        super(context, new StickBugModel(context.bakeLayer(PPRenderLayers.STICK_BUG)), 0.4f);
         this.addLayer(new PetBackStrapLayer<>(this, BACK_STRAP_TEXTURE));
     }
 

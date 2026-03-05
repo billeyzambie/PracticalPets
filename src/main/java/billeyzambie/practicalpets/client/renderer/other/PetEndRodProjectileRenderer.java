@@ -1,6 +1,6 @@
 package billeyzambie.practicalpets.client.renderer.other;
 
-import billeyzambie.practicalpets.client.PPRenders;
+import billeyzambie.practicalpets.client.PPRenderLayers;
 import billeyzambie.practicalpets.client.model.entity.pet_equipment.PetEndRodLauncherModel;
 import billeyzambie.practicalpets.entity.other.PetEndRodProjectile;
 import billeyzambie.practicalpets.misc.PracticalPets;
@@ -28,7 +28,7 @@ public class PetEndRodProjectileRenderer extends EntityRenderer<PetEndRodProject
 
     public PetEndRodProjectileRenderer(EntityRendererProvider.Context context) {
         super(context);
-        this.model = new PetEndRodLauncherModel<>(context.bakeLayer(PPRenders.PET_END_ROD_PROJECTILE));
+        this.model = new PetEndRodLauncherModel<>(context.bakeLayer(PPRenderLayers.PET_END_ROD_PROJECTILE));
     }
 
     @Override

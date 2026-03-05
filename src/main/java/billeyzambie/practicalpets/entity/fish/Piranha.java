@@ -1,15 +1,15 @@
 package billeyzambie.practicalpets.entity.fish;
 
+import billeyzambie.practicalpets.client.model.entity.fish.PiranhaModel;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.AbstractSchoolingFish;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 public class Piranha extends PracticalFish {
-    public Piranha(EntityType<? extends PracticalFish> p_27523_, Level p_27524_) {
-        super(p_27523_, p_27524_);
+    public Piranha(EntityType<? extends Piranha> type, Level level) {
+        super(type, level);
     }
 
     @Override
@@ -30,5 +30,15 @@ public class Piranha extends PracticalFish {
     @Override
     public float headSizeZ() {
         return 2;
+    }
+
+    @Override
+    public float getMinSwimSwingDelta() {
+        return PiranhaModel.MIN_SWIM_SWING_DELTA;
+    }
+
+    @Override
+    public float getMinSwimSwingAmount() {
+        return PiranhaModel.MIN_SWIM_SWING_AMOUNT;
     }
 }

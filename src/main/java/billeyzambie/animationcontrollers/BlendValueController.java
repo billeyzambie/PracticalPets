@@ -1,6 +1,7 @@
 package billeyzambie.animationcontrollers;
 
 import net.minecraft.world.entity.Entity;
+import org.checkerframework.checker.units.qual.A;
 
 public class BlendValueController {
     private final String name;
@@ -19,12 +20,12 @@ public class BlendValueController {
         this(name, blendTime, blendTime, predicate);
     }
 
-    public <T extends Entity> float calculate(PracticalPetModel<T> model, T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float animTime, float netHeadYaw, float headPitch, float blendWeight) {
-        if (entity instanceof ACEntity acEntity) {
+    public <T extends Entity & ACEntity> float calculate(PracticalPetModel<T> model, T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float animTime, float netHeadYaw, float headPitch, float blendWeight) {
+
             BVCData bvcData;
-            BVCData entityBVCData = acEntity.getBVCData().get(name);
+            BVCData entityBVCData = entity.getBVCData().get(name);
             if (entityBVCData == null) {
-                acEntity.getBVCData().put(name, bvcData = new BVCData(ageInTicks));
+                entity.getBVCData().put(name, bvcData = new BVCData(ageInTicks));
             } else {
                 bvcData = entityBVCData;
             }
@@ -42,7 +43,7 @@ public class BlendValueController {
             }
 
             if (!bvcData.getIsInOtherState() && predicate.test(
-                    (PracticalPetModel<Entity>) model,
+                    model,
                     entity,
                     limbSwing,
                     limbSwingAmount,
@@ -55,7 +56,7 @@ public class BlendValueController {
                 bvcData.setState(true, ageInTicks);
             }
             else if (bvcData.getIsInOtherState() && predicate.negate().test(
-                    (PracticalPetModel<Entity>) model,
+                    model,
                     entity,
                     limbSwing,
                     limbSwingAmount,
@@ -68,7 +69,6 @@ public class BlendValueController {
                 bvcData.setState(false, ageInTicks);
             }
             return result;
-        }
-        return 0;
+
     }
 }

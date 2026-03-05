@@ -10,12 +10,12 @@ public class MathAnimationBuilder {
         return new MathAnimationBuilder();
     }
 
-    private final HashMap<String, HashMap<MathAnimationDefinition.AnimationChannel, MathAnimationDefinition.BoneFunction>> boneFunctions = new HashMap<>();
+    private final HashMap<String, HashMap<MathAnimationDefinition.AnimationChannel, MathAnimationDefinition.BoneFunction<?>>> boneFunctions = new HashMap<>();
 
     public MathAnimationBuilder addBoneFunction(
             String boneName,
             MathAnimationDefinition.AnimationChannel channel,
-            MathAnimationDefinition.BoneFunction function
+            MathAnimationDefinition.BoneFunction<?> function
     ) {
         boneFunctions
                 .computeIfAbsent(boneName, k -> new HashMap<>())

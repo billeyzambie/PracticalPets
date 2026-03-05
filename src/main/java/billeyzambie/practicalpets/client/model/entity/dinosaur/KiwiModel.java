@@ -9,18 +9,12 @@ import billeyzambie.practicalpets.client.animation.dinosaur.KiwiAnimations;
 import billeyzambie.practicalpets.client.animation.dinosaur.PigeonAnimations;
 import billeyzambie.practicalpets.entity.dinosaur.Kiwi;
 import billeyzambie.practicalpets.misc.PPAnimationControllers;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.animation.AnimationDefinition;
-import net.minecraft.client.animation.KeyframeAnimations;
-import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 

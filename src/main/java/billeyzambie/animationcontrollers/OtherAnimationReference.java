@@ -11,7 +11,7 @@ public class OtherAnimationReference implements Animatable {
     }
 
     @Override
-    public <T extends Entity> void play(
+    public <T extends Entity & ACEntity> void play(
             PracticalPetModel<T> model,
             T entity,
             float limbSwing,

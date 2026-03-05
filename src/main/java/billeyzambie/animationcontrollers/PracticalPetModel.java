@@ -10,7 +10,6 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
@@ -30,7 +29,7 @@ public abstract class PracticalPetModel<T extends Entity & ACEntity> extends Hie
     public abstract ModelPart head();
 
     @Override
-    public void setupAnim(@NotNull T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
         redMultiplier = greenMultiplier = blueMultiplier = 1;
 
@@ -50,7 +49,7 @@ public abstract class PracticalPetModel<T extends Entity & ACEntity> extends Hie
         this.applyHeadRotation(netHeadYaw, headPitch, entity);
     }
 
-    protected void applyHeadRotation(float pNetHeadYaw, float pHeadPitch, @NotNull T entity) {
+    protected void applyHeadRotation(float pNetHeadYaw, float pHeadPitch, T entity) {
         ModelPart head = this.head();
         if (head != null) {
             head.yRot += pNetHeadYaw * ((float) Math.PI / 180F);
@@ -58,7 +57,7 @@ public abstract class PracticalPetModel<T extends Entity & ACEntity> extends Hie
         }
     }
 
-    protected void hurtAnimation(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    protected void hurtAnimation(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         ModelPart head = this.head();
         if (head != null)
             head.xRot += 9 * ((float) Math.PI / 180F);
