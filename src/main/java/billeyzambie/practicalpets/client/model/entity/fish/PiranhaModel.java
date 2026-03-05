@@ -102,14 +102,14 @@ public class PiranhaModel extends SwimmingEntityModel<Piranha> {
 
 		PartDefinition tail = body2.addOrReplaceChild("tail", CubeListBuilder.create().texOffs(4, 13).addBox(-0.5F, -1.0F, -1.0F, 1.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		PartDefinition tail1 = tail.addOrReplaceChild("tail1", CubeListBuilder.create().texOffs(1, 8).addBox(-0.5F, -2.0F, -2.0F, 0.0F, 4.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.5F, 0.0F, -1.0F));
+		PartDefinition tail1 = tail.addOrReplaceChild("tail1", CubeListBuilder.create().texOffs(1, 8).addBox(0.0F, -2.0F, -2.0F, 0.0F, 4.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, -1.0F));
 
 		PartDefinition xd = body.addOrReplaceChild("xd", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 2.0F));
 
 		PartDefinition xd_r1 = xd.addOrReplaceChild("xd_r1", CubeListBuilder.create().texOffs(10, 2).addBox(-1.0F, 0.01F, 0.0F, 2.0F, 2.0F, 2.0F, new CubeDeformation(-0.01F)), PartPose.offsetAndRotation(0.0F, -2.01F, 1.0F, -0.7854F, 0.0F, 0.0F));
 
 		PartDefinition jaw = xd.addOrReplaceChild("jaw", CubeListBuilder.create().texOffs(10, 11).addBox(-1.0F, -1.01F, 0.0F, 2.0F, 1.01F, 2.0F, new CubeDeformation(-0.01F))
-		.texOffs(0, 0).addBox(-1.0F, -2.0F, 1.0F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 2.0F, 1.0F, 0.1309F, 0.0F, 0.0F));
+				.texOffs(0, 0).addBox(-1.0F, -2.0F, 1.0F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 2.0F, 1.0F, 0.1309F, 0.0F, 0.0F));
 
 		PartDefinition left_fin = body.addOrReplaceChild("left_fin", CubeListBuilder.create().texOffs(8, 0).addBox(-2.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.0F, 1.0F, 1.0F, 0.0F, 0.0F, -0.6109F));
 
@@ -133,11 +133,11 @@ public class PiranhaModel extends SwimmingEntityModel<Piranha> {
 		this.animateSwim(entity.getSwimSwing(), entity.getSwimSwingAmount());
 	}
 
-	private static final float SWIM_FREQ_MULTI = 3;
-	private static final float SWIM_AMP_MULTI = 2;
+	public static final float SWIM_FREQ_MULTI = 6;
+	private static final float SWIM_AMP_MULTI = 6;
 
-	public static final float MIN_SWIM_SWING_DELTA = 0.05f;
-	public static final float MIN_SWIM_SWING_AMOUNT = 1 / SWIM_AMP_MULTI;
+	public static final float MIN_SWIM_SWING_DELTA = 0.02f;
+	public static final float MIN_SWIM_SWING_AMOUNT = 0.13f;
 
 	public void animateSwim(float swimSwing, float swimSwingAmount) {
 		//The animation looked backwards for some reason so I put the -

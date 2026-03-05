@@ -5,7 +5,6 @@ import billeyzambie.animationcontrollers.SwimmingAnimationEntity;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class SwimmingEntityModel<T extends Entity & SwimmingAnimationEntity> extends PracticalPetModel<T> {
@@ -15,7 +14,7 @@ public abstract class SwimmingEntityModel<T extends Entity & SwimmingAnimationEn
         super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
         float prevLimbSwing = entity.getPrevLimbSwing();
         entity.setPrevLimbSwing(limbSwing);
-        float swimSwingDelta = entity.isInWater() ? Math.max(prevLimbSwing - limbSwing, entity.getMinSwimSwingDelta()) : 0.5f;
+        float swimSwingDelta = entity.isInWater() ? Math.max(limbSwing - prevLimbSwing, entity.getMinSwimSwingDelta()) : 0.17f;
         entity.addToSwimSwing(swimSwingDelta);
 
         entity.setSwimSwingAmount(Math.max(limbSwingAmount, entity.getMinSwimSwingAmount()));

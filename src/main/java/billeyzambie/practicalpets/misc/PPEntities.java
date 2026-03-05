@@ -86,7 +86,7 @@ public class PPEntities {
     public static final RegistryObject<EntityType<Piranha>> PIRANHA = REGISTRY.register(
             "piranha",
             () -> EntityType.Builder.of(Piranha::new, MobCategory.CREATURE)
-                    .sized(0.2f, 0.25f)
+                    .sized(0.4f, 0.25f)
                     .build("piranha")
     );
 
