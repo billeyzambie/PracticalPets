@@ -54,7 +54,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.List;
 
-public abstract class PracticalPet extends TamableAnimal implements ACEntity, NeutralMob, RangedAttackMob {
+public abstract class PracticalPet extends TamableAnimal implements ACEntity, NeutralMob, RangedAttackMob, WeightedVariantEntity {
 
     public static final MutableComponent NEWLINE = Component.literal("\n");
     HashMap<String, ACData> ACData = new HashMap<>();
@@ -122,7 +122,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         this.setNeckItem(ItemStack.of(compoundTag.getCompound("NeckItem")));
         this.setBackItem(ItemStack.of(compoundTag.getCompound("BackItem")));
         this.setBodyItem(ItemStack.of(compoundTag.getCompound("BodyItem")));
-        this.setVariant(compoundTag.getInt("Variant"));
+        this.loadVariant(compoundTag);
         this.setIsRainbow(compoundTag.getBoolean("IsRainbow"));
         this.readPersistentAngerSaveData(this.level(), compoundTag);
     }
@@ -137,18 +137,15 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         compoundTag.put("NeckItem", this.getNeckItem().save(new CompoundTag()));
         compoundTag.put("BackItem", this.getBackItem().save(new CompoundTag()));
         compoundTag.put("BodyItem", this.getBodyItem().save(new CompoundTag()));
-        compoundTag.putInt("Variant", this.getVariant());
+        this.saveVariant(compoundTag);
         compoundTag.putBoolean("IsRainbow", this.isRainbow());
         this.addPersistentAngerSaveData(compoundTag);
     }
 
-    public abstract HashMap<Integer, Integer> variantSpawnWeights();
-
     @Override
     public @NotNull SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor level, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType spawnType,
                                                  @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag tag) {
-        int selectedVariant = this.pickRandomWeightedVariant();
-        this.setVariant(selectedVariant);
+        this.setVariant(this.pickRandomWeightedVariant());
 
         this.setPetLevel(1);
 
@@ -156,28 +153,6 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
             this.setIsRainbow(true);
 
         return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData, tag);
-    }
-
-    private int pickRandomWeightedVariant() {
-        var weights = variantSpawnWeights();
-        if (weights == null)
-            return 0;
-        int totalWeight = 0;
-        for (int weight : weights.values()) {
-            totalWeight += weight;
-        }
-
-        int randomValue = this.random.nextInt(totalWeight);
-        int weightAddedSoFar = 0;
-
-        for (Map.Entry<Integer, Integer> entry : weights.entrySet()) {
-            weightAddedSoFar += entry.getValue();
-            if (randomValue < weightAddedSoFar) {
-                return entry.getKey();
-            }
-        }
-
-        throw new AssertionError("I don't think this will ever happen (error in pickRandomWeightedVariant in PracticalPet.java)");
     }
 
     public final AnimationState randomIdle1AnimationState = new AnimationState();
@@ -601,10 +576,12 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         this.entityData.set(SHOULD_FOLLOW_OWNER, following);
     }
 
+    @Override
     public int getVariant() {
         return this.entityData.get(VARIANT);
     }
 
+    @Override
     public void setVariant(int variant) {
         this.entityData.set(VARIANT, variant);
     }
