@@ -68,7 +68,7 @@ public class PPSpawns {
         if (biome.is(BiomeTags.IS_RIVER)) {
             builder.getMobSpawnSettings().getSpawner(MobCategory.WATER_CREATURE).add(new MobSpawnSettings.SpawnerData(
                     PPEntities.PIRANHA.get(),
-                    10, 4, 8
+                    5, 2, 4
             ));
         }
 
