@@ -38,6 +38,9 @@ public class PPSounds {
     public static final RegistryObject<SoundEvent> KIWI_DEATH = REGISTRY.register("kiwi_death",
             () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("practicalpets", "kiwi_death")));
 
+    public static final RegistryObject<SoundEvent> FISH_DEATH = REGISTRY.register("fish_death",
+            () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("practicalpets", "fish_death")));
+
     public static final RegistryObject<SoundEvent> PET_LEVEL_UP = REGISTRY.register("pet_level_up",
             () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("practicalpets", "pet_level_up")));
 

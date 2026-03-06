@@ -150,5 +150,13 @@
         "stream": false
       }
     ]
+  },
+  "fish_death": {
+    "sounds": [
+      {
+        "name": "practicalpets:fish_death",
+        "stream": false
+      }
+    ]
   }
 }

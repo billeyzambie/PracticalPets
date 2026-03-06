@@ -4,6 +4,7 @@ import billeyzambie.animationcontrollers.ACData;
 import billeyzambie.animationcontrollers.BVCData;
 import billeyzambie.animationcontrollers.SwimmingAnimationEntity;
 import billeyzambie.practicalpets.entity.WeightedVariantEntity;
+import billeyzambie.practicalpets.misc.PPSounds;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -12,6 +13,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
@@ -102,6 +104,34 @@ public abstract class PracticalFish extends TamableSchoolingFish implements Swim
     @Override
     protected @NotNull SoundEvent getFlopSound() {
         return SoundEvents.COD_FLOP;
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return SoundEvents.COD_AMBIENT;
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource p_28281_) {
+        return SoundEvents.COD_HURT;
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return PPSounds.FISH_DEATH.get();
+    }
+
+    @Override
+    public final float getVoicePitch() {
+        return this.isAlive()
+                ? this.getCustomVoicePitch()
+                : this.getDeathSoundPitch() - 0.1f + 0.2f * this.getRandom().nextFloat();
+    }
+
+    abstract protected float getDeathSoundPitch();
+
+    private float getCustomVoicePitch() {
+        return super.getVoicePitch();
     }
 
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(PracticalFish.class, EntityDataSerializers.INT);

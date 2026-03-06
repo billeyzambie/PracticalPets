@@ -5,8 +5,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
@@ -74,6 +77,11 @@ public class Piranha extends PracticalFish {
 
     public void setBellyColor(int color) {
         this.entityData.set(BELLY_COLOR, color);
+    }
+
+    @Override
+    protected float getDeathSoundPitch() {
+        return 0.7f;
     }
 
     @Override
