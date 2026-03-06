@@ -2,6 +2,7 @@ package billeyzambie.practicalpets.misc;
 
 import billeyzambie.practicalpets.entity.dinosaur.Duck;
 import billeyzambie.practicalpets.entity.dinosaur.Kiwi;
+import billeyzambie.practicalpets.entity.fish.Piranha;
 import billeyzambie.practicalpets.entity.otherpet.Rat;
 import net.minecraft.core.Holder;
 import net.minecraft.tags.BiomeTags;
@@ -61,6 +62,13 @@ public class PPSpawns {
             builder.getMobSpawnSettings().getSpawner(MobCategory.MONSTER).add(new MobSpawnSettings.SpawnerData(
                     PPEntities.KIWI.get(),
                     50, 4, 8
+            ));
+        }
+
+        if (biome.is(BiomeTags.IS_RIVER)) {
+            builder.getMobSpawnSettings().getSpawner(MobCategory.WATER_CREATURE).add(new MobSpawnSettings.SpawnerData(
+                    PPEntities.PIRANHA.get(),
+                    10, 4, 8
             ));
         }
 
@@ -141,6 +149,14 @@ public class PPSpawns {
                 SpawnPlacements.Type.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Kiwi::kiwiCanSpawn,
+                SpawnPlacementRegisterEvent.Operation.REPLACE
+        );
+
+        event.register(
+                PPEntities.PIRANHA.get(),
+                SpawnPlacements.Type.IN_WATER,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                Piranha::piranhaCanSpawn,
                 SpawnPlacementRegisterEvent.Operation.REPLACE
         );
     }

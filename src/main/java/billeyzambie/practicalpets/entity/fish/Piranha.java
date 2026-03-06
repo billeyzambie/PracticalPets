@@ -2,18 +2,23 @@ package billeyzambie.practicalpets.entity.fish;
 
 import billeyzambie.practicalpets.client.model.entity.fish.PiranhaModel;
 import billeyzambie.practicalpets.misc.PPItems;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -129,5 +134,17 @@ public class Piranha extends PracticalFish {
                         && this.hasFollowers() && this.schoolSize * 5 >= target.getHealth()
                 )
         ));
+    }
+
+    public static boolean piranhaCanSpawn(
+            EntityType<? extends Piranha> type,
+            LevelAccessor level,
+            MobSpawnType spawnType,
+            BlockPos pos,
+            RandomSource random
+    ) {
+        boolean waterAnimalCanSpawn = checkSurfaceWaterAnimalSpawnRules(type, level, spawnType, pos, random);
+        boolean shouldPiranhaSpawn = level.getBiome(pos).is(BiomeTags.IS_JUNGLE) || random.nextBoolean();
+        return waterAnimalCanSpawn && shouldPiranhaSpawn;
     }
 }
