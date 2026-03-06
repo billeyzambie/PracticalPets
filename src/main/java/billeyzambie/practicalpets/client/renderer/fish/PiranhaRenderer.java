@@ -21,6 +21,6 @@ public class PiranhaRenderer extends PracticalPetRenderer<Piranha, PiranhaModel>
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull Piranha piranha) {
-        return TEXTURES[0];
+        return TEXTURES[piranha.getVariant() % TEXTURES.length];
     }
 }

@@ -7,9 +7,21 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
+
 public class Piranha extends PracticalFish {
     public Piranha(EntityType<? extends Piranha> type, Level level) {
         super(type, level);
+    }
+
+    private static final HashMap<Integer, Integer> VARIANT_SPAWN_WEIGHTS = new HashMap<>() {{
+        put(0, 1);
+        put(1, 1);
+    }};
+
+    @Override
+    public HashMap<Integer, Integer> variantSpawnWeights() {
+        return VARIANT_SPAWN_WEIGHTS;
     }
 
     @Override
