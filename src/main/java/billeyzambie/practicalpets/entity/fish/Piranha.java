@@ -97,7 +97,7 @@ public class Piranha extends PracticalFish {
 
     @Override
     public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor p_27528_, DifficultyInstance p_27529_, MobSpawnType p_27530_, @Nullable SpawnGroupData p_27531_, @Nullable CompoundTag p_27532_) {
-        if (this.getRandom().nextInt(100) == 0){
+        if (this.getRandom().nextInt(50) == 0){
             this.setBellyColor(Mth.hsvToRgb(
                     this.getRandom().nextFloat(),
                     0.86f,
