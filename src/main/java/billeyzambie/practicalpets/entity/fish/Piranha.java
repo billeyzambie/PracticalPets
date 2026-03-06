@@ -8,9 +8,10 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -111,5 +112,22 @@ public class Piranha extends PracticalFish {
         }
 
         return super.finalizeSpawn(p_27528_, p_27529_, p_27530_, p_27531_, p_27532_);
+    }
+
+    @Override
+    protected boolean shouldRegisterAlertOthers() {
+        return true;
+    }
+
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(
+                this, LivingEntity.class, 60 * 20, true, true,
+                target -> (
+                        !(target instanceof Piranha)
+                        && this.hasFollowers() && this.schoolSize * 5 >= target.getHealth()
+                )
+        ));
     }
 }

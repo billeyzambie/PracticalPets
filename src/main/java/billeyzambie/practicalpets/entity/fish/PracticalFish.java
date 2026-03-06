@@ -14,15 +14,19 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.TargetGoal;
+import net.minecraft.world.entity.animal.AbstractSchoolingFish;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.EnumSet;
 import java.util.HashMap;
 
 public abstract class PracticalFish extends TamableSchoolingFish implements SwimmingAnimationEntity, WeightedVariantEntity {
@@ -189,5 +193,57 @@ public abstract class PracticalFish extends TamableSchoolingFish implements Swim
     public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor p_27528_, DifficultyInstance p_27529_, MobSpawnType p_27530_, @Nullable SpawnGroupData p_27531_, @Nullable CompoundTag p_27532_) {
         this.setVariant(this.pickRandomWeightedVariant());
         return super.finalizeSpawn(p_27528_, p_27529_, p_27530_, p_27531_, p_27532_);
+    }
+
+    @Override
+    protected void registerGoals() {
+        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.25D, true));
+        this.goalSelector.addGoal(4, new AvoidEntityGoal<>(this, Player.class, 8.0F, 1.25D, 1.1D, EntitySelector.NO_SPECTATORS::test));
+        this.goalSelector.addGoal(6, new PracticalFish.FishSwimGoal(this));
+        this.goalSelector.addGoal(8, new FollowFlockLeaderGoal(this));
+        HurtByTargetGoal hurtByTargetGoal = new HurtByTargetGoal(this);
+        if (shouldRegisterAlertOthers())
+            hurtByTargetGoal = hurtByTargetGoal.setAlertOthers();
+        this.targetSelector.addGoal(1, hurtByTargetGoal);
+        this.targetSelector.addGoal(5, new CopyFlockLeaderTargetGoal(this));
+    }
+
+    protected boolean shouldRegisterAlertOthers() {
+        return false;
+    }
+
+    protected static class FishSwimGoal extends RandomSwimmingGoal {
+        private final PracticalFish fish;
+
+        public FishSwimGoal(PracticalFish fish) {
+            super(fish, 1.0D, 40);
+            this.fish = fish;
+        }
+
+        @Override
+        public boolean canUse() {
+            return this.fish.canRandomSwim() && super.canUse();
+        }
+    }
+
+    protected static class CopyFlockLeaderTargetGoal extends TargetGoal {
+        private final PracticalFish fish;
+
+        public CopyFlockLeaderTargetGoal(PracticalFish fish) {
+            super(fish, true);
+            this.fish = fish;
+            this.setFlags(EnumSet.of(Goal.Flag.TARGET));
+        }
+
+        @Override
+        public boolean canUse() {
+            return fish.isFollower() && fish.leader.getTarget() != null;
+        }
+
+        @Override
+        public void start() {
+            fish.setTarget(fish.leader.getTarget());
+            super.start();
+        }
     }
 }
