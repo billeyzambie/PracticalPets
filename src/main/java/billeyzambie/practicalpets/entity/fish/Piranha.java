@@ -1,11 +1,21 @@
 package billeyzambie.practicalpets.entity.fish;
 
 import billeyzambie.practicalpets.client.model.entity.fish.PiranhaModel;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.util.Mth;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 
@@ -52,5 +62,49 @@ public class Piranha extends PracticalFish {
     @Override
     public float getMinSwimSwingAmount() {
         return PiranhaModel.MIN_SWIM_SWING_AMOUNT;
+    }
+
+    private static final EntityDataAccessor<Integer> BELLY_COLOR = SynchedEntityData.defineId(Piranha.class, EntityDataSerializers.INT);
+
+    public static final int DEFAULT_BELLY_COLOR = 8268561;
+
+    public int getBellyColor() {
+        return this.entityData.get(BELLY_COLOR);
+    }
+
+    public void setBellyColor(int color) {
+        this.entityData.set(BELLY_COLOR, color);
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(BELLY_COLOR, DEFAULT_BELLY_COLOR);
+    }
+
+    @Override
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        if (tag.contains("BellyColor"))
+            this.setBellyColor(tag.getInt("BellyColor"));
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        tag.putInt("BellyColor", getBellyColor());
+    }
+
+    @Override
+    public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor p_27528_, DifficultyInstance p_27529_, MobSpawnType p_27530_, @Nullable SpawnGroupData p_27531_, @Nullable CompoundTag p_27532_) {
+        if (this.getRandom().nextInt(100) == 0){
+            this.setBellyColor(Mth.hsvToRgb(
+                    this.getRandom().nextFloat(),
+                    0.86f,
+                    0.49f
+            ));
+        }
+
+        return super.finalizeSpawn(p_27528_, p_27529_, p_27530_, p_27531_, p_27532_);
     }
 }

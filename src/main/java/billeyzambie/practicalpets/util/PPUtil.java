@@ -95,16 +95,20 @@ public class PPUtil {
 
     }
 
-    /** Computes sine in degrees and then multiplies the result by Mth.DEG_TO_RAD.
+    /**
+     * Computes sine in degrees and then multiplies the result by Mth.DEG_TO_RAD.
      * Used to port math animations from bedrock without constantly having to write * Mth.DEG_TO_RAD.
-     * Also converts the time from ticks to seconds, with the / 20f. */
+     * Also converts the time from ticks to seconds, with the / 20f.
+     */
     public static float bedrockSin(float value) {
         return Mth.sin(value / 20f * Mth.DEG_TO_RAD) * Mth.DEG_TO_RAD;
     }
 
-    /** Computes cosine in degrees and then multiplies the result by Mth.DEG_TO_RAD.
+    /**
+     * Computes cosine in degrees and then multiplies the result by Mth.DEG_TO_RAD.
      * Used to port math animations from bedrock without constantly having to write * Mth.DEG_TO_RAD.
-     * Also converts the time from ticks to seconds, with the / 20f. */
+     * Also converts the time from ticks to seconds, with the / 20f.
+     */
     public static float bedrockCos(float value) {
         return Mth.cos(value / 20f * Mth.DEG_TO_RAD) * Mth.DEG_TO_RAD;
     }
@@ -147,7 +151,7 @@ public class PPUtil {
         double d1 = entity.getBbHeight();
         double d0 = 0.5;
         BlockPos blockPos = entity.blockPosition();
-        for(int i = 0; i < count; ++i) {
+        for (int i = 0; i < count; ++i) {
             double d2 = randomsource.nextGaussian() * 0.02D;
             double d3 = randomsource.nextGaussian() * 0.02D;
             double d4 = randomsource.nextGaussian() * 0.02D;
@@ -158,6 +162,18 @@ public class PPUtil {
             level.addParticle(ParticleTypes.HAPPY_VILLAGER, d6, d7, d8, d2, d3, d4);
         }
         level.playLocalSound(blockPos, SoundEvents.BONE_MEAL_USE, SoundSource.NEUTRAL, 1.0F, 1.0F, false);
+    }
+
+    public static float getColorRed(int color) {
+        return (color >> 16 & 255) / 255f;
+    }
+
+    public static float getColorGreen(int color) {
+        return (color >> 8 & 255) / 255f;
+    }
+
+    public static float getColorBlue(int color) {
+        return (color & 255) / 255f;
     }
 
 }
