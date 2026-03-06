@@ -11,7 +11,7 @@ import net.minecraft.client.animation.KeyframeAnimations;
  * @author Author
  */
 public class PiranhaAnimations {
-	public static final AnimationDefinition flip = AnimationDefinition.Builder.withLength(2.6F).looping()
+	public static final AnimationDefinition flop = AnimationDefinition.Builder.withLength(2.6F).looping()
 		.addAnimation("body", new AnimationChannel(AnimationChannel.Targets.ROTATION,
 			new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, -90.0F), AnimationChannel.Interpolations.LINEAR),
 			new Keyframe(1.16F, KeyframeAnimations.degreeVec(0.0F, 0.0F, -90.0F), AnimationChannel.Interpolations.LINEAR),

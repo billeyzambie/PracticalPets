@@ -11,7 +11,6 @@ import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,7 +20,7 @@ import java.util.List;
 public class PiranhaModel extends SwimmingEntityModel<Piranha> {
 
 	private final HashMap<String, AnimationDefinition> keyframeAnimationHashMap = new HashMap<>() {{
-		put("flip", PiranhaAnimations.flip);
+		put("flop", PiranhaAnimations.flop);
 	}};
 
 	@Override

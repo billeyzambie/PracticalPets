@@ -49,15 +49,6 @@ public class PPAnimationControllers {
             )
             .build();
 
-    public static final AnimationController SIMPLE_DANCE = BinaryAnimationControllerBuilder.start("simple_dance")
-            .otherStateAnimations(new KeyframeAnimationReference("dance"))
-            .blendTime(0.2f)
-            .transitionPredicate(
-                    (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
-                            -> entity instanceof DancingEntity dancing && dancing.isDancing()
-            )
-            .build();
-
     public static final AnimationController SIMPLE_ATTACK = new AnimationController("simple_attack", List.of(
             new AnimationController.State(
                     Animatable.NO_ANIMATIONS,
@@ -418,21 +409,52 @@ public class PPAnimationControllers {
             ).otherStateAnimations(new KeyframeAnimationReference("bend_over"))
             .build();
 
-    public static final AnimationController FISH_FLOP = BinaryAnimationControllerBuilder
-            .start("fish_flip")
-            .toOtherBlendTime(0.1f)
-            .toDefaultBlendTime(0.2f)
-            .transitionPredicate((model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
-                    -> !entity.isInWater()
-            ).otherStateAnimations(new KeyframeAnimationReference("flip"))
-            .build();
+    public static final AnimationController FISH_FLOP = new AnimationController("fish_flop", List.of(
+            new AnimationController.State(
+                    Animatable.NO_ANIMATIONS,
+                    List.of(
+                            AnimationController.TransitionPredicate.NEVER,
+                            (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                                    -> !entity.isInWater(),
+                            AnimationController.TransitionPredicate.NEVER
+                    ),
+                    0.2f
+            ),
+            new AnimationController.State(
+                    Animatable.NO_ANIMATIONS,
+                    List.of(
+                            (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                                    -> entity.isInWater(),
+                            AnimationController.TransitionPredicate.NEVER,
+                            (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                                    -> entity.onGround()
+                    ),
+                    0.2f
+            ),
+            new AnimationController.State(
+                    List.of(new KeyframeAnimationReference(
+                            "flop"
+                    )),
+                    List.of(
+                            (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                                    -> entity.isInWater(),
+                            AnimationController.TransitionPredicate.NEVER,
+                            AnimationController.TransitionPredicate.NEVER
+                    ),
+                    0.2f
+            )
+    ));
 
     public static final BlendValueController ON_GROUND_BLEND = new BlendValueController("on_ground", 0.2f, (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
             -> entity.onGround()
     );
 
-    public static final BlendValueController GIRAFFE_CAT_NO_ABILITY_BLEND = new BlendValueController("on_ground", 0.2f, (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+    public static final BlendValueController GIRAFFE_CAT_NO_ABILITY_BLEND = new BlendValueController("giraffe_cat_no_ability", 0.2f, (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
             -> entity instanceof GiraffeCat giraffeCat && giraffeCat.noCurrentAbility()
+    );
+
+    public static final BlendValueController ON_AIR_OR_WATER_BLEND = new BlendValueController("on_ground_or_water", 0.2f, (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+            -> !entity.onGround() || entity.isInWater()
     );
 
 }

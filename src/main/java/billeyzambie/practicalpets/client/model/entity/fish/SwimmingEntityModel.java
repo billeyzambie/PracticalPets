@@ -2,6 +2,7 @@ package billeyzambie.practicalpets.client.model.entity.fish;
 
 import billeyzambie.animationcontrollers.PracticalPetModel;
 import billeyzambie.animationcontrollers.SwimmingAnimationEntity;
+import billeyzambie.practicalpets.misc.PPAnimationControllers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
@@ -13,6 +14,7 @@ public abstract class SwimmingEntityModel<T extends Entity & SwimmingAnimationEn
     @Override
     public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+
         float prevLimbSwing = entity.getPrevLimbSwing();
         entity.setPrevLimbSwing(limbSwing);
         float swimSwingDelta = entity.isInWater() ? Math.max(limbSwing - prevLimbSwing, entity.getMinSwimSwingDelta()) : 0.17f;
@@ -22,22 +24,14 @@ public abstract class SwimmingEntityModel<T extends Entity & SwimmingAnimationEn
 
         float moveBlend = Mth.clamp(limbSwingAmount * 4, 0, 1);
         float partialTicks = ageInTicks % 1f;
-        body().xRot += entity.getSwimXRot(partialTicks) * moveBlend;
-    }
 
-    @Override
-    protected void applyHeadRotation(float pNetHeadYaw, float pHeadPitch, @NotNull T entity) {
-        boolean inWater = entity.isInWater();
         ModelPart body = this.body();
-        if (inWater) {
-            body.zRot += pNetHeadYaw * Mth.DEG_TO_RAD / 2;
-            pHeadPitch /= 2;
-        }
-        ModelPart head = this.head();
-        if (head != null) {
-            head.yRot += pNetHeadYaw * Mth.DEG_TO_RAD;
-            head.xRot += pHeadPitch * Mth.DEG_TO_RAD;
-        }
+        body.zRot = netHeadYaw * Mth.DEG_TO_RAD / 2;
+        body.xRot = entity.getSwimXRot(partialTicks) * moveBlend;
+
+        float airOrWaterBlend = PPAnimationControllers.ON_AIR_OR_WATER_BLEND.calculate(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
+        body.xRot *= airOrWaterBlend;
+        body.zRot *= airOrWaterBlend;
     }
 
     protected abstract @NotNull ModelPart body();
