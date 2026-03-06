@@ -124,6 +124,13 @@ public class Piranha extends PracticalFish {
         return true;
     }
 
+    private int getNearbyPiranhaCount() {
+        return this.level().getEntitiesOfClass(
+                Piranha.class,
+                this.getBoundingBox().inflate(5, 5, 5)
+        ).size();
+    }
+
     @Override
     protected void registerGoals() {
         super.registerGoals();
@@ -131,7 +138,7 @@ public class Piranha extends PracticalFish {
                 this, LivingEntity.class, 15 * 20, true, true,
                 target -> (
                         !(target instanceof Piranha)
-                        && this.hasFollowers() && this.schoolSize * 5 >= target.getHealth()
+                        && this.hasFollowers() && this.getNearbyPiranhaCount() * 5 >= target.getHealth()
                 )
         ));
     }
