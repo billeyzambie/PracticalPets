@@ -10,8 +10,8 @@ import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.RegistryObject;
 
-public class ModItemModelProvider extends ItemModelProvider {
-    public ModItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
+public class PPItemModelProvider extends ItemModelProvider {
+    public PPItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
         super(output, PracticalPets.MODID, existingFileHelper);
     }
 
@@ -34,6 +34,9 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleItem(PPItems.PET_HAT);
         simpleItem(PPItems.KIWI_FEATHERS);
         simpleItem(PPItems.INFO_BOOK);
+        simpleItem(PPItems.PIRANHA);
+        simpleItem(PPItems.COOKED_PIRANHA);
+        simpleItem(PPItems.PIRANHA_BUCKET);
         //simpleItem(PPItems.PET_END_ROD_LAUNCHER);
         //simpleItem(PPItems.PET_BACKPACK);
         //simpleItem(ModItems.END_ROD_DUCK_ARMOR);

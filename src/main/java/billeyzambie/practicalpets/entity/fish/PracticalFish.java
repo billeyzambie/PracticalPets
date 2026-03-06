@@ -17,6 +17,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.NotNull;
@@ -152,16 +153,36 @@ public abstract class PracticalFish extends TamableSchoolingFish implements Swim
         this.entityData.define(VARIANT, 0);
     }
 
-    @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
-        super.readAdditionalSaveData(tag);
+    protected void loadCustomData(CompoundTag tag) {
         this.loadVariant(tag);
     }
 
-    @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
-        super.addAdditionalSaveData(tag);
+    protected void saveCustomData(CompoundTag tag) {
         this.saveVariant(tag);
+    }
+
+    @Override
+    public final void readAdditionalSaveData(@NotNull CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        this.loadCustomData(tag);
+    }
+
+    @Override
+    public final void addAdditionalSaveData(@NotNull CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        this.saveCustomData(tag);
+    }
+
+    @Override
+    public final void loadFromBucketTag(@NotNull CompoundTag tag) {
+        super.loadFromBucketTag(tag);
+        this.loadCustomData(tag);
+    }
+
+    @Override
+    public final void saveToBucketTag(@NotNull ItemStack stack) {
+        super.saveToBucketTag(stack);
+        this.saveCustomData(stack.getOrCreateTag());
     }
 
     @Override

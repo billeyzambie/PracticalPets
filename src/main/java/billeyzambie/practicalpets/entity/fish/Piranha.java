@@ -1,20 +1,17 @@
 package billeyzambie.practicalpets.entity.fish;
 
 import billeyzambie.practicalpets.client.model.entity.fish.PiranhaModel;
+import billeyzambie.practicalpets.misc.PPItems;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +36,7 @@ public class Piranha extends PracticalFish {
 
     @Override
     public @NotNull ItemStack getBucketItemStack() {
-        return new ItemStack(Items.SALMON_BUCKET);
+        return new ItemStack(PPItems.PIRANHA_BUCKET.get());
     }
 
     @Override
@@ -91,15 +88,15 @@ public class Piranha extends PracticalFish {
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
-        super.readAdditionalSaveData(tag);
+    public void loadCustomData(@NotNull CompoundTag tag) {
+        super.loadCustomData(tag);
         if (tag.contains("BellyColor"))
             this.setBellyColor(tag.getInt("BellyColor"));
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
-        super.addAdditionalSaveData(tag);
+    public void saveCustomData(CompoundTag tag) {
+        super.saveCustomData(tag);
         tag.putInt("BellyColor", getBellyColor());
     }
 

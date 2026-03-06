@@ -8,7 +8,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -17,9 +20,9 @@ import java.util.function.Consumer;
 
 import static billeyzambie.practicalpets.misc.PPItems.*;
 
-public class ModRecipeProvider extends RecipeProvider implements IConditionBuilder {
+public class PPRecipeProvider extends RecipeProvider implements IConditionBuilder {
 
-    public ModRecipeProvider(PackOutput output) {
+    public PPRecipeProvider(PackOutput output) {
         super(output);
     }
 
@@ -89,6 +92,13 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .pattern(" S ")
                 .unlockedBy("has_material", has(Items.BOOK))
                 .save(consumer, INFO_BOOK.getId());
+        meatCookingRecipe(consumer, 200, PPItems.PIRANHA.get(), PPItems.COOKED_PIRANHA.get(), 0.35F);
+    }
+
+    private void meatCookingRecipe(Consumer<FinishedRecipe> consumer, int cookTime, ItemLike ingredient, ItemLike result, float xp) {
+        simpleCookingRecipe(consumer, "smelting", RecipeSerializer.SMELTING_RECIPE, cookTime, ingredient, result, xp);
+        simpleCookingRecipe(consumer, "smoking", RecipeSerializer.SMOKING_RECIPE, cookTime / 2, ingredient, result, xp);
+        simpleCookingRecipe(consumer, "campfire_cooking", RecipeSerializer.CAMPFIRE_COOKING_RECIPE, cookTime * 3, ingredient, result, xp);
     }
 
     private void duckArmorRecipe(Consumer<FinishedRecipe> consumer, String materialName, String resultId, Item ingredient) {

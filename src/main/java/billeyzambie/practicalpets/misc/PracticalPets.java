@@ -79,9 +79,12 @@ public class PracticalPets
                 output.accept(PPItems.POULTRY_BANANA.get());
                 output.accept(PPItems.RATATOUILLE.get());
                 output.accept(PPItems.POTATO_STICK.get());
+                output.accept(PPItems.PIRANHA.get());
+                output.accept(PPItems.COOKED_PIRANHA.get());
                 //other items obtained from pets
                 output.accept(PPItems.BANANA_PEEL.get());
                 output.accept(PPItems.KIWI_FEATHERS.get());
+                output.accept(PPItems.PIRANHA_BUCKET.get());
                 //pet equipment
                 output.accept(PPItems.PET_BOWTIE.get());
                 output.accept(PPItems.PET_HAT.get());
