@@ -123,7 +123,7 @@ public class Piranha extends PracticalFish {
     protected void registerGoals() {
         super.registerGoals();
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(
-                this, LivingEntity.class, 60 * 20, true, true,
+                this, LivingEntity.class, 15 * 20, true, true,
                 target -> (
                         !(target instanceof Piranha)
                         && this.hasFollowers() && this.schoolSize * 5 >= target.getHealth()
