@@ -44,7 +44,7 @@ public abstract class PracticalPetRenderer<T extends Mob & ACEntity, M extends P
 
     private void registerCosmeticModel(Item cosmetic, HierarchicalModel<T> model) {
         registerCosmeticModel(
-                (AttachablePetCosmetic) cosmetic,
+                (AttachablePetCosmetic) PetCosmetics.getCosmeticForItem(cosmetic).orElseThrow(),
                 model
         );
     }
