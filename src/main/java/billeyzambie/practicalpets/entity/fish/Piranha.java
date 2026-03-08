@@ -138,6 +138,7 @@ public class Piranha extends PracticalFish {
                 this, LivingEntity.class, 15 * 20, true, true,
                 target -> (
                         !(target instanceof Piranha)
+                        && target.getType().getCategory() != MobCategory.CREATURE
                         && this.hasFollowers() && this.getNearbyPiranhaCount() * 5 >= target.getHealth()
                 )
         ));
