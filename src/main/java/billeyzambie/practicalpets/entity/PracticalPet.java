@@ -869,7 +869,6 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
                 this.usePlayerItem(player, hand, itemstack);
                 if (this.random.nextInt(3) == 0 && !ForgeEventFactory.onAnimalTame(this, player)) {
                     this.tame(player);
-                    this.setOrderedToSit(true);
                     //Tame heart particle
                     this.level().broadcastEntityEvent(this, (byte) 7);
                 } else {
