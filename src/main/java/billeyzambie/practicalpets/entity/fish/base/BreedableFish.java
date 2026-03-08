@@ -25,7 +25,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class BreedableFish extends CustomSchoolingFish {
+public abstract class BreedableFish extends CustomFish {
     private static final EntityDataAccessor<Boolean> DATA_BABY_ID = SynchedEntityData.defineId(BreedableFish.class, EntityDataSerializers.BOOLEAN);
     public static final int BABY_START_AGE = -24000;
     private static final int FORCED_AGE_PARTICLE_TICKS = 40;
@@ -95,8 +95,8 @@ public abstract class BreedableFish extends CustomSchoolingFish {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag p_146761_) {
-        super.addAdditionalSaveData(p_146761_);
+    protected void saveCustomData(CompoundTag p_146761_) {
+        super.saveCustomData(p_146761_);
         p_146761_.putInt("Age", this.getAge());
         p_146761_.putInt("ForcedAge", this.forcedAge);
         p_146761_.putInt("InLove", this.inLove);
@@ -106,8 +106,8 @@ public abstract class BreedableFish extends CustomSchoolingFish {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag p_146752_) {
-        super.readAdditionalSaveData(p_146752_);
+    protected void loadCustomData(CompoundTag p_146752_) {
+        super.loadCustomData(p_146752_);
         this.setAge(p_146752_.getInt("Age"));
         this.forcedAge = p_146752_.getInt("ForcedAge");
         this.inLove = p_146752_.getInt("InLove");

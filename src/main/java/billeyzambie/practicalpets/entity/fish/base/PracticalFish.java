@@ -158,36 +158,16 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
         this.entityData.define(VARIANT, 0);
     }
 
+    @Override
     protected void loadCustomData(CompoundTag tag) {
+        super.loadCustomData(tag);
         this.loadVariant(tag);
     }
 
+    @Override
     protected void saveCustomData(CompoundTag tag) {
+        super.saveCustomData(tag);
         this.saveVariant(tag);
-    }
-
-    @Override
-    public final void readAdditionalSaveData(@NotNull CompoundTag tag) {
-        super.readAdditionalSaveData(tag);
-        this.loadCustomData(tag);
-    }
-
-    @Override
-    public final void addAdditionalSaveData(@NotNull CompoundTag tag) {
-        super.addAdditionalSaveData(tag);
-        this.saveCustomData(tag);
-    }
-
-    @Override
-    public final void loadFromBucketTag(@NotNull CompoundTag tag) {
-        super.loadFromBucketTag(tag);
-        this.loadCustomData(tag);
-    }
-
-    @Override
-    public final void saveToBucketTag(@NotNull ItemStack stack) {
-        super.saveToBucketTag(stack);
-        this.saveCustomData(stack.getOrCreateTag());
     }
 
     @Override
