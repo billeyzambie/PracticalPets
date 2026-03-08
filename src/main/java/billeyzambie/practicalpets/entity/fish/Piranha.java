@@ -16,7 +16,9 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -136,12 +138,17 @@ public class Piranha extends PracticalFish {
         super.registerGoals();
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(
                 this, LivingEntity.class, 15 * 20, true, true,
-                target -> (
-                        !(target instanceof Piranha)
-                        && target.getType().getCategory() != MobCategory.CREATURE
-                        && this.hasFollowers() && this.getNearbyPiranhaCount() * 5 >= target.getHealth()
-                )
+                this::canRandomlyAttack
         ));
+    }
+
+    private boolean canRandomlyAttack(LivingEntity target) {
+        return !(target instanceof Piranha) &&
+                (this.isTame()
+                    ? target.getType().getCategory() == MobCategory.MONSTER
+                        || (target instanceof Player && getServer() != null && getServer().isPvpAllowed())
+                    : target.getType().getCategory() != MobCategory.CREATURE
+                ) && this.hasFollowers() && this.getNearbyPiranhaCount() * 5 >= target.getHealth();
     }
 
     public static boolean piranhaCanSpawn(
@@ -162,11 +169,10 @@ public class Piranha extends PracticalFish {
         Piranha baby = (Piranha) this.getType().create(level);
 
         if (baby != null) {
-            //TODO: uncomment when you make fish tameable
-            //if (this.isTame()) {
-            //    baby.setOwnerUUID(this.getOwnerUUID());
-            //    baby.setTame(true);
-            //}
+            if (this.isTame()) {
+                baby.setOwnerUUID(this.getOwnerUUID());
+                baby.setTame(true);
+            }
 
             if (partner instanceof Piranha piranha) {
                 if (this.random.nextBoolean())

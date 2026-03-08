@@ -21,7 +21,11 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-//leader and schoolSize were private in the vanilla AbstractSchoolingFish
+
+/**
+ * Mostly a copy of vanilla's {@link net.minecraft.world.entity.animal.AbstractSchoolingFish}.
+ * leader and schoolSize were private in the vanilla AbstractSchoolingFish so I had to do this
+ */
 public abstract class CustomFish extends AbstractFish {
     @Nullable
     protected CustomFish leader;

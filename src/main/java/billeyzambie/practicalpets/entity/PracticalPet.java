@@ -1088,13 +1088,13 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         return baby;
     }
 
-    public boolean sharesOwnerWith(TamableAnimal pet) {
+    public boolean sharesOwnerWith(OwnableEntity pet) {
         return PPUtil.petsShareOwner(this, pet);
     }
 
     @Override
     public boolean isAlliedTo(@NotNull Entity entity) {
-        return (entity instanceof TamableAnimal pet && this.sharesOwnerWith(pet)) || super.isAlliedTo(entity);
+        return (entity instanceof OwnableEntity pet && this.sharesOwnerWith(pet)) || super.isAlliedTo(entity);
     }
 
     public void onDropHeldItemToOwner() {

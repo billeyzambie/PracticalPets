@@ -15,12 +15,19 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
+import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -176,11 +183,25 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
         return super.finalizeSpawn(p_27528_, p_27529_, p_27530_, p_27531_, p_27532_);
     }
 
+    private AvoidEntityGoal<Player> avoidPlayersGoal;
+
+    @Override
+    protected void reassessTameGoals() {
+        if (this.avoidPlayersGoal == null) {
+            this.avoidPlayersGoal = new AvoidEntityGoal<>(this, Player.class, 8.0F, 1.25D, 1.1D, EntitySelector.NO_SPECTATORS::test);
+        }
+
+        this.goalSelector.removeGoal(this.avoidPlayersGoal);
+        if (!this.isTame()) {
+            this.goalSelector.addGoal(4, this.avoidPlayersGoal);
+        }
+
+    }
+
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.25D, true));
         this.goalSelector.addGoal(2, new BreedGoal(this, 1.25D));
-        this.goalSelector.addGoal(4, new AvoidEntityGoal<>(this, Player.class, 8.0F, 1.25D, 1.1D, EntitySelector.NO_SPECTATORS::test));
         this.goalSelector.addGoal(6, new FishSwimGoal(this));
         this.goalSelector.addGoal(8, new FollowFlockLeaderGoal(this));
         HurtByTargetGoal hurtByTargetGoal = new HurtByTargetGoal(this);
@@ -194,4 +215,53 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
         return false;
     }
 
+    @Override
+    protected void usePlayerItem(@NotNull Player player, @NotNull InteractionHand hand, @NotNull ItemStack itemStack) {
+        super.usePlayerItem(player, hand, itemStack);
+
+        if (this.isFood(itemStack)) {
+            this.playSound(SoundEvents.GENERIC_EAT, 1.0F, 1.0F);
+        }
+    }
+
+    @Override
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (this.isFood(stack)) {
+            if (this.getHealth() < this.getMaxHealth()) {
+                boolean clientSide = this.level().isClientSide();
+                if (!clientSide) {
+                    FoodProperties foodProperties = stack.getFoodProperties(this);
+                    float healAmount = foodProperties == null ? 2
+                            : foodProperties.getNutrition();
+                    this.heal(healAmount);
+                }
+                return InteractionResult.sidedSuccess(clientSide);
+            }
+            if (!this.isTame()) {
+                boolean clientSide = this.level().isClientSide();
+                if (!clientSide) {
+                    this.usePlayerItem(player, hand, stack);
+                    if (this.random.nextInt(3) == 0) {
+                        this.tame(player);
+                        //Tame heart particle
+                        this.level().broadcastEntityEvent(this, (byte) 7);
+                    }
+                    else {
+                        //Fail particle
+                        this.level().broadcastEntityEvent(this, (byte) 6);
+                    }
+                }
+                return InteractionResult.sidedSuccess(clientSide);
+            }
+        }
+        return super.mobInteract(player, hand);
+    }
+
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        if (source.getEntity() instanceof LivingEntity living && this.isOwnedBy(living) && !living.isShiftKeyDown())
+            return false;
+        return super.hurt(source, amount);
+    }
 }

@@ -25,6 +25,10 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Mostly a copy of vanilla's {@link net.minecraft.world.entity.AgeableMob}
+ * and {@link net.minecraft.world.entity.animal.Animal}
+ */
 public abstract class BreedableFish extends CustomFish {
     private static final EntityDataAccessor<Boolean> DATA_BABY_ID = SynchedEntityData.defineId(BreedableFish.class, EntityDataSerializers.BOOLEAN);
     public static final int BABY_START_AGE = -24000;

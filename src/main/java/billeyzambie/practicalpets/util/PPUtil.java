@@ -15,6 +15,7 @@ import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -139,7 +140,7 @@ public class PPUtil {
         return dx * dx + dz * dz;
     }
 
-    public static boolean petsShareOwner(TamableAnimal pet1, TamableAnimal pet2) {
+    public static boolean petsShareOwner(OwnableEntity pet1, OwnableEntity pet2) {
         UUID ownerId = pet1.getOwnerUUID();
         return ownerId != null
                 && ownerId.equals(pet2.getOwnerUUID());
