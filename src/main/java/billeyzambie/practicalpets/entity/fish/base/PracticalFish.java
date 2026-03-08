@@ -1,14 +1,16 @@
-package billeyzambie.practicalpets.entity.fish;
+package billeyzambie.practicalpets.entity.fish.base;
 
 import billeyzambie.animationcontrollers.ACData;
 import billeyzambie.animationcontrollers.BVCData;
 import billeyzambie.animationcontrollers.SwimmingAnimationEntity;
+import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.entity.WeightedVariantEntity;
 import billeyzambie.practicalpets.misc.PPSounds;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -18,7 +20,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
-import net.minecraft.world.entity.animal.AbstractSchoolingFish;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -29,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.EnumSet;
 import java.util.HashMap;
 
-public abstract class PracticalFish extends TamableSchoolingFish implements SwimmingAnimationEntity, WeightedVariantEntity {
+public abstract class PracticalFish extends TamableFish implements SwimmingAnimationEntity, WeightedVariantEntity {
     HashMap<String, ACData> ACData = new HashMap<>();
 
     @Override
@@ -198,8 +199,9 @@ public abstract class PracticalFish extends TamableSchoolingFish implements Swim
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.25D, true));
+        this.goalSelector.addGoal(2, new BreedGoal(this, 1.25D));
         this.goalSelector.addGoal(4, new AvoidEntityGoal<>(this, Player.class, 8.0F, 1.25D, 1.1D, EntitySelector.NO_SPECTATORS::test));
-        this.goalSelector.addGoal(6, new PracticalFish.FishSwimGoal(this));
+        this.goalSelector.addGoal(6, new FishSwimGoal(this));
         this.goalSelector.addGoal(8, new FollowFlockLeaderGoal(this));
         HurtByTargetGoal hurtByTargetGoal = new HurtByTargetGoal(this);
         if (shouldRegisterAlertOthers())
@@ -212,38 +214,4 @@ public abstract class PracticalFish extends TamableSchoolingFish implements Swim
         return false;
     }
 
-    protected static class FishSwimGoal extends RandomSwimmingGoal {
-        private final PracticalFish fish;
-
-        public FishSwimGoal(PracticalFish fish) {
-            super(fish, 1.0D, 40);
-            this.fish = fish;
-        }
-
-        @Override
-        public boolean canUse() {
-            return this.fish.canRandomSwim() && super.canUse();
-        }
-    }
-
-    protected static class CopyFlockLeaderTargetGoal extends TargetGoal {
-        private final PracticalFish fish;
-
-        public CopyFlockLeaderTargetGoal(PracticalFish fish) {
-            super(fish, true);
-            this.fish = fish;
-            this.setFlags(EnumSet.of(Goal.Flag.TARGET));
-        }
-
-        @Override
-        public boolean canUse() {
-            return fish.isFollower() && fish.leader.getTarget() != null;
-        }
-
-        @Override
-        public void start() {
-            fish.setTarget(fish.leader.getTarget());
-            super.start();
-        }
-    }
 }

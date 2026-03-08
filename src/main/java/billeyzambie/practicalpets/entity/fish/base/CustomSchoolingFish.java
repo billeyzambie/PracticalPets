@@ -1,4 +1,4 @@
-package billeyzambie.practicalpets.entity.fish;
+package billeyzambie.practicalpets.entity.fish.base;
 
 import com.mojang.datafixers.DataFixUtils;
 import net.minecraft.nbt.CompoundTag;
@@ -6,14 +6,15 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
-import net.minecraft.world.entity.ai.goal.FollowFlockLeaderGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.RandomSwimmingGoal;
+import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.animal.AbstractFish;
-import net.minecraft.world.entity.animal.AbstractSchoolingFish;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 
 import javax.annotation.Nullable;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -190,6 +191,42 @@ public abstract class CustomSchoolingFish extends AbstractFish {
                 this.timeToRecalcPath = this.adjustedTickDelay(10);
                 this.mob.pathToLeader();
             }
+        }
+    }
+
+
+    protected static class FishSwimGoal extends RandomSwimmingGoal {
+        private final PracticalFish fish;
+
+        public FishSwimGoal(PracticalFish fish) {
+            super(fish, 1.0D, 40);
+            this.fish = fish;
+        }
+
+        @Override
+        public boolean canUse() {
+            return this.fish.canRandomSwim() && super.canUse();
+        }
+    }
+
+    protected static class CopyFlockLeaderTargetGoal extends TargetGoal {
+        private final PracticalFish fish;
+
+        public CopyFlockLeaderTargetGoal(PracticalFish fish) {
+            super(fish, true);
+            this.fish = fish;
+            this.setFlags(EnumSet.of(Goal.Flag.TARGET));
+        }
+
+        @Override
+        public boolean canUse() {
+            return fish.isFollower() && fish.leader.getTarget() != null;
+        }
+
+        @Override
+        public void start() {
+            fish.setTarget(fish.leader.getTarget());
+            super.start();
         }
     }
 }
