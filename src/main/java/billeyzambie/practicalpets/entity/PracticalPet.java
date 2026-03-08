@@ -6,6 +6,7 @@ import billeyzambie.animationcontrollers.BVCData;
 import billeyzambie.practicalpets.items.*;
 import billeyzambie.practicalpets.misc.*;
 import billeyzambie.practicalpets.network.RandomIdle1AnimPacket;
+import billeyzambie.practicalpets.petequipment.PetCosmetics;
 import billeyzambie.practicalpets.ui.PracticalPetMenu;
 import billeyzambie.practicalpets.goal.*;
 import billeyzambie.practicalpets.util.PPUtil;
@@ -196,14 +197,16 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     }
 
     public void setHeadItem(ItemStack itemStack) {
-        if (itemStack.isEmpty() && this.getHeadItem().getItem() instanceof PetCosmetic cosmetic) {
-            playSound(cosmetic.getEquipSound());
+        if (itemStack.isEmpty()) {
+            PetCosmetics.getCosmeticForItem(this.getHeadItem()).ifPresent(
+                    cosmetic -> playSound(cosmetic.getEquipSound())
+            );
         }
         this.entityData.set(HEAD_ITEM, itemStack);
-        refreshAnyEquipmentIsBrave();
-        if (itemStack.getItem() instanceof PetCosmetic cosmetic) {
-            this.playSound(cosmetic.getEquipSound());
-        }
+        refreshPetEquipmentCache();
+        PetCosmetics.getCosmeticForItem(itemStack).ifPresent(
+                cosmetic -> this.playSound(cosmetic.getEquipSound())
+        );
     }
 
     public ItemStack getNeckItem() {
@@ -211,14 +214,16 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     }
 
     public void setNeckItem(ItemStack itemStack) {
-        if (itemStack.isEmpty() && this.getNeckItem().getItem() instanceof PetCosmetic cosmetic) {
-            playSound(cosmetic.getEquipSound());
+        if (itemStack.isEmpty()) {
+            PetCosmetics.getCosmeticForItem(this.getNeckItem()).ifPresent(
+                    cosmetic -> playSound(cosmetic.getEquipSound())
+            );
         }
         this.entityData.set(NECK_ITEM, itemStack);
-        refreshAnyEquipmentIsBrave();
-        if (itemStack.getItem() instanceof PetCosmetic cosmetic) {
-            this.playSound(cosmetic.getEquipSound());
-        }
+        refreshPetEquipmentCache();
+        PetCosmetics.getCosmeticForItem(itemStack).ifPresent(
+                cosmetic -> this.playSound(cosmetic.getEquipSound())
+        );
     }
 
     public ItemStack getBackItem() {
@@ -226,14 +231,16 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     }
 
     public void setBackItem(ItemStack itemStack) {
-        if (itemStack.isEmpty() && this.getBackItem().getItem() instanceof PetCosmetic cosmetic) {
-            playSound(cosmetic.getEquipSound());
+        if (itemStack.isEmpty()) {
+            PetCosmetics.getCosmeticForItem(this.getBackItem()).ifPresent(
+                    cosmetic -> playSound(cosmetic.getEquipSound())
+            );
         }
         this.entityData.set(BACK_ITEM, itemStack);
-        refreshAnyEquipmentIsBrave();
-        if (itemStack.getItem() instanceof PetCosmetic cosmetic) {
-            this.playSound(cosmetic.getEquipSound());
-        }
+        refreshPetEquipmentCache();
+        PetCosmetics.getCosmeticForItem(itemStack).ifPresent(
+                cosmetic -> this.playSound(cosmetic.getEquipSound())
+        );
     }
 
     public ItemStack getBodyItem() {
@@ -241,29 +248,32 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     }
 
     public void setBodyItem(ItemStack itemStack) {
-        if (itemStack.isEmpty() && this.getBodyItem().getItem() instanceof PetCosmetic cosmetic) {
-            playSound(cosmetic.getEquipSound());
+        if (itemStack.isEmpty()) {
+            PetCosmetics.getCosmeticForItem(this.getBodyItem()).ifPresent(
+                    cosmetic -> playSound(cosmetic.getEquipSound())
+            );
         }
         this.entityData.set(BODY_ITEM, itemStack);
-        refreshAnyEquipmentIsBrave();
-        if (itemStack.getItem() instanceof PetCosmetic cosmetic) {
-            this.playSound(cosmetic.getEquipSound());
-        }
+        refreshPetEquipmentCache();
+        PetCosmetics.getCosmeticForItem(itemStack).ifPresent(
+                cosmetic -> this.playSound(cosmetic.getEquipSound())
+        );
     }
 
     private boolean anyEquipmentIsBrave = false;
     private float reachMutliplier = 1;
 
-    public void refreshAnyEquipmentIsBrave() {
+    public void refreshPetEquipmentCache() {
         boolean hasBraveEquipment = false;
         Optional<PetCosmetic.Slot> rangedSlot = Optional.empty();
         this.reachMutliplier = 1;
         for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
             ItemStack cosmeticStack = this.getEquippedItem(slot);
+            Optional<PetCosmetic> cosmeticOptional = PetCosmetics.getCosmeticForItem(cosmeticStack);
             if (
-                    !cosmeticStack.isEmpty()
-                            && cosmeticStack.getItem() instanceof PetCosmetic cosmetic
+                    cosmeticOptional.isPresent()
             ) {
+                PetCosmetic cosmetic = cosmeticOptional.orElseThrow();
                 if (cosmetic.causesBravery(cosmeticStack)) {
                     hasBraveEquipment = true;
                 }
@@ -518,21 +528,29 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
             return false;
         for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
             ItemStack cosmeticStack = this.getEquippedItem(slot);
-            if (!cosmeticStack.isEmpty() && cosmeticStack.getItem() instanceof PetCosmetic cosmetic) {
+            Optional<PetCosmetic> cosmeticOptional = PetCosmetics.getCosmeticForItem(cosmeticStack);
+            if (cosmeticOptional.isPresent()) {
+                var cosmetic = cosmeticOptional.orElseThrow();
                 amount *= cosmetic.damageMultiplier();
             }
         }
         for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
             ItemStack cosmeticStack = this.getEquippedItem(slot);
-            if (!cosmeticStack.isEmpty() && cosmeticStack.getItem() instanceof PetCosmetic cosmetic) {
+            Optional<PetCosmetic> cosmeticOptional = PetCosmetics.getCosmeticForItem(cosmeticStack);
+            if (cosmeticOptional.isPresent()) {
+                var cosmetic = cosmeticOptional.orElseThrow();
                 if (!cosmetic.onPetHurt(cosmeticStack, this, source, amount))
                     return false;
             }
         }
         boolean result = super.hurt(source, amount);
+        float finalAmount = amount;
         if (result) {
-            if (this.getHeadItem().getItem() instanceof RubberDuckyPetHat && source.getEntity() != null) {
-                RubberDuckyPetHat.applyEffect(this, source.getEntity());
+            for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
+                ItemStack cosmeticStack = this.getEquippedItem(slot);
+                PetCosmetics.getCosmeticForItem(cosmeticStack).ifPresent(
+                        cosmetic -> cosmetic.onPetSuccessfullyHurt(cosmeticStack, this, source, finalAmount)
+                );
             }
             if (this.isTame())
                 this.setFollowMode(FollowMode.FOLLOWING);
@@ -544,19 +562,23 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     @Override
     public boolean doHurtTarget(@NotNull Entity entity) {
         boolean result = super.doHurtTarget(entity);
-        this.doHurtEffect(entity, result);
+        if (result)
+            this.doHurtEffect(entity);
         return result;
     }
 
-    public void doHurtEffect(@NotNull Entity entity, boolean entityGotHurt) {
-        if (entityGotHurt && entity instanceof Mob mob) {
+    public void doHurtEffect(@NotNull Entity entity) {
+        if (entity instanceof Mob mob) {
             float amount = 1;
             if (!mob.isAlive())
                 amount += mob.getMaxHealth() / 20;
             addPetXP(amount);
         }
-        if (this.getHeadItem().getItem() instanceof RubberDuckyPetHat) {
-            RubberDuckyPetHat.applyEffect(this, entity);
+        for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
+            ItemStack cosmeticStack = this.getEquippedItem(slot);
+            PetCosmetics.getCosmeticForItem(cosmeticStack).ifPresent(
+                    cosmetic -> cosmetic.onPetSuccessfullyHit(cosmeticStack, this, entity)
+            );
         }
     }
 
@@ -813,17 +835,21 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         } else {
             if (this.isTame()) {
                 if (this.isOwnedBy(player)) {
-                    if (item instanceof PetCosmetic cosmetic && cosmetic.canBePutOn(this) && !player.isSecondaryUseActive()) {
-                        PetCosmetic.Slot slot = cosmetic.slot();
-                        ItemStack currentCosmetic = this.getEquippedItem(slot);
-                        if (currentCosmetic.isEmpty()) {
-                            this.setEquippedItem(itemstack.copy(), slot);
-                            this.usePlayerItem(player, hand, itemstack);
-                            return InteractionResult.CONSUME;
-                        } else {
-                            this.spawnAtLocation(currentCosmetic);
-                            this.setEquippedItem(ItemStack.EMPTY, slot);
-                            return InteractionResult.SUCCESS;
+                    Optional<PetCosmetic> cosmeticOptional = PetCosmetics.getCosmeticForItem(item);
+                    if (cosmeticOptional.isPresent()) {
+                        PetCosmetic cosmetic = cosmeticOptional.orElseThrow();
+                        if (cosmetic.canBePutOn(this) && !player.isSecondaryUseActive()) {
+                            PetCosmetic.Slot slot = cosmetic.slot();
+                            ItemStack currentCosmetic = this.getEquippedItem(slot);
+                            if (currentCosmetic.isEmpty()) {
+                                this.setEquippedItem(itemstack.copy(), slot);
+                                this.usePlayerItem(player, hand, itemstack);
+                                return InteractionResult.CONSUME;
+                            } else {
+                                this.spawnAtLocation(currentCosmetic);
+                                this.setEquippedItem(ItemStack.EMPTY, slot);
+                                return InteractionResult.SUCCESS;
+                            }
                         }
                     }
                     if (this.isFood(itemstack) && this.getHealth() < this.getMaxHealth()) {
@@ -1036,10 +1062,10 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
 
     public void performCosmeticRangedAttack(PetCosmetic.Slot slot, @NotNull LivingEntity target, float distanceFactor) {
         ItemStack equippedStack = this.getEquippedItem(slot);
-        Item equippedItem = equippedStack.getItem();
-        if (equippedItem instanceof PetCosmetic cosmeticItem) {
-            cosmeticItem.performRangedAttack(equippedStack, this, target, distanceFactor);
-        }
+        PetCosmetics.getCosmeticForItem(equippedStack).ifPresent(
+                cosmetic ->
+                        cosmetic.performRangedAttack(equippedStack, this, target, distanceFactor)
+        );
     }
 
     @Override

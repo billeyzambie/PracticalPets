@@ -6,9 +6,7 @@ import net.minecraft.world.item.ItemStack;
 import javax.annotation.Nullable;
 
 public interface AttachablePetCosmetic extends PetCosmetic {
-    //I don't remember why this is nullable
-    //Oh yea it's in case a cosmetic is entirely emissive
-    @Nullable ResourceLocation getModelTexture();
+    ResourceLocation getModelTexture();
     enum AttachBone { HAT, BOWTIE, BACKPACK }
     AttachBone getAttachBone();
 

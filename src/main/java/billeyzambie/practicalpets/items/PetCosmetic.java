@@ -4,9 +4,13 @@ import billeyzambie.practicalpets.entity.PracticalPet;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * Never do {@code item instanceof PetCosmetic}, use {@code PetEquipment.getCosmeticForItem(item)} instead
+ */
 public interface PetCosmetic {
     enum Slot { HEAD, NECK, BACK, BODY }
     Slot slot();
@@ -33,5 +37,11 @@ public interface PetCosmetic {
     }
     default float reachMultiplier(ItemStack stack) {
         return 1;
+    }
+
+    default void onPetSuccessfullyHurt(ItemStack stack, PracticalPet pet, DamageSource source, float amount) {
+    }
+
+    default void onPetSuccessfullyHit(ItemStack stack, PracticalPet pet, Entity target) {
     }
 }

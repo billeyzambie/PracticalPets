@@ -151,9 +151,9 @@ public class StickBug extends PracticalPet implements DancingEntity {
             }
 
             this.setLastHurtMob(entity);
+            this.doHurtEffect(entity);
         }
 
-        this.doHurtEffect(entity, flag);
 
         if (!entity.isAlive()) {
             celebrateKilling = true;

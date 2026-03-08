@@ -2,8 +2,8 @@ package billeyzambie.practicalpets.ui;
 
 import billeyzambie.practicalpets.client.PPMenus;
 import billeyzambie.practicalpets.entity.PracticalPet;
-import billeyzambie.practicalpets.entity.dinosaur.Pigeon;
 import billeyzambie.practicalpets.items.PetCosmetic;
+import billeyzambie.practicalpets.petequipment.PetCosmetics;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -11,6 +11,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 
 public class PracticalPetMenu extends AbstractContainerMenu {
     public final PracticalPet pet;
@@ -24,9 +26,10 @@ public class PracticalPetMenu extends AbstractContainerMenu {
         this.addSlot(new Slot(petContainer, 0, 8, 18) {
             @Override
             public boolean mayPlace(@NotNull ItemStack stack) {
-                return stack.getItem() instanceof PetCosmetic cosmetic
-                        && cosmetic.slot() == PetCosmetic.Slot.HEAD
-                        && cosmetic.canBePutOn(pet);
+                return PetCosmetics.getCosmeticForItem(stack).filter(cosmetic ->
+                        cosmetic.slot() == PetCosmetic.Slot.HEAD
+                                && cosmetic.canBePutOn(pet)
+                ).isPresent();
             }
 
             @Override
@@ -38,9 +41,10 @@ public class PracticalPetMenu extends AbstractContainerMenu {
         this.addSlot(new Slot(petContainer, 1, 8, 36) {
             @Override
             public boolean mayPlace(@NotNull ItemStack stack) {
-                return stack.getItem() instanceof PetCosmetic cosmetic
-                        && cosmetic.slot() == PetCosmetic.Slot.NECK
-                        && cosmetic.canBePutOn(pet);
+                return PetCosmetics.getCosmeticForItem(stack).filter(cosmetic ->
+                        cosmetic.slot() == PetCosmetic.Slot.NECK
+                                && cosmetic.canBePutOn(pet)
+                ).isPresent();
             }
 
             @Override
@@ -52,9 +56,10 @@ public class PracticalPetMenu extends AbstractContainerMenu {
         this.addSlot(new Slot(petContainer, 2, 8, 54) {
             @Override
             public boolean mayPlace(@NotNull ItemStack stack) {
-                return stack.getItem() instanceof PetCosmetic cosmetic
-                        && cosmetic.slot() == PetCosmetic.Slot.BACK
-                        && cosmetic.canBePutOn(pet);
+                return PetCosmetics.getCosmeticForItem(stack).filter(cosmetic ->
+                        cosmetic.slot() == PetCosmetic.Slot.BACK
+                                && cosmetic.canBePutOn(pet)
+                ).isPresent();
             }
 
             @Override
@@ -66,9 +71,10 @@ public class PracticalPetMenu extends AbstractContainerMenu {
         this.addSlot(new Slot(petContainer, 3, 8, 72) {
             @Override
             public boolean mayPlace(@NotNull ItemStack stack) {
-                return stack.getItem() instanceof PetCosmetic cosmetic
-                        && cosmetic.slot() == PetCosmetic.Slot.BODY
-                        && cosmetic.canBePutOn(pet);
+                return PetCosmetics.getCosmeticForItem(stack).filter(cosmetic ->
+                        cosmetic.slot() == PetCosmetic.Slot.BODY
+                                && cosmetic.canBePutOn(pet)
+                ).isPresent();
             }
 
             @Override
@@ -117,7 +123,11 @@ public class PracticalPetMenu extends AbstractContainerMenu {
                 return ItemStack.EMPTY;
             }
         } else {
-            if (stack.getItem() instanceof PetCosmetic cosmetic && cosmetic.canBePutOn(pet)) {
+            Optional<PetCosmetic> cosmeticOptional =
+                    PetCosmetics.getCosmeticForItem(stack)
+                    .filter(cosmetic -> cosmetic.canBePutOn(pet));
+            if (cosmeticOptional.isPresent()) {
+                PetCosmetic cosmetic = cosmeticOptional.orElseThrow();
                 int targetSlot = switch (cosmetic.slot()) {
                     case HEAD -> 0;
                     case NECK -> 1;

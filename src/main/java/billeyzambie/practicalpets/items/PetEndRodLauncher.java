@@ -17,8 +17,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.text.AttributeSet;
-import javax.swing.text.Style;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,7 +83,7 @@ public class PetEndRodLauncher extends ConfigurableBundleItem implements Attacha
         }
         shooter.level().addFreshEntity(new PetEndRodProjectile(shooter.level(), shooter, target, Direction.Axis.Y));
         shooter.playSound(SoundEvents.SHULKER_SHOOT, 2.0F, (shooter.getRandom().nextFloat() - shooter.getRandom().nextFloat()) * 0.2F + 1.0F);
-        shooter.refreshAnyEquipmentIsBrave(); //the stack might have just run out of end rods
+        shooter.refreshPetEquipmentCache(); //the stack might have just run out of end rods
     }
 
     @Override

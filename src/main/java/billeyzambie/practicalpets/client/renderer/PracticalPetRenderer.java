@@ -8,6 +8,7 @@ import billeyzambie.practicalpets.misc.PPItems;
 import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.items.AttachablePetCosmetic;
 import billeyzambie.practicalpets.items.PetCosmetic;
+import billeyzambie.practicalpets.petequipment.PetCosmetics;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -32,36 +33,50 @@ import java.util.List;
 
 public abstract class PracticalPetRenderer<T extends Mob & ACEntity, M extends PracticalPetModel<T>> extends MobRenderer<T, M> {
 
-    final HashMap<Item, HierarchicalModel<T>> cosmeticModels = new HashMap<>();
+    final HashMap<AttachablePetCosmetic, HierarchicalModel<T>> cosmeticModels = new HashMap<>();
+
+    private void registerCosmeticModel(AttachablePetCosmetic cosmetic, HierarchicalModel<T> model) {
+        cosmeticModels.put(
+                cosmetic,
+                model
+        );
+    }
+
+    private void registerCosmeticModel(Item cosmetic, HierarchicalModel<T> model) {
+        registerCosmeticModel(
+                (AttachablePetCosmetic) cosmetic,
+                model
+        );
+    }
 
     public PracticalPetRenderer(EntityRendererProvider.Context context, M model, float shadowRadius) {
         super(context, model, shadowRadius);
 
-        cosmeticModels.put(
+        registerCosmeticModel(
                 PPItems.PET_BOWTIE.get(),
                 new PetBowtieModel<>(context.bakeLayer(PPRenderLayers.PET_BOWTIE))
         );
-        cosmeticModels.put(
+        registerCosmeticModel(
                 PPItems.ANNIVERSARY_PET_HAT_0.get(),
                 new AnniversaryPetHatModel<>(context.bakeLayer(PPRenderLayers.ANNIVERSARY_PET_HAT))
         );
-        cosmeticModels.put(
+        registerCosmeticModel(
                 PPItems.RUBBER_DUCKY_PET_HAT.get(),
                 new RubberDuckyPetHatModel<>(context.bakeLayer(PPRenderLayers.RUBBER_DUCKY_PET_HAT))
         );
-        cosmeticModels.put(
+        registerCosmeticModel(
                 PPItems.PET_CHEF_HAT.get(),
                 new PetChefHatModel<>(context.bakeLayer(PPRenderLayers.PET_CHEF_HAT))
         );
-        cosmeticModels.put(
+        registerCosmeticModel(
                 PPItems.PET_BACKPACK.get(),
                 new PetBackpackModel<>(context.bakeLayer(PPRenderLayers.PET_BACKPACK))
         );
-        cosmeticModels.put(
+        registerCosmeticModel(
                 PPItems.PET_END_ROD_LAUNCHER.get(),
                 new PetBackpackModel<>(context.bakeLayer(PPRenderLayers.PET_END_ROD_LAUNCHER))
         );
-        cosmeticModels.put(
+        registerCosmeticModel(
                 PPItems.PET_HAT.get(),
                 new PlainPetHatModel<>(context.bakeLayer(PPRenderLayers.PET_HAT))
         );
@@ -78,7 +93,8 @@ public abstract class PracticalPetRenderer<T extends Mob & ACEntity, M extends P
         if (entity instanceof PracticalPet pet) {
             if (!pet.hideEquipment()) for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
                 ItemStack cosmeticStack = pet.getEquippedItem(slot);
-                if (!cosmeticStack.isEmpty() && cosmeticStack.getItem() instanceof AttachablePetCosmetic cosmetic) {
+                var cosmeticOptional = PetCosmetics.getCosmeticForItem(cosmeticStack);
+                if (cosmeticOptional.isPresent() && cosmeticOptional.orElseThrow() instanceof AttachablePetCosmetic cosmetic) {
 
                     poseStack.pushPose();
 

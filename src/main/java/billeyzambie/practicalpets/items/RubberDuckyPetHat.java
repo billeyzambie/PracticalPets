@@ -7,6 +7,7 @@ import billeyzambie.practicalpets.misc.PPNetworking;
 import billeyzambie.practicalpets.network.PetHatSquishAnimPacket;
 import billeyzambie.practicalpets.util.DelayedTaskManager;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -75,12 +76,24 @@ public class RubberDuckyPetHat extends Item implements AttachablePetCosmetic, Dy
 
     }
 
-
     public static void playRubberDuckyPetHatSquishAnimation(PracticalPet wearer) {
         wearer.playSound(PPSounds.DUCK_AMBIENT.get(), 1f, 1.5f + wearer.getRandom().nextFloat() * 0.2f);
         PPNetworking.CHANNEL.send(
                 PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> wearer),
                 new PetHatSquishAnimPacket(wearer.getId())
         );
+    }
+
+    @Override
+    public void onPetSuccessfullyHurt(ItemStack stack, PracticalPet pet, DamageSource source, float amount) {
+        Entity target = source.getEntity();
+        if (target != null) {
+            applyEffect(pet, target);
+        }
+    }
+
+    @Override
+    public void onPetSuccessfullyHit(ItemStack stack, PracticalPet pet, Entity target) {
+        applyEffect(pet, target);
     }
 }

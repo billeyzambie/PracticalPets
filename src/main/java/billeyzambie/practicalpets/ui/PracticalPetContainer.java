@@ -66,7 +66,7 @@ public class PracticalPetContainer implements Container {
     @Override
     public void setChanged() {
         //So that it gets called when end rods are put in or out of the end rod launcher
-        this.pet.refreshAnyEquipmentIsBrave();
+        this.pet.refreshPetEquipmentCache();
     }
 
     @Override
