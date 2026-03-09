@@ -17,7 +17,8 @@ public abstract class SwimmingEntityModel<T extends Entity & SwimmingAnimationEn
 
         float prevLimbSwing = entity.getPrevLimbSwing();
         entity.setPrevLimbSwing(limbSwing);
-        float swimSwingDelta = entity.isInWater() ? Math.max(limbSwing - prevLimbSwing, entity.getMinSwimSwingDelta()) : 0.17f;
+        float minSwimSwingDelta = entity.getMinSwimSwingDelta() * 60f / Minecraft.getInstance().getFps();
+        float swimSwingDelta = entity.isInWater() ? Math.max(limbSwing - prevLimbSwing, minSwimSwingDelta) : 0.17f;
         entity.addToSwimSwing(swimSwingDelta);
 
         entity.setSwimSwingAmount(Math.max(limbSwingAmount, entity.getMinSwimSwingAmount()));
