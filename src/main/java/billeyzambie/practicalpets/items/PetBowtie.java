@@ -31,27 +31,27 @@ public class PetBowtie extends Item implements AttachablePetCosmetic, DyeableIte
     }
 
     @Override
-    public ResourceLocation getModelTexture() {
+    public ResourceLocation getModelTexture(ItemStack stack, PracticalPet pet) {
         return modelTexture;
     }
 
     @Override
-    public AttachBone getAttachBone() {
+    public AttachBone getAttachBone(ItemStack stack, PracticalPet pet) {
         return AttachBone.BOWTIE;
     }
 
     @Override
-    public Slot slot() {
+    public Slot slot(ItemStack stack, PracticalPet pet) {
         return Slot.NECK;
     }
 
     @Override
-    public boolean canBePutOn(PracticalPet pet) {
+    public boolean canBePutOn(ItemStack stack, PracticalPet pet) {
         return true;
     }
 
     @Override
-    public boolean causesBravery(ItemStack stack) {
+    public boolean causesBravery(ItemStack stack, PracticalPet pet) {
         return false;
     }
 

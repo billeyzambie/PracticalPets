@@ -101,7 +101,7 @@ public class PetEquipmentLayer<T extends Mob & ACEntity, M extends PracticalPetM
 
                     List<ModelPart> pathToAttachment;
 
-                    switch (cosmetic.getAttachBone()) {
+                    switch (cosmetic.getAttachBone(cosmeticStack, pet)) {
                         case HAT -> pathToAttachment = this.getParentModel().pathToHat();
                         case BOWTIE -> pathToAttachment = this.getParentModel().pathToBowtie();
                         case BACKPACK -> pathToAttachment = this.getParentModel().pathToBackpack();
@@ -134,17 +134,17 @@ public class PetEquipmentLayer<T extends Mob & ACEntity, M extends PracticalPetM
                     }
 
                     VertexConsumer vertexConsumer;
-                    if (cosmetic.ignoreLighting(cosmeticStack)) {
+                    if (cosmetic.ignoreLighting(cosmeticStack, pet)) {
                         packedLight = LightTexture.FULL_BLOCK;
                     }
 
-                    ResourceLocation texture = cosmetic.getModelTexture();
+                    ResourceLocation texture = cosmetic.getModelTexture(cosmeticStack, pet);
                     if (texture != null) {
                         vertexConsumer = buffer.getBuffer(RenderType.entityCutoutNoCull(texture));
                         cosmeticModel.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, r, g, b, 1);
                     }
 
-                    ResourceLocation emissiveTexture = cosmetic.getModelEmissiveTexture();
+                    ResourceLocation emissiveTexture = cosmetic.getModelEmissiveTexture(cosmeticStack, pet);
                     if (emissiveTexture != null) {
                         vertexConsumer = buffer.getBuffer(RenderType.eyes(emissiveTexture));
                         cosmeticModel.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, r, g, b, 1);

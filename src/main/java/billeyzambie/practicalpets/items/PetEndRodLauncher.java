@@ -46,32 +46,32 @@ public class PetEndRodLauncher extends ConfigurableBundleItem implements Attacha
     );
 
     @Override
-    public ResourceLocation getModelTexture() {
+    public ResourceLocation getModelTexture(ItemStack stack, PracticalPet pet) {
         return modelTexture;
     }
 
     @Override
-    public boolean ignoreLighting(ItemStack instance) {
+    public boolean ignoreLighting(ItemStack stack, PracticalPet pet) {
         return true;
     }
 
     @Override
-    public AttachBone getAttachBone() {
+    public AttachBone getAttachBone(ItemStack stack, PracticalPet pet) {
         return AttachBone.BACKPACK;
     }
 
     @Override
-    public Slot slot() {
+    public Slot slot(ItemStack stack, PracticalPet pet) {
         return Slot.BACK;
     }
 
     @Override
-    public boolean canBePutOn(PracticalPet pet) {
+    public boolean canBePutOn(ItemStack stack, PracticalPet pet) {
         return true;
     }
 
     @Override
-    public boolean canPerformRangedAttack(ItemStack stack) {
+    public boolean canPerformRangedAttack(ItemStack stack, PracticalPet pet) {
         //can perform the ranged attack if it has end rods to inside it to shoot
         return this.getContentWeight(stack) > 0;
     }
@@ -87,12 +87,12 @@ public class PetEndRodLauncher extends ConfigurableBundleItem implements Attacha
     }
 
     @Override
-    public boolean causesBravery(ItemStack stack) {
-        return this.canPerformRangedAttack(stack);
+    public boolean causesBravery(ItemStack stack, PracticalPet pet) {
+        return this.canPerformRangedAttack(stack, pet);
     }
 
     @Override
-    public float damageMultiplier() {
+    public float damageMultiplier(ItemStack stack, PracticalPet pet) {
         return 0.9f;
     }
 

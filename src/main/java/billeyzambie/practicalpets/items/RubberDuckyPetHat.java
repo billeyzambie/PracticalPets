@@ -31,32 +31,32 @@ public class RubberDuckyPetHat extends Item implements AttachablePetCosmetic, Dy
     }
 
     @Override
-    public ResourceLocation getModelTexture() {
+    public ResourceLocation getModelTexture(ItemStack stack, PracticalPet pet) {
         return modelTexture;
     }
 
     @Override
-    public AttachBone getAttachBone() {
+    public AttachBone getAttachBone(ItemStack stack, PracticalPet pet) {
         return AttachBone.HAT;
     }
 
     @Override
-    public Slot slot() {
+    public Slot slot(ItemStack stack, PracticalPet pet) {
         return Slot.HEAD;
     }
 
     @Override
-    public boolean canBePutOn(PracticalPet pet) {
+    public boolean canBePutOn(ItemStack stack, PracticalPet pet) {
         return true;
     }
 
     @Override
-    public boolean causesBravery(ItemStack stack) {
+    public boolean causesBravery(ItemStack stack, PracticalPet pet) {
         return true;
     }
 
     @Override
-    public float reachMultiplier(ItemStack stack) {
+    public float reachMultiplier(ItemStack stack, PracticalPet pet) {
         return 1.125f;
     }
 

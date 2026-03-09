@@ -18,27 +18,27 @@ public class PetBackpack extends ConfigurableBundleItem implements AttachablePet
     );
 
     @Override
-    public @Nullable ResourceLocation getModelTexture() {
+    public @Nullable ResourceLocation getModelTexture(ItemStack stack, PracticalPet pet) {
         return modelTexture;
     }
 
     @Override
-    public AttachBone getAttachBone() {
+    public AttachBone getAttachBone(ItemStack stack, PracticalPet pet) {
         return AttachBone.BACKPACK;
     }
 
     @Override
-    public Slot slot() {
+    public Slot slot(ItemStack stack, PracticalPet pet) {
         return Slot.BACK;
     }
 
     @Override
-    public boolean canBePutOn(PracticalPet pet) {
+    public boolean canBePutOn(ItemStack stack, PracticalPet pet) {
         return true;
     }
 
     @Override
-    public boolean causesBravery(ItemStack stack) {
+    public boolean causesBravery(ItemStack stack, PracticalPet pet) {
         return false;
     }
 

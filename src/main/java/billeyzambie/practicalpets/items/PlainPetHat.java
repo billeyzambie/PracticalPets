@@ -14,7 +14,7 @@ public class PlainPetHat extends PetHat implements DyeableLeatherItem {
     @Override
     public boolean onPetHurt(ItemStack stack, PracticalPet pet, DamageSource source, float amount) {
         if (amount >= pet.getHealth()) {
-            pet.setEquippedItem(ItemStack.EMPTY, this.slot());
+            pet.setEquippedItem(ItemStack.EMPTY, this.slot(stack, pet));
             pet.playSound(SoundEvents.ITEM_BREAK);
             return false;
         }

@@ -39,27 +39,27 @@ public class DuckArmor extends Item implements PetCosmetic {
 
     private final float damageMultiplier;
     @Override
-    public float damageMultiplier() {
+    public float damageMultiplier(ItemStack stack, PracticalPet pet) {
         return this.damageMultiplier;
     }
 
     @Override
-    public Slot slot() {
+    public Slot slot(ItemStack stack, PracticalPet pet) {
         return Slot.BODY;
     }
 
     @Override
-    public boolean canBePutOn(PracticalPet pet) {
+    public boolean canBePutOn(ItemStack stack, PracticalPet pet) {
         return pet instanceof AbstractDuck;
     }
 
     @Override
-    public boolean causesBravery(ItemStack stack) {
+    public boolean causesBravery(ItemStack stack, PracticalPet pet) {
         return true;
     }
 
     @Override
-    public SoundEvent getEquipSound() {
+    public SoundEvent getEquipSound(ItemStack stack, PracticalPet pet) {
         return equipSound;
     }
 }

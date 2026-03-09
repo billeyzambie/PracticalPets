@@ -13,29 +13,29 @@ import net.minecraft.world.item.ItemStack;
  */
 public interface PetCosmetic {
     enum Slot { HEAD, NECK, BACK, BODY }
-    Slot slot();
-    boolean canBePutOn(PracticalPet pet);
-    boolean causesBravery(ItemStack stack);
-    default float damageMultiplier() {
+    Slot slot(ItemStack stack, PracticalPet pet);
+    boolean canBePutOn(ItemStack stack, PracticalPet pet);
+    boolean causesBravery(ItemStack stack, PracticalPet pet);
+    default float damageMultiplier(ItemStack stack, PracticalPet pet) {
         return 1;
     }
-    default float petXPMultiplier() {
+    default float petXPMultiplier(ItemStack stack, PracticalPet pet) {
         return 1;
     }
-    default SoundEvent getEquipSound() {
+    default SoundEvent getEquipSound(ItemStack stack, PracticalPet pet) {
         return SoundEvents.ARMOR_EQUIP_LEATHER;
     }
-    default boolean canPerformRangedAttack(ItemStack stack) {
+    default boolean canPerformRangedAttack(ItemStack stack, PracticalPet pet) {
         return false;
     }
     default void performRangedAttack(ItemStack stack, PracticalPet shooter, LivingEntity target, float distanceFactor) {
 
     }
-    /** Return false if the damage should be canceled */
+    /** @return false if the damage should be canceled */
     default boolean onPetHurt(ItemStack stack, PracticalPet pet, DamageSource source, float amount) {
         return true;
     }
-    default float reachMultiplier(ItemStack stack) {
+    default float reachMultiplier(ItemStack stack, PracticalPet pet) {
         return 1;
     }
 
