@@ -4,6 +4,7 @@ import billeyzambie.practicalpets.client.model.entity.fish.PiranhaModel;
 import billeyzambie.practicalpets.entity.fish.base.BreedableFish;
 import billeyzambie.practicalpets.entity.fish.base.PracticalFish;
 import billeyzambie.practicalpets.misc.PPItems;
+import billeyzambie.practicalpets.util.PPUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -180,13 +181,27 @@ public class Piranha extends PracticalFish {
                 else
                     baby.setVariant(piranha.getVariant());
 
-                if (this.random.nextBoolean())
-                    baby.setBellyColor(this.getBellyColor());
-                else
-                    baby.setBellyColor(piranha.getBellyColor());
+                int bellyColor = this.getBellyColor();
+                int otherBellyColor = piranha.getBellyColor();
+
+                float bellyColorR = PPUtil.getColorRed(bellyColor);
+                float bellyColorG = PPUtil.getColorGreen(bellyColor);
+                float bellyColorB = PPUtil.getColorBlue(bellyColor);
+
+                float otherBellyColorR = PPUtil.getColorRed(otherBellyColor);
+                float otherBellyColorG = PPUtil.getColorGreen(otherBellyColor);
+                float otherBellyColorB = PPUtil.getColorBlue(otherBellyColor);
+
+                baby.setBellyColor(Mth.color(
+                        (bellyColorR + otherBellyColorR) / 2f,
+                        (bellyColorG + otherBellyColorG) / 2f,
+                        (bellyColorB + otherBellyColorB) / 2f
+                ));
+
             }
         }
 
         return baby;
     }
+
 }
