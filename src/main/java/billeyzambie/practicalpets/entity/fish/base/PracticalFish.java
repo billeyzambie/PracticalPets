@@ -101,6 +101,18 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
         this.swimXRot = value;
     }
 
+    private float onAirTime = 0;
+
+    @Override
+    public float getOnAirTime() {
+        return this.onAirTime;
+    }
+
+    @Override
+    public void setOnAirTime(float value) {
+        this.onAirTime = value;
+    }
+
     @Override
     public void tick() {
         super.tick();

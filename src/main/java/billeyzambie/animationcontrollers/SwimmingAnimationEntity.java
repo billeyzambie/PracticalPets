@@ -20,5 +20,13 @@ public interface SwimmingAnimationEntity extends ACEntity {
         Vec3 velocity = self.getDeltaMovement();
         float swimXRot = (float) Mth.atan2(velocity.y, velocity.horizontalDistance());
         setSwimXRot(Mth.lerp(0.2f, this.getSwimXRot(1), swimXRot));
+
+        if (self.onGround())
+            this.setOnAirTime(0);
+        else
+            this.setOnAirTime(this.getOnAirTime() + 1);
     }
+
+    float getOnAirTime();
+    void setOnAirTime(float value);
 }

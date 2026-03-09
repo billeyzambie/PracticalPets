@@ -418,7 +418,7 @@ public class PPAnimationControllers {
                                     -> !entity.isInWater(),
                             AnimationController.TransitionPredicate.NEVER
                     ),
-                    0.2f
+                    0.1f
             ),
             new AnimationController.State(
                     Animatable.NO_ANIMATIONS,
@@ -429,7 +429,7 @@ public class PPAnimationControllers {
                             (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
                                     -> entity.onGround()
                     ),
-                    0.2f
+                    0.1f
             ),
             new AnimationController.State(
                     List.of(new KeyframeAnimationReference(
@@ -437,11 +437,14 @@ public class PPAnimationControllers {
                     )),
                     List.of(
                             (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
-                                    -> entity.isInWater(),
-                            AnimationController.TransitionPredicate.NEVER,
+                                    -> entity.isInWater() || !entity.isAlive(),
+                            (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+                                    -> entity instanceof SwimmingAnimationEntity fish
+                                    && fish.getOnAirTime() > 15,
                             AnimationController.TransitionPredicate.NEVER
                     ),
-                    0.2f
+                    0.1f
+
             )
     ));
 
