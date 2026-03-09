@@ -141,6 +141,10 @@ public class PPItems {
                     (new Item.Properties()).stacksTo(1)
             )
     );
+    public static final RegistryObject<Item> PIRANHA_LAUNCHER = register(
+            "piranha_launcher",
+            PiranhaLauncher::new
+    );
 
     public static final RegistryObject<ForgeSpawnEggItem> BANANA_DUCK_SPAWN_EGG = register(
             "banana_duck_spawn_egg",
