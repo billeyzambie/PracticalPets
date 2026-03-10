@@ -16,7 +16,8 @@ import net.minecraft.world.item.ItemStack;
 /** A pet accessory that uses the item's head pose for its model on pets.
  * Doesn't have to be equippable on the head if {@link ScaleMode} is {@link ScaleMode#NONE} */
 public interface ItemModelPetCosmetic extends AttachablePetCosmetic {
-    /** Only {@link ScaleMode#NONE} has been implemented */
+    /** Only {@link ScaleMode#NONE} has been implemented
+     * Also oops I forgot helmets aren't item models on java lol */
     enum ScaleMode {
         /** No scaling. Best for items entirely on top of the head */
         NONE,
@@ -31,7 +32,6 @@ public interface ItemModelPetCosmetic extends AttachablePetCosmetic {
     ScaleMode getScaleMode();
 
     float PLAYER_HEAD_ITEM_SCALE = 0.627451f;
-    float PLAYER_HEAD_HEIGHT = 8;
 
     @Override
     default <T extends Mob & ACEntity, M extends PracticalPetModel<T>> void render(
@@ -50,7 +50,9 @@ public interface ItemModelPetCosmetic extends AttachablePetCosmetic {
         if (pet.isModelYAxisInverted())
             poseStack.mulPose(Axis.ZP.rotationDegrees(180));
 
-        poseStack.translate(0, (-PLAYER_HEAD_HEIGHT + pet.headSizeY()) / 16f, 0);
+        //No idea why I have to do this
+        poseStack.translate(0, -4 / 16f, 0);
+
         poseStack.scale(PLAYER_HEAD_ITEM_SCALE, PLAYER_HEAD_ITEM_SCALE, PLAYER_HEAD_ITEM_SCALE);
 
         Minecraft.getInstance().getItemRenderer().renderStatic(
