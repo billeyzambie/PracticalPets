@@ -10,7 +10,7 @@ public class PiranhaLauncher extends Item implements ItemModelPetCosmetic {
     }
 
     @Override
-    public ScaleMode getScaleMode() {
+    public ScaleMode getScaleMode(ItemStack stack, PracticalPet pet) {
         return ScaleMode.NONE;
     }
 

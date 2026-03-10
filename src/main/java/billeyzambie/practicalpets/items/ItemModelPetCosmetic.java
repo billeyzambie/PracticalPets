@@ -29,7 +29,7 @@ public interface ItemModelPetCosmetic extends AttachablePetCosmetic {
          * Best for items that cover the top and the sides of the head. */
         STRETCH_XZ
     }
-    ScaleMode getScaleMode();
+    ScaleMode getScaleMode(ItemStack stack, PracticalPet pet);
 
     float PLAYER_HEAD_ITEM_SCALE = 0.627451f;
 
