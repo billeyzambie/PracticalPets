@@ -3,9 +3,12 @@ package billeyzambie.practicalpets.items;
 import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.entity.fish.Piranha;
 import billeyzambie.practicalpets.entity.fish.base.PracticalFish;
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -15,9 +18,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class PiranhaLauncher extends Item implements ItemModelPetCosmetic {
     public PiranhaLauncher() {
@@ -119,6 +125,30 @@ public class PiranhaLauncher extends Item implements ItemModelPetCosmetic {
             result.putInt("FishCount", serverTag.getInt("FishCount"));
         }
         return result;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components , TooltipFlag flag) {
+        super.appendHoverText(stack, level, components , flag);
+
+        CompoundTag tag = stack.getTag();
+        int fishCount;
+        if (tag == null) {
+            fishCount = 0;
+        }
+        else {
+            fishCount = tag.getInt("FishCount");
+        }
+
+        MutableComponent tooltip;
+
+        switch (fishCount) {
+            case 0 -> tooltip = Component.translatable("tooltip.practicalpets.piranha_launcher.empty");
+            case 1 -> tooltip = Component.translatable("tooltip.practicalpets.piranha_launcher.one_fish");
+            default -> tooltip = Component.translatable("tooltip.practicalpets.piranha_launcher.fishes", fishCount);
+        }
+
+        components.add(tooltip.withStyle(ChatFormatting.GRAY));
     }
 
     //Pet accessory properties:
