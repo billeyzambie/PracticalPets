@@ -114,20 +114,6 @@ public class PiranhaLauncher extends Item implements ItemModelPetCosmetic {
     }
 
     @Override
-    public @Nullable CompoundTag getShareTag(ItemStack stack) {
-        CompoundTag result = new CompoundTag();
-        CompoundTag serverTag = stack.getTag();
-        if (serverTag != null) {
-            Tag serverDisplay = serverTag.get("display");
-            if (serverDisplay != null) {
-                result.put("display", serverDisplay);
-            }
-            result.putInt("FishCount", serverTag.getInt("FishCount"));
-        }
-        return result;
-    }
-
-    @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components , TooltipFlag flag) {
         super.appendHoverText(stack, level, components , flag);
 
