@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 
-public class PetEndRodLauncher extends ConfigurableBundleItem implements AttachablePetCosmetic, DyeableItem {
+public class PetEndRodLauncher extends ConfigurableBundleItem implements EntityModelPetCosmetic, DyeableItem {
     public PetEndRodLauncher() {
         super(new Properties().stacksTo(1));
     }
@@ -53,11 +53,6 @@ public class PetEndRodLauncher extends ConfigurableBundleItem implements Attacha
     @Override
     public boolean ignoreLighting(ItemStack stack, PracticalPet pet) {
         return true;
-    }
-
-    @Override
-    public AttachBone getAttachBone(ItemStack stack, PracticalPet pet) {
-        return AttachBone.BACKPACK;
     }
 
     @Override

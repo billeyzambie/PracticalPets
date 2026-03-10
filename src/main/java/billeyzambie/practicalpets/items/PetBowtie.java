@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class PetBowtie extends Item implements AttachablePetCosmetic, DyeableItem {
+public class PetBowtie extends Item implements EntityModelPetCosmetic, DyeableItem {
     public PetBowtie(String modelTextureName) {
         super(new Item.Properties().stacksTo(1));
         this.modelTexture = new ResourceLocation(
@@ -33,11 +33,6 @@ public class PetBowtie extends Item implements AttachablePetCosmetic, DyeableIte
     @Override
     public ResourceLocation getModelTexture(ItemStack stack, PracticalPet pet) {
         return modelTexture;
-    }
-
-    @Override
-    public AttachBone getAttachBone(ItemStack stack, PracticalPet pet) {
-        return AttachBone.BOWTIE;
     }
 
     @Override

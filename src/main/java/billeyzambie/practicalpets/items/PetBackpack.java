@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-public class PetBackpack extends ConfigurableBundleItem implements AttachablePetCosmetic, DyeableItem {
+public class PetBackpack extends ConfigurableBundleItem implements EntityModelPetCosmetic, DyeableItem {
     public PetBackpack() {
         super(new Properties().stacksTo(1));
     }
@@ -20,11 +20,6 @@ public class PetBackpack extends ConfigurableBundleItem implements AttachablePet
     @Override
     public @Nullable ResourceLocation getModelTexture(ItemStack stack, PracticalPet pet) {
         return modelTexture;
-    }
-
-    @Override
-    public AttachBone getAttachBone(ItemStack stack, PracticalPet pet) {
-        return AttachBone.BACKPACK;
     }
 
     @Override

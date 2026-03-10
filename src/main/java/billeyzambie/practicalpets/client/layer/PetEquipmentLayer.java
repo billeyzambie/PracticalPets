@@ -6,13 +6,13 @@ import billeyzambie.practicalpets.client.PPRenderLayers;
 import billeyzambie.practicalpets.client.model.entity.pet_equipment.*;
 import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.items.AttachablePetCosmetic;
+import billeyzambie.practicalpets.items.EntityModelPetCosmetic;
 import billeyzambie.practicalpets.items.PetCosmetic;
 import billeyzambie.practicalpets.misc.PPItems;
 import billeyzambie.practicalpets.petequipment.PetCosmetics;
 import billeyzambie.practicalpets.util.PPUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.LightTexture;
@@ -23,7 +23,6 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.Item;
@@ -34,9 +33,9 @@ import java.util.List;
 
 public class PetEquipmentLayer<T extends Mob & ACEntity, M extends PracticalPetModel<T>> extends RenderLayer<T, M> {
 
-    final HashMap<AttachablePetCosmetic, HierarchicalModel<T>> cosmeticModels = new HashMap<>();
+    public final HashMap<EntityModelPetCosmetic, HierarchicalModel<T>> cosmeticModels = new HashMap<>();
 
-    private void registerCosmeticModel(AttachablePetCosmetic cosmetic, HierarchicalModel<T> model) {
+    private void registerCosmeticModel(EntityModelPetCosmetic cosmetic, HierarchicalModel<T> model) {
         cosmeticModels.put(
                 cosmetic,
                 model
@@ -45,7 +44,7 @@ public class PetEquipmentLayer<T extends Mob & ACEntity, M extends PracticalPetM
 
     private void registerCosmeticModel(Item cosmetic, HierarchicalModel<T> model) {
         registerCosmeticModel(
-                (AttachablePetCosmetic) PetCosmetics.getCosmeticForItem(cosmetic).orElseThrow(),
+                (EntityModelPetCosmetic) PetCosmetics.getCosmeticForItem(cosmetic).orElseThrow(),
                 model
         );
     }
@@ -101,20 +100,13 @@ public class PetEquipmentLayer<T extends Mob & ACEntity, M extends PracticalPetM
 
                     List<ModelPart> pathToAttachment;
 
-                    switch (cosmetic.getAttachBone(cosmeticStack, pet)) {
-                        case HAT -> pathToAttachment = this.getParentModel().pathToHat();
-                        case BOWTIE -> pathToAttachment = this.getParentModel().pathToBowtie();
-                        case BACKPACK -> pathToAttachment = this.getParentModel().pathToBackpack();
+                    switch (slot) {
+                        case HEAD -> pathToAttachment = this.getParentModel().pathToHat();
+                        case NECK -> pathToAttachment = this.getParentModel().pathToBowtie();
+                        case BACK -> pathToAttachment = this.getParentModel().pathToBackpack();
                         default ->
                                 throw new AssertionError("Pretty sure this will never happen (error at practicalpetrender at render at switch (cosmetic.getAttachBone()))");
                     }
-
-                    var cosmeticModel = cosmeticModels.get(cosmetic);
-                    if (cosmeticModel == null) {
-                        throw new Error("Model not defined in the cosmeticModels hashmap for cosmetic of " + cosmetic.getClass());
-                    }
-
-                    cosmeticModel.root().resetPose();
 
                     //poseStack.mulPose(Axis.XP.rotationDegrees(180));
                     //poseStack.translate(0, -24f / 16f, 0);
@@ -123,32 +115,17 @@ public class PetEquipmentLayer<T extends Mob & ACEntity, M extends PracticalPetM
                         part.translateAndRotate(poseStack);
                     }
 
-                    cosmeticModel.setupAnim(entity, 0, 0, 0, 0, 0);
-
-                    r = g = b = 1f;
-                    if (cosmetic instanceof DyeableLeatherItem dyeableItem) {
-                        int color = dyeableItem.getColor(cosmeticStack);
-                        r = PPUtil.getColorRed(color);
-                        g = PPUtil.getColorGreen(color);
-                        b = PPUtil.getColorBlue(color);
-                    }
-
-                    VertexConsumer vertexConsumer;
-                    if (cosmetic.ignoreLighting(cosmeticStack, pet)) {
-                        packedLight = LightTexture.FULL_BLOCK;
-                    }
-
-                    ResourceLocation texture = cosmetic.getModelTexture(cosmeticStack, pet);
-                    if (texture != null) {
-                        vertexConsumer = buffer.getBuffer(RenderType.entityCutoutNoCull(texture));
-                        cosmeticModel.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, r, g, b, 1);
-                    }
-
-                    ResourceLocation emissiveTexture = cosmetic.getModelEmissiveTexture(cosmeticStack, pet);
-                    if (emissiveTexture != null) {
-                        vertexConsumer = buffer.getBuffer(RenderType.eyes(emissiveTexture));
-                        cosmeticModel.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, r, g, b, 1);
-                    }
+                    cosmetic.render(
+                            this,
+                            cosmeticStack,
+                            poseStack,
+                            buffer,
+                            packedLight,
+                            pet,
+                            limbSwing,
+                            limbSwingAmount,
+                            partialticks
+                    );
 
                     poseStack.popPose();
                 }

@@ -1,22 +1,24 @@
 package billeyzambie.practicalpets.items;
 
+import billeyzambie.animationcontrollers.ACEntity;
+import billeyzambie.animationcontrollers.PracticalPetModel;
+import billeyzambie.practicalpets.client.layer.PetEquipmentLayer;
 import billeyzambie.practicalpets.entity.PracticalPet;
-import net.minecraft.resources.ResourceLocation;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nullable;
-
 public interface AttachablePetCosmetic extends PetCosmetic {
-    ResourceLocation getModelTexture(ItemStack stack, PracticalPet pet);
-    enum AttachBone { HAT, BOWTIE, BACKPACK }
-    AttachBone getAttachBone(ItemStack stack, PracticalPet pet);
-
-    @Nullable
-    default ResourceLocation getModelEmissiveTexture(ItemStack stack, PracticalPet pet) {
-        return null;
-    }
-
-    default boolean ignoreLighting(ItemStack stack, PracticalPet pet) {
-        return false;
-    }
+    <T extends Mob & ACEntity, M extends PracticalPetModel<T>> void render(
+            PetEquipmentLayer<T, M> layer,
+            ItemStack stack,
+            PoseStack poseStack,
+            MultiBufferSource buffer,
+            int packedLight,
+            PracticalPet pet,
+            float limbSwing,
+            float limbSwingAmount,
+            float partialticks
+    );
 }

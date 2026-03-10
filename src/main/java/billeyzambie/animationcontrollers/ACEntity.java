@@ -10,4 +10,7 @@ public interface ACEntity {
     float headSizeX();
     float headSizeY();
     float headSizeZ();
+    default boolean isModelYAxisInverted() {
+        return true;
+    }
 }

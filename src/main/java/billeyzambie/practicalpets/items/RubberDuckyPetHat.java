@@ -15,7 +15,7 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
 
-public class RubberDuckyPetHat extends Item implements AttachablePetCosmetic, DyeableItem {
+public class RubberDuckyPetHat extends Item implements EntityModelPetCosmetic, DyeableItem {
     public RubberDuckyPetHat() {
         super(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
     }
@@ -33,11 +33,6 @@ public class RubberDuckyPetHat extends Item implements AttachablePetCosmetic, Dy
     @Override
     public ResourceLocation getModelTexture(ItemStack stack, PracticalPet pet) {
         return modelTexture;
-    }
-
-    @Override
-    public AttachBone getAttachBone(ItemStack stack, PracticalPet pet) {
-        return AttachBone.HAT;
     }
 
     @Override

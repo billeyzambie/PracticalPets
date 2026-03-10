@@ -6,7 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-public class PetHat extends Item implements AttachablePetCosmetic {
+public class PetHat extends Item implements EntityModelPetCosmetic {
 
     public PetHat(String modelTextureName, float xpMultiplier, Item.Properties properties) {
         super(properties.stacksTo(1));
@@ -35,11 +35,6 @@ public class PetHat extends Item implements AttachablePetCosmetic {
     @Override
     public ResourceLocation getModelTexture(ItemStack stack, PracticalPet pet) {
         return modelTexture;
-    }
-
-    @Override
-    public AttachBone getAttachBone(ItemStack stack, PracticalPet pet) {
-        return AttachBone.HAT;
     }
 
     @Override
