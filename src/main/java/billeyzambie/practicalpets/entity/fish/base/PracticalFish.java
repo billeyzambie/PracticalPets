@@ -3,14 +3,14 @@ package billeyzambie.practicalpets.entity.fish.base;
 import billeyzambie.animationcontrollers.ACData;
 import billeyzambie.animationcontrollers.BVCData;
 import billeyzambie.animationcontrollers.SwimmingAnimationEntity;
-import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.entity.WeightedVariantEntity;
+import billeyzambie.practicalpets.items.PiranhaLauncher;
 import billeyzambie.practicalpets.misc.PPSounds;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -21,20 +21,14 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.TargetGoal;
-import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.EnumSet;
 import java.util.HashMap;
 
 public abstract class PracticalFish extends TamableFish implements SwimmingAnimationEntity, WeightedVariantEntity {
@@ -178,15 +172,107 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
     }
 
     @Override
-    protected void loadCustomData(CompoundTag tag) {
+    protected final void loadCustomData(CompoundTag tag) {
         super.loadCustomData(tag);
-        this.loadVariant(tag);
+        this.loadExtraData(tag);
     }
 
     @Override
-    protected void saveCustomData(CompoundTag tag) {
+    protected final void saveCustomData(CompoundTag tag) {
         super.saveCustomData(tag);
+        this.saveExtraData(tag);
+    }
+
+    protected void loadExtraData(CompoundTag tag) {
+        this.loadVariant(tag);
+    }
+
+    protected void saveExtraData(CompoundTag tag) {
         this.saveVariant(tag);
+    }
+
+    public final CompoundTag makePiranhaLauncherTag() {
+        CompoundTag result = new CompoundTag();
+        result.remove("display");
+
+        this.addBoringPiranhaLauncherSaveData(result);
+        this.saveExtraData(result);
+        this.optimizePiranhaLauncherSave(result);
+
+        int age = this.getAge();
+        if (age != 0)
+            result.putInt("Age", age);
+
+        Component component = this.getCustomName();
+        if (component != null) {
+            result.putString("CustomName", Component.Serializer.toJson(component));
+        }
+
+
+        String typeId = this.getEncodeId();
+        if (typeId != null) {
+            result.putString("id", typeId);
+        }
+        return result;
+    }
+    
+    private void addBoringPiranhaLauncherSaveData(CompoundTag tag) {
+        if (this.isNoAi()) {
+            tag.putBoolean("NoAI", this.isNoAi());
+        }
+
+        if (this.isSilent()) {
+            tag.putBoolean("Silent", this.isSilent());
+        }
+
+        if (this.isNoGravity()) {
+            tag.putBoolean("NoGravity", this.isNoGravity());
+        }
+
+        if (this.hasGlowingTag()) {
+            tag.putBoolean("Glowing", true);
+        }
+
+        if (this.isInvulnerable()) {
+            tag.putBoolean("Invulnerable", this.isInvulnerable());
+        }
+
+        if (this.getHealth() != this.getMaxHealth())
+            tag.putFloat("Health", this.getHealth());
+    }
+
+    protected void optimizePiranhaLauncherSave(CompoundTag result) {
+        if (this.getVariant() == 0)
+            result.remove("Variant");
+    }
+
+    public static PracticalFish createFromPiranhaLauncherTag(
+            ItemStack piranhaLauncher,
+            CompoundTag fishTag,
+            Level level,
+            @Nullable LivingEntity thrower
+    ) {
+        PracticalFish fish = (PracticalFish) EntityType.create(fishTag, level).orElseThrow();
+
+        Player owner = null;
+        if (thrower == null) {
+            CompoundTag launcherTag = piranhaLauncher.getTag();
+            if (launcherTag != null && launcherTag.hasUUID("LastOwnerUUID")) {
+                fish.setTame(true);
+                fish.setOwnerUUID(launcherTag.getUUID("LastOwnerUUID"));
+            }
+        }
+        else if (thrower instanceof Player player) {
+            owner = player;
+        }
+        else if (thrower instanceof OwnableEntity pet && pet.getOwner() instanceof Player petOwner) {
+            owner = petOwner;
+        }
+        if (owner != null) {
+            fish.setTame(true);
+            fish.setOwnerUUID(owner.getUUID());
+        }
+        return fish;
     }
 
     @Override
@@ -239,9 +325,9 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
+        boolean clientSide = this.level().isClientSide();
         if (this.isFood(stack)) {
             if (this.getHealth() < this.getMaxHealth()) {
-                boolean clientSide = this.level().isClientSide();
                 if (!clientSide) {
                     FoodProperties foodProperties = stack.getFoodProperties(this);
                     float healAmount = foodProperties == null ? 2
@@ -251,7 +337,6 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
                 return InteractionResult.sidedSuccess(clientSide);
             }
             if (!this.isTame()) {
-                boolean clientSide = this.level().isClientSide();
                 if (!clientSide) {
                     this.usePlayerItem(player, hand, stack);
                     if (this.random.nextInt(3) == 0) {
@@ -263,6 +348,15 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
                         //Fail particle
                         this.level().broadcastEntityEvent(this, (byte) 6);
                     }
+                }
+                return InteractionResult.sidedSuccess(clientSide);
+            }
+        }
+        else if (stack.getItem() instanceof PiranhaLauncher piranhaLauncher) {
+            if (piranhaLauncher.tryInsertFish(stack, this, player)) {
+                if (!clientSide) {
+                    this.playSound(this.getPickupSound(), 1.0F, 1.0F);
+                    this.discard();
                 }
                 return InteractionResult.sidedSuccess(clientSide);
             }

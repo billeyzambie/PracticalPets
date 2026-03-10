@@ -19,7 +19,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -97,16 +96,23 @@ public class Piranha extends PracticalFish {
     }
 
     @Override
-    public void loadCustomData(@NotNull CompoundTag tag) {
-        super.loadCustomData(tag);
+    protected void loadExtraData(@NotNull CompoundTag tag) {
+        super.loadExtraData(tag);
         if (tag.contains("BellyColor"))
             this.setBellyColor(tag.getInt("BellyColor"));
     }
 
     @Override
-    public void saveCustomData(CompoundTag tag) {
-        super.saveCustomData(tag);
+    protected void saveExtraData(CompoundTag tag) {
+        super.saveExtraData(tag);
         tag.putInt("BellyColor", getBellyColor());
+    }
+
+    @Override
+    protected void optimizePiranhaLauncherSave(CompoundTag result) {
+        super.optimizePiranhaLauncherSave(result);
+        if (this.getBellyColor() == DEFAULT_BELLY_COLOR)
+            result.remove("BellyColor");
     }
 
     @Override
@@ -163,7 +169,6 @@ public class Piranha extends PracticalFish {
         boolean shouldPiranhaSpawn = level.getBiome(pos).is(BiomeTags.IS_JUNGLE) || random.nextBoolean();
         return waterAnimalCanSpawn && shouldPiranhaSpawn;
     }
-
 
     @Override
     public BreedableFish getBreedOffspring(@NotNull ServerLevel level, @NotNull BreedableFish partner) {
