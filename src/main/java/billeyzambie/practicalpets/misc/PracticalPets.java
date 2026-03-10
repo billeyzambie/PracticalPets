@@ -1,15 +1,18 @@
 package billeyzambie.practicalpets.misc;
 
 import billeyzambie.practicalpets.client.PPMenus;
+import billeyzambie.practicalpets.items.PiranhaLauncher;
 import billeyzambie.practicalpets.ui.PracticalPetScreen;
 import billeyzambie.practicalpets.ui.infobook.InfoBookWriter;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -178,6 +181,12 @@ public class PracticalPets
         public static void onClientSetup(FMLClientSetupEvent event)
         {
             MenuScreens.register(PPMenus.PRACTICAL_PET_MENU.get(), PracticalPetScreen::new);
+
+            ItemProperties.register(
+                    PPItems.PIRANHA_LAUNCHER.get(),
+                    new ResourceLocation(PracticalPets.MODID, "loaded"),
+                    (stack, level, entity, seed) -> PiranhaLauncher.isLoaded(stack) ? 1 : 0
+            );
 
             //ai generated:
             Minecraft.getInstance().getItemColors().register(

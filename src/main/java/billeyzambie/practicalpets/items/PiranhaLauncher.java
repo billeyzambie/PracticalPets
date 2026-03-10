@@ -30,19 +30,26 @@ public class PiranhaLauncher extends Item implements ItemModelPetCosmetic {
         super(new Properties().stacksTo(1));
     }
 
-    public int getFishCount(ItemStack stack) {
+    public static int getFishCount(ItemStack stack) {
         return getFishCount(stack.getOrCreateTag());
     }
 
-    public int getFishCount(CompoundTag launcherTag) {
+    public static int getFishCount(CompoundTag launcherTag) {
         return launcherTag.getInt("FishCount");
+    }
+
+    public static boolean isLoaded(ItemStack stack) {
+        CompoundTag tag = stack.getTag();
+        if (tag == null)
+            return false;
+        return getFishCount(tag) > 0;
     }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         CompoundTag launcherTag = itemstack.getOrCreateTag();
-        if (this.getFishCount(launcherTag) < 1) {
+        if (getFishCount(launcherTag) < 1) {
             return InteractionResultHolder.pass(itemstack);
         }
         player.getCooldowns().addCooldown(this, 20);
