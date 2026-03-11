@@ -220,10 +220,7 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
         return result;
     }
 
-    protected void optimizePiranhaLauncherSave(CompoundTag result) {
-        if (this.getVariant() == 0)
-            result.remove("Variant");
-    }
+    protected abstract void optimizePiranhaLauncherSave(CompoundTag tag);
 
     public static PracticalFish createFromPiranhaLauncherTag(
             ItemStack piranhaLauncher,

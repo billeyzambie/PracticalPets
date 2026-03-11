@@ -100,6 +100,13 @@ public class Piranha extends PracticalFish {
         super.loadExtraData(tag);
         if (tag.contains("BellyColor"))
             this.setBellyColor(tag.getInt("BellyColor"));
+        if (tag.contains("CompactVariant")) {
+            int compactVariant = tag.getInt("CompactVariant");
+            int bellyColor = compactVariant & 0xffffff;
+            int variant = compactVariant >> 24;
+            this.setBellyColor(bellyColor);
+            this.setVariant(variant);
+        }
     }
 
     @Override
@@ -109,10 +116,15 @@ public class Piranha extends PracticalFish {
     }
 
     @Override
-    protected void optimizePiranhaLauncherSave(CompoundTag result) {
-        super.optimizePiranhaLauncherSave(result);
-        if (this.getBellyColor() == DEFAULT_BELLY_COLOR)
-            result.remove("BellyColor");
+    protected void optimizePiranhaLauncherSave(CompoundTag tag) {
+        tag.remove("Variant");
+        tag.remove("BellyColor");
+        int bellyColor = this.getBellyColor();
+        int variant = this.getVariant();
+        if (bellyColor != DEFAULT_BELLY_COLOR || variant != 0) {
+            bellyColor &= 0xffffff;
+            tag.putInt("CompactVariant", bellyColor | variant << 24);
+        }
     }
 
     @Override
