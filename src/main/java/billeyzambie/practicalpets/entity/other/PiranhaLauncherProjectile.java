@@ -69,7 +69,9 @@ public class PiranhaLauncherProjectile extends ThrowableProjectile {
             PracticalFish fish = this.getFish();
             this.ejectPassengers();
             if (fish != null) {
-                fish.setDeltaMovement(this.getDeltaMovement());
+                Vec3 movement = this.getDeltaMovement();
+                fish.move(MoverType.SELF, movement);
+                fish.setDeltaMovement(movement);
             }
         }
         super.onHit(hitResult);
