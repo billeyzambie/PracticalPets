@@ -17,7 +17,7 @@ public interface SwimmingAnimationEntity extends ACEntity {
     void setSwimXRot(float value);
     default void tickSwimAnim() {
         Entity self = (Entity) this;
-        Vec3 velocity = self.getDeltaMovement();
+        Vec3 velocity = self.position().subtract(self.xo, self.yo, self.zo);
         float swimXRot = (float) Mth.atan2(velocity.y, velocity.horizontalDistance());
         setSwimXRot(Mth.lerp(0.2f, this.getSwimXRot(1), swimXRot));
 
