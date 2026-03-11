@@ -3,6 +3,7 @@ package billeyzambie.practicalpets.entity.other;
 import billeyzambie.practicalpets.entity.fish.base.PracticalFish;
 import billeyzambie.practicalpets.misc.PPEntities;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
@@ -78,6 +79,15 @@ public class PiranhaLauncherProjectile extends ThrowableProjectile {
         if (!clientSide) {
             this.discard();
         }
+    }
+
+    @Override
+    protected void positionRider(Entity entity, MoveFunction moveFunction) {
+        super.positionRider(entity, moveFunction);
+        float yRot = -this.getYRot();
+        entity.setYRot(yRot);
+        entity.setYBodyRot(yRot);
+        entity.setYHeadRot(yRot);
     }
 
     @Override

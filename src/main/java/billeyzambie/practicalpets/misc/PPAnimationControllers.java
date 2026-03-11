@@ -456,6 +456,10 @@ public class PPAnimationControllers {
             -> entity instanceof GiraffeCat giraffeCat && giraffeCat.noCurrentAbility()
     );
 
+    public static final BlendValueController RIDING_BLEND = new BlendValueController("riding_blend", 0.2f, (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
+            -> entity.getVehicle() != null
+    );
+
     public static final BlendValueController ON_AIR_OR_WATER_BLEND = new BlendValueController("on_ground_or_water", 0.2f, (model, entity, limbSwing, limbSwingAmount, ageInTicks, animTime, netHeadYaw, headPitch, deltaTime)
             -> !entity.onGround() || entity.isInWater()
     );

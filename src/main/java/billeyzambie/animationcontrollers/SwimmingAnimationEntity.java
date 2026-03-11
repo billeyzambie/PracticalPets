@@ -2,6 +2,7 @@ package billeyzambie.animationcontrollers;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.Vec3;
 
 public interface SwimmingAnimationEntity extends ACEntity {
@@ -17,9 +18,14 @@ public interface SwimmingAnimationEntity extends ACEntity {
     void setSwimXRot(float value);
     default void tickSwimAnim() {
         Entity self = (Entity) this;
-        Vec3 velocity = self.position().subtract(self.xo, self.yo, self.zo);
-        float swimXRot = (float) Mth.atan2(velocity.y, velocity.horizontalDistance());
-        setSwimXRot(Mth.lerp(0.2f, this.getSwimXRot(1), swimXRot));
+        if (self.getVehicle() instanceof Projectile projectile) {
+            float swimXRot = projectile.getXRot() * Mth.DEG_TO_RAD;
+            setSwimXRot(swimXRot);
+        } else {
+            Vec3 velocity = self.position().subtract(self.xo, self.yo, self.zo);
+            float swimXRot = (float) Mth.atan2(velocity.y, velocity.horizontalDistance());
+            setSwimXRot(Mth.lerp(0.2f, this.getSwimXRot(1), swimXRot));
+        }
 
         if (self.onGround())
             this.setOnAirTime(0);
