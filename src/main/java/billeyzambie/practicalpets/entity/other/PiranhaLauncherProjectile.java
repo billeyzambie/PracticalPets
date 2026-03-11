@@ -3,9 +3,9 @@ package billeyzambie.practicalpets.entity.other;
 import billeyzambie.practicalpets.entity.fish.base.PracticalFish;
 import billeyzambie.practicalpets.misc.PPEntities;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -71,6 +71,11 @@ public class PiranhaLauncherProjectile extends ThrowableProjectile {
             this.ejectPassengers();
             if (fish != null) {
                 Vec3 movement = this.getDeltaMovement();
+                BlockState blockState = fish.getFeetBlockState();
+                if (!blockState.isAir()) {
+                    //The fish otherwise kinda looked like it was shot on ice when shooting it on the ground
+                    movement = movement.scale(blockState.getFriction(level(), blockPosition(), fish));
+                }
                 fish.move(MoverType.SELF, movement);
                 fish.setDeltaMovement(movement);
             }
