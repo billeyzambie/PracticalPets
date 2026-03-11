@@ -3,6 +3,7 @@ package billeyzambie.practicalpets.items;
 import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.entity.fish.Piranha;
 import billeyzambie.practicalpets.entity.fish.base.PracticalFish;
+import billeyzambie.practicalpets.entity.other.PiranhaLauncherProjectile;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -81,6 +82,18 @@ public class PiranhaLauncher extends Item implements ItemModelPetCosmetic {
         PracticalFish fish = PracticalFish.createFromPiranhaLauncherTag(piranhaLauncher, fishTag, level, thrower);
         fish.setPos(throwerPosition);
         level.addFreshEntity(fish);
+
+        Vec3 projectilePosition;
+        if (thrower != null) {
+            projectilePosition = thrower.getEyePosition().add(0, -0.2,0);
+        } else {
+            projectilePosition = throwerPosition;
+        }
+
+        PiranhaLauncherProjectile projectile = new PiranhaLauncherProjectile(level, thrower, fish, projectilePosition);
+        if (thrower != null)
+            projectile.shootFromRotation(thrower, thrower.getXRot(), thrower.getYRot(), 0, 1.0f, 1f);
+        level.addFreshEntity(projectile);
 
         level.playSound(null, throwerPosition.x(), throwerPosition.y(), throwerPosition.z(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F));
     }

@@ -5,6 +5,7 @@ import billeyzambie.practicalpets.entity.dinosaur.Duck;
 import billeyzambie.practicalpets.entity.dinosaur.Kiwi;
 import billeyzambie.practicalpets.entity.dinosaur.Pigeon;
 import billeyzambie.practicalpets.entity.fish.Piranha;
+import billeyzambie.practicalpets.entity.other.PiranhaLauncherProjectile;
 import billeyzambie.practicalpets.entity.other.YeetedPetCarrier;
 import billeyzambie.practicalpets.entity.otherpet.GiraffeCat;
 import billeyzambie.practicalpets.entity.otherpet.Rat;
@@ -38,6 +39,12 @@ public class PPEntities {
             () -> EntityType.Builder.<YeetedPetCarrier>of(YeetedPetCarrier::new, MobCategory.CREATURE)
                     .sized(0.5f, 0.5f)
                     .build("thrown_pet_carrier")
+    );
+    public static final RegistryObject<EntityType<PiranhaLauncherProjectile>> PIRANHA_LAUNCHER_PROJECTILE = REGISTRY.register(
+            "piranha_launcher_projectile",
+            () -> EntityType.Builder.<PiranhaLauncherProjectile>of(PiranhaLauncherProjectile::new, MobCategory.CREATURE)
+                    .sized(0.4f, 0.25f)
+                    .build("piranha_launcher_projectile")
     );
 
     //mobs

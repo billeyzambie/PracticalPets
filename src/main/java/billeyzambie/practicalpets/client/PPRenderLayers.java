@@ -95,6 +95,7 @@ public class PPRenderLayers {
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(PPEntities.PET_END_ROD_PROJECTILE.get(), PetEndRodProjectileRenderer::new);
         event.registerEntityRenderer(PPEntities.THROWN_PET_CARRIER.get(), NothingRenderer::new);
+        event.registerEntityRenderer(PPEntities.PIRANHA_LAUNCHER_PROJECTILE.get(), NothingRenderer::new);
 
         event.registerEntityRenderer(PPEntities.BANANA_DUCK.get(), BananaDuckRenderer::new);
         event.registerEntityRenderer(PPEntities.DUCK.get(), DuckRenderer::new);
