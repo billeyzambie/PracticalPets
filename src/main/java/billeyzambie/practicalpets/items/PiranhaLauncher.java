@@ -5,6 +5,7 @@ import billeyzambie.practicalpets.entity.fish.Piranha;
 import billeyzambie.practicalpets.entity.fish.base.PracticalFish;
 import billeyzambie.practicalpets.entity.other.PiranhaLauncherProjectile;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -21,6 +22,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -95,10 +97,11 @@ public class PiranhaLauncher extends Item implements ItemModelPetCosmetic {
             projectile.shootFromRotation(thrower, thrower.getXRot(), thrower.getYRot(), 0, 1.0f, 1f);
         level.addFreshEntity(projectile);
 
-        level.playSound(null, throwerPosition.x(), throwerPosition.y(), throwerPosition.z(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F));
+        level.playSound(null, throwerPosition.x(), throwerPosition.y(), throwerPosition.z(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5f, 0.4f / (level.getRandom().nextFloat() * 0.4f + 0.8f));
+        level.playSound(null, throwerPosition.x(), throwerPosition.y(), throwerPosition.z(), SoundEvents.BUCKET_EMPTY_FISH, SoundSource.NEUTRAL, 1, 1);
     }
 
-    public boolean canInsertFish(ItemStack stack, PracticalFish fish) {
+    public boolean canInsertFishType(ItemStack stack, PracticalFish fish) {
         return fish instanceof Piranha;
     }
 
@@ -109,7 +112,7 @@ public class PiranhaLauncher extends Item implements ItemModelPetCosmetic {
      */
     public boolean tryInsertFish(ItemStack stack, PracticalFish fish, Player player) {
         if (
-                !this.canInsertFish(stack, fish)
+                !this.canInsertFishType(stack, fish)
                 || fish.isTame() && !fish.isOwnedBy(player)
                 || fish.isBaby()
         )
@@ -130,7 +133,15 @@ public class PiranhaLauncher extends Item implements ItemModelPetCosmetic {
         launcherTag.putUUID("LastOwnerUUID", player.getUUID());
         launcherTag.putInt("FishCount", fishes.size());
 
+        fish.playSound(fish.getPickupSound(), 1, 1);
+        fish.discard();
+
         return true;
+    }
+
+    @Override
+    public boolean canAttackBlock(BlockState p_43291_, Level p_43292_, BlockPos p_43293_, Player p_43294_) {
+        return !p_43294_.isCreative();
     }
 
     @Override

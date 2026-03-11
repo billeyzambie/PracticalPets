@@ -332,10 +332,6 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
             }
         } else if (stack.getItem() instanceof PiranhaLauncher piranhaLauncher) {
             if (piranhaLauncher.tryInsertFish(stack, this, player)) {
-                if (!clientSide) {
-                    this.playSound(this.getPickupSound(), 1.0F, 1.0F);
-                    this.discard();
-                }
                 return InteractionResult.sidedSuccess(clientSide);
             }
         }
@@ -344,7 +340,17 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (source.getEntity() instanceof LivingEntity living && this.isOwnedBy(living) && !living.isShiftKeyDown())
+        Entity entity = source.getEntity();
+        if (entity instanceof Player player) {
+            ItemStack mainHandStack = player.getMainHandItem();
+            if (
+                    mainHandStack.getItem() instanceof PiranhaLauncher launcherItem
+                    && launcherItem.tryInsertFish(mainHandStack, this, player)
+            ) {
+                return false;
+            }
+        }
+        if (entity instanceof LivingEntity living && this.isOwnedBy(living) && !living.isShiftKeyDown())
             return false;
         return super.hurt(source, amount);
     }
