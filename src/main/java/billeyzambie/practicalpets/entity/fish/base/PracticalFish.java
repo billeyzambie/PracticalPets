@@ -195,9 +195,11 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
         CompoundTag result = new CompoundTag();
         result.remove("display");
 
-        this.addBoringPiranhaLauncherSaveData(result);
         this.saveExtraData(result);
         this.optimizePiranhaLauncherSave(result);
+
+        if (this.getHealth() != this.getMaxHealth())
+            result.putFloat("Health", this.getHealth());
 
         int age = this.getAge();
         if (age != 0)
@@ -214,31 +216,6 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
             result.putString("id", typeId);
         }
         return result;
-    }
-    
-    private void addBoringPiranhaLauncherSaveData(CompoundTag tag) {
-        if (this.isNoAi()) {
-            tag.putBoolean("NoAI", this.isNoAi());
-        }
-
-        if (this.isSilent()) {
-            tag.putBoolean("Silent", this.isSilent());
-        }
-
-        if (this.isNoGravity()) {
-            tag.putBoolean("NoGravity", this.isNoGravity());
-        }
-
-        if (this.hasGlowingTag()) {
-            tag.putBoolean("Glowing", true);
-        }
-
-        if (this.isInvulnerable()) {
-            tag.putBoolean("Invulnerable", this.isInvulnerable());
-        }
-
-        if (this.getHealth() != this.getMaxHealth())
-            tag.putFloat("Health", this.getHealth());
     }
 
     protected void optimizePiranhaLauncherSave(CompoundTag result) {
@@ -261,11 +238,9 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
                 fish.setTame(true);
                 fish.setOwnerUUID(launcherTag.getUUID("LastOwnerUUID"));
             }
-        }
-        else if (thrower instanceof Player player) {
+        } else if (thrower instanceof Player player) {
             owner = player;
-        }
-        else if (thrower instanceof OwnableEntity pet && pet.getOwner() instanceof Player petOwner) {
+        } else if (thrower instanceof OwnableEntity pet && pet.getOwner() instanceof Player petOwner) {
             owner = petOwner;
         }
         if (owner != null) {
@@ -343,16 +318,14 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
                         this.tame(player);
                         //Tame heart particle
                         this.level().broadcastEntityEvent(this, (byte) 7);
-                    }
-                    else {
+                    } else {
                         //Fail particle
                         this.level().broadcastEntityEvent(this, (byte) 6);
                     }
                 }
                 return InteractionResult.sidedSuccess(clientSide);
             }
-        }
-        else if (stack.getItem() instanceof PiranhaLauncher piranhaLauncher) {
+        } else if (stack.getItem() instanceof PiranhaLauncher piranhaLauncher) {
             if (piranhaLauncher.tryInsertFish(stack, this, player)) {
                 if (!clientSide) {
                     this.playSound(this.getPickupSound(), 1.0F, 1.0F);
