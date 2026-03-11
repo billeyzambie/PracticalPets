@@ -5,8 +5,10 @@ import billeyzambie.animationcontrollers.BVCData;
 import billeyzambie.animationcontrollers.SwimmingAnimationEntity;
 import billeyzambie.practicalpets.entity.WeightedVariantEntity;
 import billeyzambie.practicalpets.items.PiranhaLauncher;
+import billeyzambie.practicalpets.misc.PPEntities;
 import billeyzambie.practicalpets.misc.PPSounds;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -212,7 +214,7 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
 
 
         String typeId = this.getEncodeId();
-        if (typeId != null) {
+        if (typeId != null && !typeId.equals(PPEntities.PIRANHA.getId().toString())) {
             result.putString("id", typeId);
         }
         return result;
@@ -229,6 +231,9 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
             Level level,
             @Nullable LivingEntity thrower
     ) {
+        if (!fishTag.contains("id", Tag.TAG_STRING)) {
+            fishTag.putString("id", PPEntities.PIRANHA.getId().toString());
+        }
         PracticalFish fish = (PracticalFish) EntityType.create(fishTag, level).orElseThrow();
 
         Player owner = null;
