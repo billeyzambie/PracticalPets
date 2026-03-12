@@ -191,7 +191,7 @@ public class PiranhaLauncher extends Item implements ItemModelPetCosmetic {
 
     @Override
     public boolean canPerformRangedAttack(ItemStack stack, PracticalPet pet) {
-        return getFishCount(stack) > 1;
+        return getFishCount(stack) > 0;
     }
 
     @Override

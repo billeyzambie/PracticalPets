@@ -22,6 +22,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -96,8 +98,8 @@ public class Piranha extends PracticalFish {
     }
 
     @Override
-    protected void loadExtraData(@NotNull CompoundTag tag) {
-        super.loadExtraData(tag);
+    protected void loadCustomData(@NotNull CompoundTag tag) {
+        super.loadCustomData(tag);
         if (tag.contains("BellyColor"))
             this.setBellyColor(tag.getInt("BellyColor"));
         if (tag.contains("CompactVariant")) {
@@ -110,15 +112,13 @@ public class Piranha extends PracticalFish {
     }
 
     @Override
-    protected void saveExtraData(CompoundTag tag) {
-        super.saveExtraData(tag);
+    protected void saveCustomData(CompoundTag tag) {
+        super.saveCustomData(tag);
         tag.putInt("BellyColor", getBellyColor());
     }
 
     @Override
-    protected void optimizePiranhaLauncherSave(CompoundTag tag) {
-        tag.remove("Variant");
-        tag.remove("BellyColor");
+    protected void addPiranhaLauncherData(CompoundTag tag) {
         int bellyColor = this.getBellyColor();
         int variant = this.getVariant();
         if (bellyColor != DEFAULT_BELLY_COLOR || variant != 0) {
@@ -155,7 +155,7 @@ public class Piranha extends PracticalFish {
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(
+        this.targetSelector.addGoal(9, new NearestAttackableTargetGoal<>(
                 this, LivingEntity.class, 15 * 20, true, true,
                 this::canRandomlyAttack
         ));
@@ -221,4 +221,40 @@ public class Piranha extends PracticalFish {
         return baby;
     }
 
+    @Override
+    public void push(Entity p_21294_) {
+        if (!this.isLaunched) {
+            super.push(p_21294_);
+        }
+    }
+
+    @Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+        if (!this.isLaunched)
+            return;
+        LivingEntity target = this.getTarget();
+        if (target == null)
+            return;
+        float width = this.getBbWidth();
+        float height = this.getBbHeight();
+        AABB targetBoundingBox = target.getBoundingBox();
+        double x = Mth.lerp(
+                this.random.nextDouble(),
+                targetBoundingBox.minX + width / 2f,
+                targetBoundingBox.maxX - width / 2f
+        );
+        double y = Mth.lerp(
+                this.random.nextDouble(),
+                targetBoundingBox.minY,
+                targetBoundingBox.maxY - height
+        );
+        double z = Mth.lerp(
+                this.random.nextDouble(),
+                targetBoundingBox.minZ + width / 2f,
+                targetBoundingBox.maxZ - width / 2f
+        );
+        this.resetFallDistance();
+        this.setPos(x, y, z);
+    }
 }

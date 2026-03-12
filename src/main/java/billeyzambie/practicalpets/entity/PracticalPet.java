@@ -958,8 +958,8 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
 
     @Override
     public boolean wantsToAttack(@NotNull LivingEntity target, @NotNull LivingEntity owner) {
-        if (target instanceof TamableAnimal pet) {
-            return !pet.isTame() || pet.getOwner() != owner;
+        if (target instanceof OwnableEntity pet) {
+            return !owner.getUUID().equals(pet.getOwnerUUID());
         } else
             return !(target instanceof Player) || !(owner instanceof Player) || ((Player) owner).canHarmPlayer((Player) target);
     }

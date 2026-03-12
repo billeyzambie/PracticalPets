@@ -4,9 +4,12 @@ import billeyzambie.animationcontrollers.ACData;
 import billeyzambie.animationcontrollers.BVCData;
 import billeyzambie.animationcontrollers.SwimmingAnimationEntity;
 import billeyzambie.practicalpets.entity.WeightedVariantEntity;
+import billeyzambie.practicalpets.goal.FishOwnerHurtByTargetGoal;
+import billeyzambie.practicalpets.goal.FishOwnerHurtTargetGoal;
 import billeyzambie.practicalpets.items.PiranhaLauncher;
 import billeyzambie.practicalpets.misc.PPEntities;
 import billeyzambie.practicalpets.misc.PPSounds;
+import billeyzambie.practicalpets.util.PPUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -23,6 +26,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
@@ -157,6 +161,8 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
 
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(PracticalFish.class, EntityDataSerializers.INT);
 
+    protected boolean isLaunched = false;
+
     @Override
     public int getVariant() {
         return this.entityData.get(VARIANT);
@@ -174,31 +180,29 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
     }
 
     @Override
-    protected final void loadCustomData(CompoundTag tag) {
+    protected void loadCustomData(CompoundTag tag) {
         super.loadCustomData(tag);
-        this.loadExtraData(tag);
+        this.loadVariant(tag);
+        this.isLaunched = tag.getBoolean("Launched");
     }
 
     @Override
-    protected final void saveCustomData(CompoundTag tag) {
+    protected void saveCustomData(CompoundTag tag) {
         super.saveCustomData(tag);
-        this.saveExtraData(tag);
-    }
-
-    protected void loadExtraData(CompoundTag tag) {
-        this.loadVariant(tag);
-    }
-
-    protected void saveExtraData(CompoundTag tag) {
         this.saveVariant(tag);
+        tag.putBoolean("Launched", this.isLaunched);
+    }
+
+    @Override
+    protected void modifyBucketData(CompoundTag tag) {
+        tag.remove("Launched");
     }
 
     public final CompoundTag makePiranhaLauncherTag() {
         CompoundTag result = new CompoundTag();
         result.remove("display");
 
-        this.saveExtraData(result);
-        this.optimizePiranhaLauncherSave(result);
+        this.addPiranhaLauncherData(result);
 
         if (this.getHealth() != this.getMaxHealth())
             result.putFloat("Health", this.getHealth());
@@ -220,7 +224,7 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
         return result;
     }
 
-    protected abstract void optimizePiranhaLauncherSave(CompoundTag tag);
+    protected abstract void addPiranhaLauncherData(CompoundTag tag);
 
     public static PracticalFish createFromPiranhaLauncherTag(
             ItemStack piranhaLauncher,
@@ -249,6 +253,8 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
             fish.setTame(true);
             fish.setOwnerUUID(owner.getUUID());
         }
+
+        fish.isLaunched = true;
         return fish;
     }
 
@@ -274,16 +280,43 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
     }
 
     @Override
+    public boolean wantsToAttack(@NotNull LivingEntity target, @NotNull LivingEntity owner) {
+        if (target instanceof OwnableEntity pet) {
+            return !owner.getUUID().equals(pet.getOwnerUUID());
+        } else
+            return !(target instanceof Player) || !(owner instanceof Player) || ((Player) owner).canHarmPlayer((Player) target);
+    }
+
+    public boolean shouldDefendOwner(Entity target) {
+        return this.isLaunched;
+    }
+
+    @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.25D, true));
-        this.goalSelector.addGoal(2, new BreedGoal(this, 1.25D));
+        this.goalSelector.addGoal(3, new BreedGoal(this, 1.25D));
         this.goalSelector.addGoal(6, new FishSwimGoal(this));
         this.goalSelector.addGoal(8, new FollowFlockLeaderGoal(this));
         HurtByTargetGoal hurtByTargetGoal = new HurtByTargetGoal(this);
         if (shouldRegisterAlertOthers())
             hurtByTargetGoal = hurtByTargetGoal.setAlertOthers();
         this.targetSelector.addGoal(1, hurtByTargetGoal);
-        this.targetSelector.addGoal(5, new CopyFlockLeaderTargetGoal(this));
+        this.targetSelector.addGoal(2, new FishOwnerHurtByTargetGoal(this));
+        this.targetSelector.addGoal(3, new FishOwnerHurtTargetGoal(this));
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(
+                this, LivingEntity.class,  40, true, true,
+                target -> {
+                    if (this.isLaunched && target instanceof Mob mob && mob.getTarget() != null) {
+                        return mob.getTarget() == this.getOwner();
+                    }
+                    return false;
+                }
+        ));
+        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(
+                this, LivingEntity.class,  20, true, true,
+                target -> this.isLaunched && !(target instanceof OwnableEntity ownableEntity && PPUtil.petsShareOwner(this, ownableEntity))
+        ));
+        this.targetSelector.addGoal(10, new CopyFlockLeaderTargetGoal(this));
     }
 
     protected boolean shouldRegisterAlertOthers() {

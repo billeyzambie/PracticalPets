@@ -265,6 +265,11 @@ public abstract class CustomFish extends AbstractFish {
     @Override
     public final void saveToBucketTag(@NotNull ItemStack stack) {
         super.saveToBucketTag(stack);
-        this.saveCustomData(stack.getOrCreateTag());
+        CompoundTag tag = stack.getOrCreateTag();
+        this.saveCustomData(tag);
+        this.modifyBucketData(tag);
+    }
+
+    protected void modifyBucketData(CompoundTag tag) {
     }
 }
