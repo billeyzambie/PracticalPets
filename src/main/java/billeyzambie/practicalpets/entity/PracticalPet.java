@@ -460,8 +460,8 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         this.goalSelector.addGoal(120, new LookAtPlayerGoal(this, Player.class, 10.0F));
         this.goalSelector.addGoal(120, new RandomLookAroundGoal(this));
 
-        this.targetSelector.addGoal(10, new OwnerHurtByTargetIfShouldGoal(this));
-        this.targetSelector.addGoal(20,
+        this.targetSelector.addGoal(20, new OwnerHurtByTargetIfShouldGoal(this));
+        this.targetSelector.addGoal(10,
                 this.shouldRegisterSpreadingAnger()
                         ? new DefendSelfIfShouldGoal(this).setAlertOthers()
                         : new DefendSelfIfShouldGoal(this)
