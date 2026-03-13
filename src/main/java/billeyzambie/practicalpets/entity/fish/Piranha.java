@@ -214,9 +214,9 @@ public class Piranha extends PracticalFish {
                 float otherBellyColorB = PPUtil.getColorBlue(otherBellyColor);
 
                 baby.setBellyColor(Mth.color(
-                        (bellyColorR + otherBellyColorR) / 2f,
-                        (bellyColorG + otherBellyColorG) / 2f,
-                        (bellyColorB + otherBellyColorB) / 2f
+                        PPUtil.clamp01((bellyColorR + otherBellyColorR) / 2f + (float)random.nextGaussian() * 0.1f),
+                        PPUtil.clamp01((bellyColorG + otherBellyColorG) / 2f + (float)random.nextGaussian() * 0.1f),
+                        PPUtil.clamp01((bellyColorB + otherBellyColorB) / 2f + (float)random.nextGaussian() * 0.1f)
                 ));
 
             }
