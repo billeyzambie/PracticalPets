@@ -238,35 +238,35 @@ public abstract class CustomFish extends AbstractFish {
 
     //custom code start: (maybe?)
 
-    protected void loadCustomData(CompoundTag tag) {
+    protected void loadBucketAndWorldSharedData(CompoundTag tag) {
     }
 
-    protected void saveCustomData(CompoundTag tag) {
+    protected void saveBucketAndWorldSharedData(CompoundTag tag) {
     }
 
     @Override
     public final void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        this.loadCustomData(tag);
+        this.loadBucketAndWorldSharedData(tag);
     }
 
     @Override
     public final void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
-        this.saveCustomData(tag);
+        this.saveBucketAndWorldSharedData(tag);
     }
 
     @Override
     public final void loadFromBucketTag(@NotNull CompoundTag tag) {
         super.loadFromBucketTag(tag);
-        this.loadCustomData(tag);
+        this.loadBucketAndWorldSharedData(tag);
     }
 
     @Override
     public final void saveToBucketTag(@NotNull ItemStack stack) {
         super.saveToBucketTag(stack);
         CompoundTag tag = stack.getOrCreateTag();
-        this.saveCustomData(tag);
+        this.saveBucketAndWorldSharedData(tag);
         this.modifyBucketData(tag);
     }
 

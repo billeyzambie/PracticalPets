@@ -99,8 +99,8 @@ public abstract class BreedableFish extends CustomFish {
     }
 
     @Override
-    protected void saveCustomData(CompoundTag p_146761_) {
-        super.saveCustomData(p_146761_);
+    protected void saveBucketAndWorldSharedData(CompoundTag p_146761_) {
+        super.saveBucketAndWorldSharedData(p_146761_);
         p_146761_.putInt("Age", this.getAge());
         p_146761_.putInt("ForcedAge", this.forcedAge);
         p_146761_.putInt("InLove", this.inLove);
@@ -110,8 +110,8 @@ public abstract class BreedableFish extends CustomFish {
     }
 
     @Override
-    protected void loadCustomData(CompoundTag p_146752_) {
-        super.loadCustomData(p_146752_);
+    protected void loadBucketAndWorldSharedData(CompoundTag p_146752_) {
+        super.loadBucketAndWorldSharedData(p_146752_);
         this.setAge(p_146752_.getInt("Age"));
         this.forcedAge = p_146752_.getInt("ForcedAge");
         this.inLove = p_146752_.getInt("InLove");

@@ -6,6 +6,7 @@ import billeyzambie.practicalpets.entity.fish.base.PracticalFish;
 import billeyzambie.practicalpets.misc.PPItems;
 import billeyzambie.practicalpets.util.PPUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Position;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -98,8 +99,8 @@ public class Piranha extends PracticalFish {
     }
 
     @Override
-    protected void loadCustomData(@NotNull CompoundTag tag) {
-        super.loadCustomData(tag);
+    protected void loadBucketAndWorldSharedData(@NotNull CompoundTag tag) {
+        super.loadBucketAndWorldSharedData(tag);
         if (tag.contains("BellyColor"))
             this.setBellyColor(tag.getInt("BellyColor"));
         if (tag.contains("CompactVariant")) {
@@ -112,8 +113,8 @@ public class Piranha extends PracticalFish {
     }
 
     @Override
-    protected void saveCustomData(CompoundTag tag) {
-        super.saveCustomData(tag);
+    protected void saveBucketAndWorldSharedData(CompoundTag tag) {
+        super.saveBucketAndWorldSharedData(tag);
         tag.putInt("BellyColor", getBellyColor());
     }
 
@@ -121,9 +122,12 @@ public class Piranha extends PracticalFish {
     protected void addPiranhaLauncherData(CompoundTag tag) {
         int bellyColor = this.getBellyColor();
         int variant = this.getVariant();
-        if (bellyColor != DEFAULT_BELLY_COLOR || variant != 0) {
+        if (bellyColor != DEFAULT_BELLY_COLOR) {
             bellyColor &= 0xffffff;
             tag.putInt("CompactVariant", bellyColor | variant << 24);
+        }
+        else if (variant != 0) {
+            tag.putInt("Variant", variant);
         }
     }
 
@@ -221,11 +225,19 @@ public class Piranha extends PracticalFish {
         return baby;
     }
 
+    //@Override
+    //public void push(Entity p_21294_) {
+    //    if (!this.isLaunched) {
+    //        super.push(p_21294_);
+    //    }
+    //}
+
     @Override
-    public void push(Entity p_21294_) {
-        if (!this.isLaunched) {
-            super.push(p_21294_);
+    public boolean isWithinRestriction(BlockPos blockPos) {
+        if (this.isLaunched) {
+            return blockPos.distSqr(this.blockPosition()) <= 25;
         }
+        return super.isWithinRestriction(blockPos);
     }
 
     @Override
@@ -233,8 +245,14 @@ public class Piranha extends PracticalFish {
         super.customServerAiStep();
         if (!this.isLaunched)
             return;
+        if (this.isInWater()) {
+            this.isLaunched = false;
+            return;
+        }
+        if (this.tickCount % 2 == 0)
+            return;
         LivingEntity target = this.getTarget();
-        if (target == null)
+        if (target == null || !isWithinRestriction(target.blockPosition()))
             return;
         float width = this.getBbWidth();
         float height = this.getBbHeight();
@@ -255,6 +273,7 @@ public class Piranha extends PracticalFish {
                 targetBoundingBox.maxZ - width / 2f
         );
         this.resetFallDistance();
+        this.setDeltaMovement(Vec3.ZERO);
         this.setPos(x, y, z);
     }
 }

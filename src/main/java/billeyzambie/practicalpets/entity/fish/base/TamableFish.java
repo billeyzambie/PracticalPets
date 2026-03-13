@@ -40,16 +40,16 @@ public abstract class TamableFish extends BreedableFish implements OwnableEntity
     }
 
     @Override
-    protected void saveCustomData(CompoundTag p_21819_) {
-        super.saveCustomData(p_21819_);
+    protected void saveBucketAndWorldSharedData(CompoundTag p_21819_) {
+        super.saveBucketAndWorldSharedData(p_21819_);
         if (this.getOwnerUUID() != null) {
             p_21819_.putUUID("Owner", this.getOwnerUUID());
         }
     }
 
     @Override
-    protected void loadCustomData(CompoundTag p_21815_) {
-        super.loadCustomData(p_21815_);
+    protected void loadBucketAndWorldSharedData(CompoundTag p_21815_) {
+        super.loadBucketAndWorldSharedData(p_21815_);
         UUID uuid;
         if (p_21815_.hasUUID("Owner")) {
             uuid = p_21815_.getUUID("Owner");

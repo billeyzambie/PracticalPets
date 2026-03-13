@@ -24,7 +24,7 @@ public abstract class SwimmingEntityModel<T extends Entity & SwimmingAnimationEn
         entity.setSwimSwingAmount(Math.max(limbSwingAmount, entity.getMinSwimSwingAmount()));
 
         float moveBlend = Mth.clamp(limbSwingAmount * 4, 0, 1);
-        float ridingBlend = PPAnimationControllers.RIDING_BLEND.calculate(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
+        float ridingBlend = 1 - PPAnimationControllers.NOT_RIDING_BLEND.calculate(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
         float xRotBlend = Math.max(moveBlend, ridingBlend);
 
         float partialTicks = ageInTicks % 1f;

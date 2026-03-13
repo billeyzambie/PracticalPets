@@ -180,15 +180,15 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
     }
 
     @Override
-    protected void loadCustomData(CompoundTag tag) {
-        super.loadCustomData(tag);
+    protected void loadBucketAndWorldSharedData(CompoundTag tag) {
+        super.loadBucketAndWorldSharedData(tag);
         this.loadVariant(tag);
         this.isLaunched = tag.getBoolean("Launched");
     }
 
     @Override
-    protected void saveCustomData(CompoundTag tag) {
-        super.saveCustomData(tag);
+    protected void saveBucketAndWorldSharedData(CompoundTag tag) {
+        super.saveBucketAndWorldSharedData(tag);
         this.saveVariant(tag);
         tag.putBoolean("Launched", this.isLaunched);
     }
