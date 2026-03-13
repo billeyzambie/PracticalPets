@@ -275,5 +275,6 @@ public class Piranha extends PracticalFish {
         this.resetFallDistance();
         this.setDeltaMovement(Vec3.ZERO);
         this.setPos(x, y, z);
+        this.doHurtTarget(target);
     }
 }
