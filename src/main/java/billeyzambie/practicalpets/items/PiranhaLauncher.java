@@ -94,7 +94,7 @@ public class PiranhaLauncher extends Item implements ItemModelPetCosmetic {
 
         PiranhaLauncherProjectile projectile = new PiranhaLauncherProjectile(level, thrower, fish, projectilePosition);
         if (thrower != null)
-            projectile.shootFromRotation(thrower, thrower.getXRot(), thrower.getYRot(), 0, 1.0f, 1f);
+            projectile.shootFromRotation(thrower, thrower.getXRot(), thrower.getYHeadRot(), 0, 1.0f, 1f);
         level.addFreshEntity(projectile);
 
         level.playSound(null, throwerPosition.x(), throwerPosition.y(), throwerPosition.z(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5f, 0.4f / (level.getRandom().nextFloat() * 0.4f + 0.8f));
