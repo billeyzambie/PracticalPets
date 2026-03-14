@@ -69,6 +69,7 @@ public class PiranhaLauncherProjectile extends ThrowableProjectile {
         if (entity instanceof LivingEntity living && !fish.sharesOwnerWith(living)) {
             fish.setTarget(living);
             fish.setDeltaMovement(Vec3.ZERO);
+            fish.setPos(living.position());
         }
     }
 
