@@ -30,7 +30,7 @@ import java.util.List;
 
 public class PiranhaLauncher extends Item implements ItemModelPetCosmetic {
     public PiranhaLauncher() {
-        super(new Properties().stacksTo(1));
+        super(new Properties().stacksTo(1).durability(256));
     }
 
     public static int getFishCount(ItemStack stack) {
@@ -58,11 +58,40 @@ public class PiranhaLauncher extends Item implements ItemModelPetCosmetic {
         player.getCooldowns().addCooldown(this, 10);
         if (!level.isClientSide()) {
             this.shoot(itemstack, launcherTag, level, player, player.position());
+            itemstack.hurtAndBreak(1, player, p -> {
+                p.broadcastBreakEvent(hand);
+                this.dropAllFish(itemstack, launcherTag, p.level(), p, p.position());
+            });
         }
 
         player.awardStat(Stats.ITEM_USED.get(this));
 
         return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());
+    }
+
+    public void dropAllFish(
+            ItemStack piranhaLauncher,
+            CompoundTag launcherTag,
+            Level level,
+            @Nullable LivingEntity thrower,
+            Vec3 throwerPosition
+    ) {
+        ListTag fishes = launcherTag.getList("Fishes", Tag.TAG_COMPOUND);
+        if (fishes.isEmpty())
+            return;
+
+        launcherTag.remove("Fishes");
+
+        for (Tag fishTag : fishes) {
+            PracticalFish fish = PracticalFish.createFromPiranhaLauncherTag(
+                    piranhaLauncher,
+                    (CompoundTag) fishTag,
+                    level,
+                    thrower
+            );
+            fish.setPos(throwerPosition);
+            level.addFreshEntity(fish);
+        }
     }
 
     public void shoot(
@@ -81,7 +110,12 @@ public class PiranhaLauncher extends Item implements ItemModelPetCosmetic {
 
         launcherTag.putInt("FishCount", fishes.size());
 
-        PracticalFish fish = PracticalFish.createFromPiranhaLauncherTag(piranhaLauncher, fishTag, level, thrower);
+        PracticalFish fish = PracticalFish.createFromPiranhaLauncherTag(
+                piranhaLauncher,
+                fishTag,
+                level,
+                thrower
+        );
         fish.setPos(throwerPosition);
         level.addFreshEntity(fish);
 
@@ -203,5 +237,11 @@ public class PiranhaLauncher extends Item implements ItemModelPetCosmetic {
             shooter.setHeadItem(ItemStack.EMPTY);
             shooter.setHeadItem(stack);
         }
+
+        stack.hurtAndBreak(1, shooter, p -> {
+            p.setHeadItem(ItemStack.EMPTY);
+            p.playSound(SoundEvents.ITEM_BREAK);
+            this.dropAllFish(stack, stack.getOrCreateTag(), p.level(), p, p.position());
+        });
     }
 }
