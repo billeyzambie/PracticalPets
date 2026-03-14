@@ -16,7 +16,6 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.OwnableEntity;
-import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -177,4 +176,15 @@ public class PPUtil {
         return (color & 255) / 255f;
     }
 
+    public static int clamp01(int value) {
+        return Mth.clamp(value, 0, 1);
+    }
+
+    public static float clamp01(float value) {
+        return Mth.clamp(value, 0, 1);
+    }
+
+    public static double clamp01(double value) {
+        return Mth.clamp(value, 0, 1);
+    }
 }

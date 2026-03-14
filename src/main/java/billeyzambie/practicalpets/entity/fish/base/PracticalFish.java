@@ -163,6 +163,12 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
 
     protected boolean isLaunched = false;
 
+    protected int launchTime = 0;
+
+    public int getLaunchTime() {
+        return launchTime;
+    }
+
     @Override
     public int getVariant() {
         return this.entityData.get(VARIANT);
@@ -183,25 +189,40 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
     protected void loadBucketAndWorldSharedData(CompoundTag tag) {
         super.loadBucketAndWorldSharedData(tag);
         this.loadVariant(tag);
-        this.isLaunched = tag.getBoolean("Launched");
     }
 
     @Override
     protected void saveBucketAndWorldSharedData(CompoundTag tag) {
         super.saveBucketAndWorldSharedData(tag);
         this.saveVariant(tag);
-        tag.putBoolean("Launched", this.isLaunched);
     }
 
     @Override
-    protected void modifyBucketData(CompoundTag tag) {
-        tag.remove("Launched");
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        this.isLaunched = tag.getBoolean("Launched");
+        this.launchTime = tag.getInt("LaunchTime");
+    }
+
+    @Override
+    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        tag.putBoolean("Launched", this.isLaunched);
+        tag.putInt("LaunchTime", this.launchTime);
+    }
+
+    private static final int FIVE_MINUTES = 5 * 60 * 20;
+
+    @Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+        if (this.isLaunched && ++this.launchTime >= FIVE_MINUTES) {
+            this.discard();
+        }
     }
 
     public final CompoundTag makePiranhaLauncherTag() {
         CompoundTag result = new CompoundTag();
-        result.remove("display");
-
         this.addPiranhaLauncherData(result);
 
         if (this.getHealth() != this.getMaxHealth())
@@ -215,7 +236,6 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
         if (component != null) {
             result.putString("CustomName", Component.Serializer.toJson(component));
         }
-
 
         String typeId = this.getEncodeId();
         if (typeId != null && !typeId.equals(PPEntities.PIRANHA.getId().toString())) {

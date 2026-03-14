@@ -245,13 +245,13 @@ public abstract class CustomFish extends AbstractFish {
     }
 
     @Override
-    public final void readAdditionalSaveData(@NotNull CompoundTag tag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         this.loadBucketAndWorldSharedData(tag);
     }
 
     @Override
-    public final void addAdditionalSaveData(@NotNull CompoundTag tag) {
+    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         this.saveBucketAndWorldSharedData(tag);
     }
@@ -267,9 +267,5 @@ public abstract class CustomFish extends AbstractFish {
         super.saveToBucketTag(stack);
         CompoundTag tag = stack.getOrCreateTag();
         this.saveBucketAndWorldSharedData(tag);
-        this.modifyBucketData(tag);
-    }
-
-    protected void modifyBucketData(CompoundTag tag) {
     }
 }

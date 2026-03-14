@@ -6,7 +6,6 @@ import billeyzambie.practicalpets.entity.fish.base.PracticalFish;
 import billeyzambie.practicalpets.misc.PPItems;
 import billeyzambie.practicalpets.util.PPUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Position;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -235,7 +234,7 @@ public class Piranha extends PracticalFish {
     @Override
     public boolean isWithinRestriction(BlockPos blockPos) {
         if (this.isLaunched) {
-            return blockPos.distSqr(this.blockPosition()) <= 25;
+            return blockPos.distSqr(this.blockPosition()) <= 16f;
         }
         return super.isWithinRestriction(blockPos);
     }
@@ -243,10 +242,7 @@ public class Piranha extends PracticalFish {
     @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
-        if (!this.isLaunched)
-            return;
-        if (this.isInWater()) {
-            this.isLaunched = false;
+        if (!this.isLaunched || this.isInWater()) {
             return;
         }
         if (this.tickCount % 2 == 0)
