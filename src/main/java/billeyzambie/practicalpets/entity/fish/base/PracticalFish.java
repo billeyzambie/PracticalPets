@@ -215,7 +215,7 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
         tag.putInt("LaunchTime", this.launchTime);
     }
 
-    public static final int MAX_LAUNCHED_LIFESPAN = 5 * 60 * 20;
+    public static final int MAX_LAUNCHED_LIFESPAN = 30 * 20;
 
     @Override
     protected void customServerAiStep() {
