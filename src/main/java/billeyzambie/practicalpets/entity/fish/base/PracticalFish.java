@@ -163,6 +163,10 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
 
     protected boolean isLaunched = false;
 
+    public boolean isLaunched() {
+        return isLaunched;
+    }
+
     protected int launchTime = 0;
 
     public int getLaunchTime() {
@@ -211,12 +215,12 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
         tag.putInt("LaunchTime", this.launchTime);
     }
 
-    private static final int FIVE_MINUTES = 5 * 60 * 20;
+    public static final int MAX_LAUNCHED_LIFESPAN = 5 * 60 * 20;
 
     @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
-        if (this.isLaunched && ++this.launchTime >= FIVE_MINUTES) {
+        if (this.isLaunched && ++this.launchTime >= MAX_LAUNCHED_LIFESPAN) {
             this.discard();
         }
     }

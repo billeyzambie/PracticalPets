@@ -9,7 +9,7 @@ import snownee.jade.api.IEntityComponentProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
 
-public enum PetLevelComponentProvider implements IEntityComponentProvider {
+public enum PetLevelProvider implements IEntityComponentProvider {
     INSTANCE;
 
     @Override
