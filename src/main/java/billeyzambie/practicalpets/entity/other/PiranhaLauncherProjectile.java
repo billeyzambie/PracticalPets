@@ -61,15 +61,14 @@ public class PiranhaLauncherProjectile extends ThrowableProjectile {
     @Override
     protected void onHitEntity(@NotNull EntityHitResult entityHitResult) {
         super.onHitEntity(entityHitResult);
-        Entity entity = entityHitResult.getEntity();
-        entity.hurt(this.damageSources().thrown(this, this.getOwner()), 2);
         PracticalFish fish = this.getFish();
         if (fish == null)
             return;
+        Entity entity = entityHitResult.getEntity();
+        entity.hurt(this.damageSources().thrown(this, this.getOwner()), 2);
         if (entity instanceof LivingEntity living && !fish.sharesOwnerWith(living)) {
             fish.setTarget(living);
             fish.setDeltaMovement(Vec3.ZERO);
-            fish.setPos(living.position());
         }
     }
 
@@ -78,7 +77,6 @@ public class PiranhaLauncherProjectile extends ThrowableProjectile {
         boolean clientSide = this.level().isClientSide;
         if (!clientSide) {
             PracticalFish fish = this.getFish();
-            this.ejectPassengers();
             if (fish != null) {
                 Vec3 movement = this.getDeltaMovement();
                 BlockState blockState = fish.getFeetBlockState();
@@ -92,6 +90,7 @@ public class PiranhaLauncherProjectile extends ThrowableProjectile {
         }
         super.onHit(hitResult);
         if (!clientSide) {
+            this.ejectPassengers();
             this.discard();
         }
     }
@@ -106,7 +105,20 @@ public class PiranhaLauncherProjectile extends ThrowableProjectile {
     }
 
     @Override
+    public double getPassengersRidingOffset() {
+        return 0;
+    }
+
+    @Override
     protected void defineSynchedData() {
 
+    }
+
+    @Override
+    public void tick() {
+        if (this.getFish() == null) {
+            this.discard();
+        }
+        super.tick();
     }
 }

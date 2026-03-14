@@ -331,7 +331,7 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
                 this, LivingEntity.class,  40, true, true,
                 target -> {
                     if (this.isLaunched && target instanceof Mob mob && mob.getTarget() != null) {
-                        return mob.getTarget() == this.getOwner();
+                        return mob.getTarget().getUUID() == this.getOwnerUUID();
                     }
                     return false;
                 }
