@@ -150,12 +150,7 @@ public class PracticalPets
 
        PPNetworking.register();
        PPAdvancementTriggers.init();
-       //if (Config.logDirtBlock)
-       //    LOGGER.info("DIRT BLOCK >> {}", ForgeRegistries.BLOCKS.getKey(Blocks.DIRT));
-
-       //LOGGER.info(Config.magicNumberIntroduction + Config.magicNumber);
-
-       //Config.items.forEach((item) -> LOGGER.info("ITEM >> {}", item.toString()));
+       PPDispenserBehaviors.register();
     }
 
     // Add the example block item to the building blocks tab

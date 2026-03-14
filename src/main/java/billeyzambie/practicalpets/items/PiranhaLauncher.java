@@ -18,6 +18,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -94,7 +95,8 @@ public class PiranhaLauncher extends Item implements ItemModelPetCosmetic {
         }
     }
 
-    public void shoot(
+    @Nullable
+    public Projectile shoot(
             ItemStack piranhaLauncher,
             CompoundTag launcherTag,
             Level level,
@@ -103,7 +105,7 @@ public class PiranhaLauncher extends Item implements ItemModelPetCosmetic {
     ) {
         ListTag fishes = launcherTag.getList("Fishes", Tag.TAG_COMPOUND);
         if (fishes.isEmpty())
-            return;
+            return null;
 
         CompoundTag fishTag = (CompoundTag) fishes.remove(fishes.size() - 1);
         launcherTag.put("Fishes", fishes);
@@ -133,6 +135,8 @@ public class PiranhaLauncher extends Item implements ItemModelPetCosmetic {
 
         level.playSound(null, throwerPosition.x(), throwerPosition.y(), throwerPosition.z(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5f, 0.4f / (level.getRandom().nextFloat() * 0.4f + 0.8f));
         level.playSound(null, throwerPosition.x(), throwerPosition.y(), throwerPosition.z(), SoundEvents.BUCKET_EMPTY_FISH, SoundSource.NEUTRAL, 1, 1);
+
+        return projectile;
     }
 
     public boolean canInsertFishType(ItemStack stack, PracticalFish fish) {
