@@ -385,7 +385,7 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
                 }
                 return InteractionResult.sidedSuccess(clientSide);
             }
-        } else if (stack.getItem() instanceof PiranhaLauncher piranhaLauncher) {
+        } else if (player.onGround() && stack.getItem() instanceof PiranhaLauncher piranhaLauncher) {
             if (piranhaLauncher.tryInsertFish(stack, this, player)) {
                 return InteractionResult.sidedSuccess(clientSide);
             }
