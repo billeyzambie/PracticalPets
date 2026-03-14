@@ -338,9 +338,13 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
         ));
         this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(
                 this, LivingEntity.class,  20, true, true,
-                target -> this.isLaunched && !(target instanceof OwnableEntity ownableEntity && PPUtil.petsShareOwner(this, ownableEntity))
+                target -> this.isLaunched && !sharesOwnerWith(target)
         ));
         this.targetSelector.addGoal(10, new CopyFlockLeaderTargetGoal(this));
+    }
+
+    public boolean sharesOwnerWith(Entity target) {
+        return target instanceof OwnableEntity ownableEntity && PPUtil.petsShareOwner(this, ownableEntity);
     }
 
     protected boolean shouldRegisterAlertOthers() {

@@ -2,6 +2,7 @@ package billeyzambie.practicalpets.entity.other;
 
 import billeyzambie.practicalpets.entity.fish.base.PracticalFish;
 import billeyzambie.practicalpets.misc.PPEntities;
+import billeyzambie.practicalpets.util.PPUtil;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
@@ -60,7 +61,15 @@ public class PiranhaLauncherProjectile extends ThrowableProjectile {
     @Override
     protected void onHitEntity(@NotNull EntityHitResult entityHitResult) {
         super.onHitEntity(entityHitResult);
-        entityHitResult.getEntity().hurt(this.damageSources().thrown(this, this.getOwner()), 2);
+        Entity entity = entityHitResult.getEntity();
+        entity.hurt(this.damageSources().thrown(this, this.getOwner()), 2);
+        PracticalFish fish = this.getFish();
+        if (fish == null)
+            return;
+        if (entity instanceof LivingEntity living && !fish.sharesOwnerWith(living)) {
+            fish.setTarget(living);
+            fish.setDeltaMovement(Vec3.ZERO);
+        }
     }
 
     @Override
