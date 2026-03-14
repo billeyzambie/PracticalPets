@@ -55,7 +55,7 @@ public class PiranhaLauncher extends Item implements ItemModelPetCosmetic {
         if (getFishCount(launcherTag) < 1) {
             return InteractionResultHolder.pass(itemstack);
         }
-        player.getCooldowns().addCooldown(this, 20);
+        player.getCooldowns().addCooldown(this, 10);
         if (!level.isClientSide()) {
             this.shoot(itemstack, launcherTag, level, player, player.position());
         }
