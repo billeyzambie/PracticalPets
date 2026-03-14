@@ -198,5 +198,10 @@ public class PiranhaLauncher extends Item implements ItemModelPetCosmetic {
     public void performRangedAttack(ItemStack stack, PracticalPet shooter, LivingEntity target, float distanceFactor) {
         this.shoot(stack, stack.getOrCreateTag(), shooter.level(), shooter, shooter.position());
         shooter.refreshPetEquipmentCache();
+        //Fix client showing the pet's piranha launcher still having a piranha inside
+        if (getFishCount(stack) == 0) {
+            shooter.setHeadItem(ItemStack.EMPTY);
+            shooter.setHeadItem(stack);
+        }
     }
 }
