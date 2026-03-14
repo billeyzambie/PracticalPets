@@ -234,7 +234,7 @@ public class Piranha extends PracticalFish {
     @Override
     public boolean isWithinRestriction(BlockPos blockPos) {
         if (this.isLaunched) {
-            return blockPos.distSqr(this.blockPosition()) <= 16f;
+            return blockPos.distSqr(this.blockPosition()) <= 9f;
         }
         return super.isWithinRestriction(blockPos);
     }
@@ -242,7 +242,7 @@ public class Piranha extends PracticalFish {
     @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
-        if (!this.isLaunched || this.isInWater()) {
+        if (!this.isLaunched) {
             return;
         }
         if (this.tickCount % 2 == 0)
