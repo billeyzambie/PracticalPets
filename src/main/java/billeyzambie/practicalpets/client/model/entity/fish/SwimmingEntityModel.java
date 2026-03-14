@@ -31,10 +31,10 @@ public abstract class SwimmingEntityModel<T extends Entity & SwimmingAnimationEn
         float partialTicks = ageInTicks % 1f;
 
         ModelPart body = this.body();
-        body.zRot = netHeadYaw * Mth.DEG_TO_RAD / 2 * xRotBlend;
-        body.xRot = entity.getSwimXRot(partialTicks) * moveBlend;
+        body.zRot = netHeadYaw * Mth.DEG_TO_RAD / 2 * moveBlend;
+        body.xRot = entity.getSwimXRot(partialTicks) * xRotBlend;
 
-        float airOrWaterBlend = PPAnimationControllers.ON_AIR_OR_WATER_BLEND.calculate(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
+        float airOrWaterBlend = 1 - PPAnimationControllers.ON_GROUND_AND_NOT_WATER_BLEND.calculate(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
         body.xRot *= airOrWaterBlend;
         body.zRot *= airOrWaterBlend;
     }
