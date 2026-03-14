@@ -367,6 +367,7 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
                     float healAmount = foodProperties == null ? 2
                             : foodProperties.getNutrition();
                     this.heal(healAmount);
+                    this.usePlayerItem(player, hand, stack);
                 }
                 return InteractionResult.sidedSuccess(clientSide);
             }
