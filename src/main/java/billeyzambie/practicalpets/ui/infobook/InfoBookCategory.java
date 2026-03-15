@@ -30,6 +30,9 @@ public record InfoBookCategory(String name, List<InfoBookEntry> entries) {
             )),
             new InfoBookPetEntry("kiwi", 65, 66, List.of(
                     "shearing", "leveling"
+            )),
+            new InfoBookPetEntry("piranha", 46, 40, List.of(
+                    "attacking", "piranha_launcher", "launched_piranhas", "on_pets", "in_dispenser"
             ))
     );
     public static final List<InfoBookEntry> MISC = List.of(
@@ -53,6 +56,7 @@ public record InfoBookCategory(String name, List<InfoBookEntry> entries) {
                     this.appendSection("pet_chef_hat", writer);
                     this.appendSection("pet_backpack", writer);
                     this.appendSection("pet_end_rod_launcher", writer);
+                    this.appendSection("piranha_launcher", writer);
                     this.appendSection("duck_armor", writer);
                 }
 
@@ -63,9 +67,11 @@ public record InfoBookCategory(String name, List<InfoBookEntry> entries) {
 
                 @Override
                 protected @NotNull String getSectionDescription(String section) {
-                    if (section.equals("rubber_ducky_pet_hat"))
-                        return "ui.practicalpets.info_book.duck.rubber_ducky_pet_hat.body";
-                    return super.getSectionDescription(section);
+                    return switch (section) {
+                        case "rubber_ducky_pet_hat" -> "ui.practicalpets.info_book.duck.rubber_ducky_pet_hat.body";
+                        case "piranha_launcher" -> "ui.practicalpets.info_book.piranha.on_pets.body";
+                        default -> super.getSectionDescription(section);
+                    };
                 }
             },
             new InfoBookEntry("misc") {
