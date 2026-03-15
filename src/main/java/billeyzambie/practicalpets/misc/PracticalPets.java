@@ -19,6 +19,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -182,17 +183,24 @@ public class PracticalPets
                     new ResourceLocation(PracticalPets.MODID, "loaded"),
                     (stack, level, entity, seed) -> PiranhaLauncher.isLoaded(stack) ? 1 : 0
             );
+        }
 
-            //ai generated:
-            Minecraft.getInstance().getItemColors().register(
-                    (stack, tintIndex) -> tintIndex == 0 ? ((DyeableLeatherItem) stack.getItem()).getColor(stack) : -1,
+        @SubscribeEvent
+        public static void registerColorHandlers(RegisterColorHandlersEvent.Item event) {
+            event.register(
+                    (stack, tintIndex) -> (
+                            tintIndex == 0
+                                    ? ((DyeableLeatherItem) stack.getItem()).getColor(stack)
+                                    : -1
+                    ),
                     PPItems.LEATHER_DUCK_ARMOR.get(),
                     PPItems.PET_BOWTIE.get(),
                     PPItems.RUBBER_DUCKY_PET_HAT.get(),
                     PPItems.PET_CHEF_HAT.get(),
                     PPItems.PET_BACKPACK.get(),
                     PPItems.PET_END_ROD_LAUNCHER.get(),
-                    PPItems.PET_HAT.get()
+                    PPItems.PET_HAT.get(),
+                    PPItems.PIRANHA_LAUNCHER.get()
             );
         }
 

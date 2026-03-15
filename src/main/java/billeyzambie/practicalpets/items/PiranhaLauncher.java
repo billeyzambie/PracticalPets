@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class PiranhaLauncher extends Item implements ItemModelPetCosmetic {
+public class PiranhaLauncher extends Item implements ItemModelPetCosmetic, DyeableItem {
     public PiranhaLauncher() {
         super(new Properties().stacksTo(1).durability(256));
     }
@@ -247,5 +247,10 @@ public class PiranhaLauncher extends Item implements ItemModelPetCosmetic {
             p.playSound(SoundEvents.ITEM_BREAK);
             this.dropAllFish(stack, stack.getOrCreateTag(), p.level(), p, p.position());
         });
+    }
+
+    @Override
+    public int getDefaultColor() {
+        return 0xffffff;
     }
 }
