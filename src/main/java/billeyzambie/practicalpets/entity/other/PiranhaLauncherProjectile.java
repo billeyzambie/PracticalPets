@@ -121,4 +121,15 @@ public class PiranhaLauncherProjectile extends ThrowableProjectile {
         }
         super.tick();
     }
+
+    @Override
+    protected boolean canHitEntity(Entity entity) {
+        PracticalFish fish = this.getFish();
+        return (
+            super.canHitEntity(entity)
+                && entity != this.getOwner()
+                && entity != fish
+                && !(fish != null && (fish.sharesOwnerWith(entity) || entity.getUUID().equals(fish.getOwnerUUID())))
+        );
+    }
 }
