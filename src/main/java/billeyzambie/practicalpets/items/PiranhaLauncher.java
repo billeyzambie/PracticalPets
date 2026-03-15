@@ -114,7 +114,13 @@ public class PiranhaLauncher extends Item implements ItemModelPetCosmetic, Dyeab
         if (fishes.isEmpty())
             return null;
 
-        CompoundTag fishTag = (CompoundTag) fishes.remove(fishes.size() - 1);
+        CompoundTag fishTag;
+        int fishTagIndex = fishes.size() - 1;
+        if (fishTagIndex == 0 && thrower instanceof Player player && player.getAbilities().instabuild)
+            fishTag = fishes.getCompound(fishTagIndex);
+        else
+            fishTag = (CompoundTag) fishes.remove(fishTagIndex);
+
         launcherTag.put("Fishes", fishes);
 
         launcherTag.putInt("FishCount", fishes.size());
