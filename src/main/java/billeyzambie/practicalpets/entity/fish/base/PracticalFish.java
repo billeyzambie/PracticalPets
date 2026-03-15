@@ -148,9 +148,14 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
 
     @Override
     public final float getVoicePitch() {
-        return this.isAlive()
-                ? this.getCustomVoicePitch()
-                : this.getDeathSoundPitch() - 0.1f + 0.2f * this.getRandom().nextFloat();
+        if (this.isAlive())
+            return this.getCustomVoicePitch();
+        else {
+            float result = this.getDeathSoundPitch() - 0.1f + 0.2f * this.getRandom().nextFloat();
+            if (this.isBaby())
+                result *= 1.5f;
+            return result;
+        }
     }
 
     abstract protected float getDeathSoundPitch();
