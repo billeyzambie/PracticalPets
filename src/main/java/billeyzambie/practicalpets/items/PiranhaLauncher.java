@@ -1,10 +1,15 @@
 package billeyzambie.practicalpets.items;
 
+import billeyzambie.animationcontrollers.ACEntity;
+import billeyzambie.animationcontrollers.PracticalPetModel;
+import billeyzambie.practicalpets.client.layer.PetEquipmentLayer;
 import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.entity.fish.Piranha;
 import billeyzambie.practicalpets.entity.fish.base.PracticalFish;
 import billeyzambie.practicalpets.entity.other.PiranhaLauncherProjectile;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -17,6 +22,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
@@ -247,6 +253,25 @@ public class PiranhaLauncher extends Item implements ItemModelPetCosmetic, Dyeab
             p.playSound(SoundEvents.ITEM_BREAK);
             this.dropAllFish(stack, stack.getOrCreateTag(), p.level(), p, p.position());
         });
+    }
+
+    @Override
+    public <T extends Mob & ACEntity, M extends PracticalPetModel<T>> void onRenderModelOnPetBefore(
+            PetEquipmentLayer<T, M> layer,
+            ItemStack stack,
+            PoseStack poseStack,
+            MultiBufferSource buffer,
+            int packedLight,
+            PracticalPet pet,
+            float limbSwing,
+            float limbSwingAmount,
+            float partialticks
+    ) {
+        float headY = pet.headSizeY();
+        if (headY < 3) {
+            float scale = headY / 3f;
+            poseStack.scale(scale, scale, scale);
+        }
     }
 
     @Override

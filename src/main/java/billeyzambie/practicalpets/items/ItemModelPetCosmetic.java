@@ -50,11 +50,20 @@ public interface ItemModelPetCosmetic extends AttachablePetCosmetic {
         if (pet.isModelYAxisInverted())
             poseStack.mulPose(Axis.ZP.rotationDegrees(180));
 
-        //No idea why I have to do this
+
+        onRenderModelOnPetBefore(
+                layer,
+                stack,
+                poseStack,
+                buffer,
+                packedLight,
+                pet,
+                limbSwing,
+                limbSwingAmount,
+                partialticks
+        );
         poseStack.translate(0, -4 / 16f, 0);
-
         poseStack.scale(PLAYER_HEAD_ITEM_SCALE, PLAYER_HEAD_ITEM_SCALE, PLAYER_HEAD_ITEM_SCALE);
-
         Minecraft.getInstance().getItemRenderer().renderStatic(
                 pet,
                 stack,
@@ -67,7 +76,46 @@ public interface ItemModelPetCosmetic extends AttachablePetCosmetic {
                 OverlayTexture.NO_OVERLAY,
                 pet.getId()
         );
+        onRenderModelOnPetAfter(
+                layer,
+                stack,
+                poseStack,
+                buffer,
+                packedLight,
+                pet,
+                limbSwing,
+                limbSwingAmount,
+                partialticks
+        );
 
         poseStack.popPose();
+    }
+
+    default <T extends Mob & ACEntity, M extends PracticalPetModel<T>> void onRenderModelOnPetBefore(
+            PetEquipmentLayer<T, M> layer,
+            ItemStack stack,
+            PoseStack poseStack,
+            MultiBufferSource buffer,
+            int packedLight,
+            PracticalPet pet,
+            float limbSwing,
+            float limbSwingAmount,
+            float partialticks
+    ) {
+
+    }
+
+    default <T extends Mob & ACEntity, M extends PracticalPetModel<T>> void onRenderModelOnPetAfter(
+            PetEquipmentLayer<T, M> layer,
+            ItemStack stack,
+            PoseStack poseStack,
+            MultiBufferSource buffer,
+            int packedLight,
+            PracticalPet pet,
+            float limbSwing,
+            float limbSwingAmount,
+            float partialticks
+    ) {
+
     }
 }
