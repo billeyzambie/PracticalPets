@@ -16,6 +16,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -253,6 +254,11 @@ public class PiranhaLauncher extends Item implements ItemModelPetCosmetic, Dyeab
             p.playSound(SoundEvents.ITEM_BREAK);
             this.dropAllFish(stack, stack.getOrCreateTag(), p.level(), p, p.position());
         });
+    }
+
+    @Override
+    public SoundEvent getEquipSound(ItemStack stack, PracticalPet pet) {
+        return SoundEvents.ARMOR_EQUIP_IRON;
     }
 
     @Override
