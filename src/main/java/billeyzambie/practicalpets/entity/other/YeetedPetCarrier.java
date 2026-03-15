@@ -139,7 +139,7 @@ public class YeetedPetCarrier extends Projectile {
 
     private void copyTargetTo(TamableAnimal pet) {
         pet.setTarget(target);
-        PPEvents.yeetedPetsThatGotTarget.add(pet);
+        PPEvents.mobsThatGotTheirTargetManuallySet.add(pet);
         //Probably does nothing
         pet.getNavigation().stop();
     }

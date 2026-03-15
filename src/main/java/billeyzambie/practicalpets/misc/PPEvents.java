@@ -6,13 +6,12 @@ import billeyzambie.practicalpets.entity.otherpet.GiraffeCat;
 import billeyzambie.practicalpets.network.PlayerPunchAirPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -24,21 +23,24 @@ import java.util.*;
 @Mod.EventBusSubscriber
 public class PPEvents {
 
-    public static final Set<TamableAnimal> yeetedPetsThatGotTarget = new HashSet<>();
+    public static final Set<Mob> mobsThatGotTheirTargetManuallySet = new HashSet<>();
 
     //Fix vanilla cats being angry at the air forever after being yeeted
     @SubscribeEvent
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {
         if (
-                !(event.getEntity() instanceof TamableAnimal pet)
-                || pet.level().isClientSide()
-                || !yeetedPetsThatGotTarget.contains(pet)
+                !(event.getEntity() instanceof Mob mob)
+                || mob.level().isClientSide()
+                || !mobsThatGotTheirTargetManuallySet.contains(mob)
         ) {
             return;
         }
-        if (pet.getTarget() == null || !pet.getTarget().isAlive()) {
-            pet.setTarget(null);
-            yeetedPetsThatGotTarget.remove(pet);
+        if (!mob.isAlive()) {
+            mobsThatGotTheirTargetManuallySet.remove(mob);
+        }
+        if (mob.getTarget() == null || !mob.getTarget().isAlive()) {
+            mob.setTarget(null);
+            mobsThatGotTheirTargetManuallySet.remove(mob);
         }
     }
 

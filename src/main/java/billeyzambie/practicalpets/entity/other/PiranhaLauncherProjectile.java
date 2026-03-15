@@ -2,6 +2,7 @@ package billeyzambie.practicalpets.entity.other;
 
 import billeyzambie.practicalpets.entity.fish.base.PracticalFish;
 import billeyzambie.practicalpets.misc.PPEntities;
+import billeyzambie.practicalpets.misc.PPEvents;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
@@ -66,8 +67,10 @@ public class PiranhaLauncherProjectile extends ThrowableProjectile {
         Entity entity = entityHitResult.getEntity();
         entity.hurt(this.damageSources().thrown(this, this.getOwner()), 2);
         if (entity instanceof LivingEntity living && !fish.sharesOwnerWith(living)) {
-            if (living.isAlive())
+            if (living.isAlive()) {
                 fish.setTarget(living);
+                PPEvents.mobsThatGotTheirTargetManuallySet.add(fish);
+            }
             fish.setDeltaMovement(Vec3.ZERO);
         }
     }
