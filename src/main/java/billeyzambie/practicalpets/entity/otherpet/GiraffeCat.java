@@ -58,9 +58,9 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
     }
 
     private static final HashMap<Integer, Integer> VARIANT_SPAWN_WEIGHTS = new HashMap<>() {{
-        put(0, 33);
-        put(1, 33);
-        put(2, 33);
+        put(0, 66);
+        put(1, 66);
+        put(2, 66);
         put(3, 2);
         put(4, 3);
     }};
