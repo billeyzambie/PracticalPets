@@ -8,7 +8,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
@@ -92,6 +91,15 @@ public class PPRecipeProvider extends RecipeProvider implements IConditionBuilde
                 .pattern(" S ")
                 .unlockedBy("has_material", has(Items.BOOK))
                 .save(consumer, INFO_BOOK.getId());
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, PIRANHA_LAUNCHER.get())
+                .define('R', Items.REDSTONE)
+                .define('P', PIRANHA.get())
+                .define('I', Items.IRON_INGOT)
+                .pattern(" I ")
+                .pattern("IPR")
+                .pattern(" I ")
+                .unlockedBy("has_material", has(PIRANHA.get()))
+                .save(consumer, PIRANHA_LAUNCHER.getId());
         meatCookingRecipe(consumer, 200, PPItems.PIRANHA.get(), PPItems.COOKED_PIRANHA.get(), 0.35F);
     }
 
