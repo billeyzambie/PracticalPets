@@ -467,36 +467,9 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
     public boolean hurt(DamageSource source, float amount) {
         if (source.getEntity() instanceof LivingEntity living && this.isOwnedBy(living) && !living.isShiftKeyDown())
             return false;
-        for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
-            ItemStack cosmeticStack = this.getEquippedItem(slot);
-            Optional<PetCosmetic> cosmeticOptional = PetCosmetics.getCosmeticForItem(cosmeticStack);
-            if (cosmeticOptional.isPresent()) {
-                var cosmetic = cosmeticOptional.orElseThrow();
-                amount *= cosmetic.damageMultiplier(cosmeticStack, this);
-            }
-        }
-        for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
-            ItemStack cosmeticStack = this.getEquippedItem(slot);
-            Optional<PetCosmetic> cosmeticOptional = PetCosmetics.getCosmeticForItem(cosmeticStack);
-            if (cosmeticOptional.isPresent()) {
-                var cosmetic = cosmeticOptional.orElseThrow();
-                if (!cosmetic.onPetHurt(cosmeticStack, this, source, amount))
-                    return false;
-            }
-        }
-        boolean result = super.hurt(source, amount);
-        float finalAmount = amount;
-        if (result) {
-            for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
-                ItemStack cosmeticStack = this.getEquippedItem(slot);
-                PetCosmetics.getCosmeticForItem(cosmeticStack).ifPresent(
-                        cosmetic -> cosmetic.onPetSuccessfullyHurt(cosmeticStack, this, source, finalAmount)
-                );
-            }
-            if (this.isTame())
-                this.setFollowMode(FollowMode.FOLLOWING);
-        }
-
+        boolean result = this.petCosmeticsWrappedHurt(source, amount, super::hurt);
+        if (result && this.isTame())
+            this.setFollowMode(PracticalPet.FollowMode.FOLLOWING);
         return result;
     }
 
