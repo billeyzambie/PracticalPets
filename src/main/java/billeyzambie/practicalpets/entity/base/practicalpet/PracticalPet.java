@@ -688,32 +688,6 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         if (petEquipmentWearerShear != InteractionResult.PASS)
             return petEquipmentWearerShear;
 
-        if (item instanceof ShearsItem && this.isOwnedBy(player)) {
-
-            boolean atLeastOneCosmetic = false;
-            for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
-                ItemStack stack = this.getEquippedItem(slot);
-                if (stack != ItemStack.EMPTY) {
-                    atLeastOneCosmetic = true;
-                    break;
-                }
-            }
-
-            if (atLeastOneCosmetic) {
-                if (this.level().isClientSide) {
-                    this.level().playSound(player, this.getX(), this.getY(), this.getZ(), SoundEvents.SHEEP_SHEAR, this.getSoundSource(), 1.0F, this.random.nextFloat() * 0.4F + 0.8F);
-                    return InteractionResult.SUCCESS;
-                } else {
-                    itemstack.hurtAndBreak(1, player, lambdaPlayer -> {
-                        lambdaPlayer.broadcastBreakEvent(hand);
-                    });
-                    this.dropAllEquipment(true);
-                    return InteractionResult.CONSUME;
-                }
-            }
-
-        }
-
         if (this.level().isClientSide) {
             if (this.isTame() && this.isOwnedBy(player)) {
                 return InteractionResult.SUCCESS;
