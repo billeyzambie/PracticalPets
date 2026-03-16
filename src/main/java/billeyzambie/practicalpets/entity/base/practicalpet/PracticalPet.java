@@ -680,9 +680,13 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         ItemStack itemstack = player.getItemInHand(hand);
         Item item = itemstack.getItem();
 
-        InteractionResult petEquipmentWearerInteract = this.petEquipmentWearerInteract(player, hand);
-        if (petEquipmentWearerInteract != InteractionResult.PASS)
-            return petEquipmentWearerInteract;
+        InteractionResult petEquipmentWearerEquip = this.petEquipmentWearerEquip(player, hand);
+        if (petEquipmentWearerEquip != InteractionResult.PASS)
+            return petEquipmentWearerEquip;
+
+        InteractionResult petEquipmentWearerShear = this.petEquipmentWearerShear(player, hand);
+        if (petEquipmentWearerShear != InteractionResult.PASS)
+            return petEquipmentWearerShear;
 
         if (item instanceof ShearsItem && this.isOwnedBy(player)) {
 
@@ -700,7 +704,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
                     this.level().playSound(player, this.getX(), this.getY(), this.getZ(), SoundEvents.SHEEP_SHEAR, this.getSoundSource(), 1.0F, this.random.nextFloat() * 0.4F + 0.8F);
                     return InteractionResult.SUCCESS;
                 } else {
-                    itemstack.hurtAndBreak(1, player, (lambdaPlayer) -> {
+                    itemstack.hurtAndBreak(1, player, lambdaPlayer -> {
                         lambdaPlayer.broadcastBreakEvent(hand);
                     });
                     this.dropAllEquipment(true);

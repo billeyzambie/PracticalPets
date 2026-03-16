@@ -27,4 +27,7 @@ public interface MobInterface {
         return asMob().getType().getDescription();
     }
     ItemEntity spawnAtLocation(ItemStack stack);
+    double getX();
+    double getY();
+    double getZ();
 }

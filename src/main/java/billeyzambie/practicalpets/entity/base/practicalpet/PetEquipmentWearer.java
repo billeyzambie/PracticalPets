@@ -8,6 +8,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -17,6 +19,7 @@ import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ShearsItem;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -47,7 +50,7 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
     boolean isOwnedBy(LivingEntity entity);
     int petLevel();
 
-    default InteractionResult petEquipmentWearerInteract(Player player, InteractionHand hand) {
+    default InteractionResult petEquipmentWearerEquip(Player player, InteractionHand hand) {
         if (this.isTame() && this.isOwnedBy(player)) {
             ItemStack stack = player.getItemInHand(hand);
 
@@ -76,6 +79,39 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
             }
 
         }
+        return InteractionResult.PASS;
+    }
+
+    default InteractionResult petEquipmentWearerShear(Player player, InteractionHand hand) {
+        ItemStack itemstack = player.getItemInHand(hand);
+        Item item = itemstack.getItem();
+
+        if (item instanceof ShearsItem && this.isOwnedBy(player)) {
+
+            boolean atLeastOneCosmetic = false;
+            for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
+                ItemStack stack = this.getEquippedItem(slot);
+                if (stack != ItemStack.EMPTY) {
+                    atLeastOneCosmetic = true;
+                    break;
+                }
+            }
+
+            if (atLeastOneCosmetic) {
+                if (this.level().isClientSide) {
+                    this.level().playSound(player, this.getX(), this.getY(), this.getZ(), SoundEvents.SHEEP_SHEAR, SoundSource.NEUTRAL, 1.0F, this.getRandom().nextFloat() * 0.4F + 0.8F);
+                    return InteractionResult.SUCCESS;
+                } else {
+                    itemstack.hurtAndBreak(1, player, lambdaPlayer -> {
+                        lambdaPlayer.broadcastBreakEvent(hand);
+                    });
+                    this.dropAllEquipment(true);
+                    return InteractionResult.CONSUME;
+                }
+            }
+
+        }
+
         return InteractionResult.PASS;
     }
 
