@@ -51,6 +51,9 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
     default boolean isModelYAxisInverted() {
         return false;
     }
+    default boolean hidePetEquipment() {
+        return false;
+    }
 
     Component getDeathMessage();
 

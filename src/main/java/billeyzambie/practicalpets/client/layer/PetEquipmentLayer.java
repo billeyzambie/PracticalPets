@@ -1,9 +1,9 @@
 package billeyzambie.practicalpets.client.layer;
 
-import billeyzambie.animationcontrollers.ACEntity;
-import billeyzambie.animationcontrollers.PracticalPetModel;
 import billeyzambie.practicalpets.client.PPRenderLayers;
+import billeyzambie.practicalpets.client.model.entity.base.PetEquipmentWearerModel;
 import billeyzambie.practicalpets.client.model.entity.pet_equipment.*;
+import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
 import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.items.AttachablePetCosmetic;
 import billeyzambie.practicalpets.items.EntityModelPetCosmetic;
@@ -11,8 +11,8 @@ import billeyzambie.practicalpets.items.PetCosmetic;
 import billeyzambie.practicalpets.misc.PPItems;
 import billeyzambie.practicalpets.petequipment.PetCosmetics;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HierarchicalModel;
-import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
@@ -22,9 +22,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.HashMap;
-import java.util.List;
 
-public class PetEquipmentLayer<T extends Mob & ACEntity, M extends PracticalPetModel<T>> extends RenderLayer<T, M> {
+public class PetEquipmentLayer<T extends Mob & PetEquipmentWearer, M extends EntityModel<T> & PetEquipmentWearerModel> extends RenderLayer<T, M> {
 
     public final HashMap<EntityModelPetCosmetic, HierarchicalModel<T>> cosmeticModels = new HashMap<>();
 
@@ -79,51 +78,45 @@ public class PetEquipmentLayer<T extends Mob & ACEntity, M extends PracticalPetM
     public void render(PoseStack poseStack, MultiBufferSource buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialticks, float r, float g, float b) {
 
 
-        if (entity instanceof PracticalPet pet) {
-            if (!pet.hideEquipment()) for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
-                ItemStack cosmeticStack = pet.getEquippedItem(slot);
-                var cosmeticOptional = PetCosmetics.getCosmeticForItem(cosmeticStack);
-                if (cosmeticOptional.isPresent() && cosmeticOptional.orElseThrow() instanceof AttachablePetCosmetic cosmetic) {
+        if (!entity.hidePetEquipment()) for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
+            ItemStack cosmeticStack = entity.getEquippedItem(slot);
+            var cosmeticOptional = PetCosmetics.getCosmeticForItem(cosmeticStack);
+            if (cosmeticOptional.isPresent() && cosmeticOptional.orElseThrow() instanceof AttachablePetCosmetic cosmetic) {
 
-                    poseStack.pushPose();
+                poseStack.pushPose();
 
-                    ////entityYaw only updated when the pet is walking for some reason, so I didn't use it
-                    //float bodyYaw = Mth.lerp(partialticks, entity.yBodyRotO, entity.yBodyRot);
-                    //poseStack.mulPose(Axis.YP.rotationDegrees(-bodyYaw));
+                ////entityYaw only updated when the pet is walking for some reason, so I didn't use it
+                //float bodyYaw = Mth.lerp(partialticks, entity.yBodyRotO, entity.yBodyRot);
+                //poseStack.mulPose(Axis.YP.rotationDegrees(-bodyYaw));
 
-                    List<ModelPart> pathToAttachment;
-
-                    switch (slot) {
-                        case HEAD -> pathToAttachment = this.getParentModel().pathToHat();
-                        case NECK -> pathToAttachment = this.getParentModel().pathToBowtie();
-                        case BACK -> pathToAttachment = this.getParentModel().pathToBackpack();
-                        default ->
-                                throw new AssertionError("Pretty sure this will never happen (error at practicalpetrender at render at switch (cosmetic.getAttachBone()))");
-                    }
-
-                    //poseStack.mulPose(Axis.XP.rotationDegrees(180));
-                    //poseStack.translate(0, -24f / 16f, 0);
-
-                    for (ModelPart part : pathToAttachment) {
-                        part.translateAndRotate(poseStack);
-                    }
-
-                    cosmetic.render(
-                            this,
-                            cosmeticStack,
-                            poseStack,
-                            buffer,
-                            packedLight,
-                            pet,
-                            limbSwing,
-                            limbSwingAmount,
-                            partialticks
-                    );
-
-                    poseStack.popPose();
+                switch (slot) {
+                    case HEAD -> this.getParentModel().moveToHat(poseStack);
+                    case NECK -> this.getParentModel().moveToBowtie(poseStack);
+                    case BACK -> this.getParentModel().moveToBackpack(poseStack);
+                    default -> throw new AssertionError("Pretty sure this will never happen (error at practicalpetrender at render at switch (cosmetic.getAttachBone()))");
                 }
 
+                //poseStack.mulPose(Axis.XP.rotationDegrees(180));
+                //poseStack.translate(0, -24f / 16f, 0);
+                //for (ModelPart part : pathToAttachment) {
+                //    part.translateAndRotate(poseStack);
+                //}
+
+                cosmetic.render(
+                        this,
+                        cosmeticStack,
+                        poseStack,
+                        buffer,
+                        packedLight,
+                        entity,
+                        limbSwing,
+                        limbSwingAmount,
+                        partialticks
+                );
+
+                poseStack.popPose();
             }
+
         }
     }
 }

@@ -3,11 +3,13 @@ package billeyzambie.practicalpets.items;
 import billeyzambie.animationcontrollers.ACEntity;
 import billeyzambie.animationcontrollers.PracticalPetModel;
 import billeyzambie.practicalpets.client.layer.PetEquipmentLayer;
+import billeyzambie.practicalpets.client.model.entity.base.PetEquipmentWearerModel;
 import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
 import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.Mob;
@@ -35,13 +37,13 @@ public interface ItemModelPetCosmetic extends AttachablePetCosmetic {
     float PLAYER_HEAD_ITEM_SCALE = 0.627451f;
 
     @Override
-    default <T extends Mob & ACEntity, M extends PracticalPetModel<T>> void render(
+    default <T extends Mob & PetEquipmentWearer, M extends EntityModel<T> & PetEquipmentWearerModel> void render(
             PetEquipmentLayer<T, M> layer,
             ItemStack stack,
             PoseStack poseStack,
             MultiBufferSource buffer,
             int packedLight,
-            PracticalPet wearer,
+            T wearer,
             float limbSwing,
             float limbSwingAmount,
             float partialticks
@@ -92,13 +94,13 @@ public interface ItemModelPetCosmetic extends AttachablePetCosmetic {
         poseStack.popPose();
     }
 
-    default <T extends Mob & ACEntity, M extends PracticalPetModel<T>> void onRenderModelOnPetBefore(
+    default <T extends Mob & PetEquipmentWearer, M extends EntityModel<T> & PetEquipmentWearerModel> void onRenderModelOnPetBefore(
             PetEquipmentLayer<T, M> layer,
             ItemStack stack,
             PoseStack poseStack,
             MultiBufferSource buffer,
             int packedLight,
-            PracticalPet wearer,
+            T wearer,
             float limbSwing,
             float limbSwingAmount,
             float partialticks
@@ -106,13 +108,13 @@ public interface ItemModelPetCosmetic extends AttachablePetCosmetic {
 
     }
 
-    default <T extends Mob & ACEntity, M extends PracticalPetModel<T>> void onRenderModelOnPetAfter(
+    default <T extends Mob & PetEquipmentWearer, M extends EntityModel<T> & PetEquipmentWearerModel> void onRenderModelOnPetAfter(
             PetEquipmentLayer<T, M> layer,
             ItemStack stack,
             PoseStack poseStack,
             MultiBufferSource buffer,
             int packedLight,
-            PracticalPet wearer,
+            T wearer,
             float limbSwing,
             float limbSwingAmount,
             float partialticks

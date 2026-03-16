@@ -33,19 +33,23 @@ public class PiranhaModel extends SwimmingEntityModel<Piranha> {
 		return null;
 	}
 
+	private final List<ModelPart> pathToBowtie;
+	private final List<ModelPart> pathToHat;
+	private final List<ModelPart> pathToBackpack;
+
 	@Override
 	public List<ModelPart> pathToBowtie() {
-		return List.of();
+		return pathToBowtie;
 	}
 
 	@Override
 	public List<ModelPart> pathToHat() {
-		return List.of();
+		return pathToHat;
 	}
 
 	@Override
 	public List<ModelPart> pathToBackpack() {
-		return List.of();
+		return pathToBackpack;
 	}
 
 	@Override
@@ -81,6 +85,10 @@ public class PiranhaModel extends SwimmingEntityModel<Piranha> {
 		this.eyes = this.body.getChild("eyes");
 		this.hat = this.body.getChild("hat");
 		this.bowtie = this.body.getChild("bowtie");
+
+		this.pathToHat = List.of(ooo, look, body, hat);
+		this.pathToBowtie = List.of(ooo, look, body, bowtie);
+		this.pathToBackpack = List.of(ooo, look, body, bowtie);
 	}
 
 	public static LayerDefinition createBodyLayer() {

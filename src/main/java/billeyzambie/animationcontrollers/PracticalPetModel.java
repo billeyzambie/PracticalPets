@@ -1,6 +1,7 @@
 package billeyzambie.animationcontrollers;
 
 import billeyzambie.practicalpets.client.animation.PracticalPetAnimation;
+import billeyzambie.practicalpets.client.model.entity.base.PetEquipmentWearerVanillaLikeModel;
 import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -16,15 +17,12 @@ import org.joml.Vector3f;
 import java.util.HashMap;
 import java.util.List;
 
-public abstract class PracticalPetModel<T extends Entity & ACEntity> extends HierarchicalModel<T> {
+public abstract class PracticalPetModel<T extends Entity & ACEntity> extends HierarchicalModel<T> implements PetEquipmentWearerVanillaLikeModel {
     protected static final Vector3f ANIMATION_VECTOR_CACHE = new Vector3f();
 
     public abstract HashMap<String, AnimationDefinition> getKeyframeAnimationHashMap();
     public abstract HashMap<String, Animatable> getOtherAnimationHashMap();
 
-    public abstract List<ModelPart> pathToBowtie();
-    public abstract List<ModelPart> pathToHat();
-    public abstract List<ModelPart> pathToBackpack();
     @Nullable
     public abstract ModelPart head();
 

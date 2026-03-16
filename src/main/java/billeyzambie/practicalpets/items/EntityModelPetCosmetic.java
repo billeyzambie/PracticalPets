@@ -1,14 +1,14 @@
 package billeyzambie.practicalpets.items;
 
-import billeyzambie.animationcontrollers.ACEntity;
-import billeyzambie.animationcontrollers.PracticalPetModel;
 import billeyzambie.practicalpets.client.layer.PetEquipmentLayer;
+import billeyzambie.practicalpets.client.model.entity.base.PetEquipmentWearerModel;
 import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
 import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.util.PPUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -33,13 +33,13 @@ public interface EntityModelPetCosmetic extends AttachablePetCosmetic {
     }
 
     @Override
-    default <T extends Mob & ACEntity, M extends PracticalPetModel<T>> void render(
+    default <T extends Mob & PetEquipmentWearer, M extends EntityModel<T> & PetEquipmentWearerModel> void render(
             PetEquipmentLayer<T, M> layer,
             ItemStack stack,
             PoseStack poseStack,
             MultiBufferSource buffer,
             int packedLight,
-            PracticalPet wearer,
+            T wearer,
             float limbSwing,
             float limbSwingAmount,
             float partialticks
@@ -66,11 +66,11 @@ public interface EntityModelPetCosmetic extends AttachablePetCosmetic {
             throw new Error("Model not defined in the cosmeticModels hashmap for cosmetic of " + this.getClass());
         }
         cosmeticModel.root().resetPose();
-        cosmeticModel.setupAnim((T) wearer, 0, 0, 0, 0, 0);
+        cosmeticModel.setupAnim(wearer, 0, 0, 0, 0, 0);
         ResourceLocation texture = this.getModelTexture(stack, wearer);
         vertexConsumer = buffer.getBuffer(RenderType.entityCutoutNoCull(texture));
         cosmeticModel.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, r, g, b, 1);
-        ResourceLocation emissiveTexture = this.getModelEmissiveTexture(stack, (PracticalPet) wearer);
+        ResourceLocation emissiveTexture = this.getModelEmissiveTexture(stack, wearer);
         if (emissiveTexture != null) {
             vertexConsumer = buffer.getBuffer(RenderType.eyes(emissiveTexture));
             cosmeticModel.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, r, g, b, 1);

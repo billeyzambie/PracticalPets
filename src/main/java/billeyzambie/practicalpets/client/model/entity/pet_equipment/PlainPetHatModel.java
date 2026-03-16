@@ -4,6 +4,7 @@ package billeyzambie.practicalpets.client.model.entity.pet_equipment;// Made wit
 
 
 import billeyzambie.animationcontrollers.ACEntity;
+import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.HierarchicalModel;
@@ -45,10 +46,10 @@ public class PlainPetHatModel<T extends Entity> extends HierarchicalModel<T> {
 	public void setupAnim(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
 		this.root().y -= 24f;
-		if (entity instanceof ACEntity mob) {
-			float headSizeX = mob.headSizeX();
-			float headSizeY = mob.headSizeY();
-			float headSizeZ = mob.headSizeZ();
+		if (entity instanceof PetEquipmentWearer wearer) {
+			float headSizeX = wearer.headSizeX();
+			float headSizeY = wearer.headSizeY();
+			float headSizeZ = wearer.headSizeZ();
 
 			if (headSizeY > 2) {
 				this.root().y += 1; //moves it 1 pixel down (somehow)

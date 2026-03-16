@@ -674,10 +674,6 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         super.die(p_21809_);
     }
 
-    public boolean hideEquipment() {
-        return false;
-    }
-
     @Override
     public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
 

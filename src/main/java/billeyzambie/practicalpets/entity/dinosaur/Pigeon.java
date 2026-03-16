@@ -450,8 +450,8 @@ public class Pigeon extends PracticalPet {
     }
 
     @Override
-    public boolean hideEquipment() {
-        return this.getMissionPhase() == MissionPhase.TRAVELING || super.hideEquipment();
+    public boolean hidePetEquipment() {
+        return this.getMissionPhase() == MissionPhase.TRAVELING || super.hidePetEquipment();
     }
 
     @Override

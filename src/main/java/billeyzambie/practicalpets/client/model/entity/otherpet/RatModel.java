@@ -6,7 +6,7 @@ package billeyzambie.practicalpets.client.model.entity.otherpet;// Made with Blo
 import billeyzambie.animationcontrollers.Animatable;
 import billeyzambie.animationcontrollers.PracticalPetModel;
 import billeyzambie.practicalpets.client.animation.otherpet.RatAnimations;
-import billeyzambie.practicalpets.client.model.entity.ItemHoldingEntityModel;
+import billeyzambie.practicalpets.client.model.entity.base.ItemHoldingEntityModel;
 import billeyzambie.practicalpets.entity.otherpet.Rat;
 import billeyzambie.practicalpets.misc.PPAnimationControllers;
 import net.minecraft.client.animation.AnimationDefinition;

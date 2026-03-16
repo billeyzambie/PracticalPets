@@ -3,6 +3,7 @@ package billeyzambie.practicalpets.items;
 import billeyzambie.animationcontrollers.ACEntity;
 import billeyzambie.animationcontrollers.PracticalPetModel;
 import billeyzambie.practicalpets.client.layer.PetEquipmentLayer;
+import billeyzambie.practicalpets.client.model.entity.base.PetEquipmentWearerModel;
 import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
 import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.entity.fish.Piranha;
@@ -10,6 +11,7 @@ import billeyzambie.practicalpets.entity.fish.base.PracticalFish;
 import billeyzambie.practicalpets.entity.other.PiranhaLauncherProjectile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -269,13 +271,13 @@ public class PiranhaLauncher extends Item implements ItemModelPetCosmetic, Dyeab
     }
 
     @Override
-    public <T extends Mob & ACEntity, M extends PracticalPetModel<T>> void onRenderModelOnPetBefore(
+    public  <T extends Mob & PetEquipmentWearer, M extends EntityModel<T> & PetEquipmentWearerModel>  void onRenderModelOnPetBefore(
             PetEquipmentLayer<T, M> layer,
             ItemStack stack,
             PoseStack poseStack,
             MultiBufferSource buffer,
             int packedLight,
-            PracticalPet wearer,
+            T wearer,
             float limbSwing,
             float limbSwingAmount,
             float partialticks

@@ -4,8 +4,10 @@ import billeyzambie.animationcontrollers.ACData;
 import billeyzambie.animationcontrollers.BVCData;
 import billeyzambie.animationcontrollers.SwimmingAnimationEntity;
 import billeyzambie.practicalpets.entity.base.WeightedVariantEntity;
+import billeyzambie.practicalpets.entity.base.practicalpet.IPracticalPet;
 import billeyzambie.practicalpets.goal.FishOwnerHurtByTargetGoal;
 import billeyzambie.practicalpets.goal.FishOwnerHurtTargetGoal;
+import billeyzambie.practicalpets.items.PetCosmetic;
 import billeyzambie.practicalpets.items.PiranhaLauncher;
 import billeyzambie.practicalpets.misc.PPEntities;
 import billeyzambie.practicalpets.misc.PPSounds;
@@ -36,8 +38,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.Optional;
 
-public abstract class PracticalFish extends TamableFish implements SwimmingAnimationEntity, WeightedVariantEntity {
+public abstract class PracticalFish extends TamableFish implements IPracticalPet, SwimmingAnimationEntity, WeightedVariantEntity {
     HashMap<String, ACData> ACData = new HashMap<>();
 
     @Override
@@ -50,6 +53,114 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
     @Override
     public HashMap<String, BVCData> getBVCData() {
         return BVCData;
+    }
+
+    private static final EntityDataAccessor<ItemStack> HEAD_ITEM = SynchedEntityData.defineId(PracticalFish.class, EntityDataSerializers.ITEM_STACK);
+    private static final EntityDataAccessor<ItemStack> NECK_ITEM = SynchedEntityData.defineId(PracticalFish.class, EntityDataSerializers.ITEM_STACK);
+    private static final EntityDataAccessor<ItemStack> BACK_ITEM = SynchedEntityData.defineId(PracticalFish.class, EntityDataSerializers.ITEM_STACK);
+    private static final EntityDataAccessor<ItemStack> BODY_ITEM = SynchedEntityData.defineId(PracticalFish.class, EntityDataSerializers.ITEM_STACK);
+
+
+    @Override
+    public ItemStack getPetHeadItem() {
+        return this.entityData.get(HEAD_ITEM);
+    }
+
+    @Override
+    public void setPetHeadItemRaw(ItemStack stack) {
+        this.entityData.set(HEAD_ITEM, stack);
+    }
+
+    @Override
+    public ItemStack getPetNeckItem() {
+        return this.entityData.get(NECK_ITEM);
+    }
+
+    @Override
+    public void setPetNeckItemRaw(ItemStack stack) {
+        this.entityData.set(NECK_ITEM, stack);
+    }
+
+    @Override
+    public ItemStack getPetBackItem() {
+        return this.entityData.get(BACK_ITEM);
+    }
+
+    @Override
+    public void setPetBackItemRaw(ItemStack stack) {
+        this.entityData.set(BACK_ITEM, stack);
+    }
+
+    @Override
+    public ItemStack getPetBodyItem() {
+        return this.entityData.get(BODY_ITEM);
+    }
+
+    @Override
+    public void setPetBodyItemRaw(ItemStack stack) {
+        this.entityData.set(BODY_ITEM, stack);
+    }
+
+    private boolean anyEquipmentIsBrave = false;
+    private float reachMutliplier = 1;
+    private Optional<PetCosmetic.Slot> canShootFromSlot = null;
+
+    @Override
+    public boolean anyEquipmentIsBrave() {
+        return anyEquipmentIsBrave;
+    }
+
+    @Override
+    public float getReachMutliplier() {
+        return reachMutliplier;
+    }
+
+    @Override
+    public Optional<PetCosmetic.Slot> canShootFromSlot() {
+        return canShootFromSlot;
+    }
+
+    @Override
+    public void setAnyEquipmentIsBrave(boolean value) {
+        this.anyEquipmentIsBrave = value;
+    }
+
+    @Override
+    public void setReachMultiplier(float value) {
+        this.reachMutliplier = value;
+    }
+
+    @Override
+    public void setCanShootFromSlot(Optional<PetCosmetic.Slot> value) {
+        this.canShootFromSlot = value;
+    }
+
+    private Component deathMessage = Component.empty();
+
+    @Override
+    public Component getDeathMessage() {
+        return deathMessage;
+    }
+
+    @Override
+    public boolean isModelYAxisInverted() {
+        return true;
+    }
+
+    @Override
+    public void die(DamageSource p_21809_) {
+        this.deathMessage = this.getCombatTracker().getDeathMessage();
+        super.die(p_21809_);
+    }
+
+    @Override
+    public int petLevel() {
+        return 1;
+    }
+
+    @Override
+    public boolean petIsCurrentlyFollowingOwner() {
+        return false;
     }
 
     private float prevLimbSwing = 0;
@@ -192,6 +303,10 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(VARIANT, 0);
+        this.entityData.define(HEAD_ITEM, ItemStack.EMPTY);
+        this.entityData.define(NECK_ITEM, ItemStack.EMPTY);
+        this.entityData.define(BACK_ITEM, ItemStack.EMPTY);
+        this.entityData.define(BODY_ITEM, ItemStack.EMPTY);
     }
 
     @Override
@@ -211,6 +326,7 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
         super.readAdditionalSaveData(tag);
         this.isLaunched = tag.getBoolean("Launched");
         this.launchTime = tag.getInt("LaunchTime");
+        this.loadPetCosmetics(tag);
     }
 
     @Override
@@ -218,6 +334,7 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
         super.addAdditionalSaveData(tag);
         tag.putBoolean("Launched", this.isLaunched);
         tag.putInt("LaunchTime", this.launchTime);
+        this.savePetCosmetics(tag);
     }
 
     public static final int MAX_LAUNCHED_LIFESPAN = 30 * 20;
@@ -370,6 +487,15 @@ public abstract class PracticalFish extends TamableFish implements SwimmingAnima
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
+
+        InteractionResult petEquipmentWearerEquip = this.petEquipmentWearerEquip(player, hand);
+        if (petEquipmentWearerEquip != InteractionResult.PASS)
+            return petEquipmentWearerEquip;
+
+        InteractionResult petEquipmentWearerShear = this.petEquipmentWearerShear(player, hand);
+        if (petEquipmentWearerShear != InteractionResult.PASS)
+            return petEquipmentWearerShear;
+
         ItemStack stack = player.getItemInHand(hand);
         boolean clientSide = this.level().isClientSide();
         if (this.isFood(stack)) {
