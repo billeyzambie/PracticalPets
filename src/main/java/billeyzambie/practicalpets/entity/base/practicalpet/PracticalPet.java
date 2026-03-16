@@ -56,7 +56,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.List;
 
-public abstract class PracticalPet extends TamableAnimal implements ACEntity, NeutralMob, RangedAttackMob, WeightedVariantEntity {
+public abstract class PracticalPet extends TamableAnimal implements IPracticalPet, ACEntity, NeutralMob, WeightedVariantEntity {
 
     public static final MutableComponent NEWLINE = Component.literal("\n");
     HashMap<String, ACData> ACData = new HashMap<>();
@@ -96,6 +96,11 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> IS_RAINBOW = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> IS_INTERESTED = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.BOOLEAN);
+
+    @Override
+    public boolean petIsCurrentlyFollowingOwner() {
+        return !this.isOrderedToSit() && this.shouldFollowOwner();
+    }
 
     @Override
     protected void defineSynchedData() {

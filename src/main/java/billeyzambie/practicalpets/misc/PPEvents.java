@@ -1,5 +1,6 @@
 package billeyzambie.practicalpets.misc;
 
+import billeyzambie.practicalpets.entity.base.practicalpet.OwnerFollowingPet;
 import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.entity.dinosaur.Pigeon;
 import billeyzambie.practicalpets.entity.otherpet.GiraffeCat;
@@ -7,6 +8,7 @@ import billeyzambie.practicalpets.network.PlayerPunchAirPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
@@ -100,10 +102,10 @@ public class PPEvents {
         if (!(player instanceof ServerPlayer serverPlayer))
             return;
 
-        List<PracticalPet> pets = serverPlayer.level().getEntitiesOfClass(PracticalPet.class, player.getBoundingBox().inflate(64),
+        List<TamableAnimal> pets = serverPlayer.level().getEntitiesOfClass(TamableAnimal.class, player.getBoundingBox().inflate(64),
                 pet ->
-                        pet.isTame() && pet.getOwnerUUID() != null && pet.getOwnerUUID().equals(player.getUUID())
-                        && !pet.isOrderedToSit() && pet.shouldFollowOwner()
+                        pet instanceof OwnerFollowingPet followingPet && followingPet.petIsCurrentlyFollowingOwner()
+                        && pet.isTame() && pet.getOwnerUUID() != null && pet.getOwnerUUID().equals(player.getUUID())
         );
         pets.forEach(pet -> {
             pet.teleportTo(player.getX(), player.getY(), player.getZ());
