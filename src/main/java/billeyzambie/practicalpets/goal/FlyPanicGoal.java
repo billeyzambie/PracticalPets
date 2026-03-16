@@ -1,11 +1,7 @@
 package billeyzambie.practicalpets.goal;
 
-import billeyzambie.practicalpets.entity.PracticalPet;
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.ai.goal.PanicGoal;
+import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import net.minecraft.world.entity.ai.util.AirAndWaterRandomPos;
-import net.minecraft.world.entity.ai.util.AirRandomPos;
-import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.entity.ai.util.HoverRandomPos;
 import net.minecraft.world.phys.Vec3;
 

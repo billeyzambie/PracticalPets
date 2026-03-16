@@ -1,7 +1,7 @@
 package billeyzambie.practicalpets.items;
 
 import billeyzambie.practicalpets.misc.PracticalPets;
-import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;

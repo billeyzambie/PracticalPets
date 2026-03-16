@@ -2,7 +2,7 @@ package billeyzambie.practicalpets.items;
 
 import billeyzambie.practicalpets.misc.PPSounds;
 import billeyzambie.practicalpets.misc.PracticalPets;
-import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.misc.PPNetworking;
 import billeyzambie.practicalpets.network.PetHatSquishAnimPacket;
 import billeyzambie.practicalpets.util.DelayedTaskManager;

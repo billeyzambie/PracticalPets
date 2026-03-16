@@ -1,7 +1,7 @@
 package billeyzambie.practicalpets.items;
 
 import billeyzambie.practicalpets.misc.PracticalPets;
-import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.entity.dinosaur.AbstractDuck;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;

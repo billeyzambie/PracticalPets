@@ -3,7 +3,7 @@ package billeyzambie.practicalpets.items;
 import billeyzambie.animationcontrollers.ACEntity;
 import billeyzambie.animationcontrollers.PracticalPetModel;
 import billeyzambie.practicalpets.client.layer.PetEquipmentLayer;
-import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.entity.fish.Piranha;
 import billeyzambie.practicalpets.entity.fish.base.PracticalFish;
 import billeyzambie.practicalpets.entity.other.PiranhaLauncherProjectile;

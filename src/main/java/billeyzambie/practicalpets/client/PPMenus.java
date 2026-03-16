@@ -1,8 +1,7 @@
 package billeyzambie.practicalpets.client;
 
-import billeyzambie.practicalpets.entity.dinosaur.Pigeon;
 import billeyzambie.practicalpets.ui.PracticalPetMenu;
-import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;

@@ -1,8 +1,9 @@
-package billeyzambie.practicalpets.entity;
+package billeyzambie.practicalpets.entity.base.practicalpet;
 
 import billeyzambie.animationcontrollers.ACData;
 import billeyzambie.animationcontrollers.ACEntity;
 import billeyzambie.animationcontrollers.BVCData;
+import billeyzambie.practicalpets.entity.base.WeightedVariantEntity;
 import billeyzambie.practicalpets.items.*;
 import billeyzambie.practicalpets.misc.*;
 import billeyzambie.practicalpets.network.RandomIdle1AnimPacket;

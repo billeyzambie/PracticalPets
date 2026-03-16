@@ -1,6 +1,6 @@
 package billeyzambie.practicalpets.items;
 
-import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.misc.PracticalPets;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;

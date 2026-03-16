@@ -3,7 +3,7 @@ package billeyzambie.practicalpets.entity.fish.base;
 import billeyzambie.animationcontrollers.ACData;
 import billeyzambie.animationcontrollers.BVCData;
 import billeyzambie.animationcontrollers.SwimmingAnimationEntity;
-import billeyzambie.practicalpets.entity.WeightedVariantEntity;
+import billeyzambie.practicalpets.entity.base.WeightedVariantEntity;
 import billeyzambie.practicalpets.goal.FishOwnerHurtByTargetGoal;
 import billeyzambie.practicalpets.goal.FishOwnerHurtTargetGoal;
 import billeyzambie.practicalpets.items.PiranhaLauncher;

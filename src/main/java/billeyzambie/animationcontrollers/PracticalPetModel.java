@@ -1,7 +1,7 @@
 package billeyzambie.animationcontrollers;
 
 import billeyzambie.practicalpets.client.animation.PracticalPetAnimation;
-import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.animation.AnimationDefinition;

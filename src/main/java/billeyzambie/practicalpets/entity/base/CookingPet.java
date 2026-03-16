@@ -1,5 +1,6 @@
-package billeyzambie.practicalpets.entity;
+package billeyzambie.practicalpets.entity.base;
 
+import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.misc.PPTags;
 import billeyzambie.practicalpets.util.PPUtil;
 import net.minecraft.nbt.CompoundTag;

@@ -1,6 +1,6 @@
 package billeyzambie.practicalpets.items;
 
-import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.entity.other.PetEndRodProjectile;
 import billeyzambie.practicalpets.misc.ConfigurableBundleItem;
 import billeyzambie.practicalpets.misc.PracticalPets;

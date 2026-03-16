@@ -1,4 +1,4 @@
-package billeyzambie.practicalpets.entity;
+package billeyzambie.practicalpets.entity.base;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;

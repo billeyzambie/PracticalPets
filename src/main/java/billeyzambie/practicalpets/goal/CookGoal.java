@@ -1,7 +1,7 @@
 package billeyzambie.practicalpets.goal;
 
-import billeyzambie.practicalpets.entity.CookingPet;
-import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.entity.base.CookingPet;
+import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.EnumSet;

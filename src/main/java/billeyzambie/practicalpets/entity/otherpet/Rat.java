@@ -1,7 +1,7 @@
 package billeyzambie.practicalpets.entity.otherpet;
 
-import billeyzambie.practicalpets.entity.CookingPet;
-import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.entity.base.CookingPet;
+import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.goal.CookGoal;
 import billeyzambie.practicalpets.goal.DropHeldItemToOwnerGoal;
 import billeyzambie.practicalpets.misc.PPAdvancementTriggers;
@@ -33,7 +33,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

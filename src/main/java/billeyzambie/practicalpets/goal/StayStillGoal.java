@@ -1,6 +1,6 @@
 package billeyzambie.practicalpets.goal;
 
-import billeyzambie.practicalpets.entity.StayStillGoalMob;
+import billeyzambie.practicalpets.entity.base.StayStillGoalMob;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 

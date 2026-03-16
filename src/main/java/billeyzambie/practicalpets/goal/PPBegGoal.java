@@ -3,7 +3,7 @@ package billeyzambie.practicalpets.goal;
 import java.util.EnumSet;
 import javax.annotation.Nullable;
 
-import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;

@@ -1,7 +1,7 @@
 package billeyzambie.practicalpets.entity.otherpet;
 
-import billeyzambie.practicalpets.entity.PracticalPet;
-import billeyzambie.practicalpets.entity.StayStillGoalMob;
+import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
+import billeyzambie.practicalpets.entity.base.StayStillGoalMob;
 import billeyzambie.practicalpets.entity.other.YeetedPetCarrier;
 import billeyzambie.practicalpets.goal.GiraffeCatPickUpPetGoal;
 import billeyzambie.practicalpets.goal.GiraffeCatMeleeAttackGoal;
@@ -13,7 +13,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;

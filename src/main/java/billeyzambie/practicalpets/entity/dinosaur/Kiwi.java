@@ -1,6 +1,6 @@
 package billeyzambie.practicalpets.entity.dinosaur;
 
-import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.misc.*;
 import billeyzambie.practicalpets.util.PPUtil;
 import net.minecraft.core.BlockPos;

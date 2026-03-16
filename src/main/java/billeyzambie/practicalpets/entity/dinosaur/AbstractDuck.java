@@ -1,6 +1,6 @@
 package billeyzambie.practicalpets.entity.dinosaur;
 
-import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.network.DuckIdleFlapPacket;
 import billeyzambie.practicalpets.misc.PPNetworking;
 import billeyzambie.practicalpets.network.QuackAnimPacket;

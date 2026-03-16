@@ -1,7 +1,7 @@
 package billeyzambie.practicalpets.client.layer;
 
 import billeyzambie.animationcontrollers.PracticalPetModel;
-import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;

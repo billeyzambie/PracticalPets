@@ -1,8 +1,8 @@
 package billeyzambie.practicalpets.misc;
 
 import billeyzambie.animationcontrollers.*;
-import billeyzambie.practicalpets.entity.DancingEntity;
-import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.entity.base.DancingEntity;
+import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.entity.dinosaur.AbstractDuck;
 import billeyzambie.practicalpets.entity.dinosaur.BananaDuck;
 import billeyzambie.practicalpets.entity.otherpet.GiraffeCat;

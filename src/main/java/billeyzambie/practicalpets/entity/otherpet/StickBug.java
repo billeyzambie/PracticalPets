@@ -1,7 +1,7 @@
 package billeyzambie.practicalpets.entity.otherpet;
 
-import billeyzambie.practicalpets.entity.DancingEntity;
-import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.entity.base.DancingEntity;
+import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.misc.PPAdvancementTriggers;
 import billeyzambie.practicalpets.misc.PPBlocks;
 import billeyzambie.practicalpets.misc.PPDamageTypes;

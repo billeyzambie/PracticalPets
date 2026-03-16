@@ -1,6 +1,6 @@
 package billeyzambie.practicalpets.goal;
 
-import billeyzambie.practicalpets.entity.PracticalPet;
+import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 
 public class FlyAroundLikeCrazyGoal extends FlyPanicGoal {
     public FlyAroundLikeCrazyGoal(PracticalPet p_25691_, double p_25692_) {
