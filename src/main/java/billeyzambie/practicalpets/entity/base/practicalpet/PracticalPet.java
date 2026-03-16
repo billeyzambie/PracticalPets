@@ -123,7 +123,8 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
     public void readAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
         this.setShouldFollowOwner(compoundTag.getBoolean("ShouldFollowOwner"));
-        this.setPetLevel(compoundTag.getInt("PetLevel"));
+        if (compoundTag.contains("PetLevel", Tag.TAG_INT))
+            this.setPetLevelRaw(compoundTag.getInt("PetLevel"));
         this.setPetXP(compoundTag.getFloat("PetXP"));
         this.setHeadItem(ItemStack.of(compoundTag.getCompound("HeadItem")));
         this.setNeckItem(ItemStack.of(compoundTag.getCompound("NeckItem")));
