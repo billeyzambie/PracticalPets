@@ -7,6 +7,7 @@ import billeyzambie.practicalpets.entity.PracticalPet;
 import billeyzambie.practicalpets.util.PPUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -42,6 +43,11 @@ public interface EntityModelPetCosmetic extends AttachablePetCosmetic {
             float limbSwingAmount,
             float partialticks
     ) {
+        poseStack.pushPose();
+
+        if (!pet.isModelYAxisInverted())
+            poseStack.mulPose(Axis.ZP.rotationDegrees(180));
+
         float r = 1, g = 1, b = 1;
         if (this instanceof DyeableLeatherItem dyeableItem) {
             int color = dyeableItem.getColor(stack);
@@ -68,5 +74,7 @@ public interface EntityModelPetCosmetic extends AttachablePetCosmetic {
             vertexConsumer = buffer.getBuffer(RenderType.eyes(emissiveTexture));
             cosmeticModel.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, r, g, b, 1);
         }
+
+        poseStack.popPose();
     }
 }
