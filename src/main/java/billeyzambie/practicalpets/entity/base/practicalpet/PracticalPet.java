@@ -58,7 +58,6 @@ import java.util.List;
 
 public abstract class PracticalPet extends TamableAnimal implements IPracticalPet, ACEntity, NeutralMob, WeightedVariantEntity {
 
-    public static final MutableComponent NEWLINE = Component.literal("\n");
     HashMap<String, ACData> ACData = new HashMap<>();
 
     @Override
@@ -534,6 +533,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         this.entityData.set(IS_INTERESTED, value);
     }
 
+    @Override
     public int petLevel() {
         return this.entityData.get(PET_LEVEL);
     }
@@ -661,45 +661,14 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
     private Component deathMessage = Component.empty();
 
     @Override
+    public Component getDeathMessage() {
+        return deathMessage;
+    }
+
+    @Override
     public void die(DamageSource p_21809_) {
         this.deathMessage = this.getCombatTracker().getDeathMessage();
         super.die(p_21809_);
-    }
-
-    public void dropAllEquipment(boolean deleteCurrentEquipment) {
-        for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
-            ItemStack stack = this.getEquippedItem(slot).copy();
-            Item item = stack.getItem();
-            if (!this.isAlive() && item instanceof PetBowtie bowtieItem) {
-                if (this.hasCustomName()) bowtieItem.putDeadPetInfo(stack, Component.translatable(
-                        "tooltip.practicalpets.dead_pet_bowtie_named",
-                        this.getDisplayName(),
-                        this.getTypeName(),
-                        NEWLINE,
-                        this.getDisplayName(),
-                        Component.translatable("ui.practicalpets.pet_level",
-                                Component.literal(String.valueOf(this.petLevel())).withStyle(ChatFormatting.BLUE)
-                                ).withStyle(ChatFormatting.LIGHT_PURPLE),
-                        NEWLINE,
-                        this.deathMessage
-                ).withStyle(ChatFormatting.GOLD));
-                else bowtieItem.putDeadPetInfo(stack, Component.translatable(
-                        "tooltip.practicalpets.dead_pet_bowtie",
-                        this.getDisplayName(),
-                        NEWLINE,
-                        this.getDisplayName(),
-                        Component.translatable("ui.practicalpets.pet_level",
-                                Component.literal(String.valueOf(this.petLevel())).withStyle(ChatFormatting.BLUE)
-                        ).withStyle(ChatFormatting.LIGHT_PURPLE),
-                        NEWLINE,
-                        this.deathMessage
-
-                ).withStyle(ChatFormatting.GOLD));
-            }
-            this.spawnAtLocation(stack);
-            if (deleteCurrentEquipment)
-                this.setEquippedItem(ItemStack.EMPTY, slot);
-        }
     }
 
     public boolean hideEquipment() {

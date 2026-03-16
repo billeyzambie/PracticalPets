@@ -1,13 +1,18 @@
 package billeyzambie.practicalpets.entity.base.practicalpet;
 
 import billeyzambie.practicalpets.entity.base.MobInterface;
+import billeyzambie.practicalpets.items.PetBowtie;
 import billeyzambie.practicalpets.items.PetCosmetic;
 import billeyzambie.practicalpets.petequipment.PetCosmetics;
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.RangedAttackMob;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Optional;
@@ -32,11 +37,10 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
     void setReachMultiplier(float value);
     void setCanShootFromSlot(Optional<PetCosmetic.Slot> value);
 
-    default Mob asMob() {
-        return (Mob)this;
-    }
+    Component getDeathMessage();
 
     boolean isTame();
+    int petLevel();
 
     default boolean petCosmeticDamageEntity(Entity target, float amount) {
         return target.hurt(asMob().damageSources().mobAttack(asMob()), amount);
@@ -101,6 +105,44 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
         this.setAnyEquipmentIsBrave(hasBraveEquipment);
         this.setCanShootFromSlot(rangedSlot);
         this.setReachMultiplier(reachMutliplier);
+    }
+
+    MutableComponent NEWLINE = Component.literal("\n");
+
+    default void dropAllEquipment(boolean deleteCurrentEquipment) {
+        for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
+            ItemStack stack = this.getEquippedItem(slot).copy();
+            Item item = stack.getItem();
+            if (!this.isAlive() && item instanceof PetBowtie bowtieItem) {
+                if (this.hasCustomName()) bowtieItem.putDeadPetInfo(stack, Component.translatable(
+                        "tooltip.practicalpets.dead_pet_bowtie_named",
+                        this.getDisplayName(),
+                        this.mobInterfaceGetTypeName(),
+                        NEWLINE,
+                        this.getDisplayName(),
+                        Component.translatable("ui.practicalpets.pet_level",
+                                Component.literal(String.valueOf(this.petLevel())).withStyle(ChatFormatting.BLUE)
+                        ).withStyle(ChatFormatting.LIGHT_PURPLE),
+                        NEWLINE,
+                        this.getDeathMessage()
+                ).withStyle(ChatFormatting.GOLD));
+                else bowtieItem.putDeadPetInfo(stack, Component.translatable(
+                        "tooltip.practicalpets.dead_pet_bowtie",
+                        this.getDisplayName(),
+                        NEWLINE,
+                        this.getDisplayName(),
+                        Component.translatable("ui.practicalpets.pet_level",
+                                Component.literal(String.valueOf(this.petLevel())).withStyle(ChatFormatting.BLUE)
+                        ).withStyle(ChatFormatting.LIGHT_PURPLE),
+                        NEWLINE,
+                        this.getDeathMessage()
+
+                ).withStyle(ChatFormatting.GOLD));
+            }
+            this.spawnAtLocation(stack);
+            if (deleteCurrentEquipment)
+                this.setEquippedItem(ItemStack.EMPTY, slot);
+        }
     }
 
     //Remember to also define the things in defineSynchedData
