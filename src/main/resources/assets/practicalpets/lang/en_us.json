@@ -181,7 +181,7 @@
   "ui.practicalpets.info_book.piranha.launched_piranhas.body": "Launched piranhas will §2attach§r to their target and §2continuously§r §2attack§r it. After 30 seconds they'll §2despawn§r even though they are tamed. If you want to keep a launched piranha as a pet instead of a weapon, put it in and out of a §2bucket§r.",
   "ui.practicalpets.info_book.piranha.on_pets.title": "Launcher On Pets",
   "ui.practicalpets.info_book.piranha.on_pets.body": "The piranha launcher can be put on a pet's head and the pet will then use it to throw piranhas at enemies. It also allows weak pets to defend themselves and their owner.",
-  "ui.practicalpets.info_book.piranha.in_dispenser.title": "Launcher In Dispenser",
+  "ui.practicalpets.info_book.piranha.in_dispenser.title": "Launcher In Dispensers",
   "ui.practicalpets.info_book.piranha.in_dispenser.body": "The piranha launcher can also be put in dispensers. The dispensed piranhas will have the player who last loaded the piranha launcher as their owner.",
   "ui.practicalpets.info_book.pet_equipment": "Pet Equipment",
   "ui.practicalpets.info_book.misc": "Other Features",
