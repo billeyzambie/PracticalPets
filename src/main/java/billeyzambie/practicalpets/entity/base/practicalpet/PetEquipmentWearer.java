@@ -8,10 +8,13 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.RangedAttackMob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +44,40 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
     Component getDeathMessage();
 
     boolean isTame();
+    boolean isOwnedBy(LivingEntity entity);
     int petLevel();
+
+    default InteractionResult petEquipmentWearerInteract(Player player, InteractionHand hand) {
+        if (this.isTame() && this.isOwnedBy(player)) {
+            ItemStack stack = player.getItemInHand(hand);
+
+            Optional<PetCosmetic> cosmeticOptional = PetCosmetics.getCosmeticForItem(stack);
+            if (cosmeticOptional.isPresent()) {
+                if (player.level().isClientSide())
+                    return InteractionResult.SUCCESS;
+
+                PetCosmetic cosmetic = cosmeticOptional.orElseThrow();
+
+                if (cosmetic.canBePutOn(stack, this) && !player.isSecondaryUseActive()) {
+                    PetCosmetic.Slot slot = cosmetic.slot(stack, this);
+                    ItemStack currentCosmetic = this.getEquippedItem(slot);
+                    if (currentCosmetic.isEmpty()) {
+                        this.setEquippedItem(stack.copy(), slot);
+                        if (!player.getAbilities().instabuild) {
+                            stack.shrink(1);
+                        }
+                        return InteractionResult.CONSUME;
+                    } else {
+                        this.spawnAtLocation(currentCosmetic);
+                        this.setEquippedItem(ItemStack.EMPTY, slot);
+                        return InteractionResult.SUCCESS;
+                    }
+                }
+            }
+
+        }
+        return InteractionResult.PASS;
+    }
 
     default boolean petCosmeticDamageEntity(Entity target, float amount) {
         return target.hurt(asMob().damageSources().mobAttack(asMob()), amount);
@@ -164,7 +200,9 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
         );
     }
 
-    /** Remember to also define the things in defineSynchedData */
+    /**
+     * Remember to also define the things in defineSynchedData
+     */
     default void loadPetCosmetics(CompoundTag compoundTag) {
         this.setPetHeadItem(ItemStack.of(compoundTag.getCompound("PPetHeadItem")));
         this.setPetNeckItem(ItemStack.of(compoundTag.getCompound("PPetNeckItem")));

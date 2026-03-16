@@ -680,6 +680,10 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         ItemStack itemstack = player.getItemInHand(hand);
         Item item = itemstack.getItem();
 
+        InteractionResult petEquipmentWearerInteract = this.petEquipmentWearerInteract(player, hand);
+        if (petEquipmentWearerInteract != InteractionResult.PASS)
+            return petEquipmentWearerInteract;
+
         if (item instanceof ShearsItem && this.isOwnedBy(player)) {
 
             boolean atLeastOneCosmetic = false;
@@ -715,23 +719,6 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         } else {
             if (this.isTame()) {
                 if (this.isOwnedBy(player)) {
-                    Optional<PetCosmetic> cosmeticOptional = PetCosmetics.getCosmeticForItem(item);
-                    if (cosmeticOptional.isPresent()) {
-                        PetCosmetic cosmetic = cosmeticOptional.orElseThrow();
-                        if (cosmetic.canBePutOn(itemstack, this) && !player.isSecondaryUseActive()) {
-                            PetCosmetic.Slot slot = cosmetic.slot(itemstack, this);
-                            ItemStack currentCosmetic = this.getEquippedItem(slot);
-                            if (currentCosmetic.isEmpty()) {
-                                this.setEquippedItem(itemstack.copy(), slot);
-                                this.usePlayerItem(player, hand, itemstack);
-                                return InteractionResult.CONSUME;
-                            } else {
-                                this.spawnAtLocation(currentCosmetic);
-                                this.setEquippedItem(ItemStack.EMPTY, slot);
-                                return InteractionResult.SUCCESS;
-                            }
-                        }
-                    }
                     if (this.isFood(itemstack) && this.getHealth() < this.getMaxHealth()) {
                         this.healFromEatingItem(itemstack);
                         this.usePlayerItem(player, hand, itemstack);
