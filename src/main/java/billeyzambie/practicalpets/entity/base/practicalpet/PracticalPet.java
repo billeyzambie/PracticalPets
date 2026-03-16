@@ -748,9 +748,9 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
     }
 
     @Override
-    protected void dropAllDeathLoot(@NotNull DamageSource p_21192_) {
-        super.dropAllDeathLoot(p_21192_);
-        dropAllEquipment();
+    protected void dropEquipment() {
+        super.dropEquipment();
+        this.dropAllEquipment(false);
     }
 
     private Component deathMessage = Component.empty();
@@ -761,7 +761,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
         super.die(p_21809_);
     }
 
-    public void dropAllEquipment() {
+    public void dropAllEquipment(boolean deleteCurrentEquipment) {
         for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
             ItemStack stack = this.getEquippedItem(slot).copy();
             Item item = stack.getItem();
@@ -792,7 +792,8 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
                 ).withStyle(ChatFormatting.GOLD));
             }
             this.spawnAtLocation(stack);
-            this.setEquippedItem(ItemStack.EMPTY, slot);
+            if (deleteCurrentEquipment)
+                this.setEquippedItem(ItemStack.EMPTY, slot);
         }
     }
 
@@ -825,7 +826,7 @@ public abstract class PracticalPet extends TamableAnimal implements ACEntity, Ne
                     itemstack.hurtAndBreak(1, player, (lambdaPlayer) -> {
                         lambdaPlayer.broadcastBreakEvent(hand);
                     });
-                    this.dropAllEquipment();
+                    this.dropAllEquipment(true);
                     return InteractionResult.CONSUME;
                 }
             }
