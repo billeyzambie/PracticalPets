@@ -10,10 +10,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.function.BiFunction;
@@ -145,8 +146,25 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
         }
     }
 
-    //Remember to also define the things in defineSynchedData
+    default boolean canPerformCosmeticRangedAttack() {
+        return this.canShootFromSlot().isPresent();
+    }
 
+    @Override
+    default void performRangedAttack(@NotNull LivingEntity target, float distanceFactor) {
+        if (this.canPerformCosmeticRangedAttack())
+            this.performCosmeticRangedAttack(canShootFromSlot().orElseThrow(), target, distanceFactor);
+    }
+
+    default void performCosmeticRangedAttack(PetCosmetic.Slot slot, @NotNull LivingEntity target, float distanceFactor) {
+        ItemStack equippedStack = this.getEquippedItem(slot);
+        PetCosmetics.getCosmeticForItem(equippedStack).ifPresent(
+                cosmetic ->
+                        cosmetic.performRangedAttack(equippedStack, this, target, distanceFactor)
+        );
+    }
+
+    /** Remember to also define the things in defineSynchedData */
     default void loadPetCosmetics(CompoundTag compoundTag) {
         this.setPetHeadItem(ItemStack.of(compoundTag.getCompound("PPetHeadItem")));
         this.setPetNeckItem(ItemStack.of(compoundTag.getCompound("PPetNeckItem")));
@@ -232,7 +250,7 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
                 return getPetBodyItem();
             }
         }
-        throw new AssertionError("Missing case for getting pet equipment in slot " + slot);
+        throw new IllegalStateException("Missing case for getting pet equipment in slot " + slot);
     }
 
     default void setEquippedItem(ItemStack itemStack, PetCosmetic.Slot slot) {

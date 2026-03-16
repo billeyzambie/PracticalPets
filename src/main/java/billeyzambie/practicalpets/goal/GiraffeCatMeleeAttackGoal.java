@@ -19,7 +19,7 @@ public class GiraffeCatMeleeAttackGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if (pet.canPerformRangedAttack())
+        if (pet.canPerformCosmeticRangedAttack())
             return false;
         LivingEntity livingentity = this.pet.getTarget();
         if (livingentity == null) {
@@ -32,7 +32,7 @@ public class GiraffeCatMeleeAttackGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        if (pet.canPerformRangedAttack())
+        if (pet.canPerformCosmeticRangedAttack())
             return false;
         if (!this.target.isAlive()) {
             return false;

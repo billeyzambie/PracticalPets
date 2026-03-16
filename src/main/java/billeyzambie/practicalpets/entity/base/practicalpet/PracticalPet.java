@@ -16,7 +16,6 @@ import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -379,7 +378,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         if (panicGoal != null)
             this.goalSelector.addGoal(10, panicGoal);
         this.goalSelector.addGoal(20, new SitWhenOrderedToGoal(this));
-        this.goalSelector.addGoal(30, new RangedAttackIfShouldGoal(this, this.createMeleeAttackSpeedMultiplier(), 20, 40, 20f));
+        this.goalSelector.addGoal(30, new PetEquipmentWearerCosmeticRangedAttackGoal(this, this.createMeleeAttackSpeedMultiplier()));
         this.goalSelector.addGoal(50, this.createMeleeAttackGoal());
         this.goalSelector.addGoal(55, new PPBegGoal(this));
         this.goalSelector.addGoal(60, new FollowOwnerWanderableGoal(this, this.createFollowOwnerSpeed(), 7.0F, 5.0F, false));
@@ -408,7 +407,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
     }
 
     protected @NotNull Goal createMeleeAttackGoal() {
-        return new MeleeAttackIfShouldGoal(this, this.createMeleeAttackSpeedMultiplier(), false);
+        return new PetEquipmentWearerMeleeAttackGoal(this, this.createMeleeAttackSpeedMultiplier(), false);
     }
 
     protected @Nullable Goal createPanicGoal() {
@@ -910,41 +909,6 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
     }
 
     private static final EntityDataAccessor<Integer> DATA_REMAINING_ANGER_TIME = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.INT);
-
-    public boolean canPerformRangedAttack() {
-        return this.canPerformInnateRangedAttack() || this.canPerformCosmeticRangedAttack();
-    }
-
-    //There's no mob for which this is true currently, but there might be in the future.
-    //Probably when/if I port velvet worms from bedrock edition.
-    public boolean canPerformInnateRangedAttack() {
-        return false;
-    }
-
-    public boolean canPerformCosmeticRangedAttack() {
-        return this.canShootFromSlot().isPresent();
-    }
-
-    @Override
-    public void performRangedAttack(@NotNull LivingEntity target, float distanceFactor) {
-        if (this.canPerformCosmeticRangedAttack())
-            this.performCosmeticRangedAttack(canShootFromSlot().orElseThrow(), target, distanceFactor);
-        else if (this.canPerformInnateRangedAttack()) {
-            this.performInnateRangedAttack(target, distanceFactor);
-        }
-    }
-
-    public void performInnateRangedAttack(@NotNull LivingEntity target, float distanceFactor) {
-
-    }
-
-    public void performCosmeticRangedAttack(PetCosmetic.Slot slot, @NotNull LivingEntity target, float distanceFactor) {
-        ItemStack equippedStack = this.getEquippedItem(slot);
-        PetCosmetics.getCosmeticForItem(equippedStack).ifPresent(
-                cosmetic ->
-                        cosmetic.performRangedAttack(equippedStack, this, target, distanceFactor)
-        );
-    }
 
     @Override
     public AgeableMob getBreedOffspring(@NotNull ServerLevel level, @NotNull AgeableMob partner) {
