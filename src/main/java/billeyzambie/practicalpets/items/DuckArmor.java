@@ -1,7 +1,7 @@
 package billeyzambie.practicalpets.items;
 
+import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
 import billeyzambie.practicalpets.misc.PracticalPets;
-import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.entity.dinosaur.AbstractDuck;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -39,27 +39,27 @@ public class DuckArmor extends Item implements PetCosmetic {
 
     private final float damageMultiplier;
     @Override
-    public float damageMultiplier(ItemStack stack, PracticalPet pet) {
+    public float damageMultiplier(ItemStack stack, PetEquipmentWearer wearer) {
         return this.damageMultiplier;
     }
 
     @Override
-    public Slot slot(ItemStack stack, PracticalPet pet) {
+    public Slot slot(ItemStack stack, PetEquipmentWearer wearer) {
         return Slot.BODY;
     }
 
     @Override
-    public boolean canBePutOn(ItemStack stack, PracticalPet pet) {
-        return pet instanceof AbstractDuck;
+    public boolean canBePutOn(ItemStack stack, PetEquipmentWearer wearer) {
+        return wearer instanceof AbstractDuck;
     }
 
     @Override
-    public boolean causesBravery(ItemStack stack, PracticalPet pet) {
+    public boolean causesBravery(ItemStack stack, PetEquipmentWearer wearer) {
         return true;
     }
 
     @Override
-    public SoundEvent getEquipSound(ItemStack stack, PracticalPet pet) {
+    public SoundEvent getEquipSound(ItemStack stack, PetEquipmentWearer wearer) {
         return equipSound;
     }
 }

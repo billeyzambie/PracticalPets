@@ -3,6 +3,7 @@ package billeyzambie.practicalpets.items;
 import billeyzambie.animationcontrollers.ACEntity;
 import billeyzambie.animationcontrollers.PracticalPetModel;
 import billeyzambie.practicalpets.client.layer.PetEquipmentLayer;
+import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
 import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.entity.fish.Piranha;
 import billeyzambie.practicalpets.entity.fish.base.PracticalFish;
@@ -221,49 +222,49 @@ public class PiranhaLauncher extends Item implements ItemModelPetCosmetic, Dyeab
 
     //Pet accessory properties:
     @Override
-    public ScaleMode getScaleMode(ItemStack stack, PracticalPet pet) {
+    public ScaleMode getScaleMode(ItemStack stack, PetEquipmentWearer wearer) {
         return ScaleMode.NONE;
     }
 
     @Override
-    public Slot slot(ItemStack stack, PracticalPet pet) {
+    public Slot slot(ItemStack stack, PetEquipmentWearer wearer) {
         return Slot.HEAD;
     }
 
     @Override
-    public boolean canBePutOn(ItemStack stack, PracticalPet pet) {
+    public boolean canBePutOn(ItemStack stack, PetEquipmentWearer wearer) {
         return true;
     }
 
     @Override
-    public boolean causesBravery(ItemStack stack, PracticalPet pet) {
-        return canPerformRangedAttack(stack, pet);
+    public boolean causesBravery(ItemStack stack, PetEquipmentWearer wearer) {
+        return canPerformRangedAttack(stack, wearer);
     }
 
     @Override
-    public boolean canPerformRangedAttack(ItemStack stack, PracticalPet pet) {
+    public boolean canPerformRangedAttack(ItemStack stack, PetEquipmentWearer wearer) {
         return getFishCount(stack) > 0;
     }
 
     @Override
-    public void performRangedAttack(ItemStack stack, PracticalPet shooter, LivingEntity target, float distanceFactor) {
-        this.shoot(stack, stack.getOrCreateTag(), shooter.level(), shooter, shooter.position());
-        shooter.refreshPetEquipmentCache();
+    public void performRangedAttack(ItemStack stack, PetEquipmentWearer wearer, LivingEntity target, float distanceFactor) {
+        this.shoot(stack, stack.getOrCreateTag(), wearer.level(), (LivingEntity) wearer, wearer.position());
+        wearer.refreshPetEquipmentCache();
         //Fix client showing the pet's piranha launcher still having a piranha inside
         if (getFishCount(stack) == 0) {
-            shooter.setPetHeadItem(ItemStack.EMPTY);
-            shooter.setPetHeadItem(stack);
+            wearer.setPetHeadItem(ItemStack.EMPTY);
+            wearer.setPetHeadItem(stack);
         }
 
-        stack.hurtAndBreak(1, shooter, p -> {
-            p.setPetHeadItem(ItemStack.EMPTY);
+        stack.hurtAndBreak(1, (LivingEntity) wearer, p -> {
+            ((PetEquipmentWearer)p).setPetHeadItem(ItemStack.EMPTY);
             p.playSound(SoundEvents.ITEM_BREAK);
             this.dropAllFish(stack, stack.getOrCreateTag(), p.level(), p, p.position());
         });
     }
 
     @Override
-    public SoundEvent getEquipSound(ItemStack stack, PracticalPet pet) {
+    public SoundEvent getEquipSound(ItemStack stack, PetEquipmentWearer wearer) {
         return SoundEvents.ARMOR_EQUIP_IRON;
     }
 
@@ -274,12 +275,12 @@ public class PiranhaLauncher extends Item implements ItemModelPetCosmetic, Dyeab
             PoseStack poseStack,
             MultiBufferSource buffer,
             int packedLight,
-            PracticalPet pet,
+            PracticalPet wearer,
             float limbSwing,
             float limbSwingAmount,
             float partialticks
     ) {
-        float headY = pet.headSizeY();
+        float headY = wearer.headSizeY();
         if (headY < 3) {
             float scale = headY / 3f;
             poseStack.scale(scale, scale, scale);

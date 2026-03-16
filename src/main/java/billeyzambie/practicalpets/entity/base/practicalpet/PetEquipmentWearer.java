@@ -1,9 +1,9 @@
 package billeyzambie.practicalpets.entity.base.practicalpet;
 
+import billeyzambie.practicalpets.entity.base.MobInterface;
 import billeyzambie.practicalpets.items.PetCosmetic;
 import billeyzambie.practicalpets.petequipment.PetCosmetics;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
-public interface PetCosmeticMob extends RangedAttackMob {
+public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
     void setPetHeadItemRaw(ItemStack stack);
     void setPetNeckItemRaw(ItemStack stack);
     void setPetBackItemRaw(ItemStack stack);
@@ -32,11 +32,11 @@ public interface PetCosmeticMob extends RangedAttackMob {
     void setReachMultiplier(float value);
     void setCanShootFromSlot(Optional<PetCosmetic.Slot> value);
 
-    void playSound(SoundEvent soundEvent);
-
     default Mob asMob() {
         return (Mob)this;
     }
+
+    boolean isTame();
 
     default boolean petCosmeticDamageEntity(Entity target, float amount) {
         return target.hurt(asMob().damageSources().mobAttack(asMob()), amount);

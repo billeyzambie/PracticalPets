@@ -1,6 +1,6 @@
 package billeyzambie.practicalpets.items;
 
-import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
+import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
 import billeyzambie.practicalpets.misc.ConfigurableBundleItem;
 import billeyzambie.practicalpets.misc.PracticalPets;
 import net.minecraft.resources.ResourceLocation;
@@ -18,22 +18,22 @@ public class PetBackpack extends ConfigurableBundleItem implements EntityModelPe
     );
 
     @Override
-    public @Nullable ResourceLocation getModelTexture(ItemStack stack, PracticalPet pet) {
+    public @Nullable ResourceLocation getModelTexture(ItemStack stack, PetEquipmentWearer wearer) {
         return modelTexture;
     }
 
     @Override
-    public Slot slot(ItemStack stack, PracticalPet pet) {
+    public Slot slot(ItemStack stack, PetEquipmentWearer wearer) {
         return Slot.BACK;
     }
 
     @Override
-    public boolean canBePutOn(ItemStack stack, PracticalPet pet) {
+    public boolean canBePutOn(ItemStack stack, PetEquipmentWearer wearer) {
         return true;
     }
 
     @Override
-    public boolean causesBravery(ItemStack stack, PracticalPet pet) {
+    public boolean causesBravery(ItemStack stack, PetEquipmentWearer wearer) {
         return false;
     }
 

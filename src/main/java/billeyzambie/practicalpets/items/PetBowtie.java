@@ -1,7 +1,7 @@
 package billeyzambie.practicalpets.items;
 
+import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
 import billeyzambie.practicalpets.misc.PracticalPets;
-import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -31,22 +31,22 @@ public class PetBowtie extends Item implements EntityModelPetCosmetic, DyeableIt
     }
 
     @Override
-    public ResourceLocation getModelTexture(ItemStack stack, PracticalPet pet) {
+    public ResourceLocation getModelTexture(ItemStack stack, PetEquipmentWearer wearer) {
         return modelTexture;
     }
 
     @Override
-    public Slot slot(ItemStack stack, PracticalPet pet) {
+    public Slot slot(ItemStack stack, PetEquipmentWearer wearer) {
         return Slot.NECK;
     }
 
     @Override
-    public boolean canBePutOn(ItemStack stack, PracticalPet pet) {
+    public boolean canBePutOn(ItemStack stack, PetEquipmentWearer wearer) {
         return true;
     }
 
     @Override
-    public boolean causesBravery(ItemStack stack, PracticalPet pet) {
+    public boolean causesBravery(ItemStack stack, PetEquipmentWearer wearer) {
         return false;
     }
 

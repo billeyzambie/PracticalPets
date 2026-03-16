@@ -3,6 +3,7 @@ package billeyzambie.practicalpets.items;
 import billeyzambie.animationcontrollers.ACEntity;
 import billeyzambie.animationcontrollers.PracticalPetModel;
 import billeyzambie.practicalpets.client.layer.PetEquipmentLayer;
+import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
 import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.util.PPUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -20,14 +21,14 @@ import net.minecraft.world.item.ItemStack;
 import javax.annotation.Nullable;
 
 public interface EntityModelPetCosmetic extends AttachablePetCosmetic {
-    ResourceLocation getModelTexture(ItemStack stack, PracticalPet pet);
+    ResourceLocation getModelTexture(ItemStack stack, PetEquipmentWearer wearer);
 
     @Nullable
-    default ResourceLocation getModelEmissiveTexture(ItemStack stack, PracticalPet pet) {
+    default ResourceLocation getModelEmissiveTexture(ItemStack stack, PetEquipmentWearer wearer) {
         return null;
     }
 
-    default boolean ignoreLighting(ItemStack stack, PracticalPet pet) {
+    default boolean ignoreLighting(ItemStack stack, PetEquipmentWearer wearer) {
         return false;
     }
 
@@ -38,14 +39,14 @@ public interface EntityModelPetCosmetic extends AttachablePetCosmetic {
             PoseStack poseStack,
             MultiBufferSource buffer,
             int packedLight,
-            PracticalPet pet,
+            PracticalPet wearer,
             float limbSwing,
             float limbSwingAmount,
             float partialticks
     ) {
         poseStack.pushPose();
 
-        if (!pet.isModelYAxisInverted())
+        if (!wearer.isModelYAxisInverted())
             poseStack.mulPose(Axis.ZP.rotationDegrees(180));
 
         float r = 1, g = 1, b = 1;
@@ -57,7 +58,7 @@ public interface EntityModelPetCosmetic extends AttachablePetCosmetic {
         }
 
         VertexConsumer vertexConsumer;
-        if (this.ignoreLighting(stack, pet)) {
+        if (this.ignoreLighting(stack, wearer)) {
             packedLight = LightTexture.FULL_BLOCK;
         }
         var cosmeticModel = layer.cosmeticModels.get(this);
@@ -65,11 +66,11 @@ public interface EntityModelPetCosmetic extends AttachablePetCosmetic {
             throw new Error("Model not defined in the cosmeticModels hashmap for cosmetic of " + this.getClass());
         }
         cosmeticModel.root().resetPose();
-        cosmeticModel.setupAnim((T) pet, 0, 0, 0, 0, 0);
-        ResourceLocation texture = this.getModelTexture(stack, pet);
+        cosmeticModel.setupAnim((T) wearer, 0, 0, 0, 0, 0);
+        ResourceLocation texture = this.getModelTexture(stack, wearer);
         vertexConsumer = buffer.getBuffer(RenderType.entityCutoutNoCull(texture));
         cosmeticModel.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, r, g, b, 1);
-        ResourceLocation emissiveTexture = this.getModelEmissiveTexture(stack, (PracticalPet) pet);
+        ResourceLocation emissiveTexture = this.getModelEmissiveTexture(stack, (PracticalPet) wearer);
         if (emissiveTexture != null) {
             vertexConsumer = buffer.getBuffer(RenderType.eyes(emissiveTexture));
             cosmeticModel.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, r, g, b, 1);

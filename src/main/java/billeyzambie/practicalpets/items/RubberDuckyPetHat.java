@@ -1,5 +1,6 @@
 package billeyzambie.practicalpets.items;
 
+import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
 import billeyzambie.practicalpets.misc.PPSounds;
 import billeyzambie.practicalpets.misc.PracticalPets;
 import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
@@ -31,31 +32,31 @@ public class RubberDuckyPetHat extends Item implements EntityModelPetCosmetic, D
     }
 
     @Override
-    public ResourceLocation getModelTexture(ItemStack stack, PracticalPet pet) {
+    public ResourceLocation getModelTexture(ItemStack stack, PetEquipmentWearer wearer) {
         return modelTexture;
     }
 
     @Override
-    public Slot slot(ItemStack stack, PracticalPet pet) {
+    public Slot slot(ItemStack stack, PetEquipmentWearer wearer) {
         return Slot.HEAD;
     }
 
     @Override
-    public boolean canBePutOn(ItemStack stack, PracticalPet pet) {
+    public boolean canBePutOn(ItemStack stack, PetEquipmentWearer wearer) {
         return true;
     }
 
     @Override
-    public boolean causesBravery(ItemStack stack, PracticalPet pet) {
+    public boolean causesBravery(ItemStack stack, PetEquipmentWearer wearer) {
         return true;
     }
 
     @Override
-    public float reachMultiplier(ItemStack stack, PracticalPet pet) {
+    public float reachMultiplier(ItemStack stack, PetEquipmentWearer wearer) {
         return 1.125f;
     }
 
-    public static void applyEffect(PracticalPet wearer, Entity target) {
+    public static void applyEffect(PetEquipmentWearer wearer, Entity target) {
         playRubberDuckyPetHatSquishAnimation(wearer);
 
         Vec3 direction = target.position().subtract(wearer.position()).normalize().scale(0.2);
@@ -71,24 +72,24 @@ public class RubberDuckyPetHat extends Item implements EntityModelPetCosmetic, D
 
     }
 
-    public static void playRubberDuckyPetHatSquishAnimation(PracticalPet wearer) {
+    public static void playRubberDuckyPetHatSquishAnimation(PetEquipmentWearer wearer) {
         wearer.playSound(PPSounds.DUCK_AMBIENT.get(), 1f, 1.5f + wearer.getRandom().nextFloat() * 0.2f);
         PPNetworking.CHANNEL.send(
-                PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> wearer),
-                new PetHatSquishAnimPacket(wearer.getId())
+                PacketDistributor.TRACKING_ENTITY_AND_SELF.with(wearer::asMob),
+                new PetHatSquishAnimPacket(wearer.asMob().getId())
         );
     }
 
     @Override
-    public void onPetSuccessfullyHurt(ItemStack stack, PracticalPet pet, DamageSource source, float amount) {
+    public void onPetSuccessfullyHurt(ItemStack stack, PetEquipmentWearer wearer, DamageSource source, float amount) {
         Entity target = source.getEntity();
         if (target != null) {
-            applyEffect(pet, target);
+            applyEffect(wearer, target);
         }
     }
 
     @Override
-    public void onPetSuccessfullyHit(ItemStack stack, PracticalPet pet, Entity target) {
-        applyEffect(pet, target);
+    public void onPetSuccessfullyHit(ItemStack stack, PetEquipmentWearer wearer, Entity target) {
+        applyEffect(wearer, target);
     }
 }

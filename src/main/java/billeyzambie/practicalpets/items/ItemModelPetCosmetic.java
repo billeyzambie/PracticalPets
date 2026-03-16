@@ -3,6 +3,7 @@ package billeyzambie.practicalpets.items;
 import billeyzambie.animationcontrollers.ACEntity;
 import billeyzambie.animationcontrollers.PracticalPetModel;
 import billeyzambie.practicalpets.client.layer.PetEquipmentLayer;
+import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
 import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -29,7 +30,7 @@ public interface ItemModelPetCosmetic extends AttachablePetCosmetic {
          * Best for items that cover the top and the sides of the head. */
         STRETCH_XZ
     }
-    ScaleMode getScaleMode(ItemStack stack, PracticalPet pet);
+    ScaleMode getScaleMode(ItemStack stack, PetEquipmentWearer wearer);
 
     float PLAYER_HEAD_ITEM_SCALE = 0.627451f;
 
@@ -40,14 +41,14 @@ public interface ItemModelPetCosmetic extends AttachablePetCosmetic {
             PoseStack poseStack,
             MultiBufferSource buffer,
             int packedLight,
-            PracticalPet pet,
+            PracticalPet wearer,
             float limbSwing,
             float limbSwingAmount,
             float partialticks
     ) {
         poseStack.pushPose();
 
-        if (pet.isModelYAxisInverted())
+        if (wearer.isModelYAxisInverted())
             poseStack.mulPose(Axis.ZP.rotationDegrees(180));
 
 
@@ -57,7 +58,7 @@ public interface ItemModelPetCosmetic extends AttachablePetCosmetic {
                 poseStack,
                 buffer,
                 packedLight,
-                pet,
+                wearer,
                 limbSwing,
                 limbSwingAmount,
                 partialticks
@@ -65,16 +66,16 @@ public interface ItemModelPetCosmetic extends AttachablePetCosmetic {
         poseStack.translate(0, -4 / 16f, 0);
         poseStack.scale(PLAYER_HEAD_ITEM_SCALE, PLAYER_HEAD_ITEM_SCALE, PLAYER_HEAD_ITEM_SCALE);
         Minecraft.getInstance().getItemRenderer().renderStatic(
-                pet,
+                wearer,
                 stack,
                 ItemDisplayContext.HEAD,
                 false,
                 poseStack,
                 buffer,
-                pet.level(),
+                wearer.level(),
                 packedLight,
                 OverlayTexture.NO_OVERLAY,
-                pet.getId()
+                wearer.getId()
         );
         onRenderModelOnPetAfter(
                 layer,
@@ -82,7 +83,7 @@ public interface ItemModelPetCosmetic extends AttachablePetCosmetic {
                 poseStack,
                 buffer,
                 packedLight,
-                pet,
+                wearer,
                 limbSwing,
                 limbSwingAmount,
                 partialticks
@@ -97,7 +98,7 @@ public interface ItemModelPetCosmetic extends AttachablePetCosmetic {
             PoseStack poseStack,
             MultiBufferSource buffer,
             int packedLight,
-            PracticalPet pet,
+            PracticalPet wearer,
             float limbSwing,
             float limbSwingAmount,
             float partialticks
@@ -111,7 +112,7 @@ public interface ItemModelPetCosmetic extends AttachablePetCosmetic {
             PoseStack poseStack,
             MultiBufferSource buffer,
             int packedLight,
-            PracticalPet pet,
+            PracticalPet wearer,
             float limbSwing,
             float limbSwingAmount,
             float partialticks

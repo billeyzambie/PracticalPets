@@ -1,5 +1,6 @@
 package billeyzambie.practicalpets.items;
 
+import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
 import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.misc.PracticalPets;
 import net.minecraft.ChatFormatting;
@@ -24,7 +25,7 @@ public class AnniversaryPetHat extends PetHat {
     final ResourceLocation modelEmissiveTexture;
 
     @Override
-    public @Nullable ResourceLocation getModelEmissiveTexture(ItemStack stack, PracticalPet pet) {
+    public @Nullable ResourceLocation getModelEmissiveTexture(ItemStack stack, PetEquipmentWearer wearer) {
         return modelEmissiveTexture;
     }
 

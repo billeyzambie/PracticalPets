@@ -16,7 +16,7 @@ public interface AttachablePetCosmetic extends PetCosmetic {
             PoseStack poseStack,
             MultiBufferSource buffer,
             int packedLight,
-            PracticalPet pet,
+            PracticalPet wearer,
             float limbSwing,
             float limbSwingAmount,
             float partialticks

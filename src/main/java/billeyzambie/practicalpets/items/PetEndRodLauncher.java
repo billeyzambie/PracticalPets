@@ -1,6 +1,6 @@
 package billeyzambie.practicalpets.items;
 
-import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
+import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
 import billeyzambie.practicalpets.entity.other.PetEndRodProjectile;
 import billeyzambie.practicalpets.misc.ConfigurableBundleItem;
 import billeyzambie.practicalpets.misc.PracticalPets;
@@ -46,48 +46,50 @@ public class PetEndRodLauncher extends ConfigurableBundleItem implements EntityM
     );
 
     @Override
-    public ResourceLocation getModelTexture(ItemStack stack, PracticalPet pet) {
+    public ResourceLocation getModelTexture(ItemStack stack, PetEquipmentWearer wearer) {
         return modelTexture;
     }
 
     @Override
-    public boolean ignoreLighting(ItemStack stack, PracticalPet pet) {
+    public boolean ignoreLighting(ItemStack stack, PetEquipmentWearer wearer) {
         return true;
     }
 
     @Override
-    public Slot slot(ItemStack stack, PracticalPet pet) {
+    public Slot slot(ItemStack stack, PetEquipmentWearer wearer) {
         return Slot.BACK;
     }
 
     @Override
-    public boolean canBePutOn(ItemStack stack, PracticalPet pet) {
+    public boolean canBePutOn(ItemStack stack, PetEquipmentWearer wearer) {
         return true;
     }
 
     @Override
-    public boolean canPerformRangedAttack(ItemStack stack, PracticalPet pet) {
+    public boolean canPerformRangedAttack(ItemStack stack, PetEquipmentWearer wearer) {
         //can perform the ranged attack if it has end rods to inside it to shoot
         return this.getContentWeight(stack) > 0;
     }
 
     @Override
-    public void performRangedAttack(ItemStack stack, PracticalPet shooter, LivingEntity target, float distanceFactor) {
+    public void performRangedAttack(ItemStack stack, PetEquipmentWearer wearer, LivingEntity target, float distanceFactor) {
         if (this.removeOneMatching(stack, s -> s.is(Items.END_ROD)).isEmpty()) {
             return; // no end rods in the launcher
         }
-        shooter.level().addFreshEntity(new PetEndRodProjectile(shooter.level(), shooter, target, Direction.Axis.Y));
-        shooter.playSound(SoundEvents.SHULKER_SHOOT, 2.0F, (shooter.getRandom().nextFloat() - shooter.getRandom().nextFloat()) * 0.2F + 1.0F);
-        shooter.refreshPetEquipmentCache(); //the stack might have just run out of end rods
+        if (wearer instanceof LivingEntity living) {
+            living.level().addFreshEntity(new PetEndRodProjectile(living.level(), living, target, Direction.Axis.Y));
+            living.playSound(SoundEvents.SHULKER_SHOOT, 2.0F, (living.getRandom().nextFloat() - living.getRandom().nextFloat()) * 0.2F + 1.0F);
+            wearer.refreshPetEquipmentCache(); //the stack might have just run out of end rods}
+        }
     }
 
     @Override
-    public boolean causesBravery(ItemStack stack, PracticalPet pet) {
-        return this.canPerformRangedAttack(stack, pet);
+    public boolean causesBravery(ItemStack stack, PetEquipmentWearer wearer) {
+        return this.canPerformRangedAttack(stack, wearer);
     }
 
     @Override
-    public float damageMultiplier(ItemStack stack, PracticalPet pet) {
+    public float damageMultiplier(ItemStack stack, PetEquipmentWearer wearer) {
         return 0.9f;
     }
 

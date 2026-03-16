@@ -1,6 +1,6 @@
 package billeyzambie.practicalpets.items;
 
-import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
+import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.item.DyeableLeatherItem;
@@ -12,12 +12,12 @@ public class PlainPetHat extends PetHat implements DyeableLeatherItem {
     }
 
     @Override
-    public boolean onPetHurt(ItemStack stack, PracticalPet pet, DamageSource source, float amount) {
-        if (amount >= pet.getHealth()) {
-            pet.setEquippedItem(ItemStack.EMPTY, this.slot(stack, pet));
-            pet.playSound(SoundEvents.ITEM_BREAK);
+    public boolean onPetHurt(ItemStack stack, PetEquipmentWearer wearer, DamageSource source, float amount) {
+        if (amount >= wearer.getHealth()) {
+            wearer.setEquippedItem(ItemStack.EMPTY, this.slot(stack, wearer));
+            wearer.playSound(SoundEvents.ITEM_BREAK);
             return false;
         }
-        return super.onPetHurt(stack, pet, source, amount);
+        return super.onPetHurt(stack, wearer, source, amount);
     }
 }
