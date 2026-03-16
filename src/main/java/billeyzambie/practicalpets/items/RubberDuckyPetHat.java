@@ -65,7 +65,7 @@ public class RubberDuckyPetHat extends Item implements EntityModelPetCosmetic, D
             if (wearer.isAlive() && target.isAlive()) {
                 Vec3 direction2 = target.position().subtract(wearer.position()).normalize().scale(0.2);
                 target.push(direction2.x, 0.1, direction2.z);
-                wearer.damageEntity(target, 1);
+                wearer.petCosmeticDamageEntity(target, 1);
             }
         }, 10);
 

@@ -60,7 +60,7 @@ public class PetEndRodProjectile extends Projectile {
         this(PPEntities.PET_END_ROD_PROJECTILE.get(), p_37330_);
         this.setOwner(owner);
         if (owner instanceof PracticalPet pet) {
-            ItemStack backStack = pet.getBackItem();
+            ItemStack backStack = pet.getPetBackItem();
             Item backItem = backStack.getItem();
             if (backItem instanceof DyeableItem dyeableItem) {
                 this.setColor(dyeableItem.getColor(backStack));

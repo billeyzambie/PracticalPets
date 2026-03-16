@@ -72,7 +72,7 @@ public class PetAbilityButton extends Button {
     private static final Component NOT_ENOUGH_LEVELS = Component.translatable("ui.practicalpets.pigeon_send.need_levels").withStyle(ChatFormatting.GRAY);
 
     private void pigeonTick() {
-        ItemStack pigeonBackStack = this.pet.getBackItem();
+        ItemStack pigeonBackStack = this.pet.getPetBackItem();
         Item pigeonBackItem = pigeonBackStack.getItem();
         this.active = false;
         if (pigeonBackItem instanceof PetBackpack backpack) {

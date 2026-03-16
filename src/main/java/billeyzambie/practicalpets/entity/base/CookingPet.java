@@ -43,7 +43,7 @@ public interface CookingPet {
         return result;
     }
     default boolean isChef() {
-        return asPet().getHeadItem().is(PPTags.Items.PET_CHEF_HATS);
+        return asPet().getPetHeadItem().is(PPTags.Items.PET_CHEF_HATS);
     }
     default InteractionResult cookInteract(Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);

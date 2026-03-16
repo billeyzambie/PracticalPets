@@ -29,7 +29,7 @@ public class BananaDuckArmorLayer extends RenderLayer<BananaDuck, BananaDuckMode
     }
 
     public void render(PoseStack p_117032_, MultiBufferSource p_117033_, int p_117034_, BananaDuck p_117035_, float p_117036_, float p_117037_, float p_117038_, float p_117039_, float p_117040_, float p_117041_) {
-        ItemStack itemstack = p_117035_.getBodyItem();
+        ItemStack itemstack = p_117035_.getPetBodyItem();
         if (itemstack.getItem() instanceof DuckArmor duckArmorItem) {
             this.model.setupAnim(p_117035_, p_117036_, p_117037_, p_117039_, p_117040_, p_117041_);
             this.getParentModel().copyPropertiesTo(this.model);

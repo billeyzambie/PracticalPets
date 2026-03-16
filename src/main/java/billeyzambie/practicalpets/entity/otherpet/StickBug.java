@@ -143,7 +143,7 @@ public class StickBug extends PracticalPet implements DancingEntity {
             entity.setSecondsOnFire(i * 4);
         }
 
-        boolean flag = this.damageEntity(entity, f);
+        boolean flag = this.petCosmeticDamageEntity(entity, f);
         if (flag) {
             if (f1 > 0.0F && entity instanceof LivingEntity) {
                 ((LivingEntity)entity).knockback(f1 * 0.5F, Mth.sin(this.getYRot() * ((float)Math.PI / 180F)), -Mth.cos(this.getYRot() * ((float)Math.PI / 180F)));
@@ -164,7 +164,7 @@ public class StickBug extends PracticalPet implements DancingEntity {
     }
 
     @Override
-    public boolean damageEntity(Entity target, float amount) {
+    public boolean petCosmeticDamageEntity(Entity target, float amount) {
         return target.hurt(PPDamageTypes.stickBuggedDamage(
                 (ServerLevel) this.level(),
                 this.getOwner(),

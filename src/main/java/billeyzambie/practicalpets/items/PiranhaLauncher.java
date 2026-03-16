@@ -251,12 +251,12 @@ public class PiranhaLauncher extends Item implements ItemModelPetCosmetic, Dyeab
         shooter.refreshPetEquipmentCache();
         //Fix client showing the pet's piranha launcher still having a piranha inside
         if (getFishCount(stack) == 0) {
-            shooter.setHeadItem(ItemStack.EMPTY);
-            shooter.setHeadItem(stack);
+            shooter.setPetHeadItem(ItemStack.EMPTY);
+            shooter.setPetHeadItem(stack);
         }
 
         stack.hurtAndBreak(1, shooter, p -> {
-            p.setHeadItem(ItemStack.EMPTY);
+            p.setPetHeadItem(ItemStack.EMPTY);
             p.playSound(SoundEvents.ITEM_BREAK);
             this.dropAllFish(stack, stack.getOrCreateTag(), p.level(), p, p.position());
         });

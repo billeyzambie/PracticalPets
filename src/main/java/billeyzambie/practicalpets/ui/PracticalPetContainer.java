@@ -20,19 +20,19 @@ public class PracticalPetContainer implements Container {
 
     @Override
     public boolean isEmpty() {
-        return pet.getHeadItem().isEmpty()
-                && pet.getNeckItem().isEmpty()
-                && pet.getBackItem().isEmpty()
-                && pet.getBodyItem().isEmpty();
+        return pet.getPetHeadItem().isEmpty()
+                && pet.getPetNeckItem().isEmpty()
+                && pet.getPetBackItem().isEmpty()
+                && pet.getPetBodyItem().isEmpty();
     }
 
     @Override
     public @NotNull ItemStack getItem(int slot) {
         return switch (slot) {
-            case 0 -> pet.getHeadItem();
-            case 1 -> pet.getNeckItem();
-            case 2 -> pet.getBackItem();
-            case 3 -> pet.getBodyItem();
+            case 0 -> pet.getPetHeadItem();
+            case 1 -> pet.getPetNeckItem();
+            case 2 -> pet.getPetBackItem();
+            case 3 -> pet.getPetBodyItem();
             default -> ItemStack.EMPTY;
         };
     }
@@ -56,10 +56,10 @@ public class PracticalPetContainer implements Container {
     @Override
     public void setItem(int slot, @NotNull ItemStack stack) {
         switch (slot) {
-            case 0 -> pet.setHeadItem(stack);
-            case 1 -> pet.setNeckItem(stack);
-            case 2 -> pet.setBackItem(stack);
-            case 3 -> pet.setBodyItem(stack);
+            case 0 -> pet.setPetHeadItem(stack);
+            case 1 -> pet.setPetNeckItem(stack);
+            case 2 -> pet.setPetBackItem(stack);
+            case 3 -> pet.setPetBodyItem(stack);
         }
     }
 

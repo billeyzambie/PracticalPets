@@ -14,6 +14,7 @@ import billeyzambie.practicalpets.util.PPUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -33,7 +34,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.ResetUniversalAngerTargetGoal;
-import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
@@ -80,7 +80,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
 
         @Override
         public String toString() {
-            return super.toString().toLowerCase(Locale.ENGLISH);
+            return super.toString().toLowerCase(Locale.ROOT);
         }
     }
 
@@ -126,10 +126,15 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         if (compoundTag.contains("PetLevel", Tag.TAG_INT))
             this.setPetLevelRaw(compoundTag.getInt("PetLevel"));
         this.setPetXP(compoundTag.getFloat("PetXP"));
-        this.setHeadItem(ItemStack.of(compoundTag.getCompound("HeadItem")));
-        this.setNeckItem(ItemStack.of(compoundTag.getCompound("NeckItem")));
-        this.setBackItem(ItemStack.of(compoundTag.getCompound("BackItem")));
-        this.setBodyItem(ItemStack.of(compoundTag.getCompound("BodyItem")));
+        if (compoundTag.contains("NeckItem", CompoundTag.TAG_COMPOUND)) {
+            this.setPetHeadItem(ItemStack.of(compoundTag.getCompound("HeadItem")));
+            this.setPetNeckItem(ItemStack.of(compoundTag.getCompound("NeckItem")));
+            this.setPetBackItem(ItemStack.of(compoundTag.getCompound("BackItem")));
+            this.setPetBodyItem(ItemStack.of(compoundTag.getCompound("BodyItem")));
+        }
+        else {
+            this.loadPetCosmetics(compoundTag);
+        }
         this.loadVariant(compoundTag);
         this.setIsRainbow(compoundTag.getBoolean("IsRainbow"));
         this.readPersistentAngerSaveData(this.level(), compoundTag);
@@ -141,10 +146,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         compoundTag.putBoolean("ShouldFollowOwner", this.shouldFollowOwner());
         compoundTag.putInt("PetLevel", this.petLevel());
         compoundTag.putFloat("PetXP", this.petXP());
-        compoundTag.put("HeadItem", this.getHeadItem().save(new CompoundTag()));
-        compoundTag.put("NeckItem", this.getNeckItem().save(new CompoundTag()));
-        compoundTag.put("BackItem", this.getBackItem().save(new CompoundTag()));
-        compoundTag.put("BodyItem", this.getBodyItem().save(new CompoundTag()));
+        this.savePetCosmetics(compoundTag);
         this.saveVariant(compoundTag);
         compoundTag.putBoolean("IsRainbow", this.isRainbow());
         this.addPersistentAngerSaveData(compoundTag);
@@ -155,7 +157,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
                                                  @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag tag) {
         this.setVariant(this.pickRandomWeightedVariant());
 
-        this.setPetLevel(1);
+        this.setPetLevelRaw(1);
 
         if (this.random.nextInt(300) == 0)
             this.setIsRainbow(true);
@@ -172,146 +174,78 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         );
     }
 
-    public ItemStack getEquippedItem(PetCosmetic.Slot slot) {
-        switch (slot) {
-            case HEAD -> {
-                return getHeadItem();
-            }
-            case NECK -> {
-                return getNeckItem();
-            }
-            case BACK -> {
-                return getBackItem();
-            }
-            case BODY -> {
-                return getBodyItem();
-            }
-        }
-        throw new AssertionError("Missing case for getting pet equipment in slot " + slot);
-    }
-
-    public void setEquippedItem(ItemStack itemStack, PetCosmetic.Slot slot) {
-        switch (slot) {
-            case HEAD -> setHeadItem(itemStack);
-            case NECK -> setNeckItem(itemStack);
-            case BACK -> setBackItem(itemStack);
-            case BODY -> setBodyItem(itemStack);
-        }
-    }
-
-    public ItemStack getHeadItem() {
+    @Override
+    public ItemStack getPetHeadItem() {
         return this.entityData.get(HEAD_ITEM);
     }
 
-    public void setHeadItem(ItemStack itemStack) {
-        if (itemStack.isEmpty()) {
-            ItemStack currentStack = this.getHeadItem();
-            PetCosmetics.getCosmeticForItem(currentStack).ifPresent(
-                    cosmetic -> playSound(cosmetic.getEquipSound(currentStack, this))
-            );
-        }
-        this.entityData.set(HEAD_ITEM, itemStack);
-        refreshPetEquipmentCache();
-        PetCosmetics.getCosmeticForItem(itemStack).ifPresent(
-                cosmetic -> this.playSound(cosmetic.getEquipSound(itemStack, this))
-        );
+    @Override
+    public void setPetHeadItemRaw(ItemStack stack) {
+        this.entityData.set(HEAD_ITEM, stack);
     }
 
-    public ItemStack getNeckItem() {
+    @Override
+    public ItemStack getPetNeckItem() {
         return this.entityData.get(NECK_ITEM);
     }
 
-    public void setNeckItem(ItemStack itemStack) {
-        if (itemStack.isEmpty()) {
-            ItemStack currentStack = this.getNeckItem();
-            PetCosmetics.getCosmeticForItem(currentStack).ifPresent(
-                    cosmetic -> playSound(cosmetic.getEquipSound(currentStack, this))
-            );
-        }
-        this.entityData.set(NECK_ITEM, itemStack);
-        refreshPetEquipmentCache();
-        PetCosmetics.getCosmeticForItem(itemStack).ifPresent(
-                cosmetic -> this.playSound(cosmetic.getEquipSound(itemStack, this))
-        );
+    @Override
+    public void setPetNeckItemRaw(ItemStack stack) {
+        this.entityData.set(NECK_ITEM, stack);
     }
 
-    public ItemStack getBackItem() {
+    @Override
+    public ItemStack getPetBackItem() {
         return this.entityData.get(BACK_ITEM);
     }
 
-    public void setBackItem(ItemStack itemStack) {
-        if (itemStack.isEmpty()) {
-            ItemStack currentStack = this.getBackItem();
-            PetCosmetics.getCosmeticForItem(currentStack).ifPresent(
-                    cosmetic -> playSound(cosmetic.getEquipSound(currentStack, this))
-            );
-        }
-        this.entityData.set(BACK_ITEM, itemStack);
-        refreshPetEquipmentCache();
-        PetCosmetics.getCosmeticForItem(itemStack).ifPresent(
-                cosmetic -> this.playSound(cosmetic.getEquipSound(itemStack, this))
-        );
+    @Override
+    public void setPetBackItemRaw(ItemStack stack) {
+        this.entityData.set(BACK_ITEM, stack);
     }
 
-    public ItemStack getBodyItem() {
+    @Override
+    public ItemStack getPetBodyItem() {
         return this.entityData.get(BODY_ITEM);
     }
 
-    public void setBodyItem(ItemStack itemStack) {
-        if (itemStack.isEmpty()) {
-            ItemStack currentStack = this.getBodyItem();
-            PetCosmetics.getCosmeticForItem(currentStack).ifPresent(
-                    cosmetic -> playSound(cosmetic.getEquipSound(currentStack, this))
-            );
-        }
-        this.entityData.set(BODY_ITEM, itemStack);
-        refreshPetEquipmentCache();
-        PetCosmetics.getCosmeticForItem(itemStack).ifPresent(
-                cosmetic -> this.playSound(cosmetic.getEquipSound(itemStack, this))
-        );
+    @Override
+    public void setPetBodyItemRaw(ItemStack stack) {
+        this.entityData.set(BODY_ITEM, stack);
     }
 
     private boolean anyEquipmentIsBrave = false;
     private float reachMutliplier = 1;
+    private Optional<PetCosmetic.Slot> canShootFromSlot = null;
 
-    public void refreshPetEquipmentCache() {
-        boolean hasBraveEquipment = false;
-        Optional<PetCosmetic.Slot> rangedSlot = Optional.empty();
-        this.reachMutliplier = 1;
-        for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
-            ItemStack cosmeticStack = this.getEquippedItem(slot);
-            Optional<PetCosmetic> cosmeticOptional = PetCosmetics.getCosmeticForItem(cosmeticStack);
-            if (
-                    cosmeticOptional.isPresent()
-            ) {
-                PetCosmetic cosmetic = cosmeticOptional.orElseThrow();
-                if (cosmetic.causesBravery(cosmeticStack, this)) {
-                    hasBraveEquipment = true;
-                }
-                if (rangedSlot.isEmpty() && cosmetic.canPerformRangedAttack(cosmeticStack, this)) {
-                    rangedSlot = Optional.of(slot);
-                }
-                this.reachMutliplier *= cosmetic.reachMultiplier(cosmeticStack, this);
-            }
-        }
-        this.anyEquipmentIsBrave = hasBraveEquipment;
-        this.canShootFromSlot = rangedSlot;
-    }
-
+    @Override
     public boolean anyEquipmentIsBrave() {
         return anyEquipmentIsBrave;
     }
 
+    @Override
     public float getReachMutliplier() {
         return reachMutliplier;
     }
 
-    public boolean shouldDefendOwner(@NotNull LivingEntity target) {
-        return this.anyEquipmentIsBrave() || (this.getMaxHealth() >= 20 && this.getAttributeValue(Attributes.ATTACK_DAMAGE) >= 3);
+    @Override
+    public Optional<PetCosmetic.Slot> canShootFromSlot() {
+        return canShootFromSlot;
     }
 
-    public boolean shouldDefendSelf() {
-        return this.anyEquipmentIsBrave() || (this.getMaxHealth() >= 20 && this.getAttributeValue(Attributes.ATTACK_DAMAGE) >= 3);
+    @Override
+    public void setAnyEquipmentIsBrave(boolean value) {
+        this.anyEquipmentIsBrave = value;
+    }
+
+    @Override
+    public void setReachMultiplier(float value) {
+        this.reachMutliplier = value;
+    }
+
+    @Override
+    public void setCanShootFromSlot(Optional<PetCosmetic.Slot> value) {
+        this.canShootFromSlot = value;
     }
 
     public abstract int getLevel1MaxHealth();
@@ -339,17 +273,13 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         return isTame() && !isBaby();
     }
 
-    public boolean shouldPanic() {
-        return !this.shouldDefendSelf();
-    }
-
     public PracticalPet(EntityType<? extends TamableAnimal> entityType, Level level) {
         super(entityType, level);
         setAttributesAccordingToPetLevel();
     }
 
     @Override
-    public final boolean isFood(@NotNull ItemStack itemStack) {
+    public final boolean isFood( ItemStack itemStack) {
         return isTameItem(itemStack) || isFoodThatDoesntTame(itemStack);
     }
 
@@ -593,10 +523,6 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         }
     }
 
-    public boolean damageEntity(Entity target, float amount) {
-        return target.hurt(this.damageSources().mobAttack(this), amount);
-    }
-
     public boolean shouldntFollowParent() {
         return this.isInSittingPose();
     }
@@ -639,13 +565,13 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         return this.entityData.get(PET_LEVEL);
     }
 
-    public void setPetLevel(int petLevel) {
+    public void setPetLevelRaw(int petLevel) {
         this.entityData.set(PET_LEVEL, petLevel);
         setAttributesAccordingToPetLevel();
     }
 
-    public void setPetLevelPlus(int petLevel) {
-        this.setPetLevel(petLevel);
+    public void setPetLevel(int petLevel) {
+        this.setPetLevelRaw(petLevel);
         this.setPetXP(getTotalPetXPNeededForLevel(petLevel));
         this.setHealth((float) this.getAttribute(Attributes.MAX_HEALTH).getValue());
         this.playLevelUpSound();
@@ -665,7 +591,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
 
         float multiplier = 1;
 
-        ItemStack headStack = getHeadItem();
+        ItemStack headStack = getPetHeadItem();
         if (headStack.getItem() instanceof PetHat petHat)
             multiplier *= petHat.petXPMultiplier(headStack, this);
 
@@ -678,7 +604,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
 
     public void upgradeToLevel(int level) {
         int previousLevel = petLevel();
-        setPetLevel(level);
+        setPetLevelRaw(level);
         if (!level().isClientSide()) {
 
             this.playLevelUpSound();
@@ -928,7 +854,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
             // Only run if this is the first time it's tamed, since I plan to add owner switching later.
             // And also only if it doesn't have a bowtie already,
             // in case I make some pets rarely spawn with a special kind of bowtie or something
-            if (!this.isTame() && this.getNeckItem().isEmpty()) {
+            if (!this.isTame() && this.getPetNeckItem().isEmpty()) {
                 ItemStack bowtie = new ItemStack(PPItems.PET_BOWTIE.get());
 
                 float hue = this.getRandom().nextFloat();
@@ -940,20 +866,20 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
                 tag.put("display", display);
                 bowtie.setTag(tag);
 
-                this.setNeckItem(bowtie);
+                this.setPetNeckItem(bowtie);
             }
 
             CompoundTag persistentData = player.getPersistentData();
             CompoundTag persistedData = persistentData.getCompound(Player.PERSISTED_NBT_TAG);
             int foundersHatsClaimed = persistedData.getInt(FOUNDERS_HATS_CLAIMED_TAG_ID);
             if (
-                    this.getHeadItem().isEmpty()
+                    this.getPetHeadItem().isEmpty()
                             //&& LocalDate.now().isBefore(FOUNDERS_HAT_END_DATE)
                             && foundersHatsClaimed < 5
             ) {
                 ItemStack foundersHat = new ItemStack(PPItems.ANNIVERSARY_PET_HAT_0.get());
                 AnniversaryPetHat.putPlayerName(foundersHat, player.getName().getString());
-                this.setHeadItem(foundersHat);
+                this.setPetHeadItem(foundersHat);
                 persistedData.putInt(FOUNDERS_HATS_CLAIMED_TAG_ID, foundersHatsClaimed + 1);
                 persistentData.put(Player.PERSISTED_NBT_TAG, persistedData);
                 player.sendSystemMessage(Component.translatable("ui.practicalpets.chat.got_founders_hat", foundersHat.getDisplayName(), foundersHatsClaimed + 1));
@@ -1043,8 +969,6 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
 
     private static final EntityDataAccessor<Integer> DATA_REMAINING_ANGER_TIME = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.INT);
 
-    private Optional<PetCosmetic.Slot> canShootFromSlot = Optional.empty();
-
     public boolean canPerformRangedAttack() {
         return this.canPerformInnateRangedAttack() || this.canPerformCosmeticRangedAttack();
     }
@@ -1056,13 +980,13 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
     }
 
     public boolean canPerformCosmeticRangedAttack() {
-        return this.canShootFromSlot.isPresent();
+        return this.canShootFromSlot().isPresent();
     }
 
     @Override
     public void performRangedAttack(@NotNull LivingEntity target, float distanceFactor) {
         if (this.canPerformCosmeticRangedAttack())
-            this.performCosmeticRangedAttack(canShootFromSlot.orElseThrow(), target, distanceFactor);
+            this.performCosmeticRangedAttack(canShootFromSlot().orElseThrow(), target, distanceFactor);
         else if (this.canPerformInnateRangedAttack()) {
             this.performInnateRangedAttack(target, distanceFactor);
         }

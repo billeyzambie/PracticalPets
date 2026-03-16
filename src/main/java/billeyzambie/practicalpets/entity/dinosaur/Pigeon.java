@@ -481,7 +481,7 @@ public class Pigeon extends PracticalPet {
                         }
                         this.returnFromMission();
                     } else {
-                        ItemStack backStack = this.getBackItem();
+                        ItemStack backStack = this.getPetBackItem();
                         Item backItem = backStack.getItem();
                         if (
                                 backItem instanceof PetBackpack backpack

@@ -36,7 +36,7 @@ public final class PPCommands {
                                 .executes(commandContext -> {
                                     PracticalPet pet = (PracticalPet) EntityArgument.getEntity(commandContext, "pet");
                                     int level = IntegerArgumentType.getInteger(commandContext, "level");
-                                    pet.setPetLevelPlus(level);
+                                    pet.setPetLevel(level);
                                     commandContext.getSource().sendSuccess(() -> Component.translatable("command.practicalpets.set_pet_level.success", pet.getName(), level), true);
                                     return 1;
                                 })))
