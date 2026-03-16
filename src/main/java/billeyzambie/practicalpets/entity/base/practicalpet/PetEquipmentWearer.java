@@ -44,6 +44,14 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
     void setReachMultiplier(float value);
     void setCanShootFromSlot(Optional<PetCosmetic.Slot> value);
 
+    //Used for scaling certain hats
+    float headSizeX();
+    float headSizeY();
+    float headSizeZ();
+    default boolean isModelYAxisInverted() {
+        return false;
+    }
+
     Component getDeathMessage();
 
     boolean isTame();

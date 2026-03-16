@@ -82,6 +82,10 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         }
     }
 
+    @Override
+    public boolean isModelYAxisInverted() {
+        return true;
+    }
 
     private static final EntityDataAccessor<Boolean> SHOULD_FOLLOW_OWNER = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> HAS_TARGET = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.BOOLEAN);
