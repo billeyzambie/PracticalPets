@@ -138,6 +138,9 @@ public class PetEquipmentEvents {
 
     @SubscribeEvent
     public static void onEntityJoinLevel(EntityJoinLevelEvent event) {
+        if (event.getLevel().isClientSide())
+            return;
+
         var entity = event.getEntity();
 
         if (!(entity instanceof PetEquipmentWearer))
