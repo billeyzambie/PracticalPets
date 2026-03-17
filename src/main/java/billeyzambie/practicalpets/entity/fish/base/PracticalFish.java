@@ -7,6 +7,8 @@ import billeyzambie.practicalpets.entity.base.WeightedVariantEntity;
 import billeyzambie.practicalpets.entity.base.practicalpet.IPracticalPet;
 import billeyzambie.practicalpets.goal.FishOwnerHurtByTargetGoal;
 import billeyzambie.practicalpets.goal.FishOwnerHurtTargetGoal;
+import billeyzambie.practicalpets.goal.PetEquipmentWearerCosmeticRangedAttackGoal;
+import billeyzambie.practicalpets.goal.PetEquipmentWearerMeleeAttackGoal;
 import billeyzambie.practicalpets.items.PetCosmetic;
 import billeyzambie.practicalpets.items.PiranhaLauncher;
 import billeyzambie.practicalpets.misc.PPEntities;
@@ -447,8 +449,9 @@ public abstract class PracticalFish extends TamableFish implements IPracticalPet
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.25D, true));
-        this.goalSelector.addGoal(3, new BreedGoal(this, 1.25D));
+        this.goalSelector.addGoal(2, new PetEquipmentWearerCosmeticRangedAttackGoal(this, 1.25d));
+        this.goalSelector.addGoal(2, new PetEquipmentWearerMeleeAttackGoal(this, 1.25d, true));
+        this.goalSelector.addGoal(3, new BreedGoal(this, 1.25d));
         this.goalSelector.addGoal(6, new FishSwimGoal(this));
         this.goalSelector.addGoal(8, new FollowFlockLeaderGoal(this));
         HurtByTargetGoal hurtByTargetGoal = new HurtByTargetGoal(this);
