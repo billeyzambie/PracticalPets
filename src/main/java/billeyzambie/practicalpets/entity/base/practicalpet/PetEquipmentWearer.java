@@ -58,6 +58,9 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
     default boolean canInteractEventPutPetEquipment(Player player, InteractionHand hand) {
         return true;
     }
+    default double createWearerCosmeticRangedSpeedModifier() {
+        return 1.25;
+    }
 
     Component getDeathMessage();
 

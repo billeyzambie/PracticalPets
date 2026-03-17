@@ -388,7 +388,6 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         if (panicGoal != null)
             this.goalSelector.addGoal(10, panicGoal);
         this.goalSelector.addGoal(20, new SitWhenOrderedToGoal(this));
-        this.goalSelector.addGoal(30, new PetEquipmentWearerCosmeticRangedAttackGoal(this, this.createMeleeAttackSpeedMultiplier()));
         this.goalSelector.addGoal(50, this.createMeleeAttackGoal());
         this.goalSelector.addGoal(55, new PPBegGoal(this));
         this.goalSelector.addGoal(60, new FollowOwnerWanderableGoal(this, this.createFollowOwnerSpeed(), 7.0F, 5.0F, false));
@@ -417,7 +416,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
     }
 
     protected @NotNull Goal createMeleeAttackGoal() {
-        return new PetEquipmentWearerMeleeAttackGoal(this, this.createMeleeAttackSpeedMultiplier(), false);
+        return new MeleeAttackGoal(this, this.createMeleeAttackSpeedMultiplier(), false);
     }
 
     protected @Nullable Goal createPanicGoal() {
@@ -445,6 +444,11 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
 
     protected double createMeleeAttackSpeedMultiplier() {
         return 1.25;
+    }
+
+    @Override
+    public double createWearerCosmeticRangedSpeedModifier() {
+        return createMeleeAttackSpeedMultiplier();
     }
 
     @Nullable
