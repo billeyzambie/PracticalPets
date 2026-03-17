@@ -496,12 +496,6 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
                 amount += mob.getMaxHealth() / 20;
             addPetXP(amount);
         }
-        for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
-            ItemStack cosmeticStack = this.getEquippedItem(slot);
-            PetCosmetics.getCosmeticForItem(cosmeticStack).ifPresent(
-                    cosmetic -> cosmetic.onPetHit(cosmeticStack, this, entity)
-            );
-        }
     }
 
     public boolean shouldntFollowParent() {

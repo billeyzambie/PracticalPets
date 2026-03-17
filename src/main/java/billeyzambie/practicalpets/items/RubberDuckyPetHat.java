@@ -15,6 +15,11 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 public class RubberDuckyPetHat extends Item implements EntityModelPetCosmetic, DyeableItem {
     public RubberDuckyPetHat() {
         super(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
@@ -55,7 +60,16 @@ public class RubberDuckyPetHat extends Item implements EntityModelPetCosmetic, D
         return 1.125f;
     }
 
+    private static final Set<Integer> entityIdJustGotRubberDuckied = new HashSet<>();
+
     public static void applyEffect(PetEquipmentWearer wearer, Entity target) {
+        int targetId = target.getId();
+        if (entityIdJustGotRubberDuckied.contains(targetId)) {
+            entityIdJustGotRubberDuckied.remove(targetId);
+            return;
+        }
+        entityIdJustGotRubberDuckied.add(targetId);
+
         playRubberDuckyPetHatSquishAnimation(wearer);
 
         Vec3 direction = target.position().subtract(wearer.position()).normalize().scale(0.2);

@@ -9,11 +9,13 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -78,5 +80,22 @@ public class PetEquipmentEvents {
         }
 
         event.setAmount(amount);
+    }
+
+    @SubscribeEvent
+    public static void onLivingAttack(LivingAttackEvent event) {
+        LivingEntity target = event.getEntity();
+        Entity attacker = event.getSource().getEntity();
+
+        if (!(attacker instanceof PetEquipmentWearer wearer))
+            return;
+
+        for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
+            ItemStack cosmeticStack = wearer.getEquippedItem(slot);
+            PetCosmetics.getCosmeticForItem(cosmeticStack).ifPresent(
+                    cosmetic -> cosmetic.onPetHit(cosmeticStack, wearer, target)
+            );
+
+        }
     }
 }
