@@ -12,7 +12,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.RangedAttackMob;
@@ -23,7 +22,6 @@ import net.minecraft.world.item.ShearsItem;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
-import java.util.function.BiFunction;
 
 public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
     void setPetHeadItemRaw(ItemStack stack);
@@ -134,42 +132,6 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
 
     default boolean petCosmeticDamageEntity(Entity target, float amount) {
         return target.hurt(asMob().damageSources().mobAttack(asMob()), amount);
-    }
-
-    default boolean petCosmeticsWrappedHurt(
-            DamageSource source,
-            float amount,
-            BiFunction<DamageSource, Float, Boolean> wrappedHurt
-    ) {
-
-        for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
-            ItemStack cosmeticStack = this.getEquippedItem(slot);
-            Optional<PetCosmetic> cosmeticOptional = PetCosmetics.getCosmeticForItem(cosmeticStack);
-            if (cosmeticOptional.isPresent()) {
-                var cosmetic = cosmeticOptional.orElseThrow();
-                amount *= cosmetic.damageMultiplier(cosmeticStack, this);
-            }
-        }
-        for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
-            ItemStack cosmeticStack = this.getEquippedItem(slot);
-            Optional<PetCosmetic> cosmeticOptional = PetCosmetics.getCosmeticForItem(cosmeticStack);
-            if (cosmeticOptional.isPresent()) {
-                var cosmetic = cosmeticOptional.orElseThrow();
-                if (!cosmetic.onPetHurt(cosmeticStack, this, source, amount))
-                    return false;
-            }
-        }
-        boolean result = wrappedHurt.apply(source, amount);
-        float finalAmount = amount;
-        if (result) {
-            for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
-                ItemStack cosmeticStack = this.getEquippedItem(slot);
-                PetCosmetics.getCosmeticForItem(cosmeticStack).ifPresent(
-                        cosmetic -> cosmetic.onPetSuccessfullyHurt(cosmeticStack, this, source, finalAmount)
-                );
-            }
-        }
-        return result;
     }
 
     default void refreshPetEquipmentCache() {

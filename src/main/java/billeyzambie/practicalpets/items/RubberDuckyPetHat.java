@@ -3,7 +3,6 @@ package billeyzambie.practicalpets.items;
 import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
 import billeyzambie.practicalpets.misc.PPSounds;
 import billeyzambie.practicalpets.misc.PracticalPets;
-import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.misc.PPNetworking;
 import billeyzambie.practicalpets.network.PetHatSquishAnimPacket;
 import billeyzambie.practicalpets.util.DelayedTaskManager;
@@ -82,15 +81,16 @@ public class RubberDuckyPetHat extends Item implements EntityModelPetCosmetic, D
     }
 
     @Override
-    public void onPetSuccessfullyHurt(ItemStack stack, PetEquipmentWearer wearer, DamageSource source, float amount) {
+    public boolean onPetHurt(ItemStack stack, PetEquipmentWearer wearer, DamageSource source, float amount) {
         Entity target = source.getEntity();
         if (target != null) {
             applyEffect(wearer, target);
         }
+        return false;
     }
 
     @Override
-    public void onPetSuccessfullyHit(ItemStack stack, PetEquipmentWearer wearer, Entity target) {
+    public void onPetHit(ItemStack stack, PetEquipmentWearer wearer, Entity target) {
         applyEffect(wearer, target);
     }
 }

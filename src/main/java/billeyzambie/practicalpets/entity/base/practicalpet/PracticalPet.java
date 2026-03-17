@@ -475,7 +475,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
     public boolean hurt(DamageSource source, float amount) {
         if (source.getEntity() instanceof LivingEntity living && this.isOwnedBy(living) && !living.isShiftKeyDown())
             return false;
-        boolean result = this.petCosmeticsWrappedHurt(source, amount, super::hurt);
+        boolean result = super.hurt(source, amount);
         if (result && this.isTame())
             this.setFollowMode(PracticalPet.FollowMode.FOLLOWING);
         return result;
@@ -499,7 +499,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
             ItemStack cosmeticStack = this.getEquippedItem(slot);
             PetCosmetics.getCosmeticForItem(cosmeticStack).ifPresent(
-                    cosmetic -> cosmetic.onPetSuccessfullyHit(cosmeticStack, this, entity)
+                    cosmetic -> cosmetic.onPetHit(cosmeticStack, this, entity)
             );
         }
     }
