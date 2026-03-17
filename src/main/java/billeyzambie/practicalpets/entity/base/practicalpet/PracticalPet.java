@@ -218,7 +218,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
 
     private boolean anyEquipmentIsBrave = false;
     private float reachMutliplier = 1;
-    private Optional<PetCosmetic.Slot> canShootFromSlot = null;
+    private Optional<PetCosmetic.Slot> canShootFromSlot = Optional.empty();
 
     @Override
     public boolean anyEquipmentIsBrave() {
@@ -658,7 +658,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
     @Override
     protected void dropEquipment() {
         super.dropEquipment();
-        this.dropAllEquipment(false);
+        this.dropAllPetEquipment(false);
     }
 
     private Component deathMessage = Component.empty();

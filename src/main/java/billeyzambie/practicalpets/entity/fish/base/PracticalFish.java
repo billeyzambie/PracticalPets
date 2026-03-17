@@ -141,14 +141,14 @@ public abstract class PracticalFish extends TamableFish implements IPracticalPet
     @Override
     public void remove(RemovalReason reason) {
         if (reason == RemovalReason.DISCARDED)
-            this.dropAllEquipment(true);
+            this.dropAllPetEquipment(true);
         super.remove(reason);
     }
 
     @Override
     protected void dropEquipment() {
         super.dropEquipment();
-        this.dropAllEquipment(false);
+        this.dropAllPetEquipment(false);
     }
 
     private Component deathMessage = Component.empty();

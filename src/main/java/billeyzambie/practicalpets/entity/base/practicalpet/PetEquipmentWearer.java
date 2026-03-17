@@ -116,7 +116,7 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
                     itemstack.hurtAndBreak(1, player, lambdaPlayer -> {
                         lambdaPlayer.broadcastBreakEvent(hand);
                     });
-                    this.dropAllEquipment(true);
+                    this.dropAllPetEquipment(true);
                     return InteractionResult.CONSUME;
                 }
             }
@@ -194,7 +194,7 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
     MutableComponent NEWLINE = Component.literal("\n");
 
     /** Remember to call this on dropEquipment */
-    default void dropAllEquipment(boolean deleteCurrentEquipment) {
+    default void dropAllPetEquipment(boolean deleteCurrentEquipment) {
         for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
             ItemStack stack = this.getEquippedItem(slot).copy();
             Item item = stack.getItem();
