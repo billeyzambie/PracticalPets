@@ -133,10 +133,10 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         }
 
         if (compoundTag.contains("NeckItem", CompoundTag.TAG_COMPOUND)) {
-            this.setPetHeadItem(ItemStack.of(compoundTag.getCompound("HeadItem")));
-            this.setPetNeckItem(ItemStack.of(compoundTag.getCompound("NeckItem")));
-            this.setPetBackItem(ItemStack.of(compoundTag.getCompound("BackItem")));
-            this.setPetBodyItem(ItemStack.of(compoundTag.getCompound("BodyItem")));
+            this.setPetHeadItemRaw(ItemStack.of(compoundTag.getCompound("HeadItem")));
+            this.setPetNeckItemRaw(ItemStack.of(compoundTag.getCompound("NeckItem")));
+            this.setPetBackItemRaw(ItemStack.of(compoundTag.getCompound("BackItem")));
+            this.setPetBodyItemRaw(ItemStack.of(compoundTag.getCompound("BodyItem")));
         }
         else {
             this.loadPetCosmetics(compoundTag);

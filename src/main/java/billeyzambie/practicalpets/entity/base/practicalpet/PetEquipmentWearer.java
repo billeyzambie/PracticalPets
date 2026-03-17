@@ -217,10 +217,10 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
      * Remember to also define the things in defineSynchedData
      */
     default void loadPetCosmetics(CompoundTag compoundTag) {
-        this.setPetHeadItem(ItemStack.of(compoundTag.getCompound("PPetHeadItem")));
-        this.setPetNeckItem(ItemStack.of(compoundTag.getCompound("PPetNeckItem")));
-        this.setPetBackItem(ItemStack.of(compoundTag.getCompound("PPetBackItem")));
-        this.setPetBodyItem(ItemStack.of(compoundTag.getCompound("PPetBodyItem")));
+        this.setPetHeadItemRaw(ItemStack.of(compoundTag.getCompound("PPetHeadItem")));
+        this.setPetNeckItemRaw(ItemStack.of(compoundTag.getCompound("PPetNeckItem")));
+        this.setPetBackItemRaw(ItemStack.of(compoundTag.getCompound("PPetBackItem")));
+        this.setPetBodyItemRaw(ItemStack.of(compoundTag.getCompound("PPetBodyItem")));
     }
 
     default void savePetCosmetics(CompoundTag compoundTag) {
