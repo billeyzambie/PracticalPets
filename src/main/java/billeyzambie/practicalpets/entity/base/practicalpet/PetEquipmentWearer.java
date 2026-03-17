@@ -193,6 +193,7 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
 
     MutableComponent NEWLINE = Component.literal("\n");
 
+    /** Remember to call this on dropEquipment */
     default void dropAllEquipment(boolean deleteCurrentEquipment) {
         for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
             ItemStack stack = this.getEquippedItem(slot).copy();
