@@ -135,6 +135,13 @@ public abstract class PracticalFish extends TamableFish implements IPracticalPet
         this.canShootFromSlot = value;
     }
 
+    @Override
+    public void remove(RemovalReason reason) {
+        if (reason == RemovalReason.DISCARDED)
+            this.dropAllEquipment(true);
+        super.remove(reason);
+    }
+
     private Component deathMessage = Component.empty();
 
     @Override
