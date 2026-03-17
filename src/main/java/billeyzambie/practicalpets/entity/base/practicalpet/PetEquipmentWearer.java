@@ -72,7 +72,7 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
 
                 PetCosmetic cosmetic = cosmeticOptional.orElseThrow();
 
-                if (cosmetic.canBePutOn(stack, this) && !player.isSecondaryUseActive()) {
+                if (cosmetic.canBePutOn(stack, this)) {
                     PetCosmetic.Slot slot = cosmetic.slot(stack, this);
                     ItemStack currentCosmetic = this.getEquippedItem(slot);
                     if (currentCosmetic.isEmpty()) {

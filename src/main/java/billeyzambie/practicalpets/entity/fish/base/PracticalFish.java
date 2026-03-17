@@ -30,6 +30,7 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
@@ -103,7 +104,7 @@ public abstract class PracticalFish extends TamableFish implements IPracticalPet
 
     private boolean anyEquipmentIsBrave = false;
     private float reachMutliplier = 1;
-    private Optional<PetCosmetic.Slot> canShootFromSlot = null;
+    private Optional<PetCosmetic.Slot> canShootFromSlot = Optional.empty();
 
     @Override
     public boolean anyEquipmentIsBrave() {
@@ -494,6 +495,17 @@ public abstract class PracticalFish extends TamableFish implements IPracticalPet
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        boolean clientSide = this.level().isClientSide();
+
+        if (
+                player.onGround() && stack.getItem() instanceof PiranhaLauncher piranhaLauncher
+                    && !(this.getVehicle() instanceof Projectile) && !player.isSecondaryUseActive()
+        ) {
+            if (piranhaLauncher.tryInsertFish(stack, this, player)) {
+                return InteractionResult.sidedSuccess(clientSide);
+            }
+        }
 
         InteractionResult petEquipmentWearerEquip = this.petEquipmentWearerEquip(player, hand);
         if (petEquipmentWearerEquip != InteractionResult.PASS)
@@ -503,8 +515,6 @@ public abstract class PracticalFish extends TamableFish implements IPracticalPet
         if (petEquipmentWearerShear != InteractionResult.PASS)
             return petEquipmentWearerShear;
 
-        ItemStack stack = player.getItemInHand(hand);
-        boolean clientSide = this.level().isClientSide();
         if (this.isFood(stack)) {
             if (this.getHealth() < this.getMaxHealth()) {
                 if (!clientSide) {
@@ -528,10 +538,6 @@ public abstract class PracticalFish extends TamableFish implements IPracticalPet
                         this.level().broadcastEntityEvent(this, (byte) 6);
                     }
                 }
-                return InteractionResult.sidedSuccess(clientSide);
-            }
-        } else if (player.onGround() && stack.getItem() instanceof PiranhaLauncher piranhaLauncher) {
-            if (piranhaLauncher.tryInsertFish(stack, this, player)) {
                 return InteractionResult.sidedSuccess(clientSide);
             }
         }
