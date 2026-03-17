@@ -21,22 +21,12 @@ import java.util.UUID;
 public abstract class AbstractDuck extends PracticalPet {
 
     @Override
-    public int getLevel1MaxHealth() {
-        return 6;
-    }
-
-    @Override
-    public int getLevel1AttackDamage() {
-        return 2;
-    }
-
-    @Override
-    public int getLevel10MaxHealth() {
+    public double getLevel10MaxHealth() {
         return 80;
     }
 
     @Override
-    public int getLevel10AttackDamage() {
+    public double getLevel10AttackDamage() {
         return 16;
     }
 

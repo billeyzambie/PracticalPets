@@ -61,6 +61,10 @@ public abstract class PracticalFish extends TamableFish implements IPracticalPet
     private static final EntityDataAccessor<ItemStack> BACK_ITEM = SynchedEntityData.defineId(PracticalFish.class, EntityDataSerializers.ITEM_STACK);
     private static final EntityDataAccessor<ItemStack> BODY_ITEM = SynchedEntityData.defineId(PracticalFish.class, EntityDataSerializers.ITEM_STACK);
 
+    @Override
+    public boolean isLevelable() {
+        return false;
+    }
 
     @Override
     public ItemStack getPetHeadItem() {

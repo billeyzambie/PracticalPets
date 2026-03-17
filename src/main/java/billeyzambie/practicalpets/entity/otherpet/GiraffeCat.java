@@ -78,22 +78,12 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
     }
 
     @Override
-    public int getLevel1MaxHealth() {
-        return 16;
-    }
-
-    @Override
-    public int getLevel1AttackDamage() {
-        return 3;
-    }
-
-    @Override
-    public int getLevel10MaxHealth() {
+    public double getLevel10MaxHealth() {
         return 120;
     }
 
     @Override
-    public int getLevel10AttackDamage() {
+    public double getLevel10AttackDamage() {
         return 21;
     }
 

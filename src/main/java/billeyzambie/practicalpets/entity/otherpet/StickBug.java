@@ -64,22 +64,12 @@ public class StickBug extends PracticalPet implements DancingEntity {
     }
 
     @Override
-    public int getLevel1MaxHealth() {
-        return 2;
-    }
-
-    @Override
-    public int getLevel1AttackDamage() {
-        return 1;
-    }
-
-    @Override
-    public int getLevel10MaxHealth() {
+    public double getLevel10MaxHealth() {
         return 20;
     }
 
     @Override
-    public int getLevel10AttackDamage() {
+    public double getLevel10AttackDamage() {
         return 5;
     }
 

@@ -7,7 +7,6 @@ import billeyzambie.practicalpets.entity.base.WeightedVariantEntity;
 import billeyzambie.practicalpets.items.*;
 import billeyzambie.practicalpets.misc.*;
 import billeyzambie.practicalpets.network.RandomIdle1AnimPacket;
-import billeyzambie.practicalpets.petequipment.PetCosmetics;
 import billeyzambie.practicalpets.ui.PracticalPetMenu;
 import billeyzambie.practicalpets.goal.*;
 import billeyzambie.practicalpets.util.PPUtil;
@@ -24,7 +23,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.Mth;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.DifficultyInstance;
@@ -125,9 +123,15 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
     public void readAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
         this.setShouldFollowOwner(compoundTag.getBoolean("ShouldFollowOwner"));
-        if (compoundTag.contains("PetLevel", Tag.TAG_INT))
+
+        if (compoundTag.contains("PetLevel", Tag.TAG_INT)) {
             this.setPetLevelRaw(compoundTag.getInt("PetLevel"));
-        this.setPetXP(compoundTag.getFloat("PetXP"));
+            this.setPetXPRaw(compoundTag.getFloat("PetXP"));
+        }
+        else {
+            this.loadPetLevelingData(compoundTag);
+        }
+
         if (compoundTag.contains("NeckItem", CompoundTag.TAG_COMPOUND)) {
             this.setPetHeadItem(ItemStack.of(compoundTag.getCompound("HeadItem")));
             this.setPetNeckItem(ItemStack.of(compoundTag.getCompound("NeckItem")));
@@ -137,6 +141,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         else {
             this.loadPetCosmetics(compoundTag);
         }
+
         this.loadVariant(compoundTag);
         this.setIsRainbow(compoundTag.getBoolean("IsRainbow"));
         this.readPersistentAngerSaveData(this.level(), compoundTag);
@@ -146,8 +151,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
     public void addAdditionalSaveData(@NotNull CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
         compoundTag.putBoolean("ShouldFollowOwner", this.shouldFollowOwner());
-        compoundTag.putInt("PetLevel", this.petLevel());
-        compoundTag.putFloat("PetXP", this.petXP());
+        this.savePetLevelingData(compoundTag);
         this.savePetCosmetics(compoundTag);
         this.saveVariant(compoundTag);
         compoundTag.putBoolean("IsRainbow", this.isRainbow());
@@ -256,34 +260,8 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
             this.performCosmeticRangedAttack(canShootFromSlot().orElseThrow(), target, distanceFactor);
     }
 
-    public abstract int getLevel1MaxHealth();
-
-    public abstract int getLevel1AttackDamage();
-
-    public abstract int getLevel10MaxHealth();
-
-    public abstract int getLevel10AttackDamage();
-
-    protected void setAttributesAccordingToPetLevel() {
-        int level = this.petLevel();
-        double progress1to10 = (level - 1) / 9d;
-        //if (progress1to10 < 1)
-        //    progress1to10 *= progress1to10;
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(
-                Math.round(Mth.lerp(progress1to10, getLevel1MaxHealth(), getLevel10MaxHealth()) / 2d) * 2
-        );
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(
-                Mth.lerp(progress1to10, getLevel1AttackDamage(), getLevel10AttackDamage())
-        );
-    }
-
-    public boolean isLevelable() {
-        return isTame() && !isBaby();
-    }
-
     public PracticalPet(EntityType<? extends TamableAnimal> entityType, Level level) {
         super(entityType, level);
-        setAttributesAccordingToPetLevel();
     }
 
     @Override
@@ -545,93 +523,20 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         return this.entityData.get(PET_LEVEL);
     }
 
+    @Override
     public void setPetLevelRaw(int petLevel) {
         this.entityData.set(PET_LEVEL, petLevel);
-        setAttributesAccordingToPetLevel();
+        this.refreshPetLevelAttributeMultipliers();
     }
 
-    public void setPetLevel(int petLevel) {
-        this.setPetLevelRaw(petLevel);
-        this.setPetXP(getTotalPetXPNeededForLevel(petLevel));
-        this.setHealth((float) this.getAttribute(Attributes.MAX_HEALTH).getValue());
-        this.playLevelUpSound();
-    }
-
+    @Override
     public float petXP() {
         return this.entityData.get(PET_XP);
     }
 
-    private void setPetXP(float petXP) {
+    @Override
+    public void setPetXPRaw(float petXP) {
         this.entityData.set(PET_XP, petXP);
-    }
-
-    public void addPetXP(float amount) {
-        if (!isLevelable())
-            return;
-
-        float multiplier = 1;
-
-        ItemStack headStack = getPetHeadItem();
-        if (headStack.getItem() instanceof PetHat petHat)
-            multiplier *= petHat.petXPMultiplier(headStack, this);
-
-        setPetXP(petXP() + amount * multiplier);
-
-        if (petXP() >= getTotalPetXPNeededForLevel(petLevel() + 1)) {
-            upgradeToLevel(petLevel() + 1);
-        }
-    }
-
-    public void upgradeToLevel(int level) {
-        int previousLevel = petLevel();
-        setPetLevelRaw(level);
-        if (!level().isClientSide()) {
-
-            this.playLevelUpSound();
-
-            Component message = Component.translatable(
-                    "ui.practicalpets.chat.level_up",
-                    Component.literal(this.getName().getString()).withStyle(ChatFormatting.LIGHT_PURPLE),
-                    Component.literal(String.valueOf(level)).withStyle(ChatFormatting.BLUE)
-            ).withStyle(ChatFormatting.WHITE);
-
-            double radius = 16.0;
-            AABB area = new AABB(this.blockPosition()).inflate(radius);
-            List<Player> nearbyPlayers = this.level().getEntitiesOfClass(Player.class, area);
-
-            for (Player player : nearbyPlayers) {
-                player.sendSystemMessage(message);
-            }
-
-            if (this.getOwner() instanceof ServerPlayer owner && !nearbyPlayers.contains(owner)) {
-                owner.sendSystemMessage(message);
-            }
-
-        }
-
-        setHealth(getMaxHealth());
-    }
-
-    private void playLevelUpSound() {
-        this.level().playSound(null, this.blockPosition(), PPSounds.PET_LEVEL_UP.get(), SoundSource.NEUTRAL,
-                1.0F, (float) Math.pow(2, (this.petLevel() - 2) / 12d));
-    }
-
-    /**
-     * unused
-     */
-    private static float xpFormula1(int level) {
-        if (level == 1)
-            return 0;
-        return 40 * (level - 1) + 2.5f * level * level;
-    }
-
-    private static float xpFormula2(int level) {
-        return 40 * (level - 1) + 10 * (level - 1) * (level - 1) * (level - 1);
-    }
-
-    public float getTotalPetXPNeededForLevel(int level) {
-        return xpFormula2(level);
     }
 
     public FollowMode followMode() {

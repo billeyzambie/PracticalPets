@@ -205,22 +205,12 @@ public class Rat extends PracticalPet implements CookingPet {
     }
 
     @Override
-    public int getLevel1MaxHealth() {
-        return 10;
-    }
-
-    @Override
-    public int getLevel1AttackDamage() {
-        return 2;
-    }
-
-    @Override
-    public int getLevel10MaxHealth() {
+    public double getLevel10MaxHealth() {
         return 100;
     }
 
     @Override
-    public int getLevel10AttackDamage() {
+    public double getLevel10AttackDamage() {
         return 16;
     }
 
