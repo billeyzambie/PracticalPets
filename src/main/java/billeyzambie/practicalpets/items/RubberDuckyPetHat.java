@@ -74,6 +74,7 @@ public class RubberDuckyPetHat extends Item implements EntityModelPetCosmetic, D
 
     public static void playRubberDuckyPetHatSquishAnimation(PetEquipmentWearer wearer) {
         wearer.playSound(PPSounds.DUCK_AMBIENT.get(), 1f, 1.5f + wearer.getRandom().nextFloat() * 0.2f);
+
         PPNetworking.CHANNEL.send(
                 PacketDistributor.TRACKING_ENTITY_AND_SELF.with(wearer::asMob),
                 new PetHatSquishAnimPacket(wearer.asMob().getId())

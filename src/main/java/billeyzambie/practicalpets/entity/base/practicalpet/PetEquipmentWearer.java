@@ -240,12 +240,6 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
         return this.canShootFromSlot().isPresent();
     }
 
-    @Override
-    default void performRangedAttack(@NotNull LivingEntity target, float distanceFactor) {
-        if (this.canPerformCosmeticRangedAttack())
-            this.performCosmeticRangedAttack(canShootFromSlot().orElseThrow(), target, distanceFactor);
-    }
-
     default void performCosmeticRangedAttack(PetCosmetic.Slot slot, @NotNull LivingEntity target, float distanceFactor) {
         ItemStack equippedStack = this.getEquippedItem(slot);
         PetCosmetics.getCosmeticForItem(equippedStack).ifPresent(

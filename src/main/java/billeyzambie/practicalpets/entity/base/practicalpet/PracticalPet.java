@@ -250,6 +250,12 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         this.canShootFromSlot = value;
     }
 
+    @Override
+    public void performRangedAttack(@NotNull LivingEntity target, float distanceFactor) {
+        if (this.canPerformCosmeticRangedAttack())
+            this.performCosmeticRangedAttack(canShootFromSlot().orElseThrow(), target, distanceFactor);
+    }
+
     public abstract int getLevel1MaxHealth();
 
     public abstract int getLevel1AttackDamage();
