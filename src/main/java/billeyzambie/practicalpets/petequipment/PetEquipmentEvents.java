@@ -87,7 +87,10 @@ public class PetEquipmentEvents {
         LivingEntity target = event.getEntity();
         Entity attacker = event.getSource().getEntity();
 
-        if (!(attacker instanceof PetEquipmentWearer wearer))
+        if (
+                !event.getSource().is(DamageTypes.MOB_ATTACK)
+                    || !(attacker instanceof PetEquipmentWearer wearer)
+        )
             return;
 
         for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
