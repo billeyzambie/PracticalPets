@@ -193,6 +193,11 @@ public class Kiwi extends PracticalPet {
     }
 
     @Override
+    public boolean canInteractEventShearPetEquipment(Player player, InteractionHand hand) {
+        return this.getShearedState() != ShearedState.SHEARABLE;
+    }
+
+    @Override
     public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         Item item = stack.getItem();

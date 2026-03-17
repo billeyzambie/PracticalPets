@@ -678,15 +678,6 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
     public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
 
         ItemStack itemstack = player.getItemInHand(hand);
-        Item item = itemstack.getItem();
-
-        InteractionResult petEquipmentWearerEquip = this.petEquipmentWearerEquip(player, hand);
-        if (petEquipmentWearerEquip != InteractionResult.PASS)
-            return petEquipmentWearerEquip;
-
-        InteractionResult petEquipmentWearerShear = this.petEquipmentWearerShear(player, hand);
-        if (petEquipmentWearerShear != InteractionResult.PASS)
-            return petEquipmentWearerShear;
 
         if (this.level().isClientSide) {
             if (this.isTame() && this.isOwnedBy(player)) {

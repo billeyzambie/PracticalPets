@@ -54,6 +54,12 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
     default boolean hidePetEquipment() {
         return false;
     }
+    default boolean canInteractEventShearPetEquipment(Player player, InteractionHand hand) {
+        return true;
+    }
+    default boolean canInteractEventPutPetEquipment(Player player, InteractionHand hand) {
+        return true;
+    }
 
     Component getDeathMessage();
 

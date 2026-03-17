@@ -503,6 +503,12 @@ public abstract class PracticalFish extends TamableFish implements IPracticalPet
     }
 
     @Override
+    public boolean canInteractEventPutPetEquipment(Player player, InteractionHand hand) {
+        //Call this::petEquipmentWearerEquip manually instead after the piranha launcher interaction
+        return false;
+    }
+
+    @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         boolean clientSide = this.level().isClientSide();
@@ -519,10 +525,6 @@ public abstract class PracticalFish extends TamableFish implements IPracticalPet
         InteractionResult petEquipmentWearerEquip = this.petEquipmentWearerEquip(player, hand);
         if (petEquipmentWearerEquip != InteractionResult.PASS)
             return petEquipmentWearerEquip;
-
-        InteractionResult petEquipmentWearerShear = this.petEquipmentWearerShear(player, hand);
-        if (petEquipmentWearerShear != InteractionResult.PASS)
-            return petEquipmentWearerShear;
 
         if (this.isFood(stack)) {
             if (this.getHealth() < this.getMaxHealth()) {
