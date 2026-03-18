@@ -29,9 +29,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
-@Mod.EventBusSubscriber
 public final class PracticalPetEvents {
 
+    @Mod.EventBusSubscriber
     public static final class LevelablePetEvents {
         @SubscribeEvent
         public static void onLivingAttack(LivingAttackEvent event) {
@@ -48,6 +48,7 @@ public final class PracticalPetEvents {
         }
     }
 
+    @Mod.EventBusSubscriber
     public static final class PetEquipmentWearerEvents {
         @SubscribeEvent
         public static void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
