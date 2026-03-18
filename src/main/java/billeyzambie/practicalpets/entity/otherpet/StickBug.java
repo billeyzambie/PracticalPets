@@ -141,7 +141,7 @@ public class StickBug extends PracticalPet implements DancingEntity {
             }
 
             this.setLastHurtMob(entity);
-            this.doHurtEffect(entity);
+            this.addXpOnHit(entity);
         }
 
 

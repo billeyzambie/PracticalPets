@@ -10,6 +10,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -50,12 +52,18 @@ public interface LevelablePet extends MobInterface, OwnableEntity {
     boolean isBaby();
     boolean isTame();
 
-    /** Remember to also register the entity data and call the save and load methods in the compound tag */
+    /** Remember to also register the synched entity data and call
+     * the {@link LevelablePet#loadPetLevelingData(CompoundTag)}
+     * and {@link LevelablePet#savePetLevelingData(CompoundTag)}
+     * methods in the compound tag */
     int getPetLevel();
     /** Should also call {@link LevelablePet#refreshPetLevelAttributeMultipliers()} */
     void setPetLevelRaw(int value);
 
-    /** Remember to also register the entity data and call the save and load methods in the compound tag */
+    /** Remember to also register the synched entity data and call
+     * the {@link LevelablePet#loadPetLevelingData(CompoundTag)}
+     * and {@link LevelablePet#savePetLevelingData(CompoundTag)}
+     * methods in the compound tag */
     float getPetXP();
     void setPetXPRaw(float value);
 
@@ -69,6 +77,15 @@ public interface LevelablePet extends MobInterface, OwnableEntity {
     default void savePetLevelingData(CompoundTag compoundTag) {
         compoundTag.putInt("PPetLevel", this.getPetLevel());
         compoundTag.putFloat("PPetXP", this.getPetXP());
+    }
+
+    default void addXpOnHit(Entity target) {
+        if (target instanceof Mob mob) {
+            float amount = 1;
+            if (!mob.isAlive())
+                amount += mob.getMaxHealth() / 20;
+            addPetXP(amount);
+        }
     }
 
     default void addPetXP(float amount) {

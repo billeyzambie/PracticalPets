@@ -463,23 +463,6 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         return result;
     }
 
-    @Override
-    public boolean doHurtTarget(@NotNull Entity entity) {
-        boolean result = super.doHurtTarget(entity);
-        if (result)
-            this.doHurtEffect(entity);
-        return result;
-    }
-
-    public void doHurtEffect(@NotNull Entity entity) {
-        if (entity instanceof Mob mob) {
-            float amount = 1;
-            if (!mob.isAlive())
-                amount += mob.getMaxHealth() / 20;
-            addPetXP(amount);
-        }
-    }
-
     public boolean shouldntFollowParent() {
         return this.isInSittingPose();
     }
