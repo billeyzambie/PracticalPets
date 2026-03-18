@@ -12,8 +12,10 @@ import billeyzambie.practicalpets.entity.otherpet.Rat;
 import billeyzambie.practicalpets.entity.other.PetEndRodProjectile;
 import billeyzambie.practicalpets.entity.otherpet.StickBug;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.AbstractFish;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -22,6 +24,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Mod.EventBusSubscriber(modid = PracticalPets.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class PPEntities {
@@ -97,9 +102,27 @@ public class PPEntities {
                     .build("piranha")
     );
 
-    @SubscribeEvent
-    public static void registerEntityAttributes(EntityAttributeCreationEvent event) {
+    private static final Map<EntityType<? extends LivingEntity>, AttributeSupplier> defaultAttributes = new HashMap<>();
+
+    public static double getDefaultMaxHealth(EntityType<?> type) {
+        return defaultAttributes.get(type).getBaseValue(Attributes.MAX_HEALTH);
+    }
+
+    private static void registerAttributes(
+            EntityAttributeCreationEvent event,
+            EntityType<? extends LivingEntity> type,
+            AttributeSupplier supplier
+    ) {
         event.put(
+                type,
+                supplier
+        );
+        defaultAttributes.put(type, supplier);
+    }
+
+    @SubscribeEvent
+    public static void onRegisterEntityAttributes(EntityAttributeCreationEvent event) {
+        registerAttributes(event,
                 BANANA_DUCK.get(),
                 BananaDuck.createMobAttributes()
                         .add(Attributes.MAX_HEALTH, 6)
@@ -107,7 +130,7 @@ public class PPEntities {
                         .add(Attributes.ATTACK_DAMAGE, 2)
                         .build()
         );
-        event.put(
+        registerAttributes(event,
                 DUCK.get(),
                 Mob.createMobAttributes()
                         .add(Attributes.MAX_HEALTH, 6)
@@ -115,7 +138,7 @@ public class PPEntities {
                         .add(Attributes.ATTACK_DAMAGE, 2)
                         .build()
         );
-        event.put(
+        registerAttributes(event,
                 RAT.get(),
                 Mob.createMobAttributes()
                         .add(Attributes.MAX_HEALTH, 10)
@@ -123,7 +146,7 @@ public class PPEntities {
                         .add(Attributes.ATTACK_DAMAGE, 2)
                         .build()
         );
-        event.put(
+        registerAttributes(event,
                 PIGEON.get(),
                 Mob.createMobAttributes()
                         .add(Attributes.MAX_HEALTH, 4)
@@ -132,7 +155,7 @@ public class PPEntities {
                         .add(Attributes.ATTACK_DAMAGE, 1)
                         .build()
         );
-        event.put(
+        registerAttributes(event,
                 STICK_BUG.get(),
                 Mob.createMobAttributes()
                         .add(Attributes.MAX_HEALTH, 2)
@@ -140,7 +163,7 @@ public class PPEntities {
                         .add(Attributes.ATTACK_DAMAGE, 1)
                         .build()
         );
-        event.put(
+        registerAttributes(event,
                 GIRAFFE_CAT.get(),
                 Mob.createMobAttributes()
                         .add(Attributes.MAX_HEALTH, 16)
@@ -149,7 +172,7 @@ public class PPEntities {
                         .add(Attributes.FOLLOW_RANGE, 64)
                         .build()
         );
-        event.put(
+        registerAttributes(event,
                 KIWI.get(),
                 Mob.createMobAttributes()
                         .add(Attributes.MAX_HEALTH, 6)
@@ -157,7 +180,7 @@ public class PPEntities {
                         .add(Attributes.ATTACK_DAMAGE, 2)
                         .build()
         );
-        event.put(
+        registerAttributes(event,
                 PIRANHA.get(),
                 AbstractFish.createAttributes()
                         .add(Attributes.MAX_HEALTH, 4)

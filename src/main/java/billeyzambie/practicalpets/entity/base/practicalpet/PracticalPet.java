@@ -125,6 +125,9 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         this.setShouldFollowOwner(compoundTag.getBoolean("ShouldFollowOwner"));
 
         if (compoundTag.contains("PetLevel", Tag.TAG_INT)) {
+            this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(
+                    PPEntities.getDefaultMaxHealth(this.getType())
+            );
             this.setPetLevelRaw(compoundTag.getInt("PetLevel"));
             this.setPetXPRaw(compoundTag.getFloat("PetXP"));
         }
