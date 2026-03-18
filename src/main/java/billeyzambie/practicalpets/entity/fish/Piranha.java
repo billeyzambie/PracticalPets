@@ -1,6 +1,7 @@
 package billeyzambie.practicalpets.entity.fish;
 
 import billeyzambie.practicalpets.client.model.entity.fish.PiranhaModel;
+import billeyzambie.practicalpets.entity.base.practicalpet.LevelablePet;
 import billeyzambie.practicalpets.entity.fish.base.BreedableFish;
 import billeyzambie.practicalpets.entity.fish.base.PracticalFish;
 import billeyzambie.practicalpets.misc.PPItems;

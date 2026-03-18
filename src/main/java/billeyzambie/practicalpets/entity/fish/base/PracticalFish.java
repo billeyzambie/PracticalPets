@@ -4,7 +4,7 @@ import billeyzambie.animationcontrollers.ACData;
 import billeyzambie.animationcontrollers.BVCData;
 import billeyzambie.animationcontrollers.SwimmingAnimationEntity;
 import billeyzambie.practicalpets.entity.base.WeightedVariantEntity;
-import billeyzambie.practicalpets.entity.base.practicalpet.IPracticalPet;
+import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
 import billeyzambie.practicalpets.goal.FishOwnerHurtByTargetGoal;
 import billeyzambie.practicalpets.goal.FishOwnerHurtTargetGoal;
 import billeyzambie.practicalpets.items.PetCosmetic;
@@ -41,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Optional;
 
-public abstract class PracticalFish extends TamableFish implements IPracticalPet, SwimmingAnimationEntity, WeightedVariantEntity {
+public abstract class PracticalFish extends TamableFish implements PetEquipmentWearer, SwimmingAnimationEntity, WeightedVariantEntity {
     HashMap<String, ACData> ACData = new HashMap<>();
 
     @Override
@@ -60,11 +60,6 @@ public abstract class PracticalFish extends TamableFish implements IPracticalPet
     private static final EntityDataAccessor<ItemStack> NECK_ITEM = SynchedEntityData.defineId(PracticalFish.class, EntityDataSerializers.ITEM_STACK);
     private static final EntityDataAccessor<ItemStack> BACK_ITEM = SynchedEntityData.defineId(PracticalFish.class, EntityDataSerializers.ITEM_STACK);
     private static final EntityDataAccessor<ItemStack> BODY_ITEM = SynchedEntityData.defineId(PracticalFish.class, EntityDataSerializers.ITEM_STACK);
-
-    @Override
-    public boolean isLevelable() {
-        return false;
-    }
 
     @Override
     public ItemStack getPetHeadItem() {
@@ -180,11 +175,6 @@ public abstract class PracticalFish extends TamableFish implements IPracticalPet
     @Override
     public int getPetLevel() {
         return 1;
-    }
-
-    @Override
-    public boolean petIsCurrentlyFollowingOwner() {
-        return false;
     }
 
     private float prevLimbSwing = 0;
