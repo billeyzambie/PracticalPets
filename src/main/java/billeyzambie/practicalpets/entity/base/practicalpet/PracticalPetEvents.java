@@ -12,24 +12,90 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BiFunction;
 
 public final class PracticalPetEvents {
+
+    @Mod.EventBusSubscriber
+    public static final class GuardingPetEvents {
+
+        @SubscribeEvent
+        public static void onLivingTick(LivingEvent.LivingTickEvent event) {
+            LivingEntity entity = event.getEntity();
+            if (entity.level().isClientSide())
+                return;
+
+            if (!(entity instanceof GuardingPet guardPet))
+                return;
+
+            if (guardPet.petIsCurrentlyGuarding())
+                guardPet.setPetGuardTime(guardPet.getPetGuardTime() + 1);
+
+        }
+
+        @SubscribeEvent(priority = EventPriority.LOWEST)
+        public static void onEntityTravelToDimension(EntityTravelToDimensionEvent event) {
+            Entity entity = event.getEntity();
+
+            if (!(entity instanceof GuardingPet guardPet))
+                return;
+
+            guardPet.petStopGuarding();
+        }
+
+        @SubscribeEvent
+        public static void onEntityJoinLevel(EntityJoinLevelEvent event) {
+            if (event.getLevel().isClientSide())
+                return;
+
+            Entity entity = event.getEntity();
+
+            if (!(entity instanceof GuardingPet))
+                return;
+
+            var guardPet = (Mob & GuardingPet) entity;
+
+            for (WrappedGoal wrappedGoal : guardPet.goalSelector.getAvailableGoals()) {
+                Goal goal = wrappedGoal.getGoal();
+
+                if (!(goal instanceof FollowOwnerGoal followOwnerGoal))
+                    continue;
+
+                guardPet.goalSelector.addGoal(wrappedGoal.getPriority(), new GuardingPet.GoToRestrictionGoal(guardPet));
+
+                break;
+            }
+
+            int highestTargetPriority = 0;
+
+            for (WrappedGoal wrappedGoal : guardPet.targetSelector.getAvailableGoals()) {
+                int goalPriority = wrappedGoal.getPriority();
+                if (goalPriority > highestTargetPriority)
+                    highestTargetPriority = goalPriority;
+            }
+
+            guardPet.targetSelector.addGoal(highestTargetPriority + 1, new GuardingPet.GuardGoal(guardPet));
+
+
+        }
+    }
 
     @Mod.EventBusSubscriber
     public static final class LevelablePetEvents {

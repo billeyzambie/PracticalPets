@@ -21,7 +21,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -40,7 +39,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
@@ -51,7 +50,6 @@ import org.jetbrains.annotations.Nullable;
 import java.awt.*;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.List;
 
 public abstract class PracticalPet extends TamableAnimal implements IPracticalPet, ACEntity, NeutralMob, WeightedVariantEntity {
 
@@ -72,7 +70,8 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
     public enum FollowMode {
         FOLLOWING,
         SITTING,
-        WANDERING;
+        WANDERING,
+        GUARDING;
 
         @Override
         public String toString() {
@@ -83,6 +82,30 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
     @Override
     public boolean isModelYAxisInverted() {
         return true;
+    }
+
+    private @Nullable Vec3 petGuardCenter = null;
+
+    @Override
+    public @Nullable Vec3 getPetGuardCenter() {
+        return petGuardCenter;
+    }
+
+    @Override
+    public void setPetGuardCenter(@Nullable Vec3 value) {
+        this.petGuardCenter = value;
+    }
+
+    private int petGuardTime;
+
+    @Override
+    public int getPetGuardTime() {
+        return petGuardTime;
+    }
+
+    @Override
+    public void setPetGuardTime(int petGuardTime) {
+        this.petGuardTime = petGuardTime;
     }
 
     private static final EntityDataAccessor<Boolean> SHOULD_FOLLOW_OWNER = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.BOOLEAN);
@@ -145,6 +168,8 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
             this.loadPetCosmetics(compoundTag);
         }
 
+        this.loadGuardingPetData(compoundTag);
+
         this.loadVariant(compoundTag);
         this.setIsRainbow(compoundTag.getBoolean("IsRainbow"));
         this.readPersistentAngerSaveData(this.level(), compoundTag);
@@ -156,6 +181,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         compoundTag.putBoolean("ShouldFollowOwner", this.shouldFollowOwner());
         this.savePetLevelingData(compoundTag);
         this.savePetCosmetics(compoundTag);
+        this.saveGuardingPetData(compoundTag);
         this.saveVariant(compoundTag);
         compoundTag.putBoolean("IsRainbow", this.isRainbow());
         this.addPersistentAngerSaveData(compoundTag);
@@ -534,17 +560,24 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
             return FollowMode.SITTING;
         if (this.shouldFollowOwner())
             return FollowMode.FOLLOWING;
+        if (this.petIsCurrentlyGuarding())
+            return FollowMode.GUARDING;
         return FollowMode.WANDERING;
     }
 
     public void setFollowMode(FollowMode followMode) {
         this.setOrderedToSit(followMode == FollowMode.SITTING);
-        this.setShouldFollowOwner(followMode != FollowMode.WANDERING);
+        this.setShouldFollowOwner(followMode == FollowMode.FOLLOWING || followMode == FollowMode.SITTING);
+        if (followMode == FollowMode.GUARDING)
+            this.petStartGuarding();
+        else
+            this.petStopGuarding();
     }
 
     public void incrementFollowMode() {
         switch (this.followMode()) {
-            case FOLLOWING -> setFollowMode(FollowMode.WANDERING);
+            case FOLLOWING -> setFollowMode(FollowMode.GUARDING);
+            case GUARDING -> setFollowMode(FollowMode.WANDERING);
             case WANDERING -> setFollowMode(FollowMode.SITTING);
             case SITTING -> setFollowMode(FollowMode.FOLLOWING);
         }

@@ -1,0 +1,232 @@
+package billeyzambie.practicalpets.entity.base.practicalpet;
+
+import billeyzambie.practicalpets.entity.base.MobInterface;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.EnumSet;
+
+public interface GuardingPet extends MobInterface, OwnerFollowingPet {
+    boolean isOrderedToSit();
+    /** Should be a field, doesn't need to be synched to the client */
+    @Nullable Vec3 getPetGuardCenter();
+    void setPetGuardCenter(@Nullable Vec3 value);
+
+    /** Should be a field, doesn't need to be synched to the client */
+    int getPetGuardTime();
+    /** Automatically increments every tick that {@link GuardingPet#petIsCurrentlyGuarding()} is true */
+    void setPetGuardTime(int value);
+
+    default void saveGuardingPetData(CompoundTag compoundTag) {
+        compoundTag.putInt("PPetGuardingTime", getPetGuardTime());
+        Vec3 pos = getPetGuardCenter();
+        if (pos == null)
+            return;
+        compoundTag.putDouble("PPetGuardCenterX", pos.x());
+        compoundTag.putDouble("PPetGuardCenterY", pos.y());
+        compoundTag.putDouble("PPetGuardCenterZ", pos.z());
+    }
+
+    default void loadGuardingPetData(CompoundTag compoundTag) {
+        this.setPetGuardTime(compoundTag.getInt("PPetGuardingTime"));
+        if (compoundTag.contains("PPetGuardCenterX", Tag.TAG_INT)) {
+            this.setPetGuardCenter(new Vec3(
+                    compoundTag.getDouble("PPetGuardCenterX"),
+                    compoundTag.getDouble("PPetGuardCenterY"),
+                    compoundTag.getDouble("PPetGuardCenterZ")
+            ));
+        }
+    }
+
+    default void petStartGuarding() {
+        setPetGuardCenter(this.position());
+        setPetGuardTime(0);
+
+        if (!this.petIsCurrentlyGuarding())
+            throw new IllegalStateException("Failed to make pet start guarding. Pet entered guard mode without unsitting and unfollowing first");
+    }
+    default void petStopGuarding() {
+        setPetGuardCenter(null);
+    }
+    default boolean petIsCurrentlyGuarding() {
+        return getPetGuardCenter() != null && !isOrderedToSit() && !petIsCurrentlyFollowingOwner();
+    }
+    default int getPetGuardRadius() {
+        return 16;
+    }
+    default boolean shouldGuardingPetAttack(LivingEntity target) {
+        Vec3 petGuardCenter = getPetGuardCenter();
+        if (petGuardCenter == null || !(target instanceof Enemy))
+            return false;
+        double distSqr = petGuardCenter.distanceToSqr(target.position());
+        int radius = getPetGuardRadius();
+        return distSqr <= radius * radius;
+    }
+
+    class GuardGoal extends NearestAttackableTargetGoal<LivingEntity> {
+        public final GuardingPet pet;
+        public GuardGoal(GuardingPet pet) {
+            super((Mob)pet, LivingEntity.class, 10, false, true, pet::shouldGuardingPetAttack);
+            this.pet = pet;
+        }
+
+        private boolean canGuard() {
+            return pet.petIsCurrentlyGuarding() && pet.getPetGuardTime() > 100;
+        }
+
+        @Override
+        public boolean canUse() {
+            return this.canGuard() && super.canUse();
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return this.canGuard() && super.canContinueToUse();
+        }
+    }
+
+    class GoToRestrictionGoal extends Goal {
+        private final GuardingPet pet;
+        private final PathfinderMob mob;
+        private final LevelReader level;
+        private static final double SPEED_MODIFIER = 1.5;
+        private int timeToRecalcPath;
+        private float oldWaterCost;
+
+        public GoToRestrictionGoal(GuardingPet pet) {
+            this.pet = pet;
+            this.mob = (PathfinderMob) pet;
+            this.level = this.mob.level();
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+            if (!(this.mob.getNavigation() instanceof GroundPathNavigation) && !(this.mob.getNavigation() instanceof FlyingPathNavigation)) {
+                throw new IllegalArgumentException("Unsupported mob type for FollowOwnerGoal");
+            }
+        }
+
+        private double getStartDistance() {
+            return this.pet.getPetGuardRadius();
+        }
+
+        private double getStopDistance() {
+            return Mth.clamp(this.pet.getPetGuardRadius(), 2, 4);
+        }
+
+        private double getTeleportDistance() {
+            return this.pet.getPetGuardRadius() + 8d;
+        }
+
+        private Vec3 getRestrictionCenter() {
+            return this.pet.getPetGuardCenter();
+        }
+
+        @Override
+        public boolean canUse() {
+            if (!this.pet.petIsCurrentlyGuarding())
+                return false;
+            if (this.unableToMove()) {
+                return false;
+            } else return this.mob.distanceToSqr(this.getRestrictionCenter()) >= this.getStartDistance() * this.getStartDistance();
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            if (!this.pet.petIsCurrentlyGuarding())
+                return false;
+            if (this.mob.getNavigation().isDone()) {
+                return false;
+            } else if (this.unableToMove()) {
+                return false;
+            } else {
+                return !(this.mob.distanceToSqr(this.getRestrictionCenter()) <= this.getStopDistance() * this.getStopDistance());
+            }
+        }
+
+        private boolean unableToMove() {
+            return this.pet.isOrderedToSit() || this.mob.isPassenger() || this.mob.isLeashed();
+        }
+
+        @Override
+        public void start() {
+            this.timeToRecalcPath = 0;
+            this.oldWaterCost = this.mob.getPathfindingMalus(BlockPathTypes.WATER);
+            this.mob.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
+        }
+
+        @Override
+        public void stop() {
+            this.mob.getNavigation().stop();
+            this.mob.setPathfindingMalus(BlockPathTypes.WATER, this.oldWaterCost);
+        }
+
+        @Override
+        public void tick() {
+            Vec3 targetPosition = this.getRestrictionCenter();
+            this.mob.getLookControl().setLookAt(targetPosition);
+            if (--this.timeToRecalcPath <= 0) {
+                this.timeToRecalcPath = this.adjustedTickDelay(10);
+                if (this.mob.distanceToSqr(targetPosition) >= this.getTeleportDistance() * this.getTeleportDistance()) {
+                    this.teleportToRestrictionCenter();
+                } else {
+                    this.mob.getNavigation().moveTo(targetPosition.x, targetPosition.y, targetPosition.z, SPEED_MODIFIER);
+                }
+
+            }
+        }
+
+        private void teleportToRestrictionCenter() {
+            Vec3 targetPos = this.getRestrictionCenter();
+
+            for(int i = 0; i < 10; ++i) {
+                int j = this.randomIntInclusive(-3, 3);
+                int k = this.randomIntInclusive(-1, 1);
+                int l = this.randomIntInclusive(-3, 3);
+                boolean flag = this.maybeTeleportTo((int) (targetPos.x + j), (int) (targetPos.y + k), (int) (targetPos.z + l));
+                if (flag) {
+                    return;
+                }
+            }
+
+        }
+
+        private boolean maybeTeleportTo(int p_25304_, int p_25305_, int p_25306_) {
+            if (Math.abs((double)p_25304_ - this.getRestrictionCenter().x()) < 2.0D && Math.abs((double)p_25306_ - this.getRestrictionCenter().z()) < 2.0D) {
+                return false;
+            } else if (!this.canTeleportTo(new BlockPos(p_25304_, p_25305_, p_25306_))) {
+                return false;
+            } else {
+                this.mob.moveTo((double)p_25304_ + 0.5D, p_25305_, (double)p_25306_ + 0.5D, this.mob.getYRot(), this.mob.getXRot());
+                this.mob.getNavigation().stop();
+                return true;
+            }
+        }
+
+        private boolean canTeleportTo(BlockPos p_25308_) {
+            BlockPathTypes blockpathtypes = WalkNodeEvaluator.getBlockPathTypeStatic(this.level, p_25308_.mutable());
+            if (blockpathtypes != BlockPathTypes.WALKABLE) {
+                return false;
+            } else {
+                BlockPos blockpos = p_25308_.subtract(this.mob.blockPosition());
+                return this.level.noCollision(this.mob, this.mob.getBoundingBox().move(blockpos));
+            }
+        }
+
+        private int randomIntInclusive(int p_25301_, int p_25302_) {
+            return this.mob.getRandom().nextInt(p_25302_ - p_25301_ + 1) + p_25301_;
+        }
+    }
+}

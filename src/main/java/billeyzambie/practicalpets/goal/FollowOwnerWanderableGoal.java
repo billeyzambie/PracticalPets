@@ -5,6 +5,7 @@ import java.util.EnumSet;
 import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
@@ -14,7 +15,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 
-public class FollowOwnerWanderableGoal extends Goal {
+//FollowOwnerGoal caches the pet's navigation which broke pigeons since they change navigation
+//
+public class FollowOwnerWanderableGoal extends FollowOwnerGoal {
     public static final int TELEPORT_WHEN_DISTANCE_IS = 12;
     private static final int MIN_HORIZONTAL_DISTANCE_FROM_PLAYER_WHEN_TELEPORTING = 2;
     private static final int MAX_HORIZONTAL_DISTANCE_FROM_PLAYER_WHEN_TELEPORTING = 3;
@@ -30,6 +33,7 @@ public class FollowOwnerWanderableGoal extends Goal {
     private final boolean canFly;
 
     public FollowOwnerWanderableGoal(PracticalPet p_25294_, double p_25295_, float p_25296_, float p_25297_, boolean p_25298_) {
+        super(p_25294_, p_25295_, p_25296_, p_25297_, p_25298_);
         this.pet = p_25294_;
         this.level = p_25294_.level();
         this.speedModifier = p_25295_;

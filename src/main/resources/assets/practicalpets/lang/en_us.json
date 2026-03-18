@@ -47,6 +47,7 @@
   "action.practicalpets.following": "Following",
   "action.practicalpets.sitting": "Sitting",
   "action.practicalpets.wandering": "Wandering",
+  "action.practicalpets.guarding": "Guarding",
   "ui.practicalpets.pet_level": "Level %s",
   "ui.jade.plugin_practicalpets.pet_xp": "Leveling Progress: %s / %s",
   "ui.jade.plugin_practicalpets.launched_fish_despawn": "Despawns in: %s",
