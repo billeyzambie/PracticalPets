@@ -188,6 +188,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
     @Override
     public void setPetHeadItemRaw(ItemStack stack) {
         this.entityData.set(HEAD_ITEM, stack);
+        refreshPetEquipmentCache();
     }
 
     @Override
@@ -198,6 +199,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
     @Override
     public void setPetNeckItemRaw(ItemStack stack) {
         this.entityData.set(NECK_ITEM, stack);
+        refreshPetEquipmentCache();
     }
 
     @Override
@@ -208,6 +210,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
     @Override
     public void setPetBackItemRaw(ItemStack stack) {
         this.entityData.set(BACK_ITEM, stack);
+        refreshPetEquipmentCache();
     }
 
     @Override
@@ -218,6 +221,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
     @Override
     public void setPetBodyItemRaw(ItemStack stack) {
         this.entityData.set(BODY_ITEM, stack);
+        refreshPetEquipmentCache();
     }
 
     private boolean anyEquipmentIsBrave = false;

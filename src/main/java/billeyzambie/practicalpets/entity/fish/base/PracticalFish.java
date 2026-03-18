@@ -69,6 +69,7 @@ public abstract class PracticalFish extends TamableFish implements PetEquipmentW
     @Override
     public void setPetHeadItemRaw(ItemStack stack) {
         this.entityData.set(HEAD_ITEM, stack);
+        refreshPetEquipmentCache();
     }
 
     @Override
@@ -79,6 +80,7 @@ public abstract class PracticalFish extends TamableFish implements PetEquipmentW
     @Override
     public void setPetNeckItemRaw(ItemStack stack) {
         this.entityData.set(NECK_ITEM, stack);
+        refreshPetEquipmentCache();
     }
 
     @Override
@@ -89,6 +91,7 @@ public abstract class PracticalFish extends TamableFish implements PetEquipmentW
     @Override
     public void setPetBackItemRaw(ItemStack stack) {
         this.entityData.set(BACK_ITEM, stack);
+        refreshPetEquipmentCache();
     }
 
     @Override
@@ -99,6 +102,7 @@ public abstract class PracticalFish extends TamableFish implements PetEquipmentW
     @Override
     public void setPetBodyItemRaw(ItemStack stack) {
         this.entityData.set(BODY_ITEM, stack);
+        refreshPetEquipmentCache();
     }
 
     private boolean anyEquipmentIsBrave = false;

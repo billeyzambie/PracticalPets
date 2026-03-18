@@ -24,9 +24,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
+    /** Make sure to call {@link PetEquipmentWearer#refreshPetEquipmentCache()} */
     void setPetHeadItemRaw(ItemStack stack);
+    /** Make sure to call {@link PetEquipmentWearer#refreshPetEquipmentCache()} */
     void setPetNeckItemRaw(ItemStack stack);
+    /** Make sure to call {@link PetEquipmentWearer#refreshPetEquipmentCache()} */
     void setPetBackItemRaw(ItemStack stack);
+    /** Make sure to call {@link PetEquipmentWearer#refreshPetEquipmentCache()} */
     void setPetBodyItemRaw(ItemStack stack);
 
     ItemStack getPetHeadItem();
@@ -238,7 +242,6 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
             );
         }
         setPetHeadItemRaw(itemStack);
-        refreshPetEquipmentCache();
         PetCosmetics.getCosmeticForItem(itemStack).ifPresent(
                 cosmetic -> this.playSound(cosmetic.getEquipSound(itemStack, this))
         );
@@ -252,7 +255,6 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
             );
         }
         setPetNeckItemRaw(itemStack);
-        refreshPetEquipmentCache();
         PetCosmetics.getCosmeticForItem(itemStack).ifPresent(
                 cosmetic -> this.playSound(cosmetic.getEquipSound(itemStack, this))
         );
@@ -266,7 +268,6 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
             );
         }
         setPetBackItemRaw(itemStack);
-        refreshPetEquipmentCache();
         PetCosmetics.getCosmeticForItem(itemStack).ifPresent(
                 cosmetic -> this.playSound(cosmetic.getEquipSound(itemStack, this))
         );
@@ -280,7 +281,6 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
             );
         }
         setPetBodyItemRaw(itemStack);
-        refreshPetEquipmentCache();
         PetCosmetics.getCosmeticForItem(itemStack).ifPresent(
                 cosmetic -> this.playSound(cosmetic.getEquipSound(itemStack, this))
         );
