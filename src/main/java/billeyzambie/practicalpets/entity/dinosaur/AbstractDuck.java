@@ -105,7 +105,7 @@ public abstract class AbstractDuck extends PracticalPet {
     }
 
     @Override
-    public boolean shouldDefendSelf() {
+    public boolean petShouldDefendSelf() {
         return true;
     }
 

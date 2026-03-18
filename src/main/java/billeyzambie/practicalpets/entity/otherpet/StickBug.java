@@ -89,17 +89,17 @@ public class StickBug extends PracticalPet implements DancingEntity {
     }
 
     @Override
-    public boolean shouldDefendOwner(@NotNull LivingEntity target) {
+    public boolean petShouldDefendOwner(LivingEntity target) {
         return true;
     }
 
     @Override
-    public boolean shouldDefendSelf() {
+    public boolean petShouldDefendSelf() {
         return true;
     }
 
     @Override
-    public boolean shouldPanic() {
+    public boolean petShouldPanic() {
         return true;
     }
 

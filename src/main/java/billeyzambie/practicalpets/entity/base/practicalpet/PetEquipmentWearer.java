@@ -14,6 +14,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -67,6 +68,17 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
     }
     default double createWearerCosmeticRangedSpeedModifier() {
         return 1.25;
+    }
+    default boolean petShouldDefendOwner(LivingEntity target) {
+        return this.anyEquipmentIsBrave() || (asMob().getMaxHealth() >= 20 && asMob().getAttributeValue(Attributes.ATTACK_DAMAGE) >= 3);
+    }
+
+    default boolean petShouldDefendSelf() {
+        return this.anyEquipmentIsBrave() || (asMob().getMaxHealth() >= 20 && asMob().getAttributeValue(Attributes.ATTACK_DAMAGE) >= 3);
+    }
+
+    default boolean petShouldPanic() {
+        return !this.petShouldDefendSelf();
     }
 
     Component getDeathMessage();

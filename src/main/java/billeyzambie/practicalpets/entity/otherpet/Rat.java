@@ -267,8 +267,8 @@ public class Rat extends PracticalPet implements CookingPet {
     }
 
     @Override
-    public boolean shouldDefendOwner(@NotNull LivingEntity target) {
-        if (super.shouldDefendOwner(target))
+    public boolean petShouldDefendOwner(LivingEntity target) {
+        if (super.petShouldDefendOwner(target))
             return true;
         return this.getMainHandItem().isEmpty() && mobCanBeRobbed(target);
     }

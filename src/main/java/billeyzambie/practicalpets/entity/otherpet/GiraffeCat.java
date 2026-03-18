@@ -103,12 +103,12 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
     }
 
     @Override
-    public boolean shouldDefendSelf() {
+    public boolean petShouldDefendSelf() {
         return true;
     }
 
     @Override
-    public boolean shouldDefendOwner(@NotNull LivingEntity target) {
+    public boolean petShouldDefendOwner(LivingEntity target) {
         return true;
     }
 
