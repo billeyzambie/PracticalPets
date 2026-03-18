@@ -159,7 +159,7 @@ public interface LevelablePet extends MobInterface, OwnableEntity {
     default void changePetLevel(int petLevel) {
         this.setPetLevelRaw(petLevel);
         this.setPetXPRaw(getTotalPetXPNeededForLevel(petLevel));
-        this.setHealth((float) getBaseValueOrElseDefault(Attributes.MAX_HEALTH));
+        this.setHealth(getMaxHealth());
         this.playLevelUpSound();
     }
 
