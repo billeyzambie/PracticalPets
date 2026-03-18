@@ -1,6 +1,6 @@
 package billeyzambie.practicalpets.misc;
 
-import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
+import billeyzambie.practicalpets.entity.base.practicalpet.LevelablePet;
 import billeyzambie.practicalpets.entity.otherpet.Rat;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
@@ -34,7 +34,7 @@ public final class PPCommands {
                 .then(Commands.argument("pet", EntityArgument.entity())
                         .then(Commands.argument("level", IntegerArgumentType.integer(1))
                                 .executes(commandContext -> {
-                                    PracticalPet pet = (PracticalPet) EntityArgument.getEntity(commandContext, "pet");
+                                    LevelablePet pet = (LevelablePet) EntityArgument.getEntity(commandContext, "pet");
                                     int level = IntegerArgumentType.getInteger(commandContext, "level");
                                     pet.changePetLevel(level);
                                     commandContext.getSource().sendSuccess(() -> Component.translatable("command.practicalpets.set_pet_level.success", pet.getName(), level), true);
