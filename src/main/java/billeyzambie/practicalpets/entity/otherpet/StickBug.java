@@ -301,7 +301,7 @@ public class StickBug extends PracticalPet implements DancingEntity {
             this.setIsRandomDancing(false);
         }
         else if (!navigationWasDone && (
-                this.random.nextInt(10) <= this.petLevel() / 2
+                this.random.nextInt(10) <= this.getPetLevel() / 2
                 || this.celebrateKilling
         )) {
             this.randomDanceTime = this.random.nextInt(200, 400);

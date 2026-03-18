@@ -178,7 +178,7 @@ public abstract class PracticalFish extends TamableFish implements IPracticalPet
     }
 
     @Override
-    public int petLevel() {
+    public int getPetLevel() {
         return 1;
     }
 

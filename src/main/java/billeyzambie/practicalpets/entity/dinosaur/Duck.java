@@ -1,6 +1,5 @@
 package billeyzambie.practicalpets.entity.dinosaur;
 
-import billeyzambie.practicalpets.misc.PPEntities;
 import billeyzambie.practicalpets.misc.PPItems;
 import billeyzambie.practicalpets.misc.PPSounds;
 import billeyzambie.practicalpets.goal.DuckFollowParentGoal;
@@ -12,7 +11,6 @@ import billeyzambie.practicalpets.util.WeightedList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.FluidTags;
@@ -284,7 +282,7 @@ public class Duck extends AbstractDuck {
         randomFloat *= randomFloat;
         if (
                 navigationIsDone && !this.navigationWasDone
-                        && randomFloat * (10 - 2f * (this.petLevel() - 1) / 9f) < 1
+                        && randomFloat * (10 - 2f * (this.getPetLevel() - 1) / 9f) < 1
         ) {
 
             BlockState blockState = this.level().getBlockState(this.blockPosition());
@@ -309,7 +307,7 @@ public class Duck extends AbstractDuck {
             ) {
                 float finalWeight = itemChoice.defaultWeight();
                 if (itemChoice.isTreasure)
-                    finalWeight += Math.max(0, (this.petLevel() - 5) / 3f);
+                    finalWeight += Math.max(0, (this.getPetLevel() - 5) / 3f);
                 weightedList.add(itemChoice, finalWeight);
             }
         }

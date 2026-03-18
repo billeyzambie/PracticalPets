@@ -225,7 +225,7 @@ public class Kiwi extends PracticalPet {
     }
 
     private void setRandomShearTime() {
-        float levelProgress1to10 = (this.petLevel() - 1) / 9f;
+        float levelProgress1to10 = (this.getPetLevel() - 1) / 9f;
         int i = Math.max(10,
                 (int) Mth.lerp(levelProgress1to10, 120 * 20, 30)
         );

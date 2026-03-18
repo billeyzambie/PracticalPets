@@ -519,7 +519,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
     }
 
     @Override
-    public int petLevel() {
+    public int getPetLevel() {
         return this.entityData.get(PET_LEVEL);
     }
 
@@ -530,7 +530,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
     }
 
     @Override
-    public float petXP() {
+    public float getPetXP() {
         return this.entityData.get(PET_XP);
     }
 

@@ -6,7 +6,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
@@ -23,7 +22,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 
@@ -74,7 +72,7 @@ public class BananaDuck extends AbstractDuck {
     public final AnimationState makingBananaAnimationState = new AnimationState();
 
     public TagKey<Item> getCanTurnToBananaTag() {
-        int level = this.petLevel();
+        int level = this.getPetLevel();
         if (level >= 10) {
             return PPTags.Items.LEVEL_10_TO_POULTRY_BANANA;
         }

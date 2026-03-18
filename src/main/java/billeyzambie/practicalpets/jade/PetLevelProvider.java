@@ -19,9 +19,9 @@ public enum PetLevelProvider implements IEntityComponentProvider {
             IPluginConfig config
     ) {
         if (accessor.getEntity() instanceof PracticalPet pet && pet.isLevelable()) {
-            int level = pet.petLevel();
+            int level = pet.getPetLevel();
             int xpForNextLevel = (int) (pet.getTotalPetXPNeededForLevel(level + 1) - pet.getTotalPetXPNeededForLevel(level));
-            int currentXp = (int) (pet.petXP() - pet.getTotalPetXPNeededForLevel(level));
+            int currentXp = (int) (pet.getPetXP() - pet.getTotalPetXPNeededForLevel(level));
             currentXp = Math.min(currentXp, xpForNextLevel - 1);
             tooltip.add(
                     Component.translatable(

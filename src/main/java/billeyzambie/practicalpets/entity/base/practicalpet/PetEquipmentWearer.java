@@ -66,7 +66,7 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
 
     boolean isTame();
     boolean isOwnedBy(LivingEntity entity);
-    int petLevel();
+    int getPetLevel();
 
     default InteractionResult petEquipmentWearerEquip(Player player, InteractionHand hand) {
         if (this.isTame() && this.isOwnedBy(player)) {
@@ -177,7 +177,7 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
                         NEWLINE,
                         this.getDisplayName(),
                         Component.translatable("ui.practicalpets.pet_level",
-                                Component.literal(String.valueOf(this.petLevel())).withStyle(ChatFormatting.BLUE)
+                                Component.literal(String.valueOf(this.getPetLevel())).withStyle(ChatFormatting.BLUE)
                         ).withStyle(ChatFormatting.LIGHT_PURPLE),
                         NEWLINE,
                         this.getDeathMessage()
@@ -188,7 +188,7 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
                         NEWLINE,
                         this.getDisplayName(),
                         Component.translatable("ui.practicalpets.pet_level",
-                                Component.literal(String.valueOf(this.petLevel())).withStyle(ChatFormatting.BLUE)
+                                Component.literal(String.valueOf(this.getPetLevel())).withStyle(ChatFormatting.BLUE)
                         ).withStyle(ChatFormatting.LIGHT_PURPLE),
                         NEWLINE,
                         this.getDeathMessage()

@@ -51,12 +51,12 @@ public interface LevelablePet extends MobInterface, OwnableEntity {
     boolean isTame();
 
     /** Remember to also register the entity data and call the save and load methods in the compound tag */
-    int petLevel();
+    int getPetLevel();
     /** Should also call {@link LevelablePet#refreshPetLevelAttributeMultipliers()} */
     void setPetLevelRaw(int value);
 
     /** Remember to also register the entity data and call the save and load methods in the compound tag */
-    float petXP();
+    float getPetXP();
     void setPetXPRaw(float value);
 
     default void loadPetLevelingData(CompoundTag compoundTag) {
@@ -67,8 +67,8 @@ public interface LevelablePet extends MobInterface, OwnableEntity {
     }
 
     default void savePetLevelingData(CompoundTag compoundTag) {
-        compoundTag.putInt("PPetLevel", this.petLevel());
-        compoundTag.putFloat("PPetXP", this.petXP());
+        compoundTag.putInt("PPetLevel", this.getPetLevel());
+        compoundTag.putFloat("PPetXP", this.getPetXP());
     }
 
     default void addPetXP(float amount) {
@@ -83,10 +83,10 @@ public interface LevelablePet extends MobInterface, OwnableEntity {
                 multiplier *= petHat.petXPMultiplier(headStack, wearer);
         }
 
-        setPetXPRaw(petXP() + amount * multiplier);
+        setPetXPRaw(getPetXP() + amount * multiplier);
 
-        if (petXP() >= getTotalPetXPNeededForLevel(petLevel() + 1)) {
-            upgradeToLevel(petLevel() + 1);
+        if (getPetXP() >= getTotalPetXPNeededForLevel(getPetLevel() + 1)) {
+            upgradeToLevel(getPetLevel() + 1);
         }
     }
 
@@ -109,11 +109,11 @@ public interface LevelablePet extends MobInterface, OwnableEntity {
 
     default void playLevelUpSound() {
         this.level().playSound(null, this.blockPosition(), PPSounds.PET_LEVEL_UP.get(), SoundSource.NEUTRAL,
-                1.0F, (float) Math.pow(2, (this.petLevel() - 2) / 12d));
+                1.0F, (float) Math.pow(2, (this.getPetLevel() - 2) / 12d));
     }
 
     default void upgradeToLevel(int level) {
-        int previousLevel = petLevel();
+        int previousLevel = getPetLevel();
         setPetLevelRaw(level);
         if (level().isClientSide()) {
             return;
@@ -151,7 +151,7 @@ public interface LevelablePet extends MobInterface, OwnableEntity {
     UUID ATTACK_DAMAGE_MULTIPLIER = UUID.fromString("7f999cbc-bb79-4c2b-8cda-0e15166bf50a");
 
     default void refreshPetLevelAttributeMultipliers() {
-        int level = this.petLevel();
+        int level = this.getPetLevel();
         double progress1to10 = (level - 1) / 9d;
 
         AttributeInstance healthAttribute = this.getAttribute(Attributes.MAX_HEALTH);

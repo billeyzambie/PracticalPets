@@ -140,7 +140,7 @@ public class Rat extends PracticalPet implements CookingPet {
     public void cookingSuccess() {
         PPUtil.clear(this.getCookingIngredients());
         var newItem = new ItemStack(PPItems.RATATOUILLE.get());
-        int level = this.petLevel();
+        int level = this.getPetLevel();
         if (level > 1) {
             CompoundTag tag = new CompoundTag();
             tag.putInt("RatLevel", level);
@@ -285,7 +285,7 @@ public class Rat extends PracticalPet implements CookingPet {
             if (enemyItem.isDamageableItem()) {
                 float randomFloat = this.getRandom().nextFloat();
                 enemyItem.setDamageValue(Mth.lerpInt(
-                        Math.min(1, randomFloat + (this.petLevel() - 1) / 9f),
+                        Math.min(1, randomFloat + (this.getPetLevel() - 1) / 9f),
                         enemyItem.getMaxDamage(),
                         enemyItem.getDamageValue()
                 ));
