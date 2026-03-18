@@ -50,7 +50,8 @@ public class AnniversaryPetHatModel<T extends Entity> extends HierarchicalModel<
 			float headSizeZ = wearer.headSizeZ();
 
 			if (headSizeX < 5 && headSizeZ < 5 && headSizeY > 2) {
-				this.root().y += 1; //moves it 1 pixel down (somehow)
+				if (wearer.allowLoweringTopHatsAPixel())
+					this.root().y += 1; //moves it 1 pixel down (somehow)
 				this.root().xScale *= (headSizeX + 1) / 4;
 				this.root().zScale *= (headSizeZ + 1) / 4;
 			}

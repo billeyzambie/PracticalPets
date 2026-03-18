@@ -53,6 +53,9 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
     default boolean isModelYAxisInverted() {
         return false;
     }
+    default boolean allowLoweringTopHatsAPixel() {
+        return true;
+    }
     default boolean hidePetEquipment() {
         return false;
     }

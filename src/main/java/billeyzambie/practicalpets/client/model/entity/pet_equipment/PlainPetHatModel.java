@@ -52,7 +52,8 @@ public class PlainPetHatModel<T extends Entity> extends HierarchicalModel<T> {
 			float headSizeZ = wearer.headSizeZ();
 
 			if (headSizeY > 2) {
-				this.root().y += 1; //moves it 1 pixel down (somehow)
+				if (wearer.allowLoweringTopHatsAPixel())
+					this.root().y += 1; //moves it 1 pixel down (somehow)
 				this.hat_bone.xScale *= headSizeX / 4f + 0.5f;
 				this.hat_bone.zScale *= headSizeZ / 4f + 0.5f;
 				this.hat_bone2.xScale *= headSizeX / 4f + 0.5f;
