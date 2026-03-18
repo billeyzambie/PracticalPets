@@ -3,8 +3,8 @@ package billeyzambie.practicalpets.jade;
 import billeyzambie.practicalpets.entity.fish.base.BreedableFish;
 import billeyzambie.practicalpets.entity.fish.base.PracticalFish;
 import billeyzambie.practicalpets.misc.PracticalPets;
-import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Mob;
 import snownee.jade.api.IWailaClientRegistration;
 import snownee.jade.api.IWailaCommonRegistration;
 import snownee.jade.api.IWailaPlugin;
@@ -27,7 +27,7 @@ public class PracticalPetsWailaPlugin implements IWailaPlugin {
 
     @Override
     public void registerClient(IWailaClientRegistration registration) {
-        registration.registerEntityComponent(PetLevelProvider.INSTANCE, PracticalPet.class);
+        registration.registerEntityComponent(PetLevelProvider.INSTANCE, Mob.class);
         registration.registerEntityComponent(FishGrowthProvider.INSTANCE, BreedableFish.class);
         registration.registerEntityComponent(FishBreedingProvider.INSTANCE, BreedableFish.class);
         registration.registerEntityComponent(LaunchedFishDespawnProvider.INSTANCE, PracticalFish.class);
