@@ -32,6 +32,15 @@ public interface GuardingPet extends MobInterface, OwnerFollowingPet {
     /** Automatically increments every tick that {@link GuardingPet#petIsCurrentlyGuarding()} is true */
     void setPetGuardTime(int value);
 
+    default boolean petCanStartGuarding() {
+        return isGuardingPetAbleToAttack(null);
+    }
+    /** @param target null if just checking whether the pet can guard against things in general
+     * @return {@code true} for pets that always defend their owner,
+     * otherwise should return {@link PetEquipmentWearer#petShouldDefendOwner(LivingEntity)}
+     * */
+    boolean isGuardingPetAbleToAttack(@Nullable LivingEntity target);
+
     default void saveGuardingPetData(CompoundTag compoundTag) {
         compoundTag.putInt("PPetGuardingTime", getPetGuardTime());
         Vec3 pos = getPetGuardCenter();
@@ -71,16 +80,16 @@ public interface GuardingPet extends MobInterface, OwnerFollowingPet {
     }
     default boolean shouldGuardingPetAttack(LivingEntity target) {
         Vec3 petGuardCenter = getPetGuardCenter();
-        if (petGuardCenter == null || !(target instanceof Enemy))
+        if (petGuardCenter == null || !(target instanceof Enemy) || !isGuardingPetAbleToAttack(target))
             return false;
         double distSqr = petGuardCenter.distanceToSqr(target.position());
         int radius = getPetGuardRadius();
         return distSqr <= radius * radius;
     }
 
-    class GuardGoal extends NearestAttackableTargetGoal<LivingEntity> {
+    class GuardTargetGoal extends NearestAttackableTargetGoal<LivingEntity> {
         public final GuardingPet pet;
-        public GuardGoal(GuardingPet pet) {
+        public GuardTargetGoal(GuardingPet pet) {
             super((Mob)pet, LivingEntity.class, 10, false, true, pet::shouldGuardingPetAttack);
             this.pet = pet;
         }

@@ -108,6 +108,11 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         this.petGuardTime = petGuardTime;
     }
 
+    @Override
+    public boolean isGuardingPetAbleToAttack(@Nullable LivingEntity target) {
+        return this.petShouldDefendOwner(target);
+    }
+
     private static final EntityDataAccessor<Boolean> SHOULD_FOLLOW_OWNER = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> HAS_TARGET = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> PET_LEVEL = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.INT);
@@ -576,7 +581,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
 
     public void incrementFollowMode() {
         switch (this.followMode()) {
-            case FOLLOWING -> setFollowMode(FollowMode.GUARDING);
+            case FOLLOWING -> setFollowMode(this.petCanStartGuarding() ? FollowMode.GUARDING : FollowMode.WANDERING);
             case GUARDING -> setFollowMode(FollowMode.WANDERING);
             case WANDERING -> setFollowMode(FollowMode.SITTING);
             case SITTING -> setFollowMode(FollowMode.FOLLOWING);

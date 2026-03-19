@@ -21,6 +21,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShearsItem;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -69,7 +70,8 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
     default double createWearerCosmeticRangedSpeedModifier() {
         return 1.25;
     }
-    default boolean petShouldDefendOwner(LivingEntity target) {
+    /** @param target null if just checking whether the pet can defend its owner against things in general*/
+    default boolean petShouldDefendOwner(@Nullable LivingEntity target) {
         return this.anyEquipmentIsBrave() || (asMob().getMaxHealth() >= 20 && asMob().getAttributeValue(Attributes.ATTACK_DAMAGE) >= 3);
     }
 
