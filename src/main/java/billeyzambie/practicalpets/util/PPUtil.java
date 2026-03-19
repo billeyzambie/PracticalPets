@@ -187,4 +187,8 @@ public class PPUtil {
     public static double clamp01(double value) {
         return Mth.clamp(value, 0, 1);
     }
+
+    public static boolean isOwnedByFast(OwnableEntity ownable, LivingEntity owner) {
+        return owner.getUUID().equals(ownable.getOwnerUUID());
+    }
 }

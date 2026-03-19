@@ -493,7 +493,11 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (source.getEntity() instanceof LivingEntity living && this.isOwnedBy(living) && !living.isShiftKeyDown())
+        if (
+                source.getEntity() instanceof LivingEntity living
+                        && PPUtil.isOwnedByFast(this, living)
+                        && !living.isShiftKeyDown()
+        )
             return false;
         boolean result = super.hurt(source, amount);
         if (result && this.isTame())

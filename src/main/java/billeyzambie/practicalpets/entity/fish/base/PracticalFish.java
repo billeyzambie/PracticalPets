@@ -568,7 +568,11 @@ public abstract class PracticalFish extends TamableFish implements PetEquipmentW
                 return false;
             }
         }
-        if (entity instanceof LivingEntity living && this.isOwnedBy(living) && !living.isShiftKeyDown())
+        if (
+                entity instanceof LivingEntity living
+                        && PPUtil.isOwnedByFast(this, living)
+                        && !living.isShiftKeyDown()
+        )
             return false;
         return super.hurt(source, amount);
     }
