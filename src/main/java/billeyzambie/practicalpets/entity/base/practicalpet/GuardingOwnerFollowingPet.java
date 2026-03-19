@@ -42,6 +42,14 @@ public interface GuardingOwnerFollowingPet extends MobInterface {
     FollowMode getFollowMode();
     void setFollowMode(FollowMode value);
 
+    /** should use a synched entity data accessor */
+    int getDisplayFollowModeId();
+    /** remember to define it in synched data */
+    void setDisplayFollowModeId(int value);
+    default void refreshDisplayFollowMode() {
+        setDisplayFollowModeId(this.getFollowMode().ordinal());
+    }
+
     boolean isOrderedToSit();
     /** Should be a field, doesn't need to be synched to the client */
     @Nullable Vec3 getPetGuardCenter();

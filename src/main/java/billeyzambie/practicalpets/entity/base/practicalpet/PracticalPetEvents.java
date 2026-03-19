@@ -94,6 +94,7 @@ public final class PracticalPetEvents {
 
             guardPet.targetSelector.addGoal(highestTargetPriority + 1, new GuardingOwnerFollowingPet.GuardTargetGoal<>(guardPet));
 
+            guardPet.refreshDisplayFollowMode();
 
         }
     }

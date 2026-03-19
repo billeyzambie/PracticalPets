@@ -25,7 +25,6 @@ public class PracticalPetsWailaPlugin implements IWailaPlugin {
         registration.registerEntityDataProvider(FishGrowthProvider.INSTANCE, BreedableFish.class);
         registration.registerEntityDataProvider(FishBreedingProvider.INSTANCE, BreedableFish.class);
         registration.registerEntityDataProvider(LaunchedFishDespawnProvider.INSTANCE, PracticalFish.class);
-        registration.registerEntityDataProvider(PetFollowModeProvider.INSTANCE, TamableAnimal.class);
     }
 
     @Override

@@ -132,6 +132,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         this.entityData.define(DATA_REMAINING_ANGER_TIME, 0);
         this.entityData.define(IS_RAINBOW, false);
         this.entityData.define(IS_INTERESTED, false);
+        this.entityData.define(DISPLAY_FOLLOW_MODE, 0);
     }
 
     @Override
@@ -579,6 +580,19 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
             case WANDERING -> setFollowMode(FollowMode.SITTING);
             case SITTING -> setFollowMode(FollowMode.FOLLOWING);
         }
+        this.refreshDisplayFollowMode();
+    }
+
+    private static final EntityDataAccessor<Integer> DISPLAY_FOLLOW_MODE = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.INT);
+
+    @Override
+    public int getDisplayFollowModeId() {
+        return this.entityData.get(DISPLAY_FOLLOW_MODE);
+    }
+
+    @Override
+    public void setDisplayFollowModeId(int value) {
+        this.entityData.set(DISPLAY_FOLLOW_MODE, value);
     }
 
     public boolean canSitStand() {
