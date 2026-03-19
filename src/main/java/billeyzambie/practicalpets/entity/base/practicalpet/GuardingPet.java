@@ -1,6 +1,7 @@
 package billeyzambie.practicalpets.entity.base.practicalpet;
 
 import billeyzambie.practicalpets.entity.base.MobInterface;
+import billeyzambie.practicalpets.misc.PPTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -8,6 +9,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
@@ -82,6 +84,18 @@ public interface GuardingPet extends MobInterface, OwnerFollowingPet {
         Vec3 petGuardCenter = getPetGuardCenter();
         if (petGuardCenter == null || !(target instanceof Enemy) || !isGuardingPetAbleToAttack(target))
             return false;
+
+        //noinspection DataFlowIssue
+        if (
+                target.getType().is(PPTags.EntityTypes.EXPLOSIVE_ENEMIES)
+                        && this.getAttribute(Attributes.ATTACK_DAMAGE).getValue()
+                        < target.getAttribute(Attributes.MAX_HEALTH).getValue()
+                        + target.getAttribute(Attributes.ARMOR).getValue()
+                        + target.getAttribute(Attributes.ARMOR_TOUGHNESS).getValue()
+        ) {
+            return false;
+        }
+
         double distSqr = petGuardCenter.distanceToSqr(target.position());
         int radius = getPetGuardRadius();
         return distSqr <= radius * radius;
@@ -90,12 +104,12 @@ public interface GuardingPet extends MobInterface, OwnerFollowingPet {
     class GuardTargetGoal extends NearestAttackableTargetGoal<LivingEntity> {
         public final GuardingPet pet;
         public GuardTargetGoal(GuardingPet pet) {
-            super((Mob)pet, LivingEntity.class, 10, false, true, pet::shouldGuardingPetAttack);
+            super((Mob)pet, LivingEntity.class, 20, false, true, pet::shouldGuardingPetAttack);
             this.pet = pet;
         }
 
         private boolean canGuard() {
-            return pet.petIsCurrentlyGuarding() && pet.getPetGuardTime() > 100;
+            return pet.petIsCurrentlyGuarding() && pet.getPetGuardTime() > 60;
         }
 
         @Override
