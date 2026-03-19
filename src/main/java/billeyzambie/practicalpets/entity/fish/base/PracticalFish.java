@@ -146,13 +146,6 @@ public abstract class PracticalFish extends TamableFish implements PetEquipmentW
     }
 
     @Override
-    public void remove(RemovalReason reason) {
-        if (reason == RemovalReason.DISCARDED)
-            this.dropAllPetEquipment(true);
-        super.remove(reason);
-    }
-
-    @Override
     protected void dropEquipment() {
         super.dropEquipment();
         this.dropAllPetEquipment(false);
@@ -331,12 +324,14 @@ public abstract class PracticalFish extends TamableFish implements PetEquipmentW
     protected void loadBucketAndWorldSharedData(CompoundTag tag) {
         super.loadBucketAndWorldSharedData(tag);
         this.loadVariant(tag);
+        this.loadPetCosmetics(tag);
     }
 
     @Override
     protected void saveBucketAndWorldSharedData(CompoundTag tag) {
         super.saveBucketAndWorldSharedData(tag);
         this.saveVariant(tag);
+        this.savePetCosmetics(tag);
     }
 
     @Override
@@ -344,7 +339,6 @@ public abstract class PracticalFish extends TamableFish implements PetEquipmentW
         super.readAdditionalSaveData(tag);
         this.isLaunched = tag.getBoolean("Launched");
         this.launchTime = tag.getInt("LaunchTime");
-        this.loadPetCosmetics(tag);
     }
 
     @Override
@@ -352,7 +346,6 @@ public abstract class PracticalFish extends TamableFish implements PetEquipmentW
         super.addAdditionalSaveData(tag);
         tag.putBoolean("Launched", this.isLaunched);
         tag.putInt("LaunchTime", this.launchTime);
-        this.savePetCosmetics(tag);
     }
 
     public static final int MAX_LAUNCHED_LIFESPAN = 30 * 20;
@@ -363,6 +356,10 @@ public abstract class PracticalFish extends TamableFish implements PetEquipmentW
         if (this.isLaunched && ++this.launchTime >= MAX_LAUNCHED_LIFESPAN) {
             this.discard();
         }
+    }
+
+    public void beforeInsertInPiranhaLauncher() {
+        this.dropAllPetEquipment(true);
     }
 
     public final CompoundTag makePiranhaLauncherTag() {

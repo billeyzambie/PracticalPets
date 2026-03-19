@@ -180,6 +180,8 @@ public class PiranhaLauncher extends Item implements ItemModelPetCosmetic, Dyeab
         if (player.level().isClientSide())
             return true;
 
+        fish.beforeInsertInPiranhaLauncher();
+
         ListTag fishes = launcherTag.getList("Fishes", Tag.TAG_COMPOUND);
         fishes.add(fish.makePiranhaLauncherTag());
         launcherTag.put("Fishes", fishes);
