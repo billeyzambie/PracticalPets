@@ -104,7 +104,7 @@ public interface GuardingPet extends MobInterface, OwnerFollowingPet {
         private final GuardingPet pet;
         private final PathfinderMob mob;
         private final LevelReader level;
-        private static final double SPEED_MODIFIER = 1.5;
+        private static final double SPEED_MODIFIER = 1.25;
         private int timeToRecalcPath;
         private float oldWaterCost;
 
@@ -134,9 +134,13 @@ public interface GuardingPet extends MobInterface, OwnerFollowingPet {
             return this.pet.getPetGuardCenter();
         }
 
+        private boolean commonCantUse() {
+            return this.mob.getTarget() != null || !this.pet.petIsCurrentlyGuarding();
+        }
+
         @Override
         public boolean canUse() {
-            if (!this.pet.petIsCurrentlyGuarding())
+            if (this.commonCantUse())
                 return false;
             if (this.unableToMove()) {
                 return false;
@@ -145,7 +149,7 @@ public interface GuardingPet extends MobInterface, OwnerFollowingPet {
 
         @Override
         public boolean canContinueToUse() {
-            if (!this.pet.petIsCurrentlyGuarding())
+            if (this.commonCantUse())
                 return false;
             if (this.mob.getNavigation().isDone()) {
                 return false;
