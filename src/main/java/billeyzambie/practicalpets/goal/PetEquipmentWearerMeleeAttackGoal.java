@@ -25,6 +25,6 @@ public class PetEquipmentWearerMeleeAttackGoal extends MeleeAttackGoal {
 
     @Override
     protected double getAttackReachSqr(LivingEntity p_25556_) {
-        return super.getAttackReachSqr(p_25556_) * wearer.getReachMutliplier() * wearer.getReachMutliplier();
+        return super.getAttackReachSqr(p_25556_) * wearer.getPetReachMultiplier() * wearer.getPetReachMultiplier();
     }
 }

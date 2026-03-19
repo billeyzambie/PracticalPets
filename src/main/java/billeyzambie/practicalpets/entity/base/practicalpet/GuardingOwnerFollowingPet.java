@@ -1,6 +1,7 @@
 package billeyzambie.practicalpets.entity.base.practicalpet;
 
 import billeyzambie.practicalpets.entity.base.MobInterface;
+import billeyzambie.practicalpets.items.PetCosmetic;
 import billeyzambie.practicalpets.misc.PPTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -14,6 +15,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
@@ -133,10 +135,27 @@ public interface GuardingOwnerFollowingPet extends MobInterface {
         //if (targetDamage < 5 && targetHealth < 25)
         //    return true;
 
-        double selfPower = selfHealth * selfDamage;
-        double targetPower = targetHealth * Math.max(targetDamage, 2);
+        float selfPower = (float) (selfHealth * selfDamage);
+        float targetPower = (float) (targetHealth * Math.max(targetDamage, 2));
 
-        return selfPower * 1.5 > targetPower;
+        selfPower *= customGuardPowerMultiplier(target);
+        if (this instanceof PetEquipmentWearer wearer) {
+            if (wearer.canShootFromSlot().isPresent()) {
+                var slot = wearer.canShootFromSlot().orElseThrow();
+                ItemStack stack = wearer.getEquippedItem(slot);
+                if (stack.getItem() instanceof PetCosmetic cosmetic) {
+                    selfPower *= cosmetic.rangedGuardPowerMultiplier(stack, wearer);
+                }
+            }
+            else
+                selfPower *= wearer.getGuardPowerMultiplier();
+        }
+
+        return selfPower > targetPower;
+    }
+
+    default float customGuardPowerMultiplier(LivingEntity target) {
+        return 1;
     }
 
     class GuardTargetGoal<T extends Mob & GuardingOwnerFollowingPet> extends NearestAttackableTargetGoal<LivingEntity> {

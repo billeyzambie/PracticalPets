@@ -38,6 +38,13 @@ public interface PetCosmetic {
     default float reachMultiplier(ItemStack stack, PetEquipmentWearer wearer) {
         return 1;
     }
+    default float guardPowerMultiplier(ItemStack stack, PetEquipmentWearer wearer) {
+        float reachMultiplier = (reachMultiplier(stack, wearer) - 1) * 4 + 1;
+        return reachMultiplier / damageMultiplier(stack, wearer);
+    }
+    default float rangedGuardPowerMultiplier(ItemStack stack, PetEquipmentWearer wearer) {
+        return 2;
+    }
 
     default void onPetHit(ItemStack stack, PetEquipmentWearer wearer, Entity target) {
     }

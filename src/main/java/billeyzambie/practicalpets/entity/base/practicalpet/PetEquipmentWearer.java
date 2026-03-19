@@ -41,11 +41,13 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
     ItemStack getPetBodyItem();
 
     boolean anyEquipmentIsBrave();
-    float getReachMutliplier();
+    float getPetReachMultiplier();
+    float getGuardPowerMultiplier();
     Optional<PetCosmetic.Slot> canShootFromSlot();
 
     void setAnyEquipmentIsBrave(boolean value);
-    void setReachMultiplier(float value);
+    void setPetReachMultiplier(float value);
+    void setGuardPowerMultiplier(float value);
     void setCanShootFromSlot(Optional<PetCosmetic.Slot> value);
 
     //Used for scaling certain hats
@@ -162,6 +164,7 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
         boolean hasBraveEquipment = false;
         Optional<PetCosmetic.Slot> rangedSlot = Optional.empty();
         float reachMutliplier = 1;
+        float guardPowerMutliplier = 1;
         for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
             ItemStack cosmeticStack = this.getEquippedItem(slot);
             Optional<PetCosmetic> cosmeticOptional = PetCosmetics.getCosmeticForItem(cosmeticStack);
@@ -176,11 +179,13 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
                     rangedSlot = Optional.of(slot);
                 }
                 reachMutliplier *= cosmetic.reachMultiplier(cosmeticStack, this);
+                guardPowerMutliplier *= cosmetic.guardPowerMultiplier(cosmeticStack, this);
             }
         }
         this.setAnyEquipmentIsBrave(hasBraveEquipment);
         this.setCanShootFromSlot(rangedSlot);
-        this.setReachMultiplier(reachMutliplier);
+        this.setPetReachMultiplier(reachMutliplier);
+        this.setGuardPowerMultiplier(guardPowerMutliplier);
     }
 
     MutableComponent NEWLINE = Component.literal("\n");

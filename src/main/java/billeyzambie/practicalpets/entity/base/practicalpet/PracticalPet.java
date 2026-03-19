@@ -247,7 +247,8 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
     }
 
     private boolean anyEquipmentIsBrave = false;
-    private float reachMutliplier = 1;
+    private float reachMultiplier = 1;
+    private float guardPowerMultiplier = 1;
     private Optional<PetCosmetic.Slot> canShootFromSlot = Optional.empty();
 
     @Override
@@ -256,8 +257,13 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
     }
 
     @Override
-    public float getReachMutliplier() {
-        return reachMutliplier;
+    public float getPetReachMultiplier() {
+        return reachMultiplier;
+    }
+
+    @Override
+    public float getGuardPowerMultiplier() {
+        return guardPowerMultiplier;
     }
 
     @Override
@@ -271,8 +277,13 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
     }
 
     @Override
-    public void setReachMultiplier(float value) {
-        this.reachMutliplier = value;
+    public void setPetReachMultiplier(float value) {
+        this.reachMultiplier = value;
+    }
+
+    @Override
+    public void setGuardPowerMultiplier(float guardPowerMultiplier) {
+        this.guardPowerMultiplier = guardPowerMultiplier;
     }
 
     @Override
