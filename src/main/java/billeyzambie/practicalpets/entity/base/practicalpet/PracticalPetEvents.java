@@ -12,7 +12,6 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
@@ -72,16 +71,21 @@ public final class PracticalPetEvents {
 
             var guardPet = (Mob & GuardingPet) entity;
 
-            for (WrappedGoal wrappedGoal : guardPet.goalSelector.getAvailableGoals()) {
-                Goal goal = wrappedGoal.getGoal();
-
-                if (!(goal instanceof FollowOwnerGoal followOwnerGoal))
-                    continue;
-
-                guardPet.goalSelector.addGoal(wrappedGoal.getPriority(), new GuardingPet.GoToRestrictionGoal(guardPet));
-
-                break;
-            }
+            //boolean foundFollowOwnerGoal = false;
+//
+            //for (WrappedGoal wrappedGoal : guardPet.goalSelector.getAvailableGoals()) {
+            //    Goal goal = wrappedGoal.getGoal();
+//
+            //    if (!(goal instanceof FollowOwnerGoal followOwnerGoal))
+            //        continue;
+            //    foundFollowOwnerGoal = true;
+            //    guardPet.goalSelector.addGoal(wrappedGoal.getPriority(), new GuardingPet.GoToRestrictionGoal(guardPet));
+//
+            //    break;
+            //}
+//
+            //if (!foundFollowOwnerGoal)
+            guardPet.goalSelector.addGoal(0, new GuardingPet.GoToRestrictionGoal(guardPet));
 
             int highestTargetPriority = 0;
 
@@ -91,7 +95,7 @@ public final class PracticalPetEvents {
                     highestTargetPriority = goalPriority;
             }
 
-            guardPet.targetSelector.addGoal(highestTargetPriority + 1, new GuardingPet.GuardGoal(guardPet));
+            guardPet.targetSelector.addGoal(highestTargetPriority + 1, new GuardingPet.GuardTargetGoal(guardPet));
 
 
         }
