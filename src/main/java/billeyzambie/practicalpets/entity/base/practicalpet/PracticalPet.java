@@ -678,7 +678,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
             );
         } else {
             incrementFollowMode();
-            player.displayClientMessage(Component.translatable("action.practicalpets." + followMode().toString()).withStyle(ChatFormatting.GREEN), true);
+            player.displayClientMessage(Component.translatable("action.practicalpets." + followMode().toString(), this.getDisplayName()), true);
         }
     }
 
