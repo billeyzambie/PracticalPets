@@ -85,20 +85,34 @@ public interface GuardingPet extends MobInterface, OwnerFollowingPet {
         if (petGuardCenter == null || !(target instanceof Enemy) || !isGuardingPetAbleToAttack(target))
             return false;
 
-        //noinspection DataFlowIssue
+        double distSqr = petGuardCenter.distanceToSqr(target.position());
+        int radius = getPetGuardRadius();
+        if (distSqr > radius * radius)
+            return false;
+
+        double selfDamage = this.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
+        double targetDamage = target.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
+        //not how armor works but maybe a decent approximation
+        double targetHealth = target.getHealth()
+                + target.getAttribute(Attributes.ARMOR).getValue()
+                + target.getAttribute(Attributes.ARMOR_TOUGHNESS).getValue();
+        double selfHealth = this.getHealth()
+                + this.getAttribute(Attributes.ARMOR).getValue()
+                + this.getAttribute(Attributes.ARMOR_TOUGHNESS).getValue();
         if (
                 target.getType().is(PPTags.EntityTypes.EXPLOSIVE_ENEMIES)
-                        && this.getAttribute(Attributes.ATTACK_DAMAGE).getValue()
-                        < target.getAttribute(Attributes.MAX_HEALTH).getValue()
-                        + target.getAttribute(Attributes.ARMOR).getValue()
-                        + target.getAttribute(Attributes.ARMOR_TOUGHNESS).getValue()
+                        && selfDamage < targetHealth
         ) {
             return false;
         }
 
-        double distSqr = petGuardCenter.distanceToSqr(target.position());
-        int radius = getPetGuardRadius();
-        return distSqr <= radius * radius;
+        //if (targetDamage < 5 && targetHealth < 25)
+        //    return true;
+
+        double selfPower = selfHealth * selfDamage;
+        double targetPower = targetHealth * Math.max(targetDamage, 2);
+
+        return selfPower * 1.25 > targetPower;
     }
 
     class GuardTargetGoal extends NearestAttackableTargetGoal<LivingEntity> {
