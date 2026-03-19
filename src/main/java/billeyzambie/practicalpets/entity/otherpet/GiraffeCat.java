@@ -653,7 +653,7 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
                             player.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 5, 2, false, false), this);
                         }
 
-                        if (this.isOwnedBy(player) && this.followMode() != FollowMode.WANDERING) {
+                        if (this.isOwnedBy(player) && this.getFollowMode() != FollowMode.WANDERING) {
                             PPEvents.climbedGiraffeCats.put(player, this);
                         }
                     }
@@ -667,7 +667,7 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
                     this.isAlive()
                             && this.isLadder()
                             && playerPos.y > this.position().y
-                            && this.followMode() != FollowMode.WANDERING
+                            && this.getFollowMode() != FollowMode.WANDERING
             ) {
                 this.teleportTo(playerPos.x, playerPos.y, playerPos.z);
                 this.stopLadder();

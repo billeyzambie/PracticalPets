@@ -8,7 +8,6 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
@@ -25,6 +24,24 @@ import java.util.EnumSet;
 
 public interface GuardingOwnerFollowingPet extends MobInterface {
     boolean petIsCurrentlyFollowingOwner();
+    enum FollowMode {
+        FOLLOWING("following"),
+        SITTING("sitting"),
+        WANDERING("wandering"),
+        GUARDING("guarding");
+
+        public final String name;
+        public final String jadeTranslationString;
+
+        FollowMode(String name) {
+            this.name = name;
+            this.jadeTranslationString = "ui.practicalpets." + name;
+        }
+    }
+
+    FollowMode getFollowMode();
+    void setFollowMode(FollowMode value);
+
     boolean isOrderedToSit();
     /** Should be a field, doesn't need to be synched to the client */
     @Nullable Vec3 getPetGuardCenter();
@@ -44,7 +61,6 @@ public interface GuardingOwnerFollowingPet extends MobInterface {
     boolean isGuardingPetAbleToAttack(@Nullable LivingEntity target);
 
     default void saveGuardingPetData(CompoundTag compoundTag) {
-        compoundTag.putInt("PPetGuardingTime", getPetGuardStartTime());
         Vec3 pos = getPetGuardCenter();
         if (pos == null)
             return;
@@ -54,8 +70,7 @@ public interface GuardingOwnerFollowingPet extends MobInterface {
     }
 
     default void loadGuardingPetData(CompoundTag compoundTag) {
-        this.setPetGuardStartTime(compoundTag.getInt("PPetGuardingTime"));
-        if (compoundTag.contains("PPetGuardCenterX", Tag.TAG_INT)) {
+        if (compoundTag.contains("PPetGuardCenterX", Tag.TAG_DOUBLE)) {
             this.setPetGuardCenter(new Vec3(
                     compoundTag.getDouble("PPetGuardCenterX"),
                     compoundTag.getDouble("PPetGuardCenterY"),

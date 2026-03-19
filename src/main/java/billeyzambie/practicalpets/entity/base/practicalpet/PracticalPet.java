@@ -66,18 +66,6 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         return BVCData;
     }
 
-    public enum FollowMode {
-        FOLLOWING,
-        SITTING,
-        WANDERING,
-        GUARDING;
-
-        @Override
-        public String toString() {
-            return super.toString().toLowerCase(Locale.ROOT);
-        }
-    }
-
     @Override
     public boolean isModelYAxisInverted() {
         return true;
@@ -563,7 +551,8 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         this.entityData.set(PET_XP, petXP);
     }
 
-    public FollowMode followMode() {
+    @Override
+    public FollowMode getFollowMode() {
         if (this.isOrderedToSit())
             return FollowMode.SITTING;
         if (this.shouldFollowOwner())
@@ -573,6 +562,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         return FollowMode.WANDERING;
     }
 
+    @Override
     public void setFollowMode(FollowMode followMode) {
         this.setOrderedToSit(followMode == FollowMode.SITTING);
         this.setShouldFollowOwner(followMode == FollowMode.FOLLOWING || followMode == FollowMode.SITTING);
@@ -583,7 +573,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
     }
 
     public void incrementFollowMode() {
-        switch (this.followMode()) {
+        switch (this.getFollowMode()) {
             case FOLLOWING -> setFollowMode(this.petCanStartGuarding() ? FollowMode.GUARDING : FollowMode.WANDERING);
             case GUARDING -> setFollowMode(FollowMode.WANDERING);
             case WANDERING -> setFollowMode(FollowMode.SITTING);
@@ -677,7 +667,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
             );
         } else {
             incrementFollowMode();
-            player.displayClientMessage(Component.translatable("action.practicalpets." + followMode().toString(), this.getDisplayName()), true);
+            player.displayClientMessage(Component.translatable("action.practicalpets." + getFollowMode().name, this.getDisplayName()), true);
         }
     }
 

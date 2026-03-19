@@ -5,6 +5,7 @@ import billeyzambie.practicalpets.entity.fish.base.PracticalFish;
 import billeyzambie.practicalpets.misc.PracticalPets;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.TamableAnimal;
 import snownee.jade.api.IWailaClientRegistration;
 import snownee.jade.api.IWailaCommonRegistration;
 import snownee.jade.api.IWailaPlugin;
@@ -17,19 +18,22 @@ public class PracticalPetsWailaPlugin implements IWailaPlugin {
     public static final ResourceLocation FISH_BREEDING_PROVIDER = new ResourceLocation(PracticalPets.MODID, "fish_breeding_provider");
     public static final ResourceLocation FISH_GROWTH_PROVIDER = new ResourceLocation(PracticalPets.MODID, "fish_growth_provider");
     public static final ResourceLocation LAUNCHED_FISH_DESPAWN_PROVIDER = new ResourceLocation(PracticalPets.MODID, "launched_fish_despawn_provider");
+    public static final ResourceLocation PET_FOLLOW_MODE_PROVIDER = new ResourceLocation(PracticalPets.MODID, "pet_follow_mode_provider");
 
     @Override
     public void register(IWailaCommonRegistration registration) {
         registration.registerEntityDataProvider(FishGrowthProvider.INSTANCE, BreedableFish.class);
         registration.registerEntityDataProvider(FishBreedingProvider.INSTANCE, BreedableFish.class);
         registration.registerEntityDataProvider(LaunchedFishDespawnProvider.INSTANCE, PracticalFish.class);
+        registration.registerEntityDataProvider(PetFollowModeProvider.INSTANCE, TamableAnimal.class);
     }
 
     @Override
     public void registerClient(IWailaClientRegistration registration) {
-        registration.registerEntityComponent(PetLevelProvider.INSTANCE, Mob.class);
+        registration.registerEntityComponent(PetLevelProvider.INSTANCE, TamableAnimal.class);
         registration.registerEntityComponent(FishGrowthProvider.INSTANCE, BreedableFish.class);
         registration.registerEntityComponent(FishBreedingProvider.INSTANCE, BreedableFish.class);
         registration.registerEntityComponent(LaunchedFishDespawnProvider.INSTANCE, PracticalFish.class);
+        registration.registerEntityComponent(PetFollowModeProvider.INSTANCE, TamableAnimal.class);
     }
 }
