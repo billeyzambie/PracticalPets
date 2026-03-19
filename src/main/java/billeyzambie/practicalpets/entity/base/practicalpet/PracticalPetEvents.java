@@ -20,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -33,6 +34,17 @@ public final class PracticalPetEvents {
 
     @Mod.EventBusSubscriber
     public static final class GuardingPetEvents {
+
+        @SubscribeEvent
+        public static void onLivingExperienceDrop(LivingExperienceDropEvent event) {
+            LivingEntity entity = event.getEntity();
+
+            if (!(entity.getLastHurtByMob() instanceof GuardingOwnerFollowingPet guardPet))
+                return;
+
+            if (guardPet.petIsCurrentlyGuarding())
+                event.setCanceled(true);
+        }
 
         @SubscribeEvent(priority = EventPriority.LOWEST)
         public static void onEntityTravelToDimension(EntityTravelToDimensionEvent event) {
