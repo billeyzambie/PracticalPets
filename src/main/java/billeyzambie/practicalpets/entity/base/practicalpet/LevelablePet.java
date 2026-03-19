@@ -189,13 +189,13 @@ public interface LevelablePet extends MobInterface, OwnableEntity {
 
         double targetDamage = Mth.lerp(progress1to10, getLevel1AttackDamage(), getLevel10AttackDamage());
 
-        healthAttribute.addTransientModifier(new AttributeModifier(
+        healthAttribute.addPermanentModifier(new AttributeModifier(
                 MAX_HEALTH_MULTIPLIER,
                 "pplevelmultiplier",
                 targetHealth / getLevel1MaxHealth() - 1d,
                 AttributeModifier.Operation.MULTIPLY_BASE
         ));
-        damageAttribute.addTransientModifier(new AttributeModifier(
+        damageAttribute.addPermanentModifier(new AttributeModifier(
                 ATTACK_DAMAGE_MULTIPLIER,
                 "pplevelmultiplier",
                 targetDamage / getLevel1AttackDamage() - 1d,
