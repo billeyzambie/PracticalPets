@@ -3,6 +3,10 @@
   "values": [
     "minecraft:creeper",
     {
+      "id": "mutantmonsters.mutant_creeper",
+      "required": false
+    },
+    {
       "id": "alexscaves:nucleeper",
       "required": false
     },
