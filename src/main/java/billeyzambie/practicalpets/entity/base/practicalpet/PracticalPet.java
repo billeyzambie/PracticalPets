@@ -487,7 +487,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         )
             return false;
         boolean result = super.hurt(source, amount);
-        if (result && this.isTame())
+        if (result && this.isTame() && !petIsCurrentlyGuarding())
             this.setFollowMode(PracticalPet.FollowMode.FOLLOWING);
         return result;
     }
