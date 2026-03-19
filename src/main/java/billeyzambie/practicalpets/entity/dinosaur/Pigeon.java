@@ -377,9 +377,10 @@ public class Pigeon extends PracticalPet {
                 if (path != null) {
                     BlockPos target = path.getTarget();
                     if (
-                            target.getY() >= this.getY() + 1.5
+                            !this.isInWater()
+                                    && (target.getY() >= this.getY() + 1.5
                                     || target.getY() < this.getY() - 1.5
-                                    || this.blockPosition().distToCenterSqr(target.getCenter()) > 100
+                                    || this.blockPosition().distToCenterSqr(target.getCenter()) > 100)
                     ) {
                         this.toFlyMode();
                     }
@@ -394,7 +395,13 @@ public class Pigeon extends PracticalPet {
 
             }
             case FLYING -> {
-                if (--this.movementSwitchTime <= 0 && this.onGround() && !this.hasTarget() && this.targetItemEntity == null) {
+                if (
+                        this.isInWater()
+                                || --this.movementSwitchTime <= 0
+                                && this.onGround()
+                                && !this.hasTarget()
+                                && this.targetItemEntity == null
+                ) {
                     this.toWalkMode();
                     this.setDeltaMovement(Vec3.ZERO);
                 }
