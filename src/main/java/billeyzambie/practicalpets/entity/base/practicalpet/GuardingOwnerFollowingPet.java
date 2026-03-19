@@ -23,7 +23,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 
-public interface GuardingPet extends MobInterface, OwnerFollowingPet {
+public interface GuardingOwnerFollowingPet extends MobInterface {
+    boolean petIsCurrentlyFollowingOwner();
     boolean isOrderedToSit();
     /** Should be a field, doesn't need to be synched to the client */
     @Nullable Vec3 getPetGuardCenter();
@@ -31,7 +32,7 @@ public interface GuardingPet extends MobInterface, OwnerFollowingPet {
 
     /** Should be a field, doesn't need to be synched to the client */
     int getPetGuardTime();
-    /** Automatically increments every tick that {@link GuardingPet#petIsCurrentlyGuarding()} is true */
+    /** Automatically increments every tick that {@link GuardingOwnerFollowingPet#petIsCurrentlyGuarding()} is true */
     void setPetGuardTime(int value);
 
     default boolean petCanStartGuarding() {
@@ -112,12 +113,12 @@ public interface GuardingPet extends MobInterface, OwnerFollowingPet {
         double selfPower = selfHealth * selfDamage;
         double targetPower = targetHealth * Math.max(targetDamage, 2);
 
-        return selfPower * 1.25 > targetPower;
+        return selfPower * 1.5 > targetPower;
     }
 
     class GuardTargetGoal extends NearestAttackableTargetGoal<LivingEntity> {
-        public final GuardingPet pet;
-        public GuardTargetGoal(GuardingPet pet) {
+        public final GuardingOwnerFollowingPet pet;
+        public GuardTargetGoal(GuardingOwnerFollowingPet pet) {
             super((Mob)pet, LivingEntity.class, 20, false, true, pet::shouldGuardingPetAttack);
             this.pet = pet;
         }
@@ -138,14 +139,14 @@ public interface GuardingPet extends MobInterface, OwnerFollowingPet {
     }
 
     class GoToRestrictionGoal extends Goal {
-        private final GuardingPet pet;
+        private final GuardingOwnerFollowingPet pet;
         private final PathfinderMob mob;
         private final LevelReader level;
         private static final double SPEED_MODIFIER = 1.25;
         private int timeToRecalcPath;
         private float oldWaterCost;
 
-        public GoToRestrictionGoal(GuardingPet pet) {
+        public GoToRestrictionGoal(GuardingOwnerFollowingPet pet) {
             this.pet = pet;
             this.mob = (PathfinderMob) pet;
             this.level = this.mob.level();

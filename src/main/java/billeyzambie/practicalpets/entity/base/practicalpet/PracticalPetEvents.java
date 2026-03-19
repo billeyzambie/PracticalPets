@@ -41,7 +41,7 @@ public final class PracticalPetEvents {
             if (entity.level().isClientSide())
                 return;
 
-            if (!(entity instanceof GuardingPet guardPet))
+            if (!(entity instanceof GuardingOwnerFollowingPet guardPet))
                 return;
 
             if (guardPet.petIsCurrentlyGuarding())
@@ -53,7 +53,7 @@ public final class PracticalPetEvents {
         public static void onEntityTravelToDimension(EntityTravelToDimensionEvent event) {
             Entity entity = event.getEntity();
 
-            if (!(entity instanceof GuardingPet guardPet))
+            if (!(entity instanceof GuardingOwnerFollowingPet guardPet))
                 return;
 
             guardPet.petStopGuarding();
@@ -66,10 +66,10 @@ public final class PracticalPetEvents {
 
             Entity entity = event.getEntity();
 
-            if (!(entity instanceof GuardingPet))
+            if (!(entity instanceof GuardingOwnerFollowingPet))
                 return;
 
-            var guardPet = (Mob & GuardingPet) entity;
+            var guardPet = (Mob & GuardingOwnerFollowingPet) entity;
 
             //boolean foundFollowOwnerGoal = false;
 //
@@ -85,7 +85,7 @@ public final class PracticalPetEvents {
             //}
 //
             //if (!foundFollowOwnerGoal)
-            guardPet.goalSelector.addGoal(0, new GuardingPet.GoToRestrictionGoal(guardPet));
+            guardPet.goalSelector.addGoal(0, new GuardingOwnerFollowingPet.GoToRestrictionGoal(guardPet));
 
             int highestTargetPriority = 0;
 
@@ -95,7 +95,7 @@ public final class PracticalPetEvents {
                     highestTargetPriority = goalPriority;
             }
 
-            guardPet.targetSelector.addGoal(highestTargetPriority + 1, new GuardingPet.GuardTargetGoal(guardPet));
+            guardPet.targetSelector.addGoal(highestTargetPriority + 1, new GuardingOwnerFollowingPet.GuardTargetGoal(guardPet));
 
 
         }

@@ -1,6 +1,6 @@
 package billeyzambie.practicalpets.entity.otherpet;
 
-import billeyzambie.practicalpets.entity.base.practicalpet.OwnerFollowingPet;
+import billeyzambie.practicalpets.entity.base.practicalpet.GuardingOwnerFollowingPet;
 import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.entity.base.StayStillGoalMob;
 import billeyzambie.practicalpets.entity.other.YeetedPetCarrier;
@@ -711,7 +711,7 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
                 && !pet.isPassenger()
                 && !(
                         this.shouldFollowOwner()
-                        && pet instanceof OwnerFollowingPet followingPet
+                        && pet instanceof GuardingOwnerFollowingPet followingPet
                                 && !followingPet.petIsCurrentlyFollowingOwner()
                 );
     }

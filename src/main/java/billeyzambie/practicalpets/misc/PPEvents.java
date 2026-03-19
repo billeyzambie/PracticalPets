@@ -1,7 +1,6 @@
 package billeyzambie.practicalpets.misc;
 
-import billeyzambie.practicalpets.entity.base.practicalpet.OwnerFollowingPet;
-import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
+import billeyzambie.practicalpets.entity.base.practicalpet.GuardingOwnerFollowingPet;
 import billeyzambie.practicalpets.entity.dinosaur.Pigeon;
 import billeyzambie.practicalpets.entity.otherpet.GiraffeCat;
 import billeyzambie.practicalpets.network.PlayerPunchAirPacket;
@@ -104,7 +103,7 @@ public class PPEvents {
 
         List<TamableAnimal> pets = serverPlayer.level().getEntitiesOfClass(TamableAnimal.class, player.getBoundingBox().inflate(64),
                 pet ->
-                        pet instanceof OwnerFollowingPet followingPet && followingPet.petIsCurrentlyFollowingOwner()
+                        pet instanceof GuardingOwnerFollowingPet followingPet && followingPet.petIsCurrentlyFollowingOwner()
                         && pet.isTame() && pet.getOwnerUUID() != null && pet.getOwnerUUID().equals(player.getUUID())
         );
         pets.forEach(pet -> {
