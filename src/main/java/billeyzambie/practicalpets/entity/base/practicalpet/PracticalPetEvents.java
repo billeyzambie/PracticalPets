@@ -20,7 +20,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -34,20 +33,6 @@ public final class PracticalPetEvents {
 
     @Mod.EventBusSubscriber
     public static final class GuardingPetEvents {
-
-        @SubscribeEvent
-        public static void onLivingTick(LivingEvent.LivingTickEvent event) {
-            LivingEntity entity = event.getEntity();
-            if (entity.level().isClientSide())
-                return;
-
-            if (!(entity instanceof GuardingOwnerFollowingPet guardPet))
-                return;
-
-            if (guardPet.petIsCurrentlyGuarding())
-                guardPet.setPetGuardTime(guardPet.getPetGuardTime() + 1);
-
-        }
 
         @SubscribeEvent(priority = EventPriority.LOWEST)
         public static void onEntityTravelToDimension(EntityTravelToDimensionEvent event) {
@@ -85,7 +70,7 @@ public final class PracticalPetEvents {
             //}
 //
             //if (!foundFollowOwnerGoal)
-            guardPet.goalSelector.addGoal(0, new GuardingOwnerFollowingPet.GoToRestrictionGoal(guardPet));
+            guardPet.goalSelector.addGoal(0, new GuardingOwnerFollowingPet.GoToRestrictionGoal<>(guardPet));
 
             int highestTargetPriority = 0;
 
@@ -95,7 +80,7 @@ public final class PracticalPetEvents {
                     highestTargetPriority = goalPriority;
             }
 
-            guardPet.targetSelector.addGoal(highestTargetPriority + 1, new GuardingOwnerFollowingPet.GuardTargetGoal(guardPet));
+            guardPet.targetSelector.addGoal(highestTargetPriority + 1, new GuardingOwnerFollowingPet.GuardTargetGoal<>(guardPet));
 
 
         }

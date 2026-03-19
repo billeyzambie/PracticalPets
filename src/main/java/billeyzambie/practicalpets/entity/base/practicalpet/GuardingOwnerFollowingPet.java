@@ -31,9 +31,8 @@ public interface GuardingOwnerFollowingPet extends MobInterface {
     void setPetGuardCenter(@Nullable Vec3 value);
 
     /** Should be a field, doesn't need to be synched to the client */
-    int getPetGuardTime();
-    /** Automatically increments every tick that {@link GuardingOwnerFollowingPet#petIsCurrentlyGuarding()} is true */
-    void setPetGuardTime(int value);
+    int getPetGuardStartTime();
+    void setPetGuardStartTime(int value);
 
     default boolean petCanStartGuarding() {
         return isGuardingPetAbleToAttack(null);
@@ -45,7 +44,7 @@ public interface GuardingOwnerFollowingPet extends MobInterface {
     boolean isGuardingPetAbleToAttack(@Nullable LivingEntity target);
 
     default void saveGuardingPetData(CompoundTag compoundTag) {
-        compoundTag.putInt("PPetGuardingTime", getPetGuardTime());
+        compoundTag.putInt("PPetGuardingTime", getPetGuardStartTime());
         Vec3 pos = getPetGuardCenter();
         if (pos == null)
             return;
@@ -55,7 +54,7 @@ public interface GuardingOwnerFollowingPet extends MobInterface {
     }
 
     default void loadGuardingPetData(CompoundTag compoundTag) {
-        this.setPetGuardTime(compoundTag.getInt("PPetGuardingTime"));
+        this.setPetGuardStartTime(compoundTag.getInt("PPetGuardingTime"));
         if (compoundTag.contains("PPetGuardCenterX", Tag.TAG_INT)) {
             this.setPetGuardCenter(new Vec3(
                     compoundTag.getDouble("PPetGuardCenterX"),
@@ -67,7 +66,7 @@ public interface GuardingOwnerFollowingPet extends MobInterface {
 
     default void petStartGuarding() {
         setPetGuardCenter(this.position());
-        setPetGuardTime(0);
+        setPetGuardStartTime(this.asMob().tickCount);
 
         if (!this.petIsCurrentlyGuarding())
             throw new IllegalStateException("Failed to make pet start guarding. Pet entered guard mode without unsitting and unfollowing first");
@@ -116,15 +115,15 @@ public interface GuardingOwnerFollowingPet extends MobInterface {
         return selfPower * 1.5 > targetPower;
     }
 
-    class GuardTargetGoal extends NearestAttackableTargetGoal<LivingEntity> {
-        public final GuardingOwnerFollowingPet pet;
-        public GuardTargetGoal(GuardingOwnerFollowingPet pet) {
-            super((Mob)pet, LivingEntity.class, 20, false, true, pet::shouldGuardingPetAttack);
+    class GuardTargetGoal<T extends Mob & GuardingOwnerFollowingPet> extends NearestAttackableTargetGoal<LivingEntity> {
+        public final T pet;
+        public GuardTargetGoal(T pet) {
+            super(pet, LivingEntity.class, 20, false, true, pet::shouldGuardingPetAttack);
             this.pet = pet;
         }
 
         private boolean canGuard() {
-            return pet.petIsCurrentlyGuarding() && pet.getPetGuardTime() > 60;
+            return pet.petIsCurrentlyGuarding() && pet.getPetGuardStartTime() + 60 < pet.tickCount;
         }
 
         @Override
@@ -138,21 +137,19 @@ public interface GuardingOwnerFollowingPet extends MobInterface {
         }
     }
 
-    class GoToRestrictionGoal extends Goal {
-        private final GuardingOwnerFollowingPet pet;
-        private final PathfinderMob mob;
+    class GoToRestrictionGoal<T extends Mob & GuardingOwnerFollowingPet> extends Goal {
+        private final T pet;
         private final LevelReader level;
         private static final double SPEED_MODIFIER = 1.25;
         private int timeToRecalcPath;
         private float oldWaterCost;
 
-        public GoToRestrictionGoal(GuardingOwnerFollowingPet pet) {
+        public GoToRestrictionGoal(T pet) {
             this.pet = pet;
-            this.mob = (PathfinderMob) pet;
-            this.level = this.mob.level();
+            this.level = this.pet.level();
             this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
-            if (!(this.mob.getNavigation() instanceof GroundPathNavigation) && !(this.mob.getNavigation() instanceof FlyingPathNavigation)) {
-                throw new IllegalArgumentException("Unsupported mob type for FollowOwnerGoal");
+            if (!(this.pet.getNavigation() instanceof GroundPathNavigation) && !(this.pet.getNavigation() instanceof FlyingPathNavigation)) {
+                throw new IllegalArgumentException("Unsupported mob type for GoToRestrictionGoal");
             }
         }
 
@@ -173,7 +170,7 @@ public interface GuardingOwnerFollowingPet extends MobInterface {
         }
 
         private boolean commonCantUse() {
-            return this.mob.getTarget() != null || !this.pet.petIsCurrentlyGuarding();
+            return this.pet.getTarget() != null || !this.pet.petIsCurrentlyGuarding();
         }
 
         @Override
@@ -182,49 +179,49 @@ public interface GuardingOwnerFollowingPet extends MobInterface {
                 return false;
             if (this.unableToMove()) {
                 return false;
-            } else return this.mob.distanceToSqr(this.getRestrictionCenter()) >= this.getStartDistance() * this.getStartDistance();
+            } else return this.pet.distanceToSqr(this.getRestrictionCenter()) >= this.getStartDistance() * this.getStartDistance();
         }
 
         @Override
         public boolean canContinueToUse() {
             if (this.commonCantUse())
                 return false;
-            if (this.mob.getNavigation().isDone()) {
+            if (this.pet.getNavigation().isDone()) {
                 return false;
             } else if (this.unableToMove()) {
                 return false;
             } else {
-                return !(this.mob.distanceToSqr(this.getRestrictionCenter()) <= this.getStopDistance() * this.getStopDistance());
+                return !(this.pet.distanceToSqr(this.getRestrictionCenter()) <= this.getStopDistance() * this.getStopDistance());
             }
         }
 
         private boolean unableToMove() {
-            return this.pet.isOrderedToSit() || this.mob.isPassenger() || this.mob.isLeashed();
+            return this.pet.isOrderedToSit() || this.pet.isPassenger() || this.pet.isLeashed();
         }
 
         @Override
         public void start() {
             this.timeToRecalcPath = 0;
-            this.oldWaterCost = this.mob.getPathfindingMalus(BlockPathTypes.WATER);
-            this.mob.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
+            this.oldWaterCost = this.pet.getPathfindingMalus(BlockPathTypes.WATER);
+            this.pet.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
         }
 
         @Override
         public void stop() {
-            this.mob.getNavigation().stop();
-            this.mob.setPathfindingMalus(BlockPathTypes.WATER, this.oldWaterCost);
+            this.pet.getNavigation().stop();
+            this.pet.setPathfindingMalus(BlockPathTypes.WATER, this.oldWaterCost);
         }
 
         @Override
         public void tick() {
             Vec3 targetPosition = this.getRestrictionCenter();
-            this.mob.getLookControl().setLookAt(targetPosition);
+            this.pet.getLookControl().setLookAt(targetPosition);
             if (--this.timeToRecalcPath <= 0) {
                 this.timeToRecalcPath = this.adjustedTickDelay(10);
-                if (this.mob.distanceToSqr(targetPosition) >= this.getTeleportDistance() * this.getTeleportDistance()) {
+                if (this.pet.distanceToSqr(targetPosition) >= this.getTeleportDistance() * this.getTeleportDistance()) {
                     this.teleportToRestrictionCenter();
                 } else {
-                    this.mob.getNavigation().moveTo(targetPosition.x, targetPosition.y, targetPosition.z, SPEED_MODIFIER);
+                    this.pet.getNavigation().moveTo(targetPosition.x, targetPosition.y, targetPosition.z, SPEED_MODIFIER);
                 }
 
             }
@@ -251,8 +248,8 @@ public interface GuardingOwnerFollowingPet extends MobInterface {
             } else if (!this.canTeleportTo(new BlockPos(p_25304_, p_25305_, p_25306_))) {
                 return false;
             } else {
-                this.mob.moveTo((double)p_25304_ + 0.5D, p_25305_, (double)p_25306_ + 0.5D, this.mob.getYRot(), this.mob.getXRot());
-                this.mob.getNavigation().stop();
+                this.pet.moveTo((double)p_25304_ + 0.5D, p_25305_, (double)p_25306_ + 0.5D, this.pet.getYRot(), this.pet.getXRot());
+                this.pet.getNavigation().stop();
                 return true;
             }
         }
@@ -262,13 +259,13 @@ public interface GuardingOwnerFollowingPet extends MobInterface {
             if (blockpathtypes != BlockPathTypes.WALKABLE) {
                 return false;
             } else {
-                BlockPos blockpos = p_25308_.subtract(this.mob.blockPosition());
-                return this.level.noCollision(this.mob, this.mob.getBoundingBox().move(blockpos));
+                BlockPos blockpos = p_25308_.subtract(this.pet.blockPosition());
+                return this.level.noCollision(this.pet, this.pet.getBoundingBox().move(blockpos));
             }
         }
 
         private int randomIntInclusive(int p_25301_, int p_25302_) {
-            return this.mob.getRandom().nextInt(p_25302_ - p_25301_ + 1) + p_25301_;
+            return this.pet.getRandom().nextInt(p_25302_ - p_25301_ + 1) + p_25301_;
         }
     }
 }

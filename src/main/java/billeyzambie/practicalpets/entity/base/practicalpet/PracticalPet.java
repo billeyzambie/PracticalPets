@@ -10,7 +10,6 @@ import billeyzambie.practicalpets.network.RandomIdle1AnimPacket;
 import billeyzambie.practicalpets.ui.PracticalPetMenu;
 import billeyzambie.practicalpets.goal.*;
 import billeyzambie.practicalpets.util.PPUtil;
-import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -96,16 +95,16 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         this.petGuardCenter = value;
     }
 
-    private int petGuardTime;
+    private int petGuardStartTime;
 
     @Override
-    public int getPetGuardTime() {
-        return petGuardTime;
+    public int getPetGuardStartTime() {
+        return petGuardStartTime;
     }
 
     @Override
-    public void setPetGuardTime(int petGuardTime) {
-        this.petGuardTime = petGuardTime;
+    public void setPetGuardStartTime(int petGuardStartTime) {
+        this.petGuardStartTime = petGuardStartTime;
     }
 
     @Override
