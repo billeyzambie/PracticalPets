@@ -107,8 +107,10 @@ public class PPEvents {
                         && pet.isTame() && pet.getOwnerUUID() != null && pet.getOwnerUUID().equals(player.getUUID())
         );
         pets.forEach(pet -> {
-            pet.teleportTo(player.getX(), player.getY(), player.getZ());
-            pet.setDeltaMovement(Vec3.ZERO);
+            if (pet.level().noCollision(pet, pet.getBoundingBox().move(player.position().subtract(pet.position())))) {
+                pet.teleportTo(player.getX(), player.getY(), player.getZ());
+                pet.setDeltaMovement(Vec3.ZERO);
+            }
         });
     }
 
