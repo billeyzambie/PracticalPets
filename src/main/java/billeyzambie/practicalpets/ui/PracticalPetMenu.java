@@ -1,7 +1,7 @@
 package billeyzambie.practicalpets.ui;
 
 import billeyzambie.practicalpets.client.PPMenus;
-import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
+import billeyzambie.practicalpets.entity.base.practicalpet.IPracticalPet;
 import billeyzambie.practicalpets.items.PetCosmetic;
 import billeyzambie.practicalpets.petequipment.PetCosmetics;
 import net.minecraft.world.Container;
@@ -15,10 +15,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public class PracticalPetMenu extends AbstractContainerMenu {
-    public final PracticalPet pet;
+    public final IPracticalPet pet;
     private final Container petContainer;
 
-    public PracticalPetMenu(int id, Inventory playerInv, PracticalPet pet) {
+    public PracticalPetMenu(int id, Inventory playerInv, IPracticalPet pet) {
         super(PPMenus.PRACTICAL_PET_MENU.get(), id);
         this.pet = pet;
         this.petContainer = new PracticalPetContainer(pet);

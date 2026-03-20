@@ -1,15 +1,15 @@
 package billeyzambie.practicalpets.ui;
 
-import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
+import billeyzambie.practicalpets.entity.base.practicalpet.IPracticalPet;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class PracticalPetContainer implements Container {
-    private final PracticalPet pet;
+    private final IPracticalPet pet;
 
-    public PracticalPetContainer(PracticalPet pet) {
+    public PracticalPetContainer(IPracticalPet pet) {
         this.pet = pet;
     }
 
@@ -71,7 +71,7 @@ public class PracticalPetContainer implements Container {
 
     @Override
     public boolean stillValid(@NotNull Player player) {
-        return pet.isAlive() && pet.distanceTo(player) < 8.0F;
+        return pet.isAlive() && pet.distanceTo(player) < 8;
     }
 
     @Override

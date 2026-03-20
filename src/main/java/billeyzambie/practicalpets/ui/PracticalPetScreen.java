@@ -1,5 +1,6 @@
 package billeyzambie.practicalpets.ui;
 
+import billeyzambie.practicalpets.entity.base.practicalpet.IPracticalPet;
 import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.entity.dinosaur.Pigeon;
 import billeyzambie.practicalpets.entity.otherpet.GiraffeCat;
@@ -12,6 +13,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,7 +31,7 @@ public class PracticalPetScreen extends AbstractContainerScreen<PracticalPetMenu
     private static final ResourceLocation BODY_SLOT_ICON =
             new ResourceLocation(PracticalPets.MODID, "textures/gui/slot/pet_body.png");
 
-    PracticalPet pet;
+    IPracticalPet pet;
     @Nullable
     private PetAbilityButton petAbilityButton;
 
@@ -50,19 +52,19 @@ public class PracticalPetScreen extends AbstractContainerScreen<PracticalPetMenu
                     this.leftPos + 178,
                     this.topPos + 18,
                     button -> Minecraft.getInstance().setScreen(new PigeonSendScreen(pigeon)),
-                    pet,
+                    pigeon,
                     new ResourceLocation(PracticalPets.MODID, "textures/gui/mail_icon.png")
             ));
         }
-        else if (pet instanceof GiraffeCat) {
+        else if (pet instanceof GiraffeCat giraffeCat) {
             this.addRenderableWidget(this.petAbilityButton = new PetAbilityButton(
                     this.leftPos + 178,
                     this.topPos + 18,
                     button -> {
                         this.onClose();
-                        PPNetworking.CHANNEL.sendToServer(new GiraffeCatLadderButtonPacket(pet.getId()));
+                        PPNetworking.CHANNEL.sendToServer(new GiraffeCatLadderButtonPacket(giraffeCat.getId()));
                     },
-                    pet,
+                    giraffeCat,
                     new ResourceLocation(PracticalPets.MODID, "textures/gui/ladder_icon.png")
             ));
         }
@@ -102,7 +104,7 @@ public class PracticalPetScreen extends AbstractContainerScreen<PracticalPetMenu
                 17,
                 (this.leftPos + 51) - this.mouseX,
                 (this.topPos + 50 - this.pet.getEyeHeight()) - this.mouseY,
-                this.pet
+                (LivingEntity) this.pet
         );
     }
 

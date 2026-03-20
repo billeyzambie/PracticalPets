@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -25,6 +26,8 @@ public interface MobInterface {
     float getHealth();
     RandomSource getRandom();
     boolean isAlive();
+    float distanceTo(Entity entity);
+    float getEyeHeight();
     boolean hasCustomName();
     Component getDisplayName();
     default Component mobInterfaceGetTypeName() {
