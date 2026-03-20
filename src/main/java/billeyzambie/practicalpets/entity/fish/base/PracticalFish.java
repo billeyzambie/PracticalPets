@@ -531,9 +531,11 @@ public abstract class PracticalFish extends TamableFish implements PetEquipmentW
             }
         }
 
-        InteractionResult petEquipmentWearerEquip = this.petEquipmentWearerEquip(player, hand);
-        if (petEquipmentWearerEquip != InteractionResult.PASS)
-            return petEquipmentWearerEquip;
+        if (!(this.getVehicle() instanceof Projectile) || !(stack.getItem() instanceof PiranhaLauncher)) {
+            InteractionResult petEquipmentWearerEquip = this.petEquipmentWearerEquip(player, hand);
+            if (petEquipmentWearerEquip != InteractionResult.PASS)
+                return petEquipmentWearerEquip;
+        }
 
         if (this.isFood(stack)) {
             if (this.getHealth() < this.getMaxHealth()) {
