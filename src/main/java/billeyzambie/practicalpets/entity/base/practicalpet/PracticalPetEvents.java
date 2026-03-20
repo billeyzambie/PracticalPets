@@ -20,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -34,6 +35,21 @@ public final class PracticalPetEvents {
 
     @Mod.EventBusSubscriber
     public static final class GuardingPetEvents {
+
+        @SubscribeEvent
+        public static void onLivingTick(LivingEvent.LivingTickEvent event) {
+            LivingEntity entity = event.getEntity();
+
+            if (
+                    !(entity.getLastHurtByMob() instanceof GuardingOwnerFollowingPet followingPet)
+                        || !followingPet.isTame()
+            )
+                return;
+
+            if (followingPet.getFollowMode().ordinal() != followingPet.getDisplayFollowModeId()) {
+                followingPet.refreshDisplayFollowMode();
+            }
+        }
 
         @SubscribeEvent
         public static void onLivingExperienceDrop(LivingExperienceDropEvent event) {
