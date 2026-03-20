@@ -83,6 +83,7 @@ public record InfoBookCategory(String name, List<InfoBookEntry> entries) {
                     this.appendSection("double_sneak", writer);
                     this.appendSection("bravery", writer);
                     this.appendSection("leveling", writer);
+                    this.appendSection("pet_guarding", writer);
                     this.appendSection("pet_friendly_fire", writer);
                 }
 

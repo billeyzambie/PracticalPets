@@ -52,7 +52,7 @@
   "ui.jade.plugin_practicalpets.pet_xp": "Leveling Progress: %s / %s",
   "ui.jade.plugin_practicalpets.launched_fish_despawn": "Despawns in: %s",
   "ui.practicalpets.following": "Following",
-  "ui.practicalpets.sitting": "Sitting",
+  "ui.practicalpets.sitting": "Staying",
   "ui.practicalpets.wandering": "Wandering",
   "ui.practicalpets.guarding": "Guarding",
   "config.jade.plugin_practicalpets.pet_level_provider": "Pet Level",
@@ -205,9 +205,11 @@
   "ui.practicalpets.info_book.misc.double_sneak.title": "Forced Pet Teleportation",
   "ui.practicalpets.info_book.misc.double_sneak.body": "You can §2double§r §2sneak§r to §2force§r all following §2pets§r of yours to §2teleport§r to you.",
   "ui.practicalpets.info_book.misc.bravery.title": "Pet Bravery",
-  "ui.practicalpets.info_book.misc.bravery.body": "Pets that are mainly non-combat like ducks, banana ducks, rats and pigeons need to be §2equipped§r with something that causes \"§2bravery§r\" in order for them to be able to defend their owner. Such equipment consists of any equipment that makes the pet stronger, such as duck armor, the rubber ducky pet hat, and the pet end rod launcher.",
+  "ui.practicalpets.info_book.misc.bravery.body": "Pets that are mainly non-combat like ducks, banana ducks, rats and pigeons need to be §2equipped§r with something that causes \"§2bravery§r\" in order for them to be able to defend their owner. Such equipment consists of any equipment that makes the pet stronger, such as duck armor, the rubber ducky pet hat, and the pet end rod launcher. A pet can also get permanent bravery if it gets leveled up to a level that makes it have 20 health and 3 attack damage, or more.",
   "ui.practicalpets.info_book.misc.leveling.title": "Pet Leveling",
   "ui.practicalpets.info_book.misc.leveling.body": "Pets can be §2leveled§r §2up§r by making them §2kill§r §2mobs§r, pets get more XP by killing stronger mobs. Pets become §2stronger§r and §2better§r §2at§r §2their§r uses the higher their level is. All pets start at level 1 and there is no max level, however levels beyond §210§r are very hard to reach. Currently the §2Jade§r mod is the only way to see a pet's level and its progress.",
+  "ui.practicalpets.info_book.misc.pet_guarding.title": "Pet Guarding",
+  "ui.practicalpets.info_book.misc.pet_guarding.body": "In addition to following, sitting, and wandering, pets from this mod can also §2guard§r, if they are able to defend their owner (see Pet Bravery). Pets in guarding mode will §2wander§r around in a 16 block §2radius§r from the position they were commanded to guard and §2attack§r §2monsters§r in that radius §2as§r §2long§r §2as§r §2they§r §2think§r §2they§r §2can§r §2beat§r §2them§r in a fight, which is determined by the target's and the pet's current health and attack damage, but also by the pet's equipment. Guarding pets will also §2not§r §2attack§r §2creepers§r unless they can §2one-shot§r them.",
   "ui.practicalpets.info_book.misc.pet_friendly_fire.title": "Hurting Your Own Pet",
   "ui.practicalpets.info_book.misc.pet_friendly_fire.body": "You can only hurt your own pets from this mod if you §2sneak§r. This includes any damage caused by you, whether it's a direct hit, a harming potion, a TNT ignited with flint and steel (not redstone), and many more."
 }
