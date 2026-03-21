@@ -50,7 +50,7 @@ public interface ItemModelPetCosmetic extends AttachablePetCosmetic {
     ) {
         poseStack.pushPose();
 
-        if (wearer.isModelYAxisInverted())
+        //if (wearer.isModelYAxisInverted())
             poseStack.mulPose(Axis.ZP.rotationDegrees(180));
 
 
