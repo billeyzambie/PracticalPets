@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 //Inject it right before More Mob Variants's weirdness so that this still works when it's installed
 @Mixin(value = CatRenderer.class, priority = 999)
-public class CatRendererMixin extends MobRenderer<Cat, CatModel<Cat>>  {
+public abstract class CatRendererMixin extends MobRenderer<Cat, CatModel<Cat>>  {
     @Unique
     private static final ResourceLocation TIGERLILY_TEXTURE = new ResourceLocation(
             PracticalPets.MODID,
@@ -50,13 +50,7 @@ public class CatRendererMixin extends MobRenderer<Cat, CatModel<Cat>>  {
         this.addLayer(new PetEquipmentLayer(this, context));
     }
 
-    @Unique
-    @Override
-    public ResourceLocation getTextureLocation(Cat p_114482_) {
-        return null;
-    }
-
-    public CatRendererMixin(EntityRendererProvider.Context p_174304_, CatModel<Cat> p_174305_, float p_174306_) {
+    private CatRendererMixin(EntityRendererProvider.Context p_174304_, CatModel<Cat> p_174305_, float p_174306_) {
         super(p_174304_, p_174305_, p_174306_);
     }
 }

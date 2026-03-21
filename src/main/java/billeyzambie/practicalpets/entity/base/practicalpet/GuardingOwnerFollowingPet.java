@@ -140,8 +140,8 @@ public interface GuardingOwnerFollowingPet extends MobInterface {
 
         selfPower *= customGuardPowerMultiplier(target);
         if (this instanceof PetEquipmentWearer wearer) {
-            if (wearer.canShootFromSlot().isPresent()) {
-                var slot = wearer.canShootFromSlot().orElseThrow();
+            if (wearer.petCanShootFromSlot().isPresent()) {
+                var slot = wearer.petCanShootFromSlot().orElseThrow();
                 ItemStack stack = wearer.getEquippedItem(slot);
                 if (stack.getItem() instanceof PetCosmetic cosmetic) {
                     selfPower *= cosmetic.rangedGuardPowerMultiplier(stack, wearer);

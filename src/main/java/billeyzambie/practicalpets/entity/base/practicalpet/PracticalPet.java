@@ -274,7 +274,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
     }
 
     @Override
-    public Optional<PetCosmetic.Slot> canShootFromSlot() {
+    public Optional<PetCosmetic.Slot> petCanShootFromSlot() {
         return canShootFromSlot;
     }
 
@@ -294,14 +294,14 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
     }
 
     @Override
-    public void setCanShootFromSlot(Optional<PetCosmetic.Slot> value) {
+    public void setPetCanShootFromSlot(Optional<PetCosmetic.Slot> value) {
         this.canShootFromSlot = value;
     }
 
     @Override
     public void performRangedAttack(@NotNull LivingEntity target, float distanceFactor) {
         if (this.canPerformCosmeticRangedAttack())
-            this.performCosmeticRangedAttack(canShootFromSlot().orElseThrow(), target, distanceFactor);
+            this.performCosmeticRangedAttack(petCanShootFromSlot().orElseThrow(), target, distanceFactor);
     }
 
     public PracticalPet(EntityType<? extends TamableAnimal> entityType, Level level) {
@@ -626,7 +626,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
     private Component deathMessage = Component.empty();
 
     @Override
-    public Component getDeathMessage() {
+    public Component getPetDeathMessage() {
         return deathMessage;
     }
 

@@ -43,12 +43,12 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
     boolean anyEquipmentIsBrave();
     float getPetReachMultiplier();
     float getGuardPowerMultiplier();
-    Optional<PetCosmetic.Slot> canShootFromSlot();
+    Optional<PetCosmetic.Slot> petCanShootFromSlot();
 
     void setAnyEquipmentIsBrave(boolean value);
     void setPetReachMultiplier(float value);
     void setGuardPowerMultiplier(float value);
-    void setCanShootFromSlot(Optional<PetCosmetic.Slot> value);
+    void setPetCanShootFromSlot(Optional<PetCosmetic.Slot> value);
 
     //Used for scaling certain hats
     float getPetHeadSizeX();
@@ -85,7 +85,7 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
         return !this.petShouldDefendSelf();
     }
 
-    Component getDeathMessage();
+    Component getPetDeathMessage();
 
     boolean isTame();
     boolean isOwnedBy(LivingEntity entity);
@@ -183,7 +183,7 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
             }
         }
         this.setAnyEquipmentIsBrave(hasBraveEquipment);
-        this.setCanShootFromSlot(rangedSlot);
+        this.setPetCanShootFromSlot(rangedSlot);
         this.setPetReachMultiplier(reachMutliplier);
         this.setGuardPowerMultiplier(guardPowerMutliplier);
     }
@@ -206,7 +206,7 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
                                 Component.literal(String.valueOf(this.getPetLevel())).withStyle(ChatFormatting.BLUE)
                         ).withStyle(ChatFormatting.LIGHT_PURPLE),
                         NEWLINE,
-                        this.getDeathMessage()
+                        this.getPetDeathMessage()
                 ).withStyle(ChatFormatting.GOLD));
                 else bowtieItem.putDeadPetInfo(stack, Component.translatable(
                         "tooltip.practicalpets.dead_pet_bowtie",
@@ -217,7 +217,7 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
                                 Component.literal(String.valueOf(this.getPetLevel())).withStyle(ChatFormatting.BLUE)
                         ).withStyle(ChatFormatting.LIGHT_PURPLE),
                         NEWLINE,
-                        this.getDeathMessage()
+                        this.getPetDeathMessage()
 
                 ).withStyle(ChatFormatting.GOLD));
             }
@@ -228,7 +228,7 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
     }
 
     default boolean canPerformCosmeticRangedAttack() {
-        return this.canShootFromSlot().isPresent();
+        return this.petCanShootFromSlot().isPresent();
     }
 
     default void performCosmeticRangedAttack(PetCosmetic.Slot slot, @NotNull LivingEntity target, float distanceFactor) {
