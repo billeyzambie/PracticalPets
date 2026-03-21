@@ -63,12 +63,12 @@ public class CatMixin extends TamableAnimal implements PetEquipmentWearer {
 
     @Override
     public ItemStack getPetHeadItem() {
-        return lol;
+        return ItemStack.EMPTY;
     }
 
     @Override
     public ItemStack getPetNeckItem() {
-        return xd;
+        return ItemStack.EMPTY;
     }
 
     @Override
