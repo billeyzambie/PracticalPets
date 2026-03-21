@@ -3,7 +3,7 @@
   "values": [
     "minecraft:creeper",
     {
-      "id": "mutantmonsters.mutant_creeper",
+      "id": "mutantmonsters:mutant_creeper",
       "required": false
     },
     {
