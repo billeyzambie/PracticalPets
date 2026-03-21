@@ -1,18 +1,19 @@
 package billeyzambie.practicalpets.goal;
 
-import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
+import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.EnumSet;
 
-public class GiraffeCatMeleeAttackGoal extends Goal {
-    private final PracticalPet pet;
+public class CustomCatMeleeAttackGoal<T extends TamableAnimal & PetEquipmentWearer> extends Goal {
+    private final T pet;
     private LivingEntity target;
     private int attackTime;
     private int runTime = 0;
 
-    public GiraffeCatMeleeAttackGoal(PracticalPet p_25658_) {
+    public CustomCatMeleeAttackGoal(T p_25658_) {
         this.pet = p_25658_;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
     }

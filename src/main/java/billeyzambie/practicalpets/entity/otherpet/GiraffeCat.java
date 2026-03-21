@@ -5,7 +5,7 @@ import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.entity.base.StayStillGoalMob;
 import billeyzambie.practicalpets.entity.other.YeetedPetCarrier;
 import billeyzambie.practicalpets.goal.GiraffeCatPickUpPetGoal;
-import billeyzambie.practicalpets.goal.GiraffeCatMeleeAttackGoal;
+import billeyzambie.practicalpets.goal.CustomCatMeleeAttackGoal;
 import billeyzambie.practicalpets.goal.StayStillGoal;
 import billeyzambie.practicalpets.misc.*;
 import billeyzambie.practicalpets.util.PPUtil;
@@ -161,7 +161,7 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
 
     @Override
     protected @NotNull Goal createMeleeAttackGoal() {
-        return new GiraffeCatMeleeAttackGoal(this);
+        return new CustomCatMeleeAttackGoal<>(this);
     }
 
     private static final EntityDataAccessor<Boolean> SOLID_BLOCK_ABOVE = SynchedEntityData.defineId(GiraffeCat.class, EntityDataSerializers.BOOLEAN);

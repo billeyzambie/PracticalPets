@@ -11,7 +11,8 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "renderer.minecraft.CatRendererMixin",
-    "entity.minecraft.CatMixin"
+    "entity.minecraft.CatMixin",
+    "goal.minecraft.LeapAtTargetGoalMixin",
+    "renderer.minecraft.CatRendererMixin"
   ]
 }

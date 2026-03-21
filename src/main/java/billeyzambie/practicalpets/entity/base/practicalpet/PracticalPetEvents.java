@@ -1,6 +1,6 @@
 package billeyzambie.practicalpets.entity.base.practicalpet;
 
-import billeyzambie.practicalpets.goal.GiraffeCatMeleeAttackGoal;
+import billeyzambie.practicalpets.goal.CustomCatMeleeAttackGoal;
 import billeyzambie.practicalpets.goal.PetEquipmentWearerCosmeticRangedAttackGoal;
 import billeyzambie.practicalpets.goal.PetEquipmentWearerMeleeAttackGoal;
 import billeyzambie.practicalpets.items.PetCosmetic;
@@ -12,8 +12,10 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.OcelotAttackGoal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -236,7 +238,13 @@ public final class PracticalPetEvents {
                             ((MeleeAttackGoal) oldGoal).followingTargetEvenIfNotSeen
                     )
             );
-            registerGoalReturnSelf(GiraffeCatMeleeAttackGoal.class);
+            registerGoalReturnSelf(CustomCatMeleeAttackGoal.class);
+            goalMap.put(
+                    OcelotAttackGoal.class,
+                    (oldGoal, wearer) -> new CustomCatMeleeAttackGoal<>(
+                            (TamableAnimal & PetEquipmentWearer) wearer
+                    )
+            );
         }
 
         @SubscribeEvent
