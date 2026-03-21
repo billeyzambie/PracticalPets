@@ -207,7 +207,7 @@ public class CatMixin extends TamableAnimal implements PetEquipmentWearer {
         return 1;
     }
 
-    @Override
+    @Override @Unique
     public @Nullable AgeableMob getBreedOffspring(ServerLevel p_146743_, AgeableMob p_146744_) {
         return null;
     }
