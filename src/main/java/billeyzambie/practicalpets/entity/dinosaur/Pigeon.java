@@ -145,6 +145,11 @@ public class Pigeon extends PracticalPet {
     }
 
     @Override
+    protected float getSoundVolume() {
+        return super.getSoundVolume() * 0.5f;
+    }
+
+    @Override
     public AgeableMob getBreedOffspring(@NotNull ServerLevel level, @NotNull AgeableMob partner) {
         Pigeon baby = PPEntities.PIGEON.get().create(level);
 
