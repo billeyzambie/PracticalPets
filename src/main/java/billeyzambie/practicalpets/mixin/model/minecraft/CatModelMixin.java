@@ -1,12 +1,12 @@
 package billeyzambie.practicalpets.mixin.model.minecraft;
 
+import billeyzambie.practicalpets.client.model.entity.base.PetEquipmentOffsets;
 import billeyzambie.practicalpets.client.model.entity.base.PetEquipmentWearerVanillaModel;
 import net.minecraft.client.model.CatModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -53,36 +53,18 @@ public abstract class CatModelMixin<T extends Cat> extends EntityModel<T> implem
     }
 
     @Unique
-    private static final Vec3 HAT_POSITION = new Vec3(0, -2, -0.5f);
-
-    @Unique
-    private static final Vec3 BOWTIE_POSITION = new Vec3(0, 3, -7);
-
-    @Unique
-    private static final Vec3 BACKPACK_POSITION = new Vec3(0, 11, -2);
-
-    @Override
-    public Vec3 getPetHatPosition() {
-        return HAT_POSITION;
-    }
+    private static final PetEquipmentOffsets PET_EQUIPMENT_OFFSETS = new PetEquipmentOffsets(
+            new Vec3(0, -2, -0.5f),
+            new Vec3(0, 3, -7),
+            new Vec3(0, 11, -2),
+            PetEquipmentOffsets.NO_ROTATION,
+            PetEquipmentOffsets.MINUS_NINETY_DEGREES_X,
+            PetEquipmentOffsets.MINUS_NINETY_DEGREES_X
+    );
 
     @Override
-    public Vec3 getPetBowtiePosition() {
-        return BOWTIE_POSITION;
+    public PetEquipmentOffsets getPetEquipmentOffsets() {
+        return PET_EQUIPMENT_OFFSETS;
     }
 
-    @Override
-    public Vec3 getPetBackpackPosition() {
-        return BACKPACK_POSITION;
-    }
-
-    @Override
-    public Vector3f getPetBowtieRotation() {
-        return MINUS_NINETY_DEGREES_X;
-    }
-
-    @Override
-    public Vector3f getPetBackpackRotation() {
-        return MINUS_NINETY_DEGREES_X;
-    }
 }
