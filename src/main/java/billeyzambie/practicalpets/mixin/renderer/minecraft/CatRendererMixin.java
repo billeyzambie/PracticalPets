@@ -49,7 +49,7 @@ public class CatRendererMixin extends MobRenderer<Cat, CatModel<Cat>>  {
             at = @At("TAIL")
     )
     private void onConstructor(EntityRendererProvider.Context context, CallbackInfo ci) {
-        this.addLayer(new PetEquipmentLayer(this, context));
+        //this.addLayer(new PetEquipmentLayer(this, context));
     }
 
     @Unique
