@@ -14,7 +14,7 @@ public enum PetFollowModeProvider implements IEntityComponentProvider {
 
     @Override
     public void appendTooltip(ITooltip tooltip, EntityAccessor accessor, IPluginConfig config) {
-        if (!(accessor.getEntity() instanceof GuardingOwnerFollowingPet pet) || !pet.isTame())
+        if (!(accessor.getEntity() instanceof GuardingOwnerFollowingPet pet) || !pet.guardingPet$isTame())
             return;
 
         GuardingOwnerFollowingPet.FollowMode followMode =

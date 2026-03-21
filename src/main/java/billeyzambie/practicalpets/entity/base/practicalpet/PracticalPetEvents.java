@@ -42,7 +42,7 @@ public final class PracticalPetEvents {
 
             if (
                     !(entity.getLastHurtByMob() instanceof GuardingOwnerFollowingPet followingPet)
-                        || !followingPet.isTame()
+                        || !followingPet.guardingPet$isTame()
             )
                 return;
 

@@ -73,6 +73,13 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
 
     private @Nullable Vec3 petGuardCenter = null;
 
+    //fix obscure bug where guardingPet.isTame didn't get obfuscated when building
+    //even though isOrderedToSit does get obfuscated
+    @Override
+    public boolean guardingPet$isTame() {
+        return this.isTame();
+    }
+
     @Override
     public @Nullable Vec3 getPetGuardCenter() {
         return petGuardCenter;
