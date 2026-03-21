@@ -6,6 +6,7 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -55,7 +56,10 @@ public abstract class CatModelMixin<T extends Cat> extends EntityModel<T> implem
     private static final Vec3 HAT_POSITION = new Vec3(0, -2, -0.5f);
 
     @Unique
-    private static final Vec3 BOWTIE_POSITION = new Vec3(0, -2, -8);
+    private static final Vec3 BOWTIE_POSITION = new Vec3(0, 3, -7);
+
+    @Unique
+    private static final Vec3 BACKPACK_POSITION = new Vec3(0, 11, -2);
 
     @Override
     public Vec3 getPetHatPosition() {
@@ -69,6 +73,16 @@ public abstract class CatModelMixin<T extends Cat> extends EntityModel<T> implem
 
     @Override
     public Vec3 getPetBackpackPosition() {
-        return null;
+        return BACKPACK_POSITION;
+    }
+
+    @Override
+    public Vector3f getPetBowtieRotation() {
+        return MINUS_NINETY_DEGREES_X;
+    }
+
+    @Override
+    public Vector3f getPetBackpackRotation() {
+        return MINUS_NINETY_DEGREES_X;
     }
 }

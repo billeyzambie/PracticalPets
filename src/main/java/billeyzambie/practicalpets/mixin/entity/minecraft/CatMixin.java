@@ -60,20 +60,22 @@ public class CatMixin extends TamableAnimal implements PetEquipmentWearer {
     private static final ItemStack lol = new ItemStack(PPItems.RUBBER_DUCKY_PET_HAT.get());
     @Unique
     private static final ItemStack xd = new ItemStack(PPItems.PET_BOWTIE.get());
+    @Unique
+    private static final ItemStack lmao = new ItemStack(PPItems.PET_END_ROD_LAUNCHER.get());
 
     @Override
     public ItemStack getPetHeadItem() {
-        return ItemStack.EMPTY;
+        return lol;
     }
 
     @Override
     public ItemStack getPetNeckItem() {
-        return ItemStack.EMPTY;
+        return xd;
     }
 
     @Override
     public ItemStack getPetBackItem() {
-        return ItemStack.EMPTY;
+        return lmao;
     }
 
     @Override

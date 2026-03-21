@@ -36,20 +36,18 @@ public class CatRendererMixin extends MobRenderer<Cat, CatModel<Cat>>  {
             cancellable = true
     )
     private void onGetTexture(Cat cat, CallbackInfoReturnable<ResourceLocation> cir) {
-        if (cat.getName().getString().equals("Tigerlily")) {
-            cir.setReturnValue(TIGERLILY_TEXTURE);
-        }
-        if (cat.getName().getString().equals("Budder")) {
-            cir.setReturnValue(BUDDER_TEXTURE);
+        switch (cat.getName().getString()) {
+            case "Tigerlily" -> cir.setReturnValue(TIGERLILY_TEXTURE);
+            case "Budder" -> cir.setReturnValue(BUDDER_TEXTURE);
         }
     }
 
     @Inject(
             method = "<init>",
-            at = @At("TAIL")
+            at = @At("RETURN")
     )
     private void onConstructor(EntityRendererProvider.Context context, CallbackInfo ci) {
-        //this.addLayer(new PetEquipmentLayer(this, context));
+        this.addLayer(new PetEquipmentLayer(this, context));
     }
 
     @Unique

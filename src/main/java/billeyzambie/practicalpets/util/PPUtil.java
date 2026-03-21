@@ -1,5 +1,6 @@
 package billeyzambie.practicalpets.util;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
@@ -27,6 +28,8 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.IItemHandler;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.util.UUID;
 
@@ -190,5 +193,13 @@ public class PPUtil {
 
     public static boolean isOwnedByFast(OwnableEntity ownable, LivingEntity owner) {
         return owner.getUUID().equals(ownable.getOwnerUUID());
+    }
+
+    public static void rotateDegrees(PoseStack poseStack, Vector3f rotation) {
+        poseStack.mulPose((new Quaternionf()).rotationZYX(
+                rotation.z * Mth.DEG_TO_RAD,
+                rotation.y * Mth.DEG_TO_RAD,
+                rotation.x * Mth.DEG_TO_RAD)
+        );
     }
 }
