@@ -1,6 +1,9 @@
 package billeyzambie.practicalpets.mixin.entity.minecraft;
 
 import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
+import billeyzambie.practicalpets.goal.DefendSelfIfShouldGoal;
+import billeyzambie.practicalpets.goal.OwnerHurtByTargetIfShouldGoal;
+import billeyzambie.practicalpets.goal.OwnerHurtTargetIfShouldGoal;
 import billeyzambie.practicalpets.items.PetCosmetic;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -12,14 +15,12 @@ import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -29,7 +30,6 @@ import java.util.Optional;
 
 @Mixin(Cat.class)
 public class CatMixin extends TamableAnimal implements PetEquipmentWearer {
-    @Shadow @javax.annotation.Nullable private TemptGoal temptGoal;
 
     private CatMixin(EntityType<? extends TamableAnimal> p_21803_, Level p_21804_) {
         super(p_21803_, p_21804_);
@@ -60,6 +60,16 @@ public class CatMixin extends TamableAnimal implements PetEquipmentWearer {
         this.entityData.define(NECK_ITEM, ItemStack.EMPTY);
         this.entityData.define(BACK_ITEM, ItemStack.EMPTY);
         this.entityData.define(BODY_ITEM, ItemStack.EMPTY);
+    }
+
+    @Inject(
+            method = "registerGoals",
+            at = @At("TAIL")
+    )
+    private void onRegisterGoals(CallbackInfo ci) {
+        this.targetSelector.addGoal(0, new DefendSelfIfShouldGoal(this));
+        this.targetSelector.addGoal(2, new OwnerHurtByTargetIfShouldGoal(this));
+        this.targetSelector.addGoal(4, new OwnerHurtTargetIfShouldGoal(this));
     }
 
     @Unique
