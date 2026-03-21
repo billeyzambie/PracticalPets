@@ -88,17 +88,17 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
     }
 
     @Override
-    public float headSizeX() {
+    public float getPetHeadSizeX() {
         return 5;
     }
 
     @Override
-    public float headSizeY() {
+    public float getPetHeadSizeY() {
         return 4;
     }
 
     @Override
-    public float headSizeZ() {
+    public float getPetHeadSizeZ() {
         return 5;
     }
 

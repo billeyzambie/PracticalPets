@@ -51,17 +51,17 @@ public class Piranha extends PracticalFish {
     }
 
     @Override
-    public float headSizeX() {
+    public float getPetHeadSizeX() {
         return 2;
     }
 
     @Override
-    public float headSizeY() {
+    public float getPetHeadSizeY() {
         return 2;
     }
 
     @Override
-    public float headSizeZ() {
+    public float getPetHeadSizeZ() {
         return 2;
     }
 

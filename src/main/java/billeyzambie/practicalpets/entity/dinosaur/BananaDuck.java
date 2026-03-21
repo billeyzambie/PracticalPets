@@ -137,17 +137,17 @@ public class BananaDuck extends AbstractDuck {
     }
 
     @Override
-    public float headSizeX() {
+    public float getPetHeadSizeX() {
         return 3;
     }
 
     @Override
-    public float headSizeY() {
+    public float getPetHeadSizeY() {
         return 3;
     }
 
     @Override
-    public float headSizeZ() {
+    public float getPetHeadSizeZ() {
         return 3;
     }
 

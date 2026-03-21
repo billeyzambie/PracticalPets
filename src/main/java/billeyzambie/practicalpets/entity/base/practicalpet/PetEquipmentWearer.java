@@ -51,9 +51,9 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
     void setCanShootFromSlot(Optional<PetCosmetic.Slot> value);
 
     //Used for scaling certain hats
-    float headSizeX();
-    float headSizeY();
-    float headSizeZ();
+    float getPetHeadSizeX();
+    float getPetHeadSizeY();
+    float getPetHeadSizeZ();
     default boolean isModelYAxisInverted() {
         return false;
     }

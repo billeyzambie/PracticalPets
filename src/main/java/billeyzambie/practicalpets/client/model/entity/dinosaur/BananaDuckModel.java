@@ -47,21 +47,21 @@ public class BananaDuckModel extends PracticalPetModel<BananaDuck> {
     List<ModelPart> pathToBowtie;
 
     @Override
-    public List<ModelPart> pathToBowtie() {
+    public List<ModelPart> pathToPetBowtie() {
         return pathToBowtie;
     }
 
     List<ModelPart> pathToHat;
 
     @Override
-    public List<ModelPart> pathToHat() {
+    public List<ModelPart> pathToPetHat() {
         return pathToHat;
     }
 
     List<ModelPart> pathToBackpack;
 
     @Override
-    public List<ModelPart> pathToBackpack() {
+    public List<ModelPart> pathToPetBackpack() {
         return pathToBackpack;
     }
 

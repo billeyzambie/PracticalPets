@@ -50,17 +50,17 @@ public class GiraffeCatNeckPieceModel extends PracticalPetModel<GiraffeCat> {
 	}
 
 	@Override
-	public List<ModelPart> pathToBowtie() {
+	public List<ModelPart> pathToPetBowtie() {
 		return List.of();
 	}
 
 	@Override
-	public List<ModelPart> pathToHat() {
+	public List<ModelPart> pathToPetHat() {
 		return List.of();
 	}
 
 	@Override
-	public List<ModelPart> pathToBackpack() {
+	public List<ModelPart> pathToPetBackpack() {
 		return List.of();
 	}
 

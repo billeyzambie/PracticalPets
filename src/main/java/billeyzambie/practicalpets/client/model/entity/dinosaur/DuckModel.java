@@ -224,14 +224,14 @@ public class DuckModel extends PracticalPetModel<Duck> {
     List<ModelPart> pathToBowtie;
 
     @Override
-    public List<ModelPart> pathToBowtie() {
+    public List<ModelPart> pathToPetBowtie() {
         return pathToBowtie;
     }
 
     List<ModelPart> pathToHat;
 
     @Override
-    public List<ModelPart> pathToHat() {
+    public List<ModelPart> pathToPetHat() {
         return pathToHat;
     }
 
@@ -243,7 +243,7 @@ public class DuckModel extends PracticalPetModel<Duck> {
     List<ModelPart> pathToBackpack;
 
     @Override
-    public List<ModelPart> pathToBackpack() {
+    public List<ModelPart> pathToPetBackpack() {
         return pathToBackpack;
     }
 }

@@ -6,20 +6,20 @@ import net.minecraft.client.model.geom.ModelPart;
 import java.util.List;
 
 public interface PetEquipmentWearerVanillaLikeModel extends PetEquipmentWearerModel {
-    List<ModelPart> pathToBowtie();
-    List<ModelPart> pathToHat();
-    List<ModelPart> pathToBackpack();
+    List<ModelPart> pathToPetBowtie();
+    List<ModelPart> pathToPetHat();
+    List<ModelPart> pathToPetBackpack();
 
     @Override
     default void moveToBowtie(PoseStack poseStack) {
-        pathToBowtie().forEach(part -> part.translateAndRotate(poseStack));
+        pathToPetBowtie().forEach(part -> part.translateAndRotate(poseStack));
     }
     @Override
     default void moveToHat(PoseStack poseStack) {
-        pathToHat().forEach(part -> part.translateAndRotate(poseStack));
+        pathToPetHat().forEach(part -> part.translateAndRotate(poseStack));
     }
     @Override
     default void moveToBackpack(PoseStack poseStack) {
-        pathToBackpack().forEach(part -> part.translateAndRotate(poseStack));
+        pathToPetBackpack().forEach(part -> part.translateAndRotate(poseStack));
     }
 }

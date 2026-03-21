@@ -3,7 +3,6 @@ package billeyzambie.practicalpets.client.model.entity.pet_equipment;// Made wit
 // Paste this class into your mod and generate all required imports
 
 
-import billeyzambie.animationcontrollers.ACEntity;
 import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -47,9 +46,9 @@ public class PlainPetHatModel<T extends Entity> extends HierarchicalModel<T> {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
 		this.root().y -= 24f;
 		if (entity instanceof PetEquipmentWearer wearer) {
-			float headSizeX = wearer.headSizeX();
-			float headSizeY = wearer.headSizeY();
-			float headSizeZ = wearer.headSizeZ();
+			float headSizeX = wearer.getPetHeadSizeX();
+			float headSizeY = wearer.getPetHeadSizeY();
+			float headSizeZ = wearer.getPetHeadSizeZ();
 
 			if (headSizeY > 2) {
 				if (wearer.allowLoweringTopHatsAPixel())

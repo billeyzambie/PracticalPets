@@ -46,8 +46,8 @@ public interface EntityModelPetCosmetic extends AttachablePetCosmetic {
     ) {
         poseStack.pushPose();
 
-        if (!wearer.isModelYAxisInverted())
-            poseStack.mulPose(Axis.ZP.rotationDegrees(180));
+        //if (!wearer.isModelYAxisInverted())
+        //    poseStack.translate(0, 24 / 16f, 0);
 
         float r = 1, g = 1, b = 1;
         if (this instanceof DyeableLeatherItem dyeableItem) {

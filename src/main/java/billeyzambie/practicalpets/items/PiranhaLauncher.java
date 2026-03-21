@@ -1,11 +1,8 @@
 package billeyzambie.practicalpets.items;
 
-import billeyzambie.animationcontrollers.ACEntity;
-import billeyzambie.animationcontrollers.PracticalPetModel;
 import billeyzambie.practicalpets.client.layer.PetEquipmentLayer;
 import billeyzambie.practicalpets.client.model.entity.base.PetEquipmentWearerModel;
 import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
-import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.entity.fish.Piranha;
 import billeyzambie.practicalpets.entity.fish.base.PracticalFish;
 import billeyzambie.practicalpets.entity.other.PiranhaLauncherProjectile;
@@ -284,7 +281,7 @@ public class PiranhaLauncher extends Item implements ItemModelPetCosmetic, Dyeab
             float limbSwingAmount,
             float partialticks
     ) {
-        float headY = wearer.headSizeY();
+        float headY = wearer.getPetHeadSizeY();
         if (headY < 3) {
             float scale = headY / 3f;
             poseStack.scale(scale, scale, scale);

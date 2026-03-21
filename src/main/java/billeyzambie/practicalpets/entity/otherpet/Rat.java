@@ -215,17 +215,17 @@ public class Rat extends PracticalPet implements CookingPet {
     }
 
     @Override
-    public float headSizeX() {
+    public float getPetHeadSizeX() {
         return 4;
     }
 
     @Override
-    public float headSizeY() {
+    public float getPetHeadSizeY() {
         return 3;
     }
 
     @Override
-    public float headSizeZ() {
+    public float getPetHeadSizeZ() {
         return 3;
     }
 

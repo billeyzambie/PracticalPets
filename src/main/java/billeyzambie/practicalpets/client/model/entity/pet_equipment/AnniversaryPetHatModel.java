@@ -3,17 +3,13 @@ package billeyzambie.practicalpets.client.model.entity.pet_equipment;// Made wit
 // Paste this class into your mod and generate all required imports
 
 
-import billeyzambie.animationcontrollers.ACEntity;
 import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HierarchicalModel;
-import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 
 public class AnniversaryPetHatModel<T extends Entity> extends HierarchicalModel<T> {
@@ -45,9 +41,9 @@ public class AnniversaryPetHatModel<T extends Entity> extends HierarchicalModel<
 	@Override
 	public void setupAnim(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		if (entity instanceof PetEquipmentWearer wearer) {
-			float headSizeX = wearer.headSizeX();
-			float headSizeY = wearer.headSizeY();
-			float headSizeZ = wearer.headSizeZ();
+			float headSizeX = wearer.getPetHeadSizeX();
+			float headSizeY = wearer.getPetHeadSizeY();
+			float headSizeZ = wearer.getPetHeadSizeZ();
 
 			if (headSizeX < 5 && headSizeZ < 5 && headSizeY > 2) {
 				if (wearer.allowLoweringTopHatsAPixel())

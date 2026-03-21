@@ -38,17 +38,17 @@ public class PiranhaModel extends SwimmingEntityModel<Piranha> {
 	private final List<ModelPart> pathToBackpack;
 
 	@Override
-	public List<ModelPart> pathToBowtie() {
+	public List<ModelPart> pathToPetBowtie() {
 		return pathToBowtie;
 	}
 
 	@Override
-	public List<ModelPart> pathToHat() {
+	public List<ModelPart> pathToPetHat() {
 		return pathToHat;
 	}
 
 	@Override
-	public List<ModelPart> pathToBackpack() {
+	public List<ModelPart> pathToPetBackpack() {
 		return pathToBackpack;
 	}
 
