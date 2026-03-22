@@ -1,11 +1,13 @@
 package billeyzambie.practicalpets.mixin.entity.minecraft;
 
 import billeyzambie.practicalpets.entity.base.VanillaPracticalPet;
+import billeyzambie.practicalpets.util.PPUtil;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -62,5 +64,11 @@ public abstract class WolfMixin extends Mob implements VanillaPracticalPet {
     @Override
     public boolean isGuardingPetAbleToAttack(@Nullable LivingEntity target) {
         return true;
+    }
+
+    @Override
+    public void onGetFirstTamePetBowtie(float bowtieHue) {
+        Wolf self = (Wolf)(Object)(this);
+        self.setCollarColor(PPUtil.dyeColorClosestToHue(bowtieHue));
     }
 }

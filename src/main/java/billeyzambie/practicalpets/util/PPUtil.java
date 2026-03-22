@@ -23,6 +23,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -223,5 +224,22 @@ public class PPUtil {
 
     public static boolean isDIInstalled() {
         return ModList.get().isLoaded("domesticationinnovation");
+    }
+
+    private static final DyeColor[] DYES_BY_HUE = {
+            DyeColor.RED,
+            DyeColor.ORANGE,
+            DyeColor.YELLOW,
+            DyeColor.LIME,
+            DyeColor.LIGHT_BLUE,
+            DyeColor.BLUE,
+            DyeColor.MAGENTA
+    };
+
+    /** @param hue 0 to 1, not 0 to 360. Also should never be exactly 1 */
+    public static DyeColor dyeColorClosestToHue(float hue) {
+        hue += 1 / 14f;
+        hue %= 1f;
+        return DYES_BY_HUE[Mth.floor(hue * 7)];
     }
 }

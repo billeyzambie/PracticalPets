@@ -60,6 +60,8 @@ public abstract class TamableAnimalMixin extends Animal {
             bowtie.setTag(tag);
 
             self.setPetNeckItem(bowtie);
+
+            self.onGetFirstTamePetBowtie(hue);
         }
 
         CompoundTag persistentData = player.getPersistentData();

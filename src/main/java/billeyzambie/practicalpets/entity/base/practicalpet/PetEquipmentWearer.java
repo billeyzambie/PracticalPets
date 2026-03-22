@@ -334,4 +334,8 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
             case BODY -> setPetBodyItem(itemStack);
         }
     }
+
+    default void onGetFirstTamePetBowtie(float bowtieHue) {
+
+    }
 }
