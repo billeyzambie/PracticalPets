@@ -1,5 +1,7 @@
 package billeyzambie.practicalpets.mixin.entity.minecraft;
 
+import billeyzambie.practicalpets.entity.base.practicalpet.IPracticalPet;
+import billeyzambie.practicalpets.entity.base.practicalpet.LevelablePet;
 import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
 import billeyzambie.practicalpets.goal.DefendSelfIfShouldGoal;
 import billeyzambie.practicalpets.goal.OwnerHurtByTargetIfShouldGoal;
@@ -15,12 +17,15 @@ import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -29,7 +34,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Optional;
 
 @Mixin(Cat.class)
-public class CatMixin extends TamableAnimal implements PetEquipmentWearer {
+public class CatMixin extends TamableAnimal implements IPracticalPet, VanillaWanderablePet {
+
+    @Shadow @javax.annotation.Nullable private TemptGoal temptGoal;
 
     private CatMixin(EntityType<? extends TamableAnimal> p_21803_, Level p_21804_) {
         super(p_21803_, p_21804_);
@@ -40,7 +47,7 @@ public class CatMixin extends TamableAnimal implements PetEquipmentWearer {
             at = @At("TAIL")
     )
     private void onSaveNbt(CompoundTag tag, CallbackInfo ci) {
-        this.savePetCosmetics(tag);
+        this.savePracticalPetData(tag);
     }
 
     @Inject(
@@ -48,7 +55,7 @@ public class CatMixin extends TamableAnimal implements PetEquipmentWearer {
             at = @At("TAIL")
     )
     private void onLoadNbt(CompoundTag tag, CallbackInfo ci) {
-        this.loadPetCosmetics(tag);
+        this.loadPracticalPetData(tag);
     }
 
     @Inject(
@@ -195,7 +202,19 @@ public class CatMixin extends TamableAnimal implements PetEquipmentWearer {
         return 5;
     }
 
-    private Component deathMessage;
+    @Unique
+    private Component practicalPets$deathMessage;
+
+    @Inject(
+            method = "",
+            at = @At("TAIL")
+    )
+    private void onDie(CallbackInfo ci) {
+        this.entityData.define(HEAD_ITEM, ItemStack.EMPTY);
+        this.entityData.define(NECK_ITEM, ItemStack.EMPTY);
+        this.entityData.define(BACK_ITEM, ItemStack.EMPTY);
+        this.entityData.define(BODY_ITEM, ItemStack.EMPTY);
+    }
 
     @Override
     public Component getPetDeathMessage() {
@@ -203,12 +222,136 @@ public class CatMixin extends TamableAnimal implements PetEquipmentWearer {
     }
 
     @Override
+    public double getLevel10MaxHealth() {
+        return 0;
+    }
+
+    @Override
+    public double getLevel10AttackDamage() {
+        return 0;
+    }
+
+    @Override
     public int getPetLevel() {
         return 1;
+    }
+
+    /**
+     * Should also call {@link LevelablePet#refreshPetLevelAttributeMultipliers()}
+     *
+     * @param value
+     */
+    @Override
+    public void setPetLevelRaw(int value) {
+
+    }
+
+    /**
+     * Remember to also register the synched entity data and call
+     * the {@link LevelablePet#loadPetLevelingData(CompoundTag)}
+     * and {@link LevelablePet#savePetLevelingData(CompoundTag)}
+     * methods in the compound tag
+     */
+    @Override
+    public float getPetXP() {
+        return 0;
+    }
+
+    @Override
+    public void setPetXPRaw(float value) {
+
     }
 
     @Override @Unique
     public @Nullable AgeableMob getBreedOffspring(ServerLevel p_146743_, AgeableMob p_146744_) {
         return null;
     }
+
+    @Override
+    public boolean petIsCurrentlyFollowingOwner() {
+        return false;
+    }
+
+    @Override
+    public FollowMode getFollowMode() {
+        return null;
+    }
+
+    @Override
+    public void setFollowMode(FollowMode value) {
+
+    }
+
+    /**
+     * should use a synched entity data accessor
+     */
+    @Override
+    public int getDisplayFollowModeId() {
+        return 0;
+    }
+
+    /**
+     * remember to define it in synched data
+     *
+     * @param value
+     */
+    @Override
+    public void setDisplayFollowModeId(int value) {
+
+    }
+
+    @Unique
+    private @Nullable Vec3 practicalPets$guardCenter;
+
+    /**
+     * Should be a field, doesn't need to be synched to the client
+     */
+    @Override
+    public @Nullable Vec3 getPetGuardCenter() {
+        return practicalPets$guardCenter;
+    }
+
+    @Override
+    public void setPetGuardCenter(@Nullable Vec3 value) {
+        this.practicalPets$guardCenter = value;
+    }
+
+    private int practicalPets$guardTime;
+
+    /**
+     * Should be a field, doesn't need to be synched to the client
+     */
+    @Override
+    public int getPetGuardStartTime() {
+        return practicalPets$guardTime;
+    }
+
+    @Override
+    public void setPetGuardStartTime(int value) {
+        this.practicalPets$guardTime = value;
+    }
+
+    /**
+     * @param target null if just checking whether the pet can guard against things in general
+     * @return {@code true} for pets that always defend their owner,
+     * otherwise should return {@link PetEquipmentWearer#petShouldDefendOwner(LivingEntity)}
+     */
+    @Override
+    public boolean isGuardingPetAbleToAttack(@Nullable LivingEntity target) {
+        return this.petShouldDefendOwner(target);
+    }
+
+    @Unique
+    private boolean practicalPets$shouldFollowOwner;
+
+    @Override
+    public boolean practicalPets$shouldFollowOwner() {
+        return practicalPets$shouldFollowOwner;
+    }
+
+    @Override
+    public void practicalPets$setShouldFollowOwner(boolean value) {
+        this.practicalPets$shouldFollowOwner = value;
+    }
+
 }
