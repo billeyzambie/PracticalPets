@@ -40,7 +40,8 @@ public final class PracticalPetEvents {
             LivingEntity entity = event.getEntity();
 
             if (
-                    !(entity.getLastHurtByMob() instanceof GuardingOwnerFollowingPet followingPet)
+                    entity.level().isClientSide()
+                        || !(entity.getLastHurtByMob() instanceof GuardingOwnerFollowingPet followingPet)
                         || !followingPet.isTame()
             )
                 return;
