@@ -1,5 +1,6 @@
 package billeyzambie.practicalpets.mixin.entity.minecraft;
 
+import billeyzambie.practicalpets.entity.base.VanillaWanderablePet;
 import billeyzambie.practicalpets.entity.base.practicalpet.IPracticalPet;
 import billeyzambie.practicalpets.entity.base.practicalpet.LevelablePet;
 import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
@@ -205,20 +206,14 @@ public class CatMixin extends TamableAnimal implements IPracticalPet, VanillaWan
     @Unique
     private Component practicalPets$deathMessage;
 
-    @Inject(
-            method = "",
-            at = @At("TAIL")
-    )
-    private void onDie(CallbackInfo ci) {
-        this.entityData.define(HEAD_ITEM, ItemStack.EMPTY);
-        this.entityData.define(NECK_ITEM, ItemStack.EMPTY);
-        this.entityData.define(BACK_ITEM, ItemStack.EMPTY);
-        this.entityData.define(BODY_ITEM, ItemStack.EMPTY);
+    @Override
+    public Component getPetDeathMessage() {
+        return practicalPets$deathMessage;
     }
 
     @Override
-    public Component getPetDeathMessage() {
-        return null;
+    public void setPetDeathMessage(Component value) {
+        this.practicalPets$deathMessage = value;
     }
 
     @Override

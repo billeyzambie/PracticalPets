@@ -170,14 +170,13 @@ public abstract class PracticalFish extends TamableFish implements PetEquipmentW
     }
 
     @Override
-    public boolean isModelYAxisInverted() {
-        return true;
+    public void setPetDeathMessage(Component value) {
+        this.deathMessage = value;
     }
 
     @Override
-    public void die(DamageSource p_21809_) {
-        this.deathMessage = this.getCombatTracker().getDeathMessage();
-        super.die(p_21809_);
+    public boolean isModelYAxisInverted() {
+        return true;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package billeyzambie.practicalpets.mixin.entity.minecraft;
+package billeyzambie.practicalpets.entity.base;
 
 import net.minecraft.nbt.CompoundTag;
 

@@ -21,10 +21,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -136,6 +133,19 @@ public final class PracticalPetEvents {
 
     @Mod.EventBusSubscriber
     public static final class PetEquipmentWearerEvents {
+
+        @SubscribeEvent
+        public static void onLivingDeath(LivingDeathEvent event) {
+            LivingEntity entity = event.getEntity();
+
+            if (
+                    !(entity instanceof PetEquipmentWearer wearer)
+            )
+                return;
+
+            wearer.setPetDeathMessage(entity.getCombatTracker().getDeathMessage());
+        }
+
         @SubscribeEvent
         public static void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
             Player player = event.getEntity();

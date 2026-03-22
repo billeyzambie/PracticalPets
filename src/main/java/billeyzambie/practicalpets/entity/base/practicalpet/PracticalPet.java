@@ -624,9 +624,8 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
     }
 
     @Override
-    public void die(DamageSource p_21809_) {
-        this.deathMessage = this.getCombatTracker().getDeathMessage();
-        super.die(p_21809_);
+    public void setPetDeathMessage(Component value) {
+        this.deathMessage = value;
     }
 
     @Override
