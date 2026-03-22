@@ -14,8 +14,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
@@ -40,7 +38,7 @@ import java.util.Optional;
         Wolf.class,
         Parrot.class
 }, priority = 999)
-public class VanillaPetMixin extends TamableAnimal implements VanillaPracticalPet {
+public abstract class VanillaPetMixin extends TamableAnimal implements VanillaPracticalPet {
 
     private VanillaPetMixin(EntityType<? extends TamableAnimal> p_21803_, Level p_21804_) {
         super(p_21803_, p_21804_);
@@ -222,16 +220,6 @@ public class VanillaPetMixin extends TamableAnimal implements VanillaPracticalPe
         this.practicalPets$deathMessage = value;
     }
 
-    @Override
-    public double getLevel10MaxHealth() {
-        return 100;
-    }
-
-    @Override
-    public double getLevel10AttackDamage() {
-        return 16;
-    }
-
     /** Remember to also register the synched entity data and call
      * the {@link LevelablePet#loadPetLevelingData(CompoundTag)}
      * and {@link LevelablePet#savePetLevelingData(CompoundTag)}
@@ -265,11 +253,6 @@ public class VanillaPetMixin extends TamableAnimal implements VanillaPracticalPe
     @Override
     public void setPetXPRaw(float value) {
 
-    }
-
-    @Override @Unique
-    public @Nullable AgeableMob getBreedOffspring(ServerLevel p_146743_, AgeableMob p_146744_) {
-        return null;
     }
 
     @Override

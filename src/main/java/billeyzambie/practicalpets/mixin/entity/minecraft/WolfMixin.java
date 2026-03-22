@@ -1,8 +1,6 @@
 package billeyzambie.practicalpets.mixin.entity.minecraft;
 
 import billeyzambie.practicalpets.entity.base.VanillaPracticalPet;
-import billeyzambie.practicalpets.util.PPUtil;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.animal.Wolf;
@@ -14,6 +12,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Wolf.class)
 public abstract class WolfMixin implements VanillaPracticalPet {
+
+    @Override
+    public double getLevel10MaxHealth() {
+        return 120;
+    }
+
+    @Override
+    public double getLevel10AttackDamage() {
+        return 21;
+    }
+
     @Inject(
             method = {"mobInteract(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;"},
             at = @At(
