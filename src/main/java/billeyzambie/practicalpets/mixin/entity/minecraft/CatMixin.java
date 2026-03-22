@@ -1,5 +1,6 @@
 package billeyzambie.practicalpets.mixin.entity.minecraft;
 
+import billeyzambie.practicalpets.compat.domesticationinnovation.DomesticationInnovationHelper;
 import billeyzambie.practicalpets.entity.base.VanillaPracticalPet;
 import billeyzambie.practicalpets.entity.base.practicalpet.LevelablePet;
 import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
@@ -37,7 +38,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Optional;
 
 @SuppressWarnings("WrongEntityDataParameterClass")
-@Mixin(Cat.class)
+@Mixin(value = Cat.class, priority = 999)
 public class CatMixin extends TamableAnimal implements VanillaPracticalPet {
 
     private CatMixin(EntityType<? extends TamableAnimal> p_21803_, Level p_21804_) {
@@ -109,7 +110,7 @@ public class CatMixin extends TamableAnimal implements VanillaPracticalPet {
         else {
             this.practicalPets$incrementFollowMode();
             this.refreshDisplayFollowMode();
-            player.sendSystemMessage(Component.translatable("action.practicalpets." + getFollowMode().name, this.getDisplayName()));
+            player.displayClientMessage(Component.translatable("action.practicalpets." + getFollowMode().name, this.getDisplayName()), true);
         }
         cir.setReturnValue(InteractionResult.SUCCESS);
     }
@@ -309,12 +310,14 @@ public class CatMixin extends TamableAnimal implements VanillaPracticalPet {
 
     @Override
     public FollowMode getFollowMode() {
+        if (this.petIsCurrentlyGuarding())
+            return FollowMode.GUARDING;
+        if (PPUtil.isDIInstalled())
+            return DomesticationInnovationHelper.getFollowModeForVanillaPet(this);
         if (this.isOrderedToSit())
             return FollowMode.SITTING;
         if (this.practicalPets$shouldFollowOwner())
             return FollowMode.FOLLOWING;
-        if (this.petIsCurrentlyGuarding())
-            return FollowMode.GUARDING;
         return FollowMode.WANDERING;
     }
 
@@ -326,6 +329,9 @@ public class CatMixin extends TamableAnimal implements VanillaPracticalPet {
             this.petStartGuarding();
         else
             this.petStopGuarding();
+        if (PPUtil.isDIInstalled()) {
+            DomesticationInnovationHelper.setPetCommandFromFollowMode(this, value);
+        }
     }
 
     /**

@@ -32,6 +32,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.network.NetworkHooks;
 import org.joml.Quaternionf;
@@ -218,5 +219,9 @@ public class PPUtil {
                 ),
                 buf -> buf.writeVarInt(((Entity)pet).getId())
         );
+    }
+
+    public static boolean isDIInstalled() {
+        return ModList.get().isLoaded("domesticationinnovation");
     }
 }
