@@ -22,6 +22,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Parrot.class)
 public abstract class ParrotMixin extends PathfinderMob implements VanillaPracticalPet {
 
+    @Override
+    public float getPetHeadSizeX() {
+        return 2;
+    }
+
+    @Override
+    public float getPetHeadSizeY() {
+        return 3;
+    }
+
+    @Override
+    public float getPetHeadSizeZ() {
+        return 4;
+    }
+
     private ParrotMixin(EntityType<? extends PathfinderMob> p_21368_, Level p_21369_) {
         super(p_21368_, p_21369_);
     }

@@ -25,8 +25,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Cat.class)
 public abstract class CatMixin extends Mob implements VanillaPracticalPet {
+    @Override
+    public float getPetHeadSizeX() {
+        return 5;
+    }
 
-    @Shadow @javax.annotation.Nullable private TemptGoal temptGoal;
+    @Override
+    public float getPetHeadSizeY() {
+        return 4;
+    }
+
+    @Override
+    public float getPetHeadSizeZ() {
+        return 5;
+    }
 
     private CatMixin(EntityType<? extends Mob> p_21368_, Level p_21369_) {
         super(p_21368_, p_21369_);

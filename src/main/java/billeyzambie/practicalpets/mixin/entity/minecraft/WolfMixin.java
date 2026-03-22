@@ -18,6 +18,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Wolf.class)
 public abstract class WolfMixin extends Mob implements VanillaPracticalPet {
 
+    @Override
+    public float getPetHeadSizeX() {
+        return 6;
+    }
+
+    @Override
+    public float getPetHeadSizeY() {
+        return 5;
+    }
+
+    @Override
+    public float getPetHeadSizeZ() {
+        return 4;
+    }
+
     private WolfMixin(EntityType<? extends Mob> p_21368_, Level p_21369_) {
         super(p_21368_, p_21369_);
     }

@@ -4,7 +4,11 @@
   "refmap": "mixins.practicalpets.refmap.json",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "model.minecraft.CatModelMixin"
+    "model.minecraft.CatModelMixin",
+    "model.minecraft.ParrotModelMixin",
+    "model.minecraft.WolfModelMixin",
+    "renderer.minecraft.VanillaPetRendererMixin",
+    "renderer.minecraft.CatRendererMixin"
   ],
   "server": [],
   "injectors": {
@@ -16,7 +20,6 @@
     "entity.minecraft.VanillaPetMixin",
     "entity.minecraft.WolfMixin",
     "goal.minecraft.FollowOwnerGoalMixin",
-    "goal.minecraft.LeapAtTargetGoalMixin",
-    "renderer.minecraft.CatRendererMixin"
+    "goal.minecraft.LeapAtTargetGoalMixin"
   ]
 }

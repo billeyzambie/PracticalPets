@@ -190,21 +190,6 @@ public abstract class VanillaPetMixin extends TamableAnimal implements VanillaPr
             this.performCosmeticRangedAttack(petCanShootFromSlot().orElseThrow(), target, distanceFactor);
     }
 
-    @Override
-    public float getPetHeadSizeX() {
-        return 5;
-    }
-
-    @Override
-    public float getPetHeadSizeY() {
-        return 4;
-    }
-
-    @Override
-    public float getPetHeadSizeZ() {
-        return 5;
-    }
-
     @Unique
     private Component practicalPets$deathMessage;
 

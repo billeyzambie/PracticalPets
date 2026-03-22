@@ -42,14 +42,6 @@ public abstract class CatRendererMixin extends MobRenderer<Cat, CatModel<Cat>>  
         }
     }
 
-    @Inject(
-            method = "<init>",
-            at = @At("RETURN")
-    )
-    private void onConstructor(EntityRendererProvider.Context context, CallbackInfo ci) {
-        this.addLayer(new PetEquipmentLayer(this, context));
-    }
-
     private CatRendererMixin(EntityRendererProvider.Context p_174304_, CatModel<Cat> p_174305_, float p_174306_) {
         super(p_174304_, p_174305_, p_174306_);
     }
