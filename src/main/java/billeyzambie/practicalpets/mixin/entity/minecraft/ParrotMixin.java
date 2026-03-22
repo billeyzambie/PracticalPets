@@ -6,7 +6,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.PanicGoal;
 import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.player.Player;
@@ -19,9 +20,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Parrot.class)
-public abstract class ParrotMixin extends Mob implements VanillaPracticalPet {
+public abstract class ParrotMixin extends PathfinderMob implements VanillaPracticalPet {
 
-    private ParrotMixin(EntityType<? extends Mob> p_21368_, Level p_21369_) {
+    private ParrotMixin(EntityType<? extends PathfinderMob> p_21368_, Level p_21369_) {
         super(p_21368_, p_21369_);
     }
 
@@ -54,6 +55,8 @@ public abstract class ParrotMixin extends Mob implements VanillaPracticalPet {
     private void onRegisterGoals(CallbackInfo ci) {
         this.removeAllGoals(goal -> goal instanceof PanicGoal);
         this.goalSelector.addGoal(0, new FlyPanicGoal(this, 1.25d));
+
+        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.25d, true));
 
         this.targetSelector.addGoal(0, new DefendSelfIfShouldGoal(this));
         this.targetSelector.addGoal(2, new OwnerHurtByTargetIfShouldGoal(this));
