@@ -1,7 +1,7 @@
 package billeyzambie.practicalpets.client;
 
+import billeyzambie.practicalpets.entity.base.practicalpet.IPracticalPet;
 import billeyzambie.practicalpets.ui.PracticalPetMenu;
-import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
@@ -18,6 +18,6 @@ public class PPMenus {
                     () -> IForgeMenuType.create((id, inv, buf) -> {
                         int entityId = buf.readVarInt();
                         Entity entity = inv.player.level().getEntity(entityId);
-                        return new PracticalPetMenu(id, inv, (PracticalPet) entity);
+                        return new PracticalPetMenu(id, inv, (IPracticalPet) entity);
                     }));
 }
