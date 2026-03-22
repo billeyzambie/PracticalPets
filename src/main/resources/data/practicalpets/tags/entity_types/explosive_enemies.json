@@ -7,6 +7,10 @@
       "required": false
     },
     {
+      "id": "scguns:sulfurhead",
+      "required": false
+    },
+    {
       "id": "alexscaves:nucleeper",
       "required": false
     },
