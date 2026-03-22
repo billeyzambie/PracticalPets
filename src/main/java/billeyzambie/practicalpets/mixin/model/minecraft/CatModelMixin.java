@@ -54,9 +54,9 @@ public abstract class CatModelMixin<T extends Cat> extends EntityModel<T> implem
 
     @Unique
     private static final PetEquipmentOffsets PET_EQUIPMENT_OFFSETS = new PetEquipmentOffsets(
-            new Vec3(0, -2, -0.5f),
-            new Vec3(0, 3, -7),
-            new Vec3(0, 11, -2),
+            new Vec3(0, -2, -0.5),
+            new Vec3(0, 7, 3),
+            new Vec3(0, 2, 11.5f),
             PetEquipmentOffsets.NO_ROTATION,
             PetEquipmentOffsets.MINUS_NINETY_DEGREES_X,
             PetEquipmentOffsets.MINUS_NINETY_DEGREES_X
