@@ -75,16 +75,6 @@ public abstract class VanillaPetMixin extends TamableAnimal implements VanillaPr
         this.entityData.define(DISPLAY_FOLLOW_MODE, 0);
     }
 
-    @Inject(
-            method = "registerGoals",
-            at = @At("TAIL")
-    )
-    private void onRegisterGoals(CallbackInfo ci) {
-        this.targetSelector.addGoal(0, new DefendSelfIfShouldGoal(this));
-        this.targetSelector.addGoal(2, new OwnerHurtByTargetIfShouldGoal(this));
-        this.targetSelector.addGoal(4, new OwnerHurtTargetIfShouldGoal(this));
-    }
-
     @Unique
     private static final EntityDataAccessor<ItemStack> HEAD_ITEM = SynchedEntityData.defineId(VanillaPetMixin.class, EntityDataSerializers.ITEM_STACK);
     @Unique
@@ -327,16 +317,6 @@ public abstract class VanillaPetMixin extends TamableAnimal implements VanillaPr
     @Override
     public void setPetGuardStartTime(int value) {
         this.practicalPets$guardTime = value;
-    }
-
-    /**
-     * @param target null if just checking whether the pet can guard against things in general
-     * @return {@code true} for pets that always defend their owner,
-     * otherwise should return {@link PetEquipmentWearer#petShouldDefendOwner(LivingEntity)}
-     */
-    @Override
-    public boolean isGuardingPetAbleToAttack(@Nullable LivingEntity target) {
-        return this.petShouldDefendOwner(target);
     }
 
     @Unique
