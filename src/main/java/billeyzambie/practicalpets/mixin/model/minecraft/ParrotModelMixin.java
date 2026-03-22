@@ -55,7 +55,7 @@ public abstract class ParrotModelMixin<T extends Parrot> extends EntityModel<T> 
 
     @Unique
     private static final PetEquipmentOffsets PET_EQUIPMENT_OFFSETS = new PetEquipmentOffsets(
-            new Vec3(0, -2.5, -0.5),
+            new Vec3(0, -2.5, -1),
             new Vec3(0, 1, -1),
             new Vec3(0, -1.5, 3.5),
             PetEquipmentOffsets.NO_ROTATION,
