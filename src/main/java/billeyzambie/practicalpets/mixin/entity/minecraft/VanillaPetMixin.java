@@ -4,6 +4,7 @@ import billeyzambie.practicalpets.compat.domesticationinnovation.DomesticationIn
 import billeyzambie.practicalpets.entity.base.VanillaPracticalPet;
 import billeyzambie.practicalpets.entity.base.practicalpet.LevelablePet;
 import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
+import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.goal.DefendSelfIfShouldGoal;
 import billeyzambie.practicalpets.goal.OwnerHurtByTargetIfShouldGoal;
 import billeyzambie.practicalpets.goal.OwnerHurtTargetIfShouldGoal;
@@ -69,6 +70,8 @@ public abstract class VanillaPetMixin extends TamableAnimal implements VanillaPr
         this.entityData.define(NECK_ITEM, ItemStack.EMPTY);
         this.entityData.define(BACK_ITEM, ItemStack.EMPTY);
         this.entityData.define(BODY_ITEM, ItemStack.EMPTY);
+        this.entityData.define(PET_LEVEL, 1);
+        this.entityData.define(PET_XP, 0f);
         this.entityData.define(DISPLAY_FOLLOW_MODE, 0);
     }
 
@@ -92,6 +95,11 @@ public abstract class VanillaPetMixin extends TamableAnimal implements VanillaPr
     private static final EntityDataAccessor<ItemStack> BODY_ITEM = SynchedEntityData.defineId(VanillaPetMixin.class, EntityDataSerializers.ITEM_STACK);
     @Unique
     private static final EntityDataAccessor<Integer> DISPLAY_FOLLOW_MODE = SynchedEntityData.defineId(VanillaPetMixin.class, EntityDataSerializers.INT);
+    @Unique
+    private static final EntityDataAccessor<Integer> PET_LEVEL = SynchedEntityData.defineId(VanillaPetMixin.class, EntityDataSerializers.INT);
+    @Unique
+    private static final EntityDataAccessor<Float> PET_XP = SynchedEntityData.defineId(VanillaPetMixin.class, EntityDataSerializers.FLOAT);
+
 
     @Override
     public ItemStack getPetHeadItem() {
@@ -220,39 +228,25 @@ public abstract class VanillaPetMixin extends TamableAnimal implements VanillaPr
         this.practicalPets$deathMessage = value;
     }
 
-    /** Remember to also register the synched entity data and call
-     * the {@link LevelablePet#loadPetLevelingData(CompoundTag)}
-     * and {@link LevelablePet#savePetLevelingData(CompoundTag)}
-     * methods in the compound tag */
     @Override
     public int getPetLevel() {
-        return 1;
+        return this.entityData.get(PET_LEVEL);
     }
 
-    /**
-     * Should also call {@link LevelablePet#refreshPetLevelAttributeMultipliers()}
-     *
-     * @param value
-     */
     @Override
-    public void setPetLevelRaw(int value) {
-
+    public void setPetLevelRaw(int petLevel) {
+        this.entityData.set(PET_LEVEL, petLevel);
+        this.refreshPetLevelAttributeMultipliers();
     }
 
-    /**
-     * Remember to also register the synched entity data and call
-     * the {@link LevelablePet#loadPetLevelingData(CompoundTag)}
-     * and {@link LevelablePet#savePetLevelingData(CompoundTag)}
-     * methods in the compound tag
-     */
     @Override
     public float getPetXP() {
-        return 0;
+        return this.entityData.get(PET_XP);
     }
 
     @Override
-    public void setPetXPRaw(float value) {
-
+    public void setPetXPRaw(float petXP) {
+        this.entityData.set(PET_XP, petXP);
     }
 
     @Override
