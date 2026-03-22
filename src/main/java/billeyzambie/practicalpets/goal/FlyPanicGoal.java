@@ -1,6 +1,6 @@
 package billeyzambie.practicalpets.goal;
 
-import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
+import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
 import net.minecraft.world.entity.ai.util.AirAndWaterRandomPos;
 import net.minecraft.world.entity.ai.util.HoverRandomPos;
 import net.minecraft.world.phys.Vec3;
@@ -8,7 +8,7 @@ import net.minecraft.world.phys.Vec3;
 import javax.annotation.Nullable;
 
 public class FlyPanicGoal extends PanicIfShouldGoal {
-    public FlyPanicGoal(PracticalPet p_25691_, double p_25692_) {
+    public FlyPanicGoal(PetEquipmentWearer p_25691_, double p_25692_) {
         super(p_25691_, p_25692_);
     }
 

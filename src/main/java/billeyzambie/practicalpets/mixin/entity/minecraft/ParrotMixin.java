@@ -1,14 +1,13 @@
 package billeyzambie.practicalpets.mixin.entity.minecraft;
 
 import billeyzambie.practicalpets.entity.base.VanillaPracticalPet;
-import billeyzambie.practicalpets.goal.DefendSelfIfShouldGoal;
-import billeyzambie.practicalpets.goal.OwnerHurtByTargetIfShouldGoal;
-import billeyzambie.practicalpets.goal.OwnerHurtTargetIfShouldGoal;
+import billeyzambie.practicalpets.goal.*;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.PanicGoal;
 import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -53,6 +52,9 @@ public abstract class ParrotMixin extends Mob implements VanillaPracticalPet {
             at = @At("TAIL")
     )
     private void onRegisterGoals(CallbackInfo ci) {
+        this.removeAllGoals(goal -> goal instanceof PanicGoal);
+        this.goalSelector.addGoal(0, new FlyPanicGoal(this, 1.25d));
+
         this.targetSelector.addGoal(0, new DefendSelfIfShouldGoal(this));
         this.targetSelector.addGoal(2, new OwnerHurtByTargetIfShouldGoal(this));
         this.targetSelector.addGoal(4, new OwnerHurtTargetIfShouldGoal(this));
