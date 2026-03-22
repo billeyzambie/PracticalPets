@@ -7,8 +7,8 @@
     "model.minecraft.CatModelMixin",
     "model.minecraft.ParrotModelMixin",
     "model.minecraft.WolfModelMixin",
-    "renderer.minecraft.VanillaPetRendererMixin",
-    "renderer.minecraft.CatRendererMixin"
+    "renderer.minecraft.CatRendererMixin",
+    "renderer.minecraft.VanillaPetRendererMixin"
   ],
   "server": [],
   "injectors": {
@@ -17,6 +17,7 @@
   "mixins": [
     "entity.minecraft.CatMixin",
     "entity.minecraft.ParrotMixin",
+    "entity.minecraft.TamableAnimalMixin",
     "entity.minecraft.VanillaPetMixin",
     "entity.minecraft.WolfMixin",
     "goal.minecraft.FollowOwnerGoalMixin",

@@ -688,52 +688,6 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         }
     }
 
-    public static final LocalDate FOUNDERS_HAT_END_DATE = LocalDate.of(2025, 8, 1);
-
-    public static final String FOUNDERS_HATS_CLAIMED_TAG_ID = PracticalPets.MODID + ":founders_hats_claimed";
-
-    @Override
-    public void tame(@NotNull Player player) {
-        if (!this.level().isClientSide()) {
-            // Only run if this is the first time it's tamed, since I plan to add owner switching later.
-            // And also only if it doesn't have a bowtie already,
-            // in case I make some pets rarely spawn with a special kind of bowtie or something
-            if (!this.isTame() && this.getPetNeckItem().isEmpty()) {
-                ItemStack bowtie = new ItemStack(PPItems.PET_BOWTIE.get());
-
-                float hue = this.getRandom().nextFloat();
-                int rgb = Color.HSBtoRGB(hue, 1, 1);
-
-                CompoundTag tag = new CompoundTag();
-                CompoundTag display = new CompoundTag();
-                display.putInt("color", rgb);
-                tag.put("display", display);
-                bowtie.setTag(tag);
-
-                this.setPetNeckItem(bowtie);
-            }
-
-            CompoundTag persistentData = player.getPersistentData();
-            CompoundTag persistedData = persistentData.getCompound(Player.PERSISTED_NBT_TAG);
-            int foundersHatsClaimed = persistedData.getInt(FOUNDERS_HATS_CLAIMED_TAG_ID);
-            if (
-                    this.getPetHeadItem().isEmpty()
-                            //&& LocalDate.now().isBefore(FOUNDERS_HAT_END_DATE)
-                            && foundersHatsClaimed < 5
-            ) {
-                ItemStack foundersHat = new ItemStack(PPItems.ANNIVERSARY_PET_HAT_0.get());
-                AnniversaryPetHat.putPlayerName(foundersHat, player.getName().getString());
-                this.setPetHeadItem(foundersHat);
-                persistedData.putInt(FOUNDERS_HATS_CLAIMED_TAG_ID, foundersHatsClaimed + 1);
-                persistentData.put(Player.PERSISTED_NBT_TAG, persistedData);
-                player.sendSystemMessage(Component.translatable("ui.practicalpets.chat.got_founders_hat", foundersHat.getDisplayName(), foundersHatsClaimed + 1));
-                player.sendSystemMessage(Component.translatable("ui.practicalpets.info.item.anniversary_pet_hat_0", foundersHat.getDisplayName()));
-                player.playSound(PPSounds.PET_LEVEL_UP.get());
-            }
-        }
-        super.tame(player);
-    }
-
     @Override
     public boolean wantsToAttack(@NotNull LivingEntity target, @NotNull LivingEntity owner) {
         if (target instanceof OwnableEntity pet) {
