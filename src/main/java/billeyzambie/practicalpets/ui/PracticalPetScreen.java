@@ -101,7 +101,7 @@ public class PracticalPetScreen extends AbstractContainerScreen<PracticalPetMenu
         InventoryScreen.renderEntityInInventoryFollowsMouse(
                 graphics,
                 this.leftPos + 51, this.topPos + 78,
-                17,
+                34,
                 (this.leftPos + 51) - this.mouseX,
                 (this.topPos + 50 - this.pet.getEyeHeight()) - this.mouseY,
                 (LivingEntity) this.pet
