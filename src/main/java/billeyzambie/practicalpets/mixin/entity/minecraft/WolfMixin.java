@@ -5,20 +5,20 @@ import billeyzambie.practicalpets.util.PPUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(Cat.class)
-public abstract class CatMixin implements VanillaPracticalPet {
+@Mixin(Wolf.class)
+public abstract class WolfMixin implements VanillaPracticalPet {
     @Inject(
             method = {"mobInteract(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;"},
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/entity/animal/Cat;setOrderedToSit(Z)V"
+                    target = "Lnet/minecraft/world/entity/animal/Wolf;setOrderedToSit(Z)V"
             ),
             cancellable = true
     )

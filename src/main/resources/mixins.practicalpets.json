@@ -12,6 +12,9 @@
   },
   "mixins": [
     "entity.minecraft.CatMixin",
+    "entity.minecraft.ParrotMixin",
+    "entity.minecraft.VanillaPetMixin",
+    "entity.minecraft.WolfMixin",
     "goal.minecraft.FollowOwnerGoalMixin",
     "goal.minecraft.LeapAtTargetGoalMixin",
     "renderer.minecraft.CatRendererMixin"
