@@ -42,4 +42,6 @@ public interface MobInterface {
     Component getName();
     void setHealth(float value);
     float getMaxHealth();
+    boolean isBaby();
+    boolean isTame();
 }

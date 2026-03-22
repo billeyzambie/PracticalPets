@@ -87,7 +87,6 @@ public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
 
     Component getPetDeathMessage();
 
-    boolean isTame();
     boolean isOwnedBy(LivingEntity entity);
     int getPetLevel();
 

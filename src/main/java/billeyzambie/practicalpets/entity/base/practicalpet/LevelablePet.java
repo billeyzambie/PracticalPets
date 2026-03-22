@@ -49,9 +49,6 @@ public interface LevelablePet extends MobInterface, OwnableEntity {
         return isTame() && !isBaby();
     }
 
-    boolean isBaby();
-    boolean isTame();
-
     /** Remember to also register the synched entity data and call
      * the {@link LevelablePet#loadPetLevelingData(CompoundTag)}
      * and {@link LevelablePet#savePetLevelingData(CompoundTag)}

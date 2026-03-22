@@ -53,7 +53,6 @@ public interface GuardingOwnerFollowingPet extends MobInterface {
     }
 
     boolean isOrderedToSit();
-    boolean guardingPet$isTame();
     /** Should be a field, doesn't need to be synched to the client */
     @Nullable Vec3 getPetGuardCenter();
     void setPetGuardCenter(@Nullable Vec3 value);
