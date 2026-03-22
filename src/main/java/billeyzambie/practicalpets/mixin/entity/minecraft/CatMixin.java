@@ -1,43 +1,44 @@
 package billeyzambie.practicalpets.mixin.entity.minecraft;
 
-import billeyzambie.practicalpets.entity.base.VanillaWanderablePet;
-import billeyzambie.practicalpets.entity.base.practicalpet.IPracticalPet;
+import billeyzambie.practicalpets.entity.base.VanillaPracticalPet;
 import billeyzambie.practicalpets.entity.base.practicalpet.LevelablePet;
 import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
 import billeyzambie.practicalpets.goal.DefendSelfIfShouldGoal;
 import billeyzambie.practicalpets.goal.OwnerHurtByTargetIfShouldGoal;
 import billeyzambie.practicalpets.goal.OwnerHurtTargetIfShouldGoal;
 import billeyzambie.practicalpets.items.PetCosmetic;
+import billeyzambie.practicalpets.util.PPUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Optional;
 
+@SuppressWarnings("WrongEntityDataParameterClass")
 @Mixin(Cat.class)
-public class CatMixin extends TamableAnimal implements IPracticalPet, VanillaWanderablePet {
-
-    @Shadow @javax.annotation.Nullable private TemptGoal temptGoal;
+public class CatMixin extends TamableAnimal implements VanillaPracticalPet {
 
     private CatMixin(EntityType<? extends TamableAnimal> p_21803_, Level p_21804_) {
         super(p_21803_, p_21804_);
@@ -68,6 +69,7 @@ public class CatMixin extends TamableAnimal implements IPracticalPet, VanillaWan
         this.entityData.define(NECK_ITEM, ItemStack.EMPTY);
         this.entityData.define(BACK_ITEM, ItemStack.EMPTY);
         this.entityData.define(BODY_ITEM, ItemStack.EMPTY);
+        this.entityData.define(DISPLAY_FOLLOW_MODE, 0);
     }
 
     @Inject(
@@ -81,13 +83,47 @@ public class CatMixin extends TamableAnimal implements IPracticalPet, VanillaWan
     }
 
     @Unique
-    private static final EntityDataAccessor<ItemStack> HEAD_ITEM = SynchedEntityData.defineId(CatMixin.class, EntityDataSerializers.ITEM_STACK);
+    private void practicalPets$incrementFollowMode() {
+        switch (this.getFollowMode()) {
+            case FOLLOWING -> setFollowMode(this.petCanStartGuarding() ? FollowMode.GUARDING : FollowMode.WANDERING);
+            case GUARDING -> setFollowMode(FollowMode.WANDERING);
+            case WANDERING -> setFollowMode(FollowMode.SITTING);
+            case SITTING -> setFollowMode(FollowMode.FOLLOWING);
+        }
+        this.refreshDisplayFollowMode();
+    }
+
+
+    @Inject(
+            method = {"mobInteract(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;"},
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/entity/animal/Cat;setOrderedToSit(Z)V"
+            ),
+            cancellable = true
+    )
+    private void onInteract(Player player, InteractionHand p_28154_, CallbackInfoReturnable<InteractionResult> cir) {
+        if (player.isSecondaryUseActive()) {
+            PPUtil.openPetMenu(player, this);
+        }
+        else {
+            this.practicalPets$incrementFollowMode();
+            this.refreshDisplayFollowMode();
+            player.sendSystemMessage(Component.translatable("action.practicalpets." + getFollowMode().name, this.getDisplayName()));
+        }
+        cir.setReturnValue(InteractionResult.SUCCESS);
+    }
+
     @Unique
-    private static final EntityDataAccessor<ItemStack> NECK_ITEM = SynchedEntityData.defineId(CatMixin.class, EntityDataSerializers.ITEM_STACK);
+    private static final EntityDataAccessor<ItemStack> HEAD_ITEM = SynchedEntityData.defineId(Cat.class, EntityDataSerializers.ITEM_STACK);
     @Unique
-    private static final EntityDataAccessor<ItemStack> BACK_ITEM = SynchedEntityData.defineId(CatMixin.class, EntityDataSerializers.ITEM_STACK);
+    private static final EntityDataAccessor<ItemStack> NECK_ITEM = SynchedEntityData.defineId(Cat.class, EntityDataSerializers.ITEM_STACK);
     @Unique
-    private static final EntityDataAccessor<ItemStack> BODY_ITEM = SynchedEntityData.defineId(CatMixin.class, EntityDataSerializers.ITEM_STACK);
+    private static final EntityDataAccessor<ItemStack> BACK_ITEM = SynchedEntityData.defineId(Cat.class, EntityDataSerializers.ITEM_STACK);
+    @Unique
+    private static final EntityDataAccessor<ItemStack> BODY_ITEM = SynchedEntityData.defineId(Cat.class, EntityDataSerializers.ITEM_STACK);
+    @Unique
+    private static final EntityDataAccessor<Integer> DISPLAY_FOLLOW_MODE = SynchedEntityData.defineId(Cat.class, EntityDataSerializers.INT);
 
     @Override
     public ItemStack getPetHeadItem() {
@@ -218,14 +254,18 @@ public class CatMixin extends TamableAnimal implements IPracticalPet, VanillaWan
 
     @Override
     public double getLevel10MaxHealth() {
-        return 0;
+        return 100;
     }
 
     @Override
     public double getLevel10AttackDamage() {
-        return 0;
+        return 16;
     }
 
+    /** Remember to also register the synched entity data and call
+     * the {@link LevelablePet#loadPetLevelingData(CompoundTag)}
+     * and {@link LevelablePet#savePetLevelingData(CompoundTag)}
+     * methods in the compound tag */
     @Override
     public int getPetLevel() {
         return 1;
@@ -264,17 +304,28 @@ public class CatMixin extends TamableAnimal implements IPracticalPet, VanillaWan
 
     @Override
     public boolean petIsCurrentlyFollowingOwner() {
-        return false;
+        return !this.isOrderedToSit() && this.practicalPets$shouldFollowOwner();
     }
 
     @Override
     public FollowMode getFollowMode() {
-        return null;
+        if (this.isOrderedToSit())
+            return FollowMode.SITTING;
+        if (this.practicalPets$shouldFollowOwner())
+            return FollowMode.FOLLOWING;
+        if (this.petIsCurrentlyGuarding())
+            return FollowMode.GUARDING;
+        return FollowMode.WANDERING;
     }
 
     @Override
     public void setFollowMode(FollowMode value) {
-
+        this.setOrderedToSit(value == FollowMode.SITTING);
+        this.practicalPets$setShouldFollowOwner(value == FollowMode.FOLLOWING || value == FollowMode.SITTING);
+        if (value == FollowMode.GUARDING)
+            this.petStartGuarding();
+        else
+            this.petStopGuarding();
     }
 
     /**
@@ -282,7 +333,7 @@ public class CatMixin extends TamableAnimal implements IPracticalPet, VanillaWan
      */
     @Override
     public int getDisplayFollowModeId() {
-        return 0;
+        return this.entityData.get(DISPLAY_FOLLOW_MODE);
     }
 
     /**
@@ -292,7 +343,7 @@ public class CatMixin extends TamableAnimal implements IPracticalPet, VanillaWan
      */
     @Override
     public void setDisplayFollowModeId(int value) {
-
+        this.entityData.set(DISPLAY_FOLLOW_MODE, value);
     }
 
     @Unique

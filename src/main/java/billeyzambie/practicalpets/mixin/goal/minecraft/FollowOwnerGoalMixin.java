@@ -1,5 +1,6 @@
 package billeyzambie.practicalpets.mixin.goal.minecraft;
 
+import billeyzambie.practicalpets.entity.base.VanillaPracticalPet;
 import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
@@ -25,6 +26,8 @@ public abstract class FollowOwnerGoalMixin extends Goal {
     )
     private void onCanUse(CallbackInfoReturnable<Boolean> cir) {
         if (tamable instanceof PetEquipmentWearer && tamable.getTarget() != null && tamable.getTarget().isAlive())
+            cir.setReturnValue(false);
+        else if (tamable instanceof VanillaPracticalPet pet && !pet.practicalPets$shouldFollowOwner())
             cir.setReturnValue(false);
     }
 }

@@ -681,17 +681,10 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
 
     protected void emptyOwnerInteraction(Player player, ItemStack itemStack) {
         if (player.isSecondaryUseActive()) {
-            NetworkHooks.openScreen(
-                    (ServerPlayer) player,
-                    new SimpleMenuProvider(
-                            (id, inv, p) -> new PracticalPetMenu(id, inv, this),
-                            this.getName()
-                    ),
-                    buf -> buf.writeVarInt(this.getId())
-            );
+            PPUtil.openPetMenu(player, this);
         } else {
             incrementFollowMode();
-            player.displayClientMessage(Component.translatable("action.practicalpets." + getFollowMode().name, this.getDisplayName()), true);
+            player.sendSystemMessage(Component.translatable("action.practicalpets." + getFollowMode().name, this.getDisplayName()));
         }
     }
 

@@ -1,16 +1,21 @@
 package billeyzambie.practicalpets.entity.base;
 
+import billeyzambie.practicalpets.entity.base.practicalpet.IPracticalPet;
 import net.minecraft.nbt.CompoundTag;
 
-public interface VanillaWanderablePet {
+public interface VanillaPracticalPet extends IPracticalPet {
     boolean practicalPets$shouldFollowOwner();
     void practicalPets$setShouldFollowOwner(boolean value);
 
-    default void practicalPets$saveShouldFollowOwner(CompoundTag tag) {
+    @Override
+    default void savePracticalPetData(CompoundTag tag) {
+        IPracticalPet.super.savePracticalPetData(tag);
         tag.putBoolean("PracticalPetShouldFollow", this.practicalPets$shouldFollowOwner());
     }
 
-    default void practicalPets$loadShouldFollowOwner(CompoundTag tag) {
+    @Override
+    default void loadPracticalPetData(CompoundTag tag) {
+        IPracticalPet.super.loadPracticalPetData(tag);
         if (tag.contains("PracticalPetShouldFollow"))
             this.practicalPets$setShouldFollowOwner(tag.getBoolean("PracticalPetShouldFollow"));
     }

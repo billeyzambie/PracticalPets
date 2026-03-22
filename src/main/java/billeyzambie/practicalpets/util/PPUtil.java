@@ -1,5 +1,7 @@
 package billeyzambie.practicalpets.util;
 
+import billeyzambie.practicalpets.entity.base.practicalpet.IPracticalPet;
+import billeyzambie.practicalpets.ui.PracticalPetMenu;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -7,10 +9,12 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -18,6 +22,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -28,6 +33,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.network.NetworkHooks;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -200,6 +206,17 @@ public class PPUtil {
                 rotation.z * Mth.DEG_TO_RAD,
                 rotation.y * Mth.DEG_TO_RAD,
                 rotation.x * Mth.DEG_TO_RAD)
+        );
+    }
+
+    public static void openPetMenu(Player player, IPracticalPet pet) {
+        NetworkHooks.openScreen(
+                (ServerPlayer) player,
+                new SimpleMenuProvider(
+                        (id, inv, p) -> new PracticalPetMenu(id, inv, pet),
+                        pet.getName()
+                ),
+                buf -> buf.writeVarInt(((Entity)pet).getId())
         );
     }
 }
