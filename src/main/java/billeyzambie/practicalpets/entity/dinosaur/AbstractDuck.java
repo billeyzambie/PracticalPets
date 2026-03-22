@@ -142,15 +142,15 @@ public abstract class AbstractDuck extends PracticalPet {
             this.setDeltaMovement(vec3.multiply(1.0D, 0.6D, 1.0D));
         }
 
-        AttributeInstance movementSpeed = this.getAttribute(Attributes.MOVEMENT_SPEED);
-        assert movementSpeed != null : "AbstractDuck movement speed was null";
-        if (this.isIdleFlapping()) {
-            if (!movementSpeed.hasModifier(IDLE_FLAP_SLOWDOWN_MODIFIER)) {
-                movementSpeed.addTransientModifier(IDLE_FLAP_SLOWDOWN_MODIFIER);
+        if (!this.level().isClientSide()) {
+            AttributeInstance movementSpeed = this.getAttribute(Attributes.MOVEMENT_SPEED);
+            if (this.isIdleFlapping()) {
+                if (!movementSpeed.hasModifier(IDLE_FLAP_SLOWDOWN_MODIFIER)) {
+                    movementSpeed.addTransientModifier(IDLE_FLAP_SLOWDOWN_MODIFIER);
+                }
+            } else if (movementSpeed.hasModifier(IDLE_FLAP_SLOWDOWN_MODIFIER)) {
+                movementSpeed.removeModifier(IDLE_FLAP_SLOWDOWN_MODIFIER);
             }
-        }
-        else if (movementSpeed.hasModifier(IDLE_FLAP_SLOWDOWN_MODIFIER)) {
-            movementSpeed.removeModifier(IDLE_FLAP_SLOWDOWN_MODIFIER);
         }
     }
 
