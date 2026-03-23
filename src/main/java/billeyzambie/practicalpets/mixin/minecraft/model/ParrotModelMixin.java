@@ -2,13 +2,16 @@ package billeyzambie.practicalpets.mixin.minecraft.model;
 
 import billeyzambie.practicalpets.client.model.entity.base.PetEquipmentOffsets;
 import billeyzambie.practicalpets.client.model.entity.base.PetEquipmentWearerVanillaModel;
+import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.ParrotModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -29,6 +32,27 @@ public abstract class ParrotModelMixin<T extends Parrot> extends EntityModel<T> 
         pathToPetBowtie = List.of(head);
         pathToPetHat = List.of(head);
         pathToPetBackpack = List.of(body);
+    }
+
+    @Final
+    @Shadow
+    private ModelPart feather;
+
+    @Inject(
+            method = "prepareMobModel(Lnet/minecraft/world/entity/animal/Parrot;FFF)V",
+            at = @At("TAIL")
+    )
+    private void onPrepareModel(Parrot parrot, float p_103213_, float p_103214_, float p_103215_, CallbackInfo ci) {
+        if (parrot instanceof PetEquipmentWearer wearer && !wearer.getPetHeadItem().isEmpty())
+            this.feather.visible = false;
+    }
+
+    @Inject(
+            method = "prepareMobModel(Lnet/minecraft/world/entity/animal/Parrot;FFF)V",
+            at = @At("HEAD")
+    )
+    private void onPrepareModelHead(Parrot parrot, float p_103213_, float p_103214_, float p_103215_, CallbackInfo ci) {
+        this.feather.visible = true;
     }
 
     @Unique
