@@ -1,4 +1,4 @@
-package billeyzambie.practicalpets.compat.domesticationinnovation;
+package billeyzambie.practicalpets.compat;
 
 import billeyzambie.practicalpets.entity.base.practicalpet.GuardingOwnerFollowingPet;
 import com.github.alexthe666.citadel.server.entity.IComandableMob;

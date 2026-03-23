@@ -1,7 +1,6 @@
-package billeyzambie.practicalpets.jade;
+package billeyzambie.practicalpets.compat.jade;
 
 import billeyzambie.practicalpets.entity.base.practicalpet.LevelablePet;
-import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;

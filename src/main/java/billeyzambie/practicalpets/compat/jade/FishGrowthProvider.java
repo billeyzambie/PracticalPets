@@ -1,10 +1,9 @@
-package billeyzambie.practicalpets.jade;
+package billeyzambie.practicalpets.compat.jade;
 
 import billeyzambie.practicalpets.entity.fish.base.BreedableFish;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
 import snownee.jade.api.*;
 import snownee.jade.api.config.IPluginConfig;

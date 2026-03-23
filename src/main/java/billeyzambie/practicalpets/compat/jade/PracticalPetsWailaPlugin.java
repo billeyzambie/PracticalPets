@@ -1,10 +1,9 @@
-package billeyzambie.practicalpets.jade;
+package billeyzambie.practicalpets.compat.jade;
 
 import billeyzambie.practicalpets.entity.fish.base.BreedableFish;
 import billeyzambie.practicalpets.entity.fish.base.PracticalFish;
 import billeyzambie.practicalpets.misc.PracticalPets;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
 import snownee.jade.api.IWailaClientRegistration;
 import snownee.jade.api.IWailaCommonRegistration;

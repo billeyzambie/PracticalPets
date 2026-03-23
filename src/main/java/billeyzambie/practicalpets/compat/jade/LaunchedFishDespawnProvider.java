@@ -1,4 +1,4 @@
-package billeyzambie.practicalpets.jade;
+package billeyzambie.practicalpets.compat.jade;
 
 
 import billeyzambie.practicalpets.entity.fish.base.PracticalFish;

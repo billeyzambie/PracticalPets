@@ -1,13 +1,7 @@
 package billeyzambie.practicalpets.mixin.entity.minecraft;
 
-import billeyzambie.practicalpets.compat.domesticationinnovation.DomesticationInnovationHelper;
+import billeyzambie.practicalpets.compat.DomesticationInnovationHelper;
 import billeyzambie.practicalpets.entity.base.VanillaPracticalPet;
-import billeyzambie.practicalpets.entity.base.practicalpet.LevelablePet;
-import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
-import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
-import billeyzambie.practicalpets.goal.DefendSelfIfShouldGoal;
-import billeyzambie.practicalpets.goal.OwnerHurtByTargetIfShouldGoal;
-import billeyzambie.practicalpets.goal.OwnerHurtTargetIfShouldGoal;
 import billeyzambie.practicalpets.items.PetCosmetic;
 import billeyzambie.practicalpets.util.PPUtil;
 import net.minecraft.nbt.CompoundTag;
