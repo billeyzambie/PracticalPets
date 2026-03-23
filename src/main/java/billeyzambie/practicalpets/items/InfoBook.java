@@ -90,11 +90,14 @@ public class InfoBook extends Item {
         Player player = event.getEntity();
         CompoundTag persistentData = player.getPersistentData();
         CompoundTag persistedData = persistentData.getCompound(Player.PERSISTED_NBT_TAG);
-        boolean gotInfoBook = persistedData.getBoolean("GotPracticalPetsInfoBook");
+        boolean gotInfoBook = persistedData.getBoolean("GotPracticalPetsInfoBook_v2");
         if (!gotInfoBook) {
-            player.spawnAtLocation(new ItemStack(PPItems.INFO_BOOK.get()));
+            if (!player.addItem(new ItemStack(PPItems.INFO_BOOK.get()))) {
+                player.spawnAtLocation(new ItemStack(PPItems.INFO_BOOK.get()));
+            }
         }
-        persistedData.putBoolean("GotPracticalPetsInfoBook", true);
+        persistedData.putBoolean("GotPracticalPetsInfoBook_v2", true);
+        persistentData.remove("GotPracticalPetsInfoBook");
         persistentData.put(Player.PERSISTED_NBT_TAG, persistedData);
     }
 }
