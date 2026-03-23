@@ -77,6 +77,8 @@ public interface LevelablePet extends MobInterface, OwnableEntity {
     }
 
     default void addXpOnHit(Entity target) {
+        if (this instanceof GuardingOwnerFollowingPet pet && pet.petIsCurrentlyGuarding())
+            return;
         if (target instanceof Mob mob) {
             float amount = 1;
             if (!mob.isAlive())
