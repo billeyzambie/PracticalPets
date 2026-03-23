@@ -228,18 +228,17 @@ public class PPUtil {
 
     private static final DyeColor[] DYES_BY_HUE = {
             DyeColor.RED,
-            DyeColor.ORANGE,
             DyeColor.YELLOW,
-            DyeColor.LIME,
-            DyeColor.LIGHT_BLUE,
+            DyeColor.GREEN,
+            DyeColor.CYAN,
             DyeColor.BLUE,
             DyeColor.MAGENTA
     };
 
     /** @param hue 0 to 1, not 0 to 360. Also should never be exactly 1 */
     public static DyeColor dyeColorClosestToHue(float hue) {
-        hue += 1 / 14f;
+        hue += 1 / 12f;
         hue %= 1f;
-        return DYES_BY_HUE[Mth.floor(hue * 7)];
+        return DYES_BY_HUE[Mth.floor(hue * 6)];
     }
 }
