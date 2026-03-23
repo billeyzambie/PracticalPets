@@ -26,7 +26,7 @@ public abstract class ParrotModelMixin<T extends Parrot> extends EntityModel<T> 
     private void onConstructor(ModelPart root, CallbackInfo ci) {
         ModelPart body = root.getChild("body");
         ModelPart head = root.getChild("head");
-        pathToPetBowtie = List.of(body);
+        pathToPetBowtie = List.of(head);
         pathToPetHat = List.of(head);
         pathToPetBackpack = List.of(body);
     }
@@ -59,7 +59,7 @@ public abstract class ParrotModelMixin<T extends Parrot> extends EntityModel<T> 
             new Vec3(0, 1, -1),
             new Vec3(0, -1.5, 3.5),
             PetEquipmentOffsets.NO_ROTATION,
-            PetEquipmentOffsets.MINUS_NINETY_DEGREES_X.mul(0.5f, new Vector3f()),
+            PetEquipmentOffsets.NO_ROTATION,
             PetEquipmentOffsets.MINUS_NINETY_DEGREES_X
     );
 
