@@ -85,6 +85,7 @@ public record InfoBookCategory(String name, List<InfoBookEntry> entries) {
                     this.appendSection("leveling", writer);
                     this.appendSection("pet_guarding", writer);
                     this.appendSection("pet_friendly_fire", writer);
+                    this.appendSection("vanilla_pets", writer);
                 }
 
                 @Override
