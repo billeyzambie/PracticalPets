@@ -1,5 +1,6 @@
 package billeyzambie.practicalpets.misc;
 
+import billeyzambie.practicalpets.entity.base.SpecialPunchPet;
 import billeyzambie.practicalpets.entity.base.practicalpet.GuardingOwnerFollowingPet;
 import billeyzambie.practicalpets.entity.dinosaur.Pigeon;
 import billeyzambie.practicalpets.entity.otherpet.GiraffeCat;
@@ -13,7 +14,9 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,6 +26,15 @@ import java.util.*;
 
 @Mod.EventBusSubscriber
 public class PPEvents {
+
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public static void onPlayerAttackEntity(AttackEntityEvent event) {
+        Player player = event.getEntity();
+        if (event.getTarget() instanceof SpecialPunchPet pet) {
+            if (pet.specialPunched(player))
+                event.setCanceled(true);
+        }
+    }
 
     public static final Set<Mob> mobsThatGotTheirTargetManuallySet = new HashSet<>();
 

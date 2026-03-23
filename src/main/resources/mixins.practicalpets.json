@@ -8,7 +8,8 @@
     "model.minecraft.ParrotModelMixin",
     "model.minecraft.WolfModelMixin",
     "renderer.minecraft.CatRendererMixin",
-    "renderer.minecraft.VanillaPetRendererMixin"
+    "renderer.minecraft.VanillaPetRendererMixin",
+    "misc.domesticationinnovation.ClientProxyMixin"
   ],
   "server": [],
   "injectors": {

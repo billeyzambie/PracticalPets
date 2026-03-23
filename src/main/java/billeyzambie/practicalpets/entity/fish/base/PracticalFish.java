@@ -3,6 +3,7 @@ package billeyzambie.practicalpets.entity.fish.base;
 import billeyzambie.animationcontrollers.ACData;
 import billeyzambie.animationcontrollers.BVCData;
 import billeyzambie.animationcontrollers.SwimmingAnimationEntity;
+import billeyzambie.practicalpets.entity.base.SpecialPunchPet;
 import billeyzambie.practicalpets.entity.base.WeightedVariantEntity;
 import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
 import billeyzambie.practicalpets.goal.FishOwnerHurtByTargetGoal;
@@ -41,7 +42,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Optional;
 
-public abstract class PracticalFish extends TamableFish implements PetEquipmentWearer, SwimmingAnimationEntity, WeightedVariantEntity {
+public abstract class PracticalFish extends TamableFish implements
+        PetEquipmentWearer,
+        SwimmingAnimationEntity,
+        WeightedVariantEntity,
+        SpecialPunchPet {
+
     HashMap<String, ACData> ACData = new HashMap<>();
 
     @Override
@@ -516,6 +522,7 @@ public abstract class PracticalFish extends TamableFish implements PetEquipmentW
         return false;
     }
 
+    //this is a mess
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
@@ -566,17 +573,20 @@ public abstract class PracticalFish extends TamableFish implements PetEquipmentW
     }
 
     @Override
+    public boolean shouldDisableDIPunchThrough(Player player) {
+        return player.getMainHandItem().getItem() instanceof PiranhaLauncher;
+    }
+
+    @Override
+    public boolean specialPunched(Player player) {
+        ItemStack mainHandStack = player.getMainHandItem();
+        return mainHandStack.getItem() instanceof PiranhaLauncher launcherItem
+                && launcherItem.tryInsertFish(mainHandStack, this, player);
+    }
+
+    @Override
     public boolean hurt(DamageSource source, float amount) {
         Entity entity = source.getEntity();
-        if (entity instanceof Player player) {
-            ItemStack mainHandStack = player.getMainHandItem();
-            if (
-                    mainHandStack.getItem() instanceof PiranhaLauncher launcherItem
-                    && launcherItem.tryInsertFish(mainHandStack, this, player)
-            ) {
-                return false;
-            }
-        }
         if (
                 entity instanceof LivingEntity living
                         && PPUtil.isOwnedByFast(this, living)
