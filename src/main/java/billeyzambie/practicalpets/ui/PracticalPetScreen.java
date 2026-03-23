@@ -1,7 +1,6 @@
 package billeyzambie.practicalpets.ui;
 
 import billeyzambie.practicalpets.entity.base.practicalpet.IPracticalPet;
-import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.entity.dinosaur.Pigeon;
 import billeyzambie.practicalpets.entity.otherpet.GiraffeCat;
 import billeyzambie.practicalpets.misc.PPNetworking;
@@ -101,7 +100,7 @@ public class PracticalPetScreen extends AbstractContainerScreen<PracticalPetMenu
         InventoryScreen.renderEntityInInventoryFollowsMouse(
                 graphics,
                 this.leftPos + 51, this.topPos + 78,
-                34,
+                30,
                 (this.leftPos + 51) - this.mouseX,
                 (this.topPos + 50 - this.pet.getEyeHeight()) - this.mouseY,
                 (LivingEntity) this.pet
