@@ -226,6 +226,10 @@ public class PPUtil {
         return ModList.get().isLoaded("domesticationinnovation");
     }
 
+    public static boolean isMBVInstalled() {
+        return ModList.get().isLoaded("moremobvariants");
+    }
+
     private static final DyeColor[] DYES_BY_HUE = {
             DyeColor.RED,
             DyeColor.YELLOW,

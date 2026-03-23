@@ -1,5 +1,6 @@
 package billeyzambie.practicalpets.entity.otherpet;
 
+import billeyzambie.practicalpets.compat.MoreMobVariantsHelper;
 import billeyzambie.practicalpets.entity.base.practicalpet.GuardingOwnerFollowingPet;
 import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.entity.base.StayStillGoalMob;
@@ -420,7 +421,16 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
                 }
             } else if (partner instanceof Cat cat) {
                 baby.setCatHybrid(true);
-                baby.setVariant(CAT_VARIANT_TO_INT.getOrDefault(cat.getVariant(), 10));
+
+                int babyVariant;
+                if (PPUtil.isMBVInstalled()) {
+                    babyVariant = MoreMobVariantsHelper.getGiraffeCatVariantFromCatVariant(cat);
+                }
+                else {
+                    babyVariant = CAT_VARIANT_TO_INT.getOrDefault(cat.getVariant(), 10);
+                }
+                baby.setVariant(babyVariant);
+
                 baby.setSnoutless(this.isSnoutless());
             }
         }
