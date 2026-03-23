@@ -1,4 +1,4 @@
-package billeyzambie.practicalpets.mixin.renderer.minecraft;
+package billeyzambie.practicalpets.mixin.minecraft.renderer;
 
 import billeyzambie.practicalpets.client.layer.PetEquipmentLayer;
 import billeyzambie.practicalpets.misc.PracticalPets;

@@ -1,4 +1,4 @@
-package billeyzambie.practicalpets.mixin.misc.domesticationinnovation;
+package billeyzambie.practicalpets.mixin.domesticationinnovation;
 
 import billeyzambie.practicalpets.entity.base.SpecialPunchPet;
 import com.github.alexthe668.domesticationinnovation.client.ClientProxy;

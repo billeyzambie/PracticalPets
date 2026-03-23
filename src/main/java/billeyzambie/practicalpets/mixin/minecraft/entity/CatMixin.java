@@ -1,4 +1,4 @@
-package billeyzambie.practicalpets.mixin.entity.minecraft;
+package billeyzambie.practicalpets.mixin.minecraft.entity;
 
 import billeyzambie.practicalpets.entity.base.VanillaPracticalPet;
 import billeyzambie.practicalpets.goal.DefendSelfIfShouldGoal;

@@ -1,4 +1,4 @@
-package billeyzambie.practicalpets.mixin.model.minecraft;
+package billeyzambie.practicalpets.mixin.minecraft.model;
 
 import billeyzambie.practicalpets.client.model.entity.base.PetEquipmentOffsets;
 import billeyzambie.practicalpets.client.model.entity.base.PetEquipmentWearerVanillaModel;

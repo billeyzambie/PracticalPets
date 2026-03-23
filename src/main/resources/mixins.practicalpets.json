@@ -4,24 +4,24 @@
   "refmap": "mixins.practicalpets.refmap.json",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "model.minecraft.CatModelMixin",
-    "model.minecraft.ParrotModelMixin",
-    "model.minecraft.WolfModelMixin",
-    "renderer.minecraft.CatRendererMixin",
-    "renderer.minecraft.VanillaPetRendererMixin",
-    "misc.domesticationinnovation.ClientProxyMixin"
+    "minecraft.model.CatModelMixin",
+    "minecraft.model.ParrotModelMixin",
+    "minecraft.model.WolfModelMixin",
+    "minecraft.renderer.CatRendererMixin",
+    "minecraft.renderer.VanillaPetRendererMixin",
+    "domesticationinnovation.ClientProxyMixin"
   ],
   "server": [],
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [
-    "entity.minecraft.CatMixin",
-    "entity.minecraft.ParrotMixin",
-    "entity.minecraft.TamableAnimalMixin",
-    "entity.minecraft.VanillaPetMixin",
-    "entity.minecraft.WolfMixin",
-    "goal.minecraft.FollowOwnerGoalMixin",
-    "goal.minecraft.LeapAtTargetGoalMixin"
+    "minecraft.entity.CatMixin",
+    "minecraft.entity.ParrotMixin",
+    "minecraft.entity.TamableAnimalMixin",
+    "minecraft.entity.VanillaPetMixin",
+    "minecraft.entity.WolfMixin",
+    "minecraft.goal.FollowOwnerGoalMixin",
+    "minecraft.goal.LeapAtTargetGoalMixin"
   ]
 }
