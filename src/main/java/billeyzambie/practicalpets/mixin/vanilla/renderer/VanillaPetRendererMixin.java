@@ -1,4 +1,4 @@
-package billeyzambie.practicalpets.mixin.minecraft.renderer;
+package billeyzambie.practicalpets.mixin.vanilla.renderer;
 
 import billeyzambie.practicalpets.client.layer.PetEquipmentLayer;
 import billeyzambie.practicalpets.client.model.entity.base.PetEquipmentWearerModel;

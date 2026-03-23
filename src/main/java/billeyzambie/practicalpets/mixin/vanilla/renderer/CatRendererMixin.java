@@ -1,6 +1,5 @@
-package billeyzambie.practicalpets.mixin.minecraft.renderer;
+package billeyzambie.practicalpets.mixin.vanilla.renderer;
 
-import billeyzambie.practicalpets.client.layer.PetEquipmentLayer;
 import billeyzambie.practicalpets.misc.PracticalPets;
 import net.minecraft.client.model.CatModel;
 import net.minecraft.client.renderer.entity.CatRenderer;
@@ -12,7 +11,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 //Inject it right before More Mob Variants's weirdness so that this still works when it's installed

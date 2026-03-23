@@ -1,59 +1,63 @@
-package billeyzambie.practicalpets.mixin.minecraft.entity;
+package billeyzambie.practicalpets.mixin.vanilla.entity;
 
 import billeyzambie.practicalpets.entity.base.VanillaPracticalPet;
+import billeyzambie.practicalpets.goal.DefendSelfIfShouldGoal;
+import billeyzambie.practicalpets.goal.OwnerHurtByTargetIfShouldGoal;
+import billeyzambie.practicalpets.goal.OwnerHurtTargetIfShouldGoal;
+import billeyzambie.practicalpets.goal.PanicIfShouldGoal;
 import billeyzambie.practicalpets.util.PPUtil;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.PanicGoal;
 import net.minecraft.world.entity.animal.Cat;
-import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(Wolf.class)
-public abstract class WolfMixin extends Mob implements VanillaPracticalPet {
-
+@Mixin(Cat.class)
+public abstract class CatMixin extends Mob implements VanillaPracticalPet {
     @Override
     public float getPetHeadSizeX() {
-        return 6;
-    }
-
-    @Override
-    public float getPetHeadSizeY() {
         return 5;
     }
 
     @Override
-    public float getPetHeadSizeZ() {
+    public float getPetHeadSizeY() {
         return 4;
     }
 
-    private WolfMixin(EntityType<? extends Mob> p_21368_, Level p_21369_) {
+    @Override
+    public float getPetHeadSizeZ() {
+        return 5;
+    }
+
+    private CatMixin(EntityType<? extends Mob> p_21368_, Level p_21369_) {
         super(p_21368_, p_21369_);
     }
 
     @Override
     public double getLevel10MaxHealth() {
-        return 120;
+        return 100;
     }
 
     @Override
     public double getLevel10AttackDamage() {
-        return 21;
+        return 16;
     }
 
     @Inject(
             method = {"mobInteract(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;"},
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/entity/animal/Wolf;setOrderedToSit(Z)V"
+                    target = "Lnet/minecraft/world/entity/animal/Cat;setOrderedToSit(Z)V"
             ),
             cancellable = true
     )
@@ -61,14 +65,27 @@ public abstract class WolfMixin extends Mob implements VanillaPracticalPet {
         this.practicalsPets$vanillaPetInteract(player, cir);
     }
 
+    @Inject(
+            method = "registerGoals",
+            at = @At("TAIL")
+    )
+    private void onRegisterGoals(CallbackInfo ci) {
+        this.removeAllGoals(goal -> goal instanceof PanicGoal);
+        this.goalSelector.addGoal(1, new PanicIfShouldGoal(this, 1.5d));
+
+        this.targetSelector.addGoal(0, new DefendSelfIfShouldGoal(this));
+        this.targetSelector.addGoal(2, new OwnerHurtByTargetIfShouldGoal(this));
+        this.targetSelector.addGoal(4, new OwnerHurtTargetIfShouldGoal(this));
+    }
+
     @Override
     public boolean isGuardingPetAbleToAttack(@Nullable LivingEntity target) {
-        return true;
+        return this.petShouldDefendOwner(target);
     }
 
     @Override
     public void onGetFirstTamePetBowtie(float bowtieHue) {
-        Wolf self = (Wolf)(Object)(this);
+        Cat self = (Cat)(Object)(this);
         self.setCollarColor(PPUtil.dyeColorClosestToHue(bowtieHue));
     }
 }

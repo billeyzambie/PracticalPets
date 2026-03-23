@@ -1,4 +1,4 @@
-package billeyzambie.practicalpets.mixin.minecraft.model;
+package billeyzambie.practicalpets.mixin.vanilla.model;
 
 import billeyzambie.practicalpets.client.model.entity.base.PetEquipmentOffsets;
 import billeyzambie.practicalpets.client.model.entity.base.PetEquipmentWearerVanillaModel;
@@ -8,7 +8,6 @@ import net.minecraft.client.model.ParrotModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

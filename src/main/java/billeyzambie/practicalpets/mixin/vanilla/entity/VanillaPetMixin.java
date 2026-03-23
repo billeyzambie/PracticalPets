@@ -1,4 +1,4 @@
-package billeyzambie.practicalpets.mixin.minecraft.entity;
+package billeyzambie.practicalpets.mixin.vanilla.entity;
 
 import billeyzambie.practicalpets.compat.DomesticationInnovationHelper;
 import billeyzambie.practicalpets.entity.base.VanillaPracticalPet;

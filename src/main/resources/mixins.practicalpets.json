@@ -5,23 +5,23 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "domesticationinnovation.ClientProxyMixin",
-    "minecraft.model.CatModelMixin",
-    "minecraft.model.ParrotModelMixin",
-    "minecraft.model.WolfModelMixin",
-    "minecraft.renderer.CatRendererMixin",
-    "minecraft.renderer.VanillaPetRendererMixin"
+    "vanilla.model.CatModelMixin",
+    "vanilla.model.ParrotModelMixin",
+    "vanilla.model.WolfModelMixin",
+    "vanilla.renderer.CatRendererMixin",
+    "vanilla.renderer.VanillaPetRendererMixin"
   ],
   "server": [],
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [
-    "minecraft.entity.CatMixin",
-    "minecraft.entity.ParrotMixin",
-    "minecraft.entity.TamableAnimalMixin",
-    "minecraft.entity.VanillaPetMixin",
-    "minecraft.entity.WolfMixin",
-    "minecraft.goal.FollowOwnerGoalMixin",
-    "minecraft.goal.LeapAtTargetGoalMixin"
+    "vanilla.entity.CatMixin",
+    "vanilla.entity.ParrotMixin",
+    "vanilla.entity.TamableAnimalMixin",
+    "vanilla.entity.VanillaPetMixin",
+    "vanilla.entity.WolfMixin",
+    "vanilla.goal.FollowOwnerGoalMixin",
+    "vanilla.goal.LeapAtTargetGoalMixin"
   ]
 }

@@ -1,11 +1,11 @@
-package billeyzambie.practicalpets.mixin.minecraft.model;
+package billeyzambie.practicalpets.mixin.vanilla.model;
 
 import billeyzambie.practicalpets.client.model.entity.base.PetEquipmentOffsets;
 import billeyzambie.practicalpets.client.model.entity.base.PetEquipmentWearerAgeableListModel;
+import net.minecraft.client.model.CatModel;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.WolfModel;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -15,8 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-@Mixin(WolfModel.class)
-public abstract class WolfModelMixin<T extends Wolf> extends EntityModel<T> implements PetEquipmentWearerAgeableListModel {
+@Mixin(CatModel.class)
+public abstract class CatModelMixin<T extends Cat> extends EntityModel<T> implements PetEquipmentWearerAgeableListModel {
 
     @Inject(
             method = "<init>",
@@ -24,11 +24,9 @@ public abstract class WolfModelMixin<T extends Wolf> extends EntityModel<T> impl
     )
     private void onConstructor(ModelPart root, CallbackInfo ci) {
         ModelPart body = root.getChild("body");
-        ModelPart upperBody = root.getChild("upper_body");
         ModelPart head = root.getChild("head");
-        ModelPart realHead = head.getChild("real_head");
-        pathToPetBowtie = List.of(upperBody);
-        pathToPetHat = List.of(head, realHead);
+        pathToPetBowtie = List.of(body);
+        pathToPetHat = List.of(head);
         pathToPetBackpack = List.of(body);
     }
 
@@ -56,9 +54,9 @@ public abstract class WolfModelMixin<T extends Wolf> extends EntityModel<T> impl
 
     @Unique
     private static final PetEquipmentOffsets PET_EQUIPMENT_OFFSETS = new PetEquipmentOffsets(
-            new Vec3(1, -3, 0),
-            new Vec3(1, 3, -3),
-            new Vec3(0, -3, 2.5),
+            new Vec3(0, -2, -0.5),
+            new Vec3(0, 7, 3),
+            new Vec3(0, 2, 11.5f),
             PetEquipmentOffsets.NO_ROTATION,
             PetEquipmentOffsets.MINUS_NINETY_DEGREES_X,
             PetEquipmentOffsets.MINUS_NINETY_DEGREES_X
