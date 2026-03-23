@@ -4,12 +4,12 @@
   "refmap": "mixins.practicalpets.refmap.json",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "domesticationinnovation.ClientProxyMixin",
     "minecraft.model.CatModelMixin",
     "minecraft.model.ParrotModelMixin",
     "minecraft.model.WolfModelMixin",
     "minecraft.renderer.CatRendererMixin",
-    "minecraft.renderer.VanillaPetRendererMixin",
-    "domesticationinnovation.ClientProxyMixin"
+    "minecraft.renderer.VanillaPetRendererMixin"
   ],
   "server": [],
   "injectors": {

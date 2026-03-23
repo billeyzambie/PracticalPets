@@ -4,7 +4,6 @@ import billeyzambie.practicalpets.client.PPRenderLayers;
 import billeyzambie.practicalpets.client.model.entity.base.PetEquipmentWearerModel;
 import billeyzambie.practicalpets.client.model.entity.pet_equipment.*;
 import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
-import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.items.AttachablePetCosmetic;
 import billeyzambie.practicalpets.items.EntityModelPetCosmetic;
 import billeyzambie.practicalpets.items.PetCosmetic;
@@ -90,9 +89,9 @@ public class PetEquipmentLayer<T extends Mob & PetEquipmentWearer, M extends Ent
                 //poseStack.mulPose(Axis.YP.rotationDegrees(-bodyYaw));
 
                 switch (slot) {
-                    case HEAD -> this.getParentModel().moveToHat(poseStack);
-                    case NECK -> this.getParentModel().moveToBowtie(poseStack);
-                    case BACK -> this.getParentModel().moveToBackpack(poseStack);
+                    case HEAD -> this.getParentModel().moveToPetHat(poseStack);
+                    case NECK -> this.getParentModel().moveToPetBowtie(poseStack);
+                    case BACK -> this.getParentModel().moveToPetBackpack(poseStack);
                     default -> throw new AssertionError("Pretty sure this will never happen (error at practicalpetrender at render at switch (cosmetic.getAttachBone()))");
                 }
 

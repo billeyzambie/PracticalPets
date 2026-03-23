@@ -1,7 +1,7 @@
 package billeyzambie.practicalpets.mixin.minecraft.model;
 
 import billeyzambie.practicalpets.client.model.entity.base.PetEquipmentOffsets;
-import billeyzambie.practicalpets.client.model.entity.base.PetEquipmentWearerVanillaModel;
+import billeyzambie.practicalpets.client.model.entity.base.PetEquipmentWearerAgeableListModel;
 import net.minecraft.client.model.CatModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 
 @Mixin(CatModel.class)
-public abstract class CatModelMixin<T extends Cat> extends EntityModel<T> implements PetEquipmentWearerVanillaModel {
+public abstract class CatModelMixin<T extends Cat> extends EntityModel<T> implements PetEquipmentWearerAgeableListModel {
 
     @Inject(
             method = "<init>",

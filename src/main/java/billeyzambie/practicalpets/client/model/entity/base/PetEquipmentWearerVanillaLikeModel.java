@@ -11,15 +11,15 @@ public interface PetEquipmentWearerVanillaLikeModel extends PetEquipmentWearerMo
     List<ModelPart> pathToPetBackpack();
 
     @Override
-    default void moveToBowtie(PoseStack poseStack) {
+    default void moveToPetBowtie(PoseStack poseStack) {
         pathToPetBowtie().forEach(part -> part.translateAndRotate(poseStack));
     }
     @Override
-    default void moveToHat(PoseStack poseStack) {
+    default void moveToPetHat(PoseStack poseStack) {
         pathToPetHat().forEach(part -> part.translateAndRotate(poseStack));
     }
     @Override
-    default void moveToBackpack(PoseStack poseStack) {
+    default void moveToPetBackpack(PoseStack poseStack) {
         pathToPetBackpack().forEach(part -> part.translateAndRotate(poseStack));
     }
 }
