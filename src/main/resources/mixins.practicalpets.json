@@ -20,6 +20,7 @@
     "GlobalPetMixin",
     "alexsmobs.AlexsMobsPetMixin",
     "alexsmobs.entity.RaccoonMixin",
+    "vanilla.LivingEntityMixin",
     "vanilla.TamableAnimalMixin",
     "vanilla.VanillaPetMixin",
     "vanilla.entity.CatMixin",

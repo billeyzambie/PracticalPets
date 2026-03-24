@@ -156,12 +156,6 @@ public abstract class PracticalFish extends TamableFish implements
         this.canShootFromSlot = value;
     }
 
-    @Override
-    protected void dropEquipment() {
-        super.dropEquipment();
-        this.dropAllPetEquipment(false);
-    }
-
     private Component deathMessage = Component.empty();
 
     @Override

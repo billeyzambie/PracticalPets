@@ -588,12 +588,6 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         return true;
     }
 
-    @Override
-    protected void dropEquipment() {
-        super.dropEquipment();
-        this.dropAllPetEquipment(false);
-    }
-
     private Component deathMessage = Component.empty();
 
     @Override
