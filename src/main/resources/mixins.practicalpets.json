@@ -16,6 +16,7 @@
     "defaultRequire": 1
   },
   "mixins": [
+    "GlobalPetMixin",
     "vanilla.entity.CatMixin",
     "vanilla.entity.ParrotMixin",
     "vanilla.entity.TamableAnimalMixin",
