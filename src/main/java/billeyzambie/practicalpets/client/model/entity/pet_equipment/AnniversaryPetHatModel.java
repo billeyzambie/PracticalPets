@@ -49,6 +49,7 @@ public class AnniversaryPetHatModel<T extends Entity> extends HierarchicalModel<
 				if (wearer.allowLoweringTopHatsAPixel())
 					this.root().y += 1; //moves it 1 pixel down (somehow)
 				this.root().xScale *= (headSizeX + 1) / 4;
+				this.root().xScale *= (headSizeX + 1) / 4;
 				this.root().zScale *= (headSizeZ + 1) / 4;
 			}
 
