@@ -30,6 +30,7 @@ public interface PetEquipmentWearerCitadelModel extends PetEquipmentWearerModel 
 
     @Override
     default void moveToPetBowtie(PoseStack poseStack) {
+        poseStack.translate(0, 24 / 16f, 0);
         for (AdvancedModelBox part : pathToPetBowtie()) {
             part.translateAndRotate(poseStack);
         }
@@ -37,6 +38,7 @@ public interface PetEquipmentWearerCitadelModel extends PetEquipmentWearerModel 
     }
     @Override
     default void moveToPetHat(PoseStack poseStack) {
+        poseStack.translate(0, 24 / 16f, 0);
         for (AdvancedModelBox part : pathToPetHat()) {
             part.translateAndRotate(poseStack);
         }
@@ -44,6 +46,7 @@ public interface PetEquipmentWearerCitadelModel extends PetEquipmentWearerModel 
     }
     @Override
     default void moveToPetBackpack(PoseStack poseStack) {
+        poseStack.translate(0, 24 / 16f, 0);
         for (AdvancedModelBox part : pathToPetBackpack()) {
             part.translateAndRotate(poseStack);
         }

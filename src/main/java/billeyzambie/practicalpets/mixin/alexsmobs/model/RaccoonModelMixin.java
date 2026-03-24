@@ -58,12 +58,12 @@ public abstract class RaccoonModelMixin extends AdvancedEntityModel<EntityRaccoo
 
     @Unique
     private static final PetEquipmentOffsets PET_EQUIPMENT_OFFSETS = new PetEquipmentOffsets(
-            new Vec3(0, -2, -0.5),
-            new Vec3(0, 7, 3),
-            new Vec3(0, 2, 11.5f),
+            new Vec3(0, -4, -1.5),
+            new Vec3(0, 4, -7),
+            new Vec3(0, -4, 2),
             PetEquipmentOffsets.NO_ROTATION,
-            PetEquipmentOffsets.MINUS_NINETY_DEGREES_X,
-            PetEquipmentOffsets.MINUS_NINETY_DEGREES_X
+            PetEquipmentOffsets.NO_ROTATION,
+            PetEquipmentOffsets.NO_ROTATION
     );
 
     @Override
