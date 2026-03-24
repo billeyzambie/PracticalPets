@@ -157,12 +157,6 @@ public abstract class PracticalFish extends TamableFish implements
     }
 
     @Override
-    public void performRangedAttack(@NotNull LivingEntity target, float distanceFactor) {
-        if (this.canPerformCosmeticRangedAttack())
-            this.performCosmeticRangedAttack(petCanShootFromSlot().orElseThrow(), target, distanceFactor);
-    }
-
-    @Override
     protected void dropEquipment() {
         super.dropEquipment();
         this.dropAllPetEquipment(false);

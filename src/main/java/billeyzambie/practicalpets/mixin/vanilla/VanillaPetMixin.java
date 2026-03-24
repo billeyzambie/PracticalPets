@@ -25,13 +25,6 @@ public abstract class VanillaPetMixin extends TamableAnimal implements VanillaPr
     }
 
     @Override
-    public void performRangedAttack(@NotNull LivingEntity target, float distanceFactor) {
-        if (this.canPerformCosmeticRangedAttack())
-            this.performCosmeticRangedAttack(petCanShootFromSlot().orElseThrow(), target, distanceFactor);
-    }
-
-
-    @Override
     public boolean petIsCurrentlyFollowingOwner() {
         return !this.isOrderedToSit() && this.practicalPets$shouldFollowOwner();
     }

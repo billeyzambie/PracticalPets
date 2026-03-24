@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public interface PetEquipmentWearer extends RangedAttackMob, MobInterface {
+public interface PetEquipmentWearer extends MobInterface {
     /** Make sure to call {@link PetEquipmentWearer#refreshPetEquipmentCache()} */
     void setPetHeadItemRaw(ItemStack stack);
     /** Make sure to call {@link PetEquipmentWearer#refreshPetEquipmentCache()} */

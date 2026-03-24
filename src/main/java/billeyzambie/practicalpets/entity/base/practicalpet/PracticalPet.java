@@ -285,12 +285,6 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         this.canShootFromSlot = value;
     }
 
-    @Override
-    public void performRangedAttack(@NotNull LivingEntity target, float distanceFactor) {
-        if (this.canPerformCosmeticRangedAttack())
-            this.performCosmeticRangedAttack(petCanShootFromSlot().orElseThrow(), target, distanceFactor);
-    }
-
     public PracticalPet(EntityType<? extends TamableAnimal> entityType, Level level) {
         super(entityType, level);
     }
