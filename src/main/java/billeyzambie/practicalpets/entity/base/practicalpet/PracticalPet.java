@@ -60,11 +60,6 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         return BVCData;
     }
 
-    @Override
-    public boolean isModelYAxisInverted() {
-        return true;
-    }
-
     private @Nullable Vec3 petGuardCenter = null;
 
     @Override

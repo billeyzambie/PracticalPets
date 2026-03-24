@@ -76,7 +76,6 @@ public class PetEquipmentLayer<T extends Mob & PetEquipmentWearer, M extends Ent
     @Override
     public void render(PoseStack poseStack, MultiBufferSource buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialticks, float r, float g, float b) {
 
-
         if (!entity.hidePetEquipment()) for (PetCosmetic.Slot slot : PetCosmetic.Slot.values()) {
             ItemStack cosmeticStack = entity.getEquippedItem(slot);
             var cosmeticOptional = PetCosmetics.getCosmeticForItem(cosmeticStack);

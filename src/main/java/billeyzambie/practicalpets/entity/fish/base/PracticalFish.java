@@ -169,11 +169,6 @@ public abstract class PracticalFish extends TamableFish implements
     }
 
     @Override
-    public boolean isModelYAxisInverted() {
-        return true;
-    }
-
-    @Override
     public int getPetLevel() {
         return 1;
     }

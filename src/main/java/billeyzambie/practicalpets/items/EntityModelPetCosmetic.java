@@ -3,11 +3,9 @@ package billeyzambie.practicalpets.items;
 import billeyzambie.practicalpets.client.layer.PetEquipmentLayer;
 import billeyzambie.practicalpets.client.model.entity.base.PetEquipmentWearerModel;
 import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
-import billeyzambie.practicalpets.entity.base.practicalpet.PracticalPet;
 import billeyzambie.practicalpets.util.PPUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -45,9 +43,6 @@ public interface EntityModelPetCosmetic extends AttachablePetCosmetic {
             float partialticks
     ) {
         poseStack.pushPose();
-
-        //if (!wearer.isModelYAxisInverted())
-        //    poseStack.translate(0, 24 / 16f, 0);
 
         float r = 1, g = 1, b = 1;
         if (this instanceof DyeableLeatherItem dyeableItem) {
