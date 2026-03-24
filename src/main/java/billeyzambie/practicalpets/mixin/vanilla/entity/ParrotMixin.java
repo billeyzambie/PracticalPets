@@ -7,6 +7,8 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.PanicGoal;
 import net.minecraft.world.entity.animal.Parrot;
@@ -81,5 +83,13 @@ public abstract class ParrotMixin extends PathfinderMob implements VanillaPracti
     @Override
     public boolean isGuardingPetAbleToAttack(@Nullable LivingEntity target) {
         return this.petShouldDefendOwner(target);
+    }
+
+    @Inject(
+            method = "createAttributes",
+            at = @At("RETURN")
+    )
+    private static void onCreateAttributes(CallbackInfoReturnable<AttributeSupplier.Builder> cir) {
+        cir.getReturnValue().add(Attributes.ATTACK_DAMAGE, 1);
     }
 }
