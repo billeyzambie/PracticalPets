@@ -100,6 +100,8 @@ public class PetEquipmentLayer<T extends Mob & PetEquipmentWearer, M extends Ent
                 //    part.translateAndRotate(poseStack);
                 //}
 
+                //just a random number close to 1 to make z fighting unlikely
+                poseStack.scale(1.0163f, 1.0163f, 1.0163f);
                 cosmetic.render(
                         this,
                         cosmeticStack,
