@@ -40,12 +40,12 @@ public abstract class WolfMixin extends Mob implements VanillaPracticalPet {
 
     @Override
     public double getLevel10MaxHealth() {
-        return 120;
+        return 160;
     }
 
     @Override
     public double getLevel10AttackDamage() {
-        return 21;
+        return 25;
     }
 
     @Inject(
