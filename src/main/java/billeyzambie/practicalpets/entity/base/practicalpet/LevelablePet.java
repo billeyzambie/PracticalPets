@@ -168,7 +168,6 @@ public interface LevelablePet extends MobInterface, OwnableEntity {
 
     default void refreshPetLevelAttributeMultipliers() {
         int level = this.getPetLevel();
-        double progress1to10 = (level - 1) / 9d;
 
         AttributeInstance healthAttribute = this.getAttribute(Attributes.MAX_HEALTH);
         AttributeInstance damageAttribute = this.getAttribute(Attributes.ATTACK_DAMAGE);
@@ -182,11 +181,24 @@ public interface LevelablePet extends MobInterface, OwnableEntity {
         if (level <= 1)
             return;
 
-        double targetHealth = Mth.lerp(progress1to10, getLevel1MaxHealth(), getLevel10MaxHealth());
+
+        double targetHealth;
+        double targetDamage;
+
+        if (level < 10) {
+            double progress1to10 = (level - 1) / 9d;
+            targetHealth = Mth.lerp(progress1to10, getLevel1MaxHealth(), getLevel10MaxHealth());
+            targetDamage = Mth.lerp(progress1to10, getLevel1AttackDamage(), getLevel10AttackDamage());
+        }
+        else {
+            double progressBeyond10 = level / 10d;
+            targetHealth = this.getLevel10MaxHealth() * progressBeyond10;
+            targetDamage = this.getLevel10AttackDamage() * progressBeyond10;
+        }
+
         //Health not being a multiple of 2 looks confusing on jade
         targetHealth = Math.round(targetHealth / 2d) * 2;
 
-        double targetDamage = Mth.lerp(progress1to10, getLevel1AttackDamage(), getLevel10AttackDamage());
 
         healthAttribute.addPermanentModifier(new AttributeModifier(
                 MAX_HEALTH_MULTIPLIER,
