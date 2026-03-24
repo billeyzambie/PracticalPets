@@ -25,22 +25,12 @@ public interface VanillaPracticalPet extends IPracticalPet {
             this.practicalPets$setShouldFollowOwner(tag.getBoolean("PracticalPetShouldFollow"));
     }
 
-    default void practicalPets$incrementFollowMode() {
-        switch (this.getFollowMode()) {
-            case FOLLOWING -> setFollowMode(this.petCanStartGuarding() ? FollowMode.GUARDING : FollowMode.WANDERING);
-            case GUARDING -> setFollowMode(FollowMode.WANDERING);
-            case WANDERING -> setFollowMode(FollowMode.SITTING);
-            case SITTING -> setFollowMode(FollowMode.FOLLOWING);
-        }
-        this.refreshDisplayFollowMode();
-    }
-
     default void practicalsPets$vanillaPetInteract(Player player, CallbackInfoReturnable<InteractionResult> cir) {
         if (player.isSecondaryUseActive()) {
             PPUtil.openPetMenu(player, this);
         }
         else {
-            this.practicalPets$incrementFollowMode();
+            this.incrementPetFollowMode();
             this.refreshDisplayFollowMode();
             player.displayClientMessage(Component.translatable("action.practicalpets." + this.getFollowMode().name, this.getDisplayName()), true);
         }

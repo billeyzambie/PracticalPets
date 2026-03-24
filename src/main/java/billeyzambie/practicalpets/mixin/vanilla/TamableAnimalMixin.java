@@ -1,4 +1,4 @@
-package billeyzambie.practicalpets.mixin.vanilla.entity;
+package billeyzambie.practicalpets.mixin.vanilla;
 
 import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
 import billeyzambie.practicalpets.items.AnniversaryPetHat;

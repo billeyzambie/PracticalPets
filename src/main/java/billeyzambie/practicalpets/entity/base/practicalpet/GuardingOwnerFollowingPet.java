@@ -40,6 +40,16 @@ public interface GuardingOwnerFollowingPet extends MobInterface {
             this.jadeTranslationString = "ui.practicalpets." + name;
         }
     }
+    
+    default void incrementPetFollowMode() {
+        switch (this.getFollowMode()) {
+            case FOLLOWING -> setFollowMode(this.petCanStartGuarding() ? FollowMode.GUARDING : FollowMode.WANDERING);
+            case GUARDING -> setFollowMode(FollowMode.WANDERING);
+            case WANDERING -> setFollowMode(FollowMode.SITTING);
+            case SITTING -> setFollowMode(FollowMode.FOLLOWING);
+        }
+        this.refreshDisplayFollowMode();
+    }
 
     FollowMode getFollowMode();
     void setFollowMode(FollowMode value);

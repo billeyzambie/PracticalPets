@@ -2,6 +2,7 @@ package billeyzambie.practicalpets.mixin;
 
 import billeyzambie.practicalpets.entity.base.practicalpet.IPracticalPet;
 import billeyzambie.practicalpets.items.PetCosmetic;
+import com.github.alexthe666.alexsmobs.entity.EntityRaccoon;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -27,7 +28,8 @@ import java.util.Optional;
 @Mixin(value = {
         Cat.class,
         Wolf.class,
-        Parrot.class
+        Parrot.class,
+        EntityRaccoon.class
 })
 public abstract class GlobalPetMixin extends TamableAnimal implements IPracticalPet {
 

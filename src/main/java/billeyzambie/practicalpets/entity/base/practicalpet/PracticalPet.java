@@ -7,7 +7,6 @@ import billeyzambie.practicalpets.entity.base.WeightedVariantEntity;
 import billeyzambie.practicalpets.items.*;
 import billeyzambie.practicalpets.misc.*;
 import billeyzambie.practicalpets.network.RandomIdle1AnimPacket;
-import billeyzambie.practicalpets.ui.PracticalPetMenu;
 import billeyzambie.practicalpets.goal.*;
 import billeyzambie.practicalpets.util.PPUtil;
 import net.minecraft.Util;
@@ -18,13 +17,11 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -41,13 +38,10 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.*;
-import java.time.LocalDate;
 import java.util.*;
 
 public abstract class PracticalPet extends TamableAnimal implements IPracticalPet, ACEntity, NeutralMob, WeightedVariantEntity {
@@ -584,16 +578,6 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
             this.petStopGuarding();
     }
 
-    public void incrementFollowMode() {
-        switch (this.getFollowMode()) {
-            case FOLLOWING -> setFollowMode(this.petCanStartGuarding() ? FollowMode.GUARDING : FollowMode.WANDERING);
-            case GUARDING -> setFollowMode(FollowMode.WANDERING);
-            case WANDERING -> setFollowMode(FollowMode.SITTING);
-            case SITTING -> setFollowMode(FollowMode.FOLLOWING);
-        }
-        this.refreshDisplayFollowMode();
-    }
-
     private static final EntityDataAccessor<Integer> DISPLAY_FOLLOW_MODE = SynchedEntityData.defineId(PracticalPet.class, EntityDataSerializers.INT);
 
     @Override
@@ -683,7 +667,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         if (player.isSecondaryUseActive()) {
             PPUtil.openPetMenu(player, this);
         } else {
-            incrementFollowMode();
+            incrementPetFollowMode();
             player.displayClientMessage(Component.translatable("action.practicalpets." + getFollowMode().name, this.getDisplayName()), true);
         }
     }
