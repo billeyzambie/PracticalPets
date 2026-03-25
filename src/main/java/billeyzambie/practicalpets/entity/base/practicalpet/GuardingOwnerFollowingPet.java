@@ -43,10 +43,10 @@ public interface GuardingOwnerFollowingPet extends MobInterface {
     
     default void incrementPetFollowMode() {
         switch (this.getFollowMode()) {
-            case FOLLOWING -> setFollowMode(this.petCanStartGuarding() ? FollowMode.GUARDING : FollowMode.WANDERING);
+            case FOLLOWING -> setFollowMode(FollowMode.SITTING);
             case GUARDING -> setFollowMode(FollowMode.WANDERING);
-            case WANDERING -> setFollowMode(FollowMode.SITTING);
-            case SITTING -> setFollowMode(FollowMode.FOLLOWING);
+            case WANDERING -> setFollowMode(FollowMode.FOLLOWING);
+            case SITTING -> setFollowMode(this.petCanStartGuarding() ? FollowMode.GUARDING : FollowMode.WANDERING);
         }
         this.refreshDisplayFollowMode();
     }
