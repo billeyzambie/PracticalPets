@@ -212,8 +212,10 @@ public class PPUtil {
     }
 
     public static void openPetMenu(Player player, IPracticalPet pet) {
+        if (!(player instanceof ServerPlayer serverPlayer))
+            return;
         NetworkHooks.openScreen(
-                (ServerPlayer) player,
+                serverPlayer,
                 new SimpleMenuProvider(
                         (id, inv, p) -> new PracticalPetMenu(id, inv, pet),
                         pet.getName()

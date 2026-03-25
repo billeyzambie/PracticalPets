@@ -57,7 +57,7 @@ public abstract class WolfMixin extends Mob implements VanillaPracticalPet {
             cancellable = true
     )
     private void onInteract(Player player, InteractionHand p_28154_, CallbackInfoReturnable<InteractionResult> cir) {
-        this.practicalsPets$vanillaPetInteract(player, cir);
+        this.defaultPracticalPetInteraction(player, cir);
     }
 
     @Override
