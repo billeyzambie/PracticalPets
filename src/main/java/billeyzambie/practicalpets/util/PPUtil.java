@@ -232,6 +232,10 @@ public class PPUtil {
         return ModList.get().isLoaded("moremobvariants");
     }
 
+    public static boolean isAlexsMobsInstalled() {
+        return ModList.get().isLoaded("moremobvariants");
+    }
+
     private static final DyeColor[] DYES_BY_HUE = {
             DyeColor.RED,
             DyeColor.YELLOW,

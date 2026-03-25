@@ -1,8 +1,6 @@
 package billeyzambie.practicalpets.mixin.alexsmobs;
 
 import billeyzambie.practicalpets.entity.base.practicalpet.IPracticalPet;
-import com.github.alexthe666.alexsmobs.entity.EntityBaldEagle;
-import com.github.alexthe666.alexsmobs.entity.EntityGrizzlyBear;
 import com.github.alexthe666.alexsmobs.entity.EntityRaccoon;
 import com.github.alexthe666.alexsmobs.entity.IFollower;
 import net.minecraft.world.entity.EntityType;
@@ -11,15 +9,15 @@ import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
-@Mixin({EntityRaccoon.class})
-public abstract class AlexsMobsPetMixin extends TamableAnimal implements IFollower, IPracticalPet {
-    private AlexsMobsPetMixin(EntityType<? extends TamableAnimal> p_21803_, Level p_21804_) {
+@Mixin(EntityRaccoon.class)
+public abstract class AlexsMobsGenericPetMixin extends TamableAnimal implements IFollower, IPracticalPet {
+    private AlexsMobsGenericPetMixin(EntityType<? extends TamableAnimal> p_21803_, Level p_21804_) {
         super(p_21803_, p_21804_);
     }
 
     @Override
     public boolean petIsCurrentlyFollowingOwner() {
-        return !this.isOrderedToSit() && this.shouldFollow();
+        return !this.isSitting() && this.shouldFollow();
     }
 
     @Shadow(remap = false) abstract public boolean isSitting();

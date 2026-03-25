@@ -21,6 +21,7 @@
     "alexsmobs.AlexsMobsGenericPetMixin",
     "alexsmobs.entity.CrowMixin",
     "alexsmobs.entity.RaccoonMixin",
+    "alexsmobs.goal.CrowAIMeleeGoalMixin",
     "vanilla.LivingEntityMixin",
     "vanilla.TamableAnimalMixin",
     "vanilla.VanillaPetMixin",

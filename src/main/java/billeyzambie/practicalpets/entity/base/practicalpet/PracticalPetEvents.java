@@ -1,10 +1,12 @@
 package billeyzambie.practicalpets.entity.base.practicalpet;
 
+import billeyzambie.practicalpets.compat.AlexsMobsHelper;
 import billeyzambie.practicalpets.goal.CustomCatMeleeAttackGoal;
 import billeyzambie.practicalpets.goal.PetEquipmentWearerCosmeticRangedAttackGoal;
 import billeyzambie.practicalpets.goal.PetEquipmentWearerMeleeAttackGoal;
 import billeyzambie.practicalpets.items.PetCosmetic;
 import billeyzambie.practicalpets.petequipment.PetCosmetics;
+import billeyzambie.practicalpets.util.PPUtil;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -256,6 +258,8 @@ public final class PracticalPetEvents {
                             (TamableAnimal & PetEquipmentWearer) wearer
                     )
             );
+            if (PPUtil.isAlexsMobsInstalled())
+                AlexsMobsHelper.registerAlexsMobsAttackGoals();
         }
 
         @SubscribeEvent
