@@ -8,6 +8,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -107,5 +108,18 @@ public abstract class RaccoonMixin extends TamableAnimal implements IFollower, I
         return false;
     }
 
+    @Redirect(
+            remap = false,
+            method = "tick",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;getBaseValue()D"
+            )
+    )
+    private double fixAttackDamage(
+            AttributeInstance instance
+    ) {
+        return instance.getValue();
+    }
 
 }
