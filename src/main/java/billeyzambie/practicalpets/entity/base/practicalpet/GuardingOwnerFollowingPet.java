@@ -192,14 +192,14 @@ public interface GuardingOwnerFollowingPet extends MobInterface {
     class GoToRestrictionGoal<T extends Mob & GuardingOwnerFollowingPet> extends Goal {
         private final T pet;
         private final LevelReader level;
-        private static final double SPEED_MODIFIER = 1.25;
+        private static final double SPEED_MODIFIER = 1;
         private int timeToRecalcPath;
         private float oldWaterCost;
 
         public GoToRestrictionGoal(T pet) {
             this.pet = pet;
             this.level = this.pet.level();
-            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE));
             if (!(this.pet.getNavigation() instanceof GroundPathNavigation) && !(this.pet.getNavigation() instanceof FlyingPathNavigation)) {
                 throw new IllegalArgumentException("Unsupported mob type for GoToRestrictionGoal");
             }
@@ -267,7 +267,6 @@ public interface GuardingOwnerFollowingPet extends MobInterface {
         @Override
         public void tick() {
             Vec3 targetPosition = this.getRestrictionCenter();
-            this.pet.getLookControl().setLookAt(targetPosition);
             if (--this.timeToRecalcPath <= 0) {
                 this.timeToRecalcPath = this.adjustedTickDelay(10);
                 if (this.pet.distanceToSqr(targetPosition) >= this.getTeleportDistance() * this.getTeleportDistance()) {
