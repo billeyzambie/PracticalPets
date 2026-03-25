@@ -722,7 +722,7 @@ public class GiraffeCat extends PracticalPet implements StayStillGoalMob {
                 && !(
                         this.shouldFollowOwner()
                         && pet instanceof GuardingOwnerFollowingPet followingPet
-                                && !followingPet.petIsCurrentlyFollowingOwner()
+                                && followingPet.getFollowMode() != this.getFollowMode()
                 );
     }
 

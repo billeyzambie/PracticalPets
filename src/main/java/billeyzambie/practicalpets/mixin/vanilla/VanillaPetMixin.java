@@ -33,10 +33,10 @@ public abstract class VanillaPetMixin extends TamableAnimal implements VanillaPr
     public FollowMode getFollowMode() {
         if (this.petIsCurrentlyGuarding())
             return FollowMode.GUARDING;
-        if (PPUtil.isDIInstalled())
-            return DomesticationInnovationHelper.getFollowModeForVanillaPet(this);
         if (this.isOrderedToSit())
             return FollowMode.SITTING;
+        if (PPUtil.isDIInstalled())
+            return DomesticationInnovationHelper.getFollowModeForVanillaPet(this);
         if (this.practicalPets$shouldFollowOwner())
             return FollowMode.FOLLOWING;
         return FollowMode.WANDERING;

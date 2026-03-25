@@ -22,7 +22,7 @@ public abstract class AlexsMobsPetMixin extends TamableAnimal implements IFollow
         return !this.isOrderedToSit() && this.shouldFollow();
     }
 
-    @Shadow(remap = false) abstract public int getCommand();
+    @Shadow(remap = false) abstract public boolean isSitting();
     @Shadow(remap = false) public boolean forcedSit;
     @Shadow(remap = false) abstract public void setCommand(int value);
 
@@ -30,8 +30,11 @@ public abstract class AlexsMobsPetMixin extends TamableAnimal implements IFollow
     public FollowMode getFollowMode() {
         if (this.petIsCurrentlyGuarding())
             return FollowMode.GUARDING;
-        int followModeIndex = (this.getCommand() - 1 + 3) % 3;
-        return FollowMode.values()[followModeIndex];
+        if (this.isSitting())
+            return FollowMode.SITTING;
+        if (this.shouldFollow())
+            return FollowMode.FOLLOWING;
+        return FollowMode.WANDERING;
     }
 
     @Override
