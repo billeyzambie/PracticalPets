@@ -6,9 +6,17 @@ import com.github.alexthe666.alexsmobs.entity.IFollower;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.UUID;
 
 @Mixin(EntityRaccoon.class)
 public abstract class RaccoonMixin extends TamableAnimal implements IFollower, IPracticalPet {
@@ -45,6 +53,23 @@ public abstract class RaccoonMixin extends TamableAnimal implements IFollower, I
     @Override
     public boolean isGuardingPetAbleToAttack(@Nullable LivingEntity target) {
         return true;
+    }
+
+    @Shadow(remap = false) @Nullable private UUID eggThrowerUUID;
+
+    @Inject(
+            remap = false,
+            method = "postWashItem",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lcom/github/alexthe666/alexsmobs/entity/EntityRaccoon;setTame(Z)V"
+            )
+    )
+    private void onPostWash(ItemStack stack, CallbackInfo ci) {
+        if (this.eggThrowerUUID != null) {
+            Player player = this.level().getPlayerByUUID(this.eggThrowerUUID);
+            this.onPetEquipmentWearerFirstTame(player);
+        }
     }
 
 }

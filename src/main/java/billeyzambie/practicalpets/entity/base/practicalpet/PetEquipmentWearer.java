@@ -1,8 +1,12 @@
 package billeyzambie.practicalpets.entity.base.practicalpet;
 
 import billeyzambie.practicalpets.entity.base.MobInterface;
+import billeyzambie.practicalpets.items.AnniversaryPetHat;
 import billeyzambie.practicalpets.items.PetBowtie;
 import billeyzambie.practicalpets.items.PetCosmetic;
+import billeyzambie.practicalpets.misc.PPItems;
+import billeyzambie.practicalpets.misc.PPSounds;
+import billeyzambie.practicalpets.misc.PracticalPets;
 import billeyzambie.practicalpets.petequipment.PetCosmetics;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -22,6 +26,8 @@ import net.minecraft.world.item.ShearsItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.*;
+import java.time.LocalDate;
 import java.util.Optional;
 
 public interface PetEquipmentWearer extends MobInterface {
@@ -333,5 +339,45 @@ public interface PetEquipmentWearer extends MobInterface {
 
     default void onGetFirstTamePetBowtie(float bowtieHue) {
 
+    }
+
+    LocalDate FOUNDERS_HAT_END_DATE = LocalDate.of(2025, 8, 1);
+    String FOUNDERS_HATS_CLAIMED_TAG_ID = PracticalPets.MODID + ":founders_hats_claimed";
+
+    default void onPetEquipmentWearerFirstTame(Player player) {
+        if (!this.isTame() && this.getPetNeckItem().isEmpty()) {
+            ItemStack bowtie = new ItemStack(PPItems.PET_BOWTIE.get());
+
+            float hue = this.getRandom().nextFloat();
+            int rgb = Color.HSBtoRGB(hue, 1, 1);
+
+            CompoundTag tag = new CompoundTag();
+            CompoundTag display = new CompoundTag();
+            display.putInt("color", rgb);
+            tag.put("display", display);
+            bowtie.setTag(tag);
+
+            this.setPetNeckItem(bowtie);
+
+            this.onGetFirstTamePetBowtie(hue);
+        }
+
+        CompoundTag persistentData = player.getPersistentData();
+        CompoundTag persistedData = persistentData.getCompound(Player.PERSISTED_NBT_TAG);
+        int foundersHatsClaimed = persistedData.getInt(FOUNDERS_HATS_CLAIMED_TAG_ID);
+        if (
+                this.getPetHeadItem().isEmpty()
+                        //&& LocalDate.now().isBefore(FOUNDERS_HAT_END_DATE)
+                        && foundersHatsClaimed < 5
+        ) {
+            ItemStack foundersHat = new ItemStack(PPItems.ANNIVERSARY_PET_HAT_0.get());
+            AnniversaryPetHat.putPlayerName(foundersHat, player.getName().getString());
+            this.setPetHeadItem(foundersHat);
+            persistedData.putInt(FOUNDERS_HATS_CLAIMED_TAG_ID, foundersHatsClaimed + 1);
+            persistentData.put(Player.PERSISTED_NBT_TAG, persistedData);
+            player.sendSystemMessage(Component.translatable("ui.practicalpets.chat.got_founders_hat", foundersHat.getDisplayName(), foundersHatsClaimed + 1));
+            player.sendSystemMessage(Component.translatable("ui.practicalpets.info.item.anniversary_pet_hat_0", foundersHat.getDisplayName()));
+            player.playSound(PPSounds.PET_LEVEL_UP.get());
+        }
     }
 }
