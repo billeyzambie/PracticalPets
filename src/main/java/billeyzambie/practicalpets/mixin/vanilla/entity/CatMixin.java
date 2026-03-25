@@ -62,7 +62,7 @@ public abstract class CatMixin extends Mob implements VanillaPracticalPet {
             cancellable = true
     )
     private void onInteract(Player player, InteractionHand p_28154_, CallbackInfoReturnable<InteractionResult> cir) {
-        this.defaultPracticalPetInteraction(player, cir);
+        this.defaultPracticalPetMixinInteraction(player, cir);
     }
 
     @Inject(

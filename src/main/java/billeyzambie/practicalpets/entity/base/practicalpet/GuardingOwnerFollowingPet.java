@@ -6,6 +6,7 @@ import billeyzambie.practicalpets.misc.PPTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -15,6 +16,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
@@ -26,29 +28,68 @@ import java.util.EnumSet;
 
 public interface GuardingOwnerFollowingPet extends MobInterface {
     boolean petIsCurrentlyFollowingOwner();
+
     enum FollowMode {
         FOLLOWING("following"),
         SITTING("sitting"),
         WANDERING("wandering"),
-        GUARDING("guarding");
+        GUARDING("guarding"),
+        SPECIAL("special") {
+            @Override
+            public String getInteractString(GuardingOwnerFollowingPet pet) {
+                return pet.getSpecialPetFollowModeInteractString();
+            }
 
-        public final String name;
-        public final String jadeTranslationString;
+            @Override
+            public String getJadeString(GuardingOwnerFollowingPet pet) {
+                return pet.getSpecialPetFollowModeJadeString();
+            }
+        };
+
+        private final String interactString;
+        private final String jadeString;
 
         FollowMode(String name) {
-            this.name = name;
-            this.jadeTranslationString = "ui.practicalpets." + name;
+            this.interactString = "action.practicalpets." + name;
+            this.jadeString = "ui.practicalpets." + name;
+        }
+
+        public String getInteractString(GuardingOwnerFollowingPet pet) {
+            return this.interactString;
+        }
+
+        public String getJadeString(GuardingOwnerFollowingPet pet) {
+            return this.jadeString;
         }
     }
+
+    default String getSpecialPetFollowModeInteractString() {
+        return "action.practicalpets.special";
+    }
+
+    default String getSpecialPetFollowModeJadeString() {
+        return "ui.practicalpets.special";
+    }
+
+    default boolean petCanUseSpecialFollowMode() {
+        return false;
+    }
     
-    default void incrementPetFollowMode() {
+    default void incrementPetFollowMode(@Nullable Player player) {
         switch (this.getFollowMode()) {
             case FOLLOWING -> setFollowMode(FollowMode.SITTING);
-            case GUARDING -> setFollowMode(FollowMode.FOLLOWING);
             case WANDERING -> setFollowMode(this.petCanStartGuarding() ? FollowMode.GUARDING : FollowMode.FOLLOWING);
-            case SITTING -> setFollowMode(FollowMode.WANDERING);
+            case GUARDING -> setFollowMode(FollowMode.FOLLOWING);
+            case SITTING -> setFollowMode(this.petCanUseSpecialFollowMode() ? FollowMode.SPECIAL : FollowMode.WANDERING);
+            case SPECIAL -> setFollowMode(FollowMode.WANDERING);
         }
         this.refreshDisplayFollowMode();
+        if (player != null) {
+            player.displayClientMessage(Component.translatable(
+                    getFollowMode().getInteractString(this),
+                    this.getDisplayName()
+            ), true);
+        }
     }
 
     FollowMode getFollowMode();

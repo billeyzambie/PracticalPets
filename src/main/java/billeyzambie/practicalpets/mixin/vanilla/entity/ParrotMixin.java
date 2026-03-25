@@ -62,7 +62,7 @@ public abstract class ParrotMixin extends PathfinderMob implements VanillaPracti
             cancellable = true
     )
     private void onInteract(Player player, InteractionHand p_28154_, CallbackInfoReturnable<InteractionResult> cir) {
-        this.defaultPracticalPetInteraction(player, cir);
+        this.defaultPracticalPetMixinInteraction(player, cir);
     }
 
     @Inject(

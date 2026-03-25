@@ -18,7 +18,8 @@
   },
   "mixins": [
     "GlobalPetMixin",
-    "alexsmobs.AlexsMobsPetMixin",
+    "alexsmobs.AlexsMobsGenericPetMixin",
+    "alexsmobs.entity.CrowMixin",
     "alexsmobs.entity.RaccoonMixin",
     "vanilla.LivingEntityMixin",
     "vanilla.TamableAnimalMixin",

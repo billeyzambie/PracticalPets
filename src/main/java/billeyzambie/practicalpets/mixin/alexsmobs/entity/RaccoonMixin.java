@@ -91,7 +91,7 @@ public abstract class RaccoonMixin extends TamableAnimal implements IFollower, I
             InteractionHand hand,
             CallbackInfoReturnable<InteractionResult> cir
     ) {
-        this.defaultPracticalPetInteraction(player, cir);
+        this.defaultPracticalPetMixinInteraction(player, cir);
     }
 
     @Redirect(

@@ -21,7 +21,7 @@ public enum PetFollowModeProvider implements IEntityComponentProvider {
                 GuardingOwnerFollowingPet.FollowMode.values()[pet.getDisplayFollowModeId()];
 
         tooltip.add(
-                Component.translatable(followMode.jadeTranslationString)
+                Component.translatable(followMode.getJadeString(pet))
                         .withStyle(ChatFormatting.GREEN)
         );
     }

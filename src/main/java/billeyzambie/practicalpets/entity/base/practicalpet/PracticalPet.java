@@ -650,8 +650,7 @@ public abstract class PracticalPet extends TamableAnimal implements IPracticalPe
         if (player.isSecondaryUseActive()) {
             PPUtil.openPetMenu(player, this);
         } else {
-            incrementPetFollowMode();
-            player.displayClientMessage(Component.translatable("action.practicalpets." + getFollowMode().name, this.getDisplayName()), true);
+            incrementPetFollowMode(player);
         }
     }
 

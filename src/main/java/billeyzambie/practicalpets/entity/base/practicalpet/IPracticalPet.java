@@ -19,14 +19,12 @@ public interface IPracticalPet extends PetEquipmentWearer, LevelablePet, Guardin
         this.loadGuardingPetData(tag);
     }
 
-    default void defaultPracticalPetInteraction(Player player, CallbackInfoReturnable<InteractionResult> cir) {
+    default void defaultPracticalPetMixinInteraction(Player player, CallbackInfoReturnable<InteractionResult> cir) {
         if (player.isSecondaryUseActive()) {
             PPUtil.openPetMenu(player, this);
         }
         else {
-            this.incrementPetFollowMode();
-            this.refreshDisplayFollowMode();
-            player.displayClientMessage(Component.translatable("action.practicalpets." + this.getFollowMode().name, this.getDisplayName()), true);
+            this.incrementPetFollowMode(player);
         }
         cir.setReturnValue(InteractionResult.SUCCESS);
     }
