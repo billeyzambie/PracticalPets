@@ -10,6 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -60,7 +61,14 @@ public abstract class RaccoonMixin extends TamableAnimal implements IFollower, I
         return true;
     }
 
+    @Override
+    public boolean canInteractEventShearPetEquipment(Player player, InteractionHand hand) {
+        return this.getColor() == null;
+    }
+
     @Shadow(remap = false) @Nullable private UUID eggThrowerUUID;
+
+    @Shadow(remap = false) @Nullable public abstract DyeColor getColor();
 
     @Inject(
             remap = false,
