@@ -121,6 +121,8 @@ public class PPEvents {
         pets.forEach(pet -> {
             if (pet.level().noCollision(pet, pet.getBoundingBox().move(player.position().subtract(pet.position())))) {
                 pet.teleportTo(player.getX(), player.getY(), player.getZ());
+                pet.getNavigation().stop();
+                pet.getNavigation().moveTo(player, 1d);
                 pet.setDeltaMovement(Vec3.ZERO);
             }
         });
