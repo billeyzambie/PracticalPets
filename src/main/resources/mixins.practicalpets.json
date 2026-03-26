@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "GlobalPetRendererMixin",
+    "alexsmobs.model.CrowModelMixin",
     "alexsmobs.model.RaccoonModelMixin",
     "domesticationinnovation.ClientProxyMixin",
     "vanilla.model.CatModelMixin",

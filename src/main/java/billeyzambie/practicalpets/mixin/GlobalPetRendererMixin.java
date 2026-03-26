@@ -3,6 +3,7 @@ package billeyzambie.practicalpets.mixin;
 import billeyzambie.practicalpets.client.layer.PetEquipmentLayer;
 import billeyzambie.practicalpets.client.model.entity.base.PetEquipmentWearerModel;
 import billeyzambie.practicalpets.entity.base.practicalpet.PetEquipmentWearer;
+import com.github.alexthe666.alexsmobs.client.render.RenderCrow;
 import com.github.alexthe666.alexsmobs.client.render.RenderRaccoon;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.*;
@@ -16,7 +17,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
         CatRenderer.class,
         WolfRenderer.class,
         ParrotRenderer.class,
-        RenderRaccoon.class
+        RenderRaccoon.class,
+        RenderCrow.class
 })
 public abstract class GlobalPetRendererMixin<T extends Mob & PetEquipmentWearer, M extends EntityModel<T> & PetEquipmentWearerModel> extends MobRenderer<T, M> {
 
