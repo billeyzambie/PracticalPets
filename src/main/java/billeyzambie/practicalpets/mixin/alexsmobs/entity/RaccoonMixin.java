@@ -75,6 +75,7 @@ public abstract class RaccoonMixin extends TamableAnimal implements IFollower, I
             method = "postWashItem",
             at = @At(
                     value = "INVOKE",
+                    remap = true,
                     target = "Lcom/github/alexthe666/alexsmobs/entity/EntityRaccoon;setTame(Z)V"
             )
     )
@@ -86,10 +87,10 @@ public abstract class RaccoonMixin extends TamableAnimal implements IFollower, I
     }
 
     @Inject(
-            remap = false,
             method = "mobInteract",
             at = @At(
                     value = "INVOKE",
+                    remap = false,
                     target = "Lcom/github/alexthe666/alexsmobs/entity/EntityRaccoon;setCommand(I)V"
             ),
             cancellable = true
@@ -103,7 +104,6 @@ public abstract class RaccoonMixin extends TamableAnimal implements IFollower, I
     }
 
     @Redirect(
-            remap = false,
             method = "mobInteract",
             at = @At(
                     value = "INVOKE",
@@ -117,7 +117,6 @@ public abstract class RaccoonMixin extends TamableAnimal implements IFollower, I
     }
 
     @Redirect(
-            remap = false,
             method = "tick",
             at = @At(
                     value = "INVOKE",

@@ -120,10 +120,10 @@ public abstract class CrowMixin extends TamableAnimal implements IPracticalPet {
     }
 
     @Inject(
-            remap = false,
             method = "mobInteract",
             at = @At(
                     value = "INVOKE",
+                    remap = false,
                     target = "Lcom/github/alexthe666/alexsmobs/entity/EntityCrow;setCommand(I)V"
             ),
             cancellable = true
@@ -138,13 +138,11 @@ public abstract class CrowMixin extends TamableAnimal implements IPracticalPet {
 
 
     @Inject(
-            remap = false,
             method = "tick",
             at = @At(
                     value = "INVOKE",
                     target = "Lcom/github/alexthe666/alexsmobs/entity/EntityCrow;setTame(Z)V"
-            ),
-            cancellable = true
+            )
     )
     private void onTame(CallbackInfo ci) {
         if (this.seedThrowerID != null) {
