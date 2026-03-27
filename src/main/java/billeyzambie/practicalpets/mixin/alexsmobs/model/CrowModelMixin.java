@@ -62,10 +62,10 @@ public abstract class CrowModelMixin extends AdvancedEntityModel<EntityCrow> imp
     @Unique
     private static final PetEquipmentOffsets PET_EQUIPMENT_OFFSETS = new PetEquipmentOffsets(
             new Vec3(0, -2.5, 0),
-            new Vec3(0, -3.5, -3.5),
+            new Vec3(0, -5, 0),
             new Vec3(0, -3, -1.5),
             PetEquipmentOffsets.NO_ROTATION,
-            PetEquipmentOffsets.MINUS_45_DEGREES_X,
+            PetEquipmentOffsets.NO_ROTATION,
             PetEquipmentOffsets.MINUS_NINETY_DEGREES_X
     );
 

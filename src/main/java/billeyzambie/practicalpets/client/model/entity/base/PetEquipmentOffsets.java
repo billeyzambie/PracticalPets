@@ -15,7 +15,6 @@ public record PetEquipmentOffsets(
         Vector3f backpackRotation
 ) {
     public static final Vector3f MINUS_NINETY_DEGREES_X = new Vector3f(-90, 0, 0);
-    public static final Vector3f MINUS_45_DEGREES_X = new Vector3f(-45, 0, 0);
     public static final Vector3f NO_ROTATION = new Vector3f(0, 0, 0);
     public void applyHat(PoseStack poseStack) {
         PPUtil.rotateDegrees(poseStack, hatRotation);
