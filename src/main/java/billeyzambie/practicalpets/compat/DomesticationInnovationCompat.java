@@ -4,7 +4,7 @@ import billeyzambie.practicalpets.entity.base.practicalpet.GuardingOwnerFollowin
 import com.github.alexthe666.citadel.server.entity.IComandableMob;
 import net.minecraft.world.entity.TamableAnimal;
 
-public class DomesticationInnovationHelper {
+public class DomesticationInnovationCompat {
     public static GuardingOwnerFollowingPet.FollowMode getFollowModeForVanillaPet(TamableAnimal pet) {
         IComandableMob comandableMob = (IComandableMob) pet;
         int command = comandableMob.getCommand();

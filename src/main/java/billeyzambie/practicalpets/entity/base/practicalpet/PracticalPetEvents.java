@@ -1,6 +1,6 @@
 package billeyzambie.practicalpets.entity.base.practicalpet;
 
-import billeyzambie.practicalpets.compat.AlexsMobsHelper;
+import billeyzambie.practicalpets.compat.AlexsMobsCompat;
 import billeyzambie.practicalpets.goal.CustomCatMeleeAttackGoal;
 import billeyzambie.practicalpets.goal.PetEquipmentWearerCosmeticRangedAttackGoal;
 import billeyzambie.practicalpets.goal.PetEquipmentWearerMeleeAttackGoal;
@@ -259,7 +259,7 @@ public final class PracticalPetEvents {
                     )
             );
             if (PPUtil.isAlexsMobsInstalled())
-                AlexsMobsHelper.registerAlexsMobsAttackGoals();
+                AlexsMobsCompat.registerAlexsMobsAttackGoals();
         }
 
         @SubscribeEvent

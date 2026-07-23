@@ -1,16 +1,14 @@
 package billeyzambie.practicalpets.mixin.vanilla;
 
-import billeyzambie.practicalpets.compat.DomesticationInnovationHelper;
+import billeyzambie.practicalpets.compat.DomesticationInnovationCompat;
 import billeyzambie.practicalpets.entity.base.VanillaPracticalPet;
 import billeyzambie.practicalpets.util.PPUtil;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
@@ -36,7 +34,7 @@ public abstract class VanillaPetMixin extends TamableAnimal implements VanillaPr
         if (this.isOrderedToSit())
             return FollowMode.SITTING;
         if (PPUtil.isDIInstalled())
-            return DomesticationInnovationHelper.getFollowModeForVanillaPet(this);
+            return DomesticationInnovationCompat.getFollowModeForVanillaPet(this);
         if (this.practicalPets$shouldFollowOwner())
             return FollowMode.FOLLOWING;
         return FollowMode.WANDERING;
@@ -51,7 +49,7 @@ public abstract class VanillaPetMixin extends TamableAnimal implements VanillaPr
         else
             this.petStopGuarding();
         if (PPUtil.isDIInstalled()) {
-            DomesticationInnovationHelper.setPetCommandFromFollowMode(this, value);
+            DomesticationInnovationCompat.setPetCommandFromFollowMode(this, value);
         }
     }
 

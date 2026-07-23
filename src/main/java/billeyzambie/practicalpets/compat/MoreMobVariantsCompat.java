@@ -8,7 +8,7 @@ import net.minecraft.world.entity.animal.Cat;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MoreMobVariantsHelper {
+public class MoreMobVariantsCompat {
     private static final Map<String, Integer> giraffeCatVariants = new HashMap<>();
 
     static {
