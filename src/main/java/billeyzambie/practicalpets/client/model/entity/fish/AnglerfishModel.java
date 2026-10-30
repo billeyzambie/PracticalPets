@@ -4,6 +4,7 @@ package billeyzambie.practicalpets.client.model.entity.fish;// Made with Blockbe
 
 import billeyzambie.animationcontrollers.Animatable;
 import billeyzambie.practicalpets.client.animation.fish.PiranhaAnimations;
+import billeyzambie.practicalpets.entity.fish.Anglerfish;
 import billeyzambie.practicalpets.entity.fish.Piranha;
 import billeyzambie.practicalpets.misc.PPAnimationControllers;
 import billeyzambie.practicalpets.util.PPUtil;
@@ -19,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.List;
 
-public class AnglerfishModel extends SwimmingEntityModel<Piranha> {
+public class AnglerfishModel extends SwimmingEntityModel<Anglerfish> {
 	private final ModelPart ooo;
 	private final ModelPart body;
 	private final ModelPart hat;
@@ -59,7 +60,7 @@ public class AnglerfishModel extends SwimmingEntityModel<Piranha> {
 		PartDefinition body = ooo.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 0).addBox(-3.5F, -3.5F, -3.5F, 7.0F, 7.0F, 7.0F, new CubeDeformation(0.0F))
 		.texOffs(22, 0).addBox(-3.5F, -3.5F, -4.5F, 7.0F, 4.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -3.5F, 0.5F));
 
-		PartDefinition hat = body.addOrReplaceChild("hat", CubeListBuilder.create(), PartPose.offset(0.0F, -3.5F, 0.5F));
+		PartDefinition hat = body.addOrReplaceChild("hat", CubeListBuilder.create(), PartPose.offset(0.0F, -3.5F, 0.0F));
 
 		PartDefinition tail = body.addOrReplaceChild("tail", CubeListBuilder.create().texOffs(0, 23).addBox(-1.5F, -1.5F, -1.0F, 3.0F, 3.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 3.5F));
 
@@ -88,7 +89,7 @@ public class AnglerfishModel extends SwimmingEntityModel<Piranha> {
 	}
 
 	@Override
-	public void setupAnim(@NotNull Piranha entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(@NotNull Anglerfish entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 
 		PPAnimationControllers.FISH_FLOP.play(this, entity, limbSwing, limbSwingAmount, ageInTicks, 0, netHeadYaw, headPitch, 1);
@@ -99,6 +100,9 @@ public class AnglerfishModel extends SwimmingEntityModel<Piranha> {
 
 	private static final float SWIM_FREQ_MULTI = 3;
 	private static final float SWIM_AMP_MULTI = 6;
+
+	public static final float MIN_SWIM_SWING_DELTA = 0.02f * 6 / SWIM_FREQ_MULTI;
+	public static final float MIN_SWIM_SWING_AMOUNT = 0.13f * 6 / SWIM_AMP_MULTI;
 
 	public void animateSwim(float swimSwing, float swimSwingAmount) {
 		//The animation looked backwards for some reason so I put the -

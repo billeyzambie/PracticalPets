@@ -79,6 +79,7 @@ public class PracticalPets
                 output.accept(PPItems.KIWI_SPAWN_EGG.get());
                 //fish spawn eggs
                 output.accept(PPItems.PIRANHA_SPAWN_EGG.get());
+                output.accept(PPItems.ANGLERFISH_SPAWN_EGG.get());
                 //food obtained from pets
                 output.accept(PPItems.POULTRY_BANANA.get());
                 output.accept(PPItems.RATATOUILLE.get());

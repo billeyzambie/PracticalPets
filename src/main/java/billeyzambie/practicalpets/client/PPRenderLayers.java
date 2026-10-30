@@ -1,6 +1,7 @@
 package billeyzambie.practicalpets.client;
 
 import billeyzambie.practicalpets.client.model.entity.dinosaur.*;
+import billeyzambie.practicalpets.client.model.entity.fish.AnglerfishModel;
 import billeyzambie.practicalpets.client.model.entity.fish.PiranhaModel;
 import billeyzambie.practicalpets.client.model.entity.otherpet.GiraffeCatModel;
 import billeyzambie.practicalpets.client.model.entity.otherpet.GiraffeCatNeckPieceModel;
@@ -12,6 +13,7 @@ import billeyzambie.practicalpets.client.renderer.dinosaur.DuckRenderer;
 import billeyzambie.practicalpets.client.renderer.dinosaur.KiwiRenderer;
 import billeyzambie.practicalpets.client.renderer.dinosaur.PigeonRenderer;
 import billeyzambie.practicalpets.client.renderer.fish.PiranhaRenderer;
+import billeyzambie.practicalpets.client.renderer.fish.AnglerfishRenderer;
 import billeyzambie.practicalpets.client.renderer.other.NothingRenderer;
 import billeyzambie.practicalpets.client.renderer.other.PetEndRodProjectileRenderer;
 import billeyzambie.practicalpets.client.renderer.otherpet.GiraffeCatRenderer;
@@ -55,6 +57,9 @@ public class PPRenderLayers {
     );
     public static final ModelLayerLocation PIRANHA = new ModelLayerLocation(
             new ResourceLocation(PracticalPets.MODID, "piranha_layer"), "main"
+    );
+    public static final ModelLayerLocation ANGLERFISH = new ModelLayerLocation(
+            new ResourceLocation(PracticalPets.MODID, "anglerfish_layer"), "main"
     );
 
     public static final ModelLayerLocation GIRAFFE_CAT_NECK_PIECE = new ModelLayerLocation(
@@ -105,6 +110,7 @@ public class PPRenderLayers {
         event.registerEntityRenderer(PPEntities.GIRAFFE_CAT.get(), GiraffeCatRenderer::new);
         event.registerEntityRenderer(PPEntities.KIWI.get(), KiwiRenderer::new);
         event.registerEntityRenderer(PPEntities.PIRANHA.get(), PiranhaRenderer::new);
+        event.registerEntityRenderer(PPEntities.ANGLERFISH.get(), AnglerfishRenderer::new);
     }
     @SubscribeEvent
     public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
@@ -118,6 +124,7 @@ public class PPRenderLayers {
         event.registerLayerDefinition(PPRenderLayers.GIRAFFE_CAT, GiraffeCatModel::createBodyLayer);
         event.registerLayerDefinition(PPRenderLayers.KIWI, KiwiModel::createBodyLayer);
         event.registerLayerDefinition(PPRenderLayers.PIRANHA, PiranhaModel::createBodyLayer);
+        event.registerLayerDefinition(PPRenderLayers.ANGLERFISH, AnglerfishModel::createBodyLayer);
 
         event.registerLayerDefinition(PPRenderLayers.GIRAFFE_CAT_NECK_PIECE, GiraffeCatNeckPieceModel::createBodyLayer);
 

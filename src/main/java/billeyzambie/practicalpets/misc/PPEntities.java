@@ -4,6 +4,7 @@ import billeyzambie.practicalpets.entity.dinosaur.BananaDuck;
 import billeyzambie.practicalpets.entity.dinosaur.Duck;
 import billeyzambie.practicalpets.entity.dinosaur.Kiwi;
 import billeyzambie.practicalpets.entity.dinosaur.Pigeon;
+import billeyzambie.practicalpets.entity.fish.Anglerfish;
 import billeyzambie.practicalpets.entity.fish.Piranha;
 import billeyzambie.practicalpets.entity.other.PiranhaLauncherProjectile;
 import billeyzambie.practicalpets.entity.other.YeetedPetCarrier;
@@ -97,9 +98,15 @@ public class PPEntities {
     );
     public static final RegistryObject<EntityType<Piranha>> PIRANHA = REGISTRY.register(
             "piranha",
-            () -> EntityType.Builder.of(Piranha::new, MobCategory.CREATURE)
+            () -> EntityType.Builder.of(Piranha::new, MobCategory.WATER_CREATURE)
                     .sized(0.4f, 0.25f)
                     .build("piranha")
+    );
+    public static final RegistryObject<EntityType<Anglerfish>> ANGLERFISH = REGISTRY.register(
+            "anglerfish",
+            () -> EntityType.Builder.of(Anglerfish::new, MobCategory.UNDERGROUND_WATER_CREATURE)
+                    .sized(0.7f, 0.5f)
+                    .build("anglerfish")
     );
 
     private static final Map<EntityType<? extends LivingEntity>, AttributeSupplier> defaultAttributes = new HashMap<>();
@@ -186,6 +193,14 @@ public class PPEntities {
                         .add(Attributes.MAX_HEALTH, 4)
                         .add(Attributes.MOVEMENT_SPEED, 1.0)
                         .add(Attributes.ATTACK_DAMAGE, 2)
+                        .build()
+        );
+        registerAttributes(event,
+                ANGLERFISH.get(),
+                AbstractFish.createAttributes()
+                        .add(Attributes.MAX_HEALTH, 10)
+                        .add(Attributes.MOVEMENT_SPEED, 1.0)
+                        .add(Attributes.ATTACK_DAMAGE, 5)
                         .build()
         );
 
