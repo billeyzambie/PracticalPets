@@ -1,6 +1,7 @@
 package billeyzambie.practicalpets.client.renderer.fish;
 
 import billeyzambie.practicalpets.client.PPRenderLayers;
+import billeyzambie.practicalpets.client.layer.AnglerfishLightLayer;
 import billeyzambie.practicalpets.client.model.entity.fish.AnglerfishModel;
 import billeyzambie.practicalpets.client.renderer.PracticalPetRenderer;
 import billeyzambie.practicalpets.entity.fish.Anglerfish;
@@ -12,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public class AnglerfishRenderer extends PracticalPetRenderer<Anglerfish, AnglerfishModel> {
     public AnglerfishRenderer(EntityRendererProvider.Context context) {
         super(context, new AnglerfishModel(context.bakeLayer(PPRenderLayers.ANGLERFISH)), 0.4f);
+        this.addLayer(new AnglerfishLightLayer(this));
     }
 
     private static final ResourceLocation[] TEXTURES = {

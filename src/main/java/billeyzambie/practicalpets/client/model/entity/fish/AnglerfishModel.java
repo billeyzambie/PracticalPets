@@ -71,7 +71,7 @@ public class AnglerfishModel extends SwimmingEntityModel<Anglerfish> {
 
 		PartDefinition angler = body.addOrReplaceChild("angler", CubeListBuilder.create(), PartPose.offset(0.0F, -3.5F, -2.5F));
 
-		PartDefinition angler_r1 = angler.addOrReplaceChild("angler_r1", CubeListBuilder.create().texOffs(17, 25).addBox(0.0F, -5.0F, -6.0F, 0.0F, 5.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.3054F, 0.0F, 0.0F));
+		PartDefinition angler_r1 = angler.addOrReplaceChild("angler_r1", CubeListBuilder.create().texOffs(17, 25).addBox(0.0F, -5.0F, -6.0F, 0.0F, 5.0F, 6.0F, new CubeDeformation(0.01F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.3054F, 0.0F, 0.0F));
 
 		PartDefinition bone = angler.addOrReplaceChild("bone", CubeListBuilder.create(), PartPose.offset(0.0F, -1.7F, -6.25F));
 
